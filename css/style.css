@@ -129,7 +129,7 @@ body {
   position: absolute;
   inset: 0;
   opacity: 0.03;
-  background-image: radial-gradient(circle, white 2px, transparent 1px);
+  background-image: radial-gradient(circle, white 3px, transparent 2px);
   background-size: 2.5rem 2.5rem;
   pointer-events: none;
 }
