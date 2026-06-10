@@ -159,6 +159,133 @@
 
     </section>
 
+    <!-- ================= AUDIO PLAYER SECTION ================= -->
+
+    <section class="audio-player-section">
+
+        <div class="section-header">
+
+            <h2>Listen To Today's Ayah</h2>
+
+            <p>
+                Beautiful recitations from world-renowned Qur'an reciters.
+            </p>
+
+        </div>
+
+        <div class="audio-player">
+
+            <div class="audio-top">
+
+                <div class="audio-info">
+
+                    <h3>
+                        Surah Al-Furqan
+
+                        <span class="live-tag">
+                            Today
+                        </span>
+
+                    </h3>
+
+                    <span>
+                        Verse 74
+                    </span>
+
+                </div>
+
+                <select id="reciter-select">
+
+                    <option value="jabir">
+                        Ali Jabir
+                    </option>
+
+                    <option value="ghamdi">
+                        Saad Al-Ghamdi
+                    </option>
+
+                    <option value="afasy">
+                        Mishary Alafasy
+                    </option>
+
+                    <option value="sudais">
+                        Abdul Rahman Al-Sudais
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Controls -->
+
+            <div class="audio-controls">
+
+                <button id="prev-btn" class="audio-btn">
+
+                    <i data-lucide="skip-back"></i>
+
+                </button>
+
+                <button id="play-btn" class="audio-play-btn">
+
+                    <i data-lucide="play"></i>
+
+                </button>
+
+                <button id="next-btn" class="audio-btn">
+
+                    <i data-lucide="skip-forward"></i>
+
+                </button>
+
+            </div>
+
+            <!-- Progress -->
+
+            <div class="audio-progress">
+
+                <div class="audio-progress-fill"></div>
+
+            </div>
+
+            <!-- Time -->
+
+            <div class="audio-time">
+
+                <span id="current-time">
+                    0:00
+                </span>
+
+                <span id="duration">
+                    0:00
+                </span>
+
+            </div>
+
+            <!-- Bottom -->
+
+            <div class="audio-bottom">
+
+                <div class="volume-wrapper">
+
+                    <i data-lucide="volume-2"></i>
+
+                    <input type="range" id="volume-slider" min="0" max="100" value="80">
+
+                </div>
+
+                <button id="speed-btn">
+                    1x
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <audio id="quran-audio"></audio>
+
     <!-- ================= TOPICS SECTION ================= -->
 
     <section class="topics">
@@ -518,6 +645,7 @@
 
     <script src="js/script.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/audio.js"></script>
     <script>
         lucide.createIcons();
     </script>
