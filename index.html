@@ -181,11 +181,6 @@
 
                     <h3>
                         Surah Al-Furqan
-
-                        <span class="live-tag">
-                            Today
-                        </span>
-
                     </h3>
 
                     <span>
@@ -196,31 +191,18 @@
 
                 <select id="reciter-select">
 
-                    <option value="jabir">
-                        Ali Jabir
-                    </option>
-
-                    <option value="ghamdi">
-                        Saad Al-Ghamdi
-                    </option>
-
-                    <option value="afasy">
-                        Mishary Alafasy
-                    </option>
-
-                    <option value="sudais">
-                        Abdul Rahman Al-Sudais
-                    </option>
+                    <option>Ali Jabir</option>
+                    <option>Saad Al-Ghamdi</option>
+                    <option>Mishary Alafasy</option>
+                    <option>Abdul Rahman Al-Sudais</option>
 
                 </select>
 
             </div>
 
-            <!-- Controls -->
-
             <div class="audio-controls">
 
-                <button id="prev-btn" class="audio-btn">
+                <button id="skip-back-btn" class="audio-btn">
 
                     <i data-lucide="skip-back"></i>
 
@@ -232,7 +214,7 @@
 
                 </button>
 
-                <button id="next-btn" class="audio-btn">
+                <button id="skip-forward-btn" class="audio-btn">
 
                     <i data-lucide="skip-forward"></i>
 
@@ -240,15 +222,11 @@
 
             </div>
 
-            <!-- Progress -->
-
-            <div class="audio-progress">
+            <div class="audio-progress" id="audio-progress">
 
                 <div class="audio-progress-fill"></div>
 
             </div>
-
-            <!-- Time -->
 
             <div class="audio-time">
 
@@ -262,20 +240,24 @@
 
             </div>
 
-            <!-- Bottom -->
-
             <div class="audio-bottom">
 
                 <div class="volume-wrapper">
 
-                    <i data-lucide="volume-2"></i>
+                    <button id="mute-btn" class="audio-small-btn">
+
+                        <i data-lucide="volume-2"></i>
+
+                    </button>
 
                     <input type="range" id="volume-slider" min="0" max="100" value="80">
 
                 </div>
 
-                <button id="speed-btn">
+                <button id="speed-btn" class="audio-small-btn">
+
                     1x
+
                 </button>
 
             </div>
@@ -285,6 +267,34 @@
     </section>
 
     <audio id="quran-audio"></audio>
+
+    <!-- ================= AYAH EXPLORER ================= -->
+
+    <section class="ayah-explorer">
+
+        <div class="section-header">
+
+            <h2>Explore The Qur'an</h2>
+
+            <p>
+                Search and discover Surahs beautifully.
+            </p>
+
+        </div>
+
+        <div class="explorer-search">
+
+            <i data-lucide="search"></i>
+
+            <input type="text" id="surah-search" placeholder="Search Surah name...">
+
+        </div>
+
+        <div class="surah-grid" id="surah-grid">
+
+        </div>
+
+    </section>
 
     <!-- ================= TOPICS SECTION ================= -->
 
@@ -645,10 +655,11 @@
 
     <script src="js/script.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="js/audio.js"></script>
     <script>
         lucide.createIcons();
     </script>
+    <script src="js/audio.js"></script>
+    <script src="js/surah-explorer.js"></script>
 </body>
 
 </html>

@@ -4,6 +4,7 @@
 
 :root {
   --primary: #10b981;
+  /* --primary: #22c55e; */
   --dark: #0f172a;
   --dark-light: #1e293b;
   --white: #ffffff;
@@ -267,12 +268,10 @@ body {
 }
 
 .audio-player {
-  max-width: 900px;
-  margin: auto;
-  padding: 2rem;
-  border-radius: 2rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2rem;
   backdrop-filter: blur(20px);
 }
 
@@ -280,72 +279,65 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
 .audio-info h3 {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 1.8rem;
+  color: white;
+  margin-bottom: 0.4rem;
+  font-size: 1.3rem;
 }
 
-.live-tag {
-  font-size: 0.8rem;
-  padding: 0.35rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(62, 244, 216, 0.15);
-  color: #3ef4d8;
+.audio-info span {
+  color: #94a3b8;
 }
 
 #reciter-select {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.8rem 1rem;
   border-radius: 12px;
-  border: none;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  outline: none;
+}
+
+#reciter-select option {
+  color: var(--dark-light);
 }
 
 .audio-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
 }
 
 .audio-btn {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   transition: 0.3s;
 }
 
 .audio-btn:hover {
-  background: var(--skin-color);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  background: var(--primary);
 }
 
 .audio-play-btn {
-  width: 85px;
-  height: 85px;
-  border-radius: 50%;
+  width: 70px;
+  height: 70px;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  background: var(--skin-color);
+  background: var(--primary);
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
   transition: 0.3s;
 }
 
@@ -355,56 +347,162 @@ body {
 
 .audio-progress {
   width: 100%;
-  height: 10px;
+  height: 8px;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
+  border-radius: 100px;
   overflow: hidden;
   cursor: pointer;
 }
 
 .audio-progress-fill {
-  width: 0;
+  width: 0%;
   height: 100%;
-  background: var(--white);
-  display: block;
-  border-radius: 999px;
-  transition: width .1s linear;
+  background: var(--primary);
+  border-radius: 100px;
 }
 
 .audio-time {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.7rem;
-  margin-bottom: 1.5rem;
+  margin-top: 0.8rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
 }
 
 .audio-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .volume-wrapper {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.audio-small-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
 }
 
 #volume-slider {
-  width: 10rem;
-  accent-color: var(--skin-color);
+  width: 100%;
 }
 
 #speed-btn {
-  border: none;
-  cursor: pointer;
-  padding: 0.8rem 1.2rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  min-width: 70px;
   font-weight: 600;
+}
+
+.ayah-explorer {
+  padding: 6rem 8%;
+}
+
+.explorer-search {
+  max-width: 700px;
+  margin: 2rem auto 3rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.explorer-search svg {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #94a3b8;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.explorer-search input {
+  width: 100%;
+  height: 58px;
+  padding-left: 55px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  outline: none;
+  font-size: 1rem;
+}
+
+.surah-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.surah-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 1.5rem;
+  transition: 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.surah-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+}
+
+.surah-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.surah-card h3 {
+  color: white;
+  margin-bottom: 0.4rem;
+}
+
+.surah-english {
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.surah-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.favorite-btn.active {
+  color: gold;
 }
 
 /* Topic Section */
@@ -763,14 +861,18 @@ body {
 
   .audio-top {
     flex-direction: column;
-    text-align: center;
+    align-items: stretch;
   }
 
   .audio-bottom {
     flex-direction: column;
   }
 
-  .audio-info h3 {
-    justify-content: center;
+  .volume-wrapper {
+    width: 100%;
+  }
+
+  .surah-grid {
+    grid-template-columns: 1fr;
   }
 }
