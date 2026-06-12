@@ -958,7 +958,11 @@ body {
 /* PREMIUM READER CARDS */
 
 .verse-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.02)
+  );
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
   padding: 2.5rem;
@@ -971,7 +975,11 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top, rgba(245,208,111,0.08), transparent);
+  background: radial-gradient(
+    circle at top,
+    rgba(245, 208, 111, 0.08),
+    transparent
+  );
   opacity: 0;
   transition: 0.4s;
 }
@@ -1205,5 +1213,21 @@ body {
 
   .surah-grid {
     grid-template-columns: 1fr;
+  }
+
+  .bismillah-header {
+    font-size: 2rem;
+  }
+
+  .bismillah-header::before,
+  .bismillah-header::after {
+    width: 22%;
+  }
+}
+
+@media (max-width: 540px) {
+  .bismillah-header::before,
+  .bismillah-header::after {
+    display: none;
   }
 }
