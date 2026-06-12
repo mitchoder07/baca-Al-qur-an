@@ -1,412 +1,302 @@
 // ============== Surah Explorer ============================ //
-const readBtn =
-    document.getElementById(
-        "read-surah-btn"
-    );
 
-const readerModal =
-    document.querySelector(
-        ".reader-modal"
-    );
+const grid = document.getElementById("surah-grid");
+const searchInput = document.getElementById("surah-search");
+const readerModal = document.querySelector(".reader-modal");
+const readerClose = document.querySelector(".reader-close");
+const surahModal = document.querySelector(".surah-modal");
+const modalClose = document.querySelector(".surah-modal-close");
+const readBtn = document.getElementById("read-surah-btn");
 
-const readerClose =
-    document.querySelector(
-        ".reader-close"
-    );
+document.getElementById("show-translation").addEventListener("click", () => {
+    readerMode = "both";
+    updateReaderModeUI();
+});
 
-let selectedSurah = null;
+document.getElementById("hide-translation").addEventListener("click", () => {
+    readerMode = "arabic";
+    updateReaderModeUI();
+});
 
-const grid =
-    document.getElementById("surah-grid");
+function updateReaderModeUI() {
+    const arabicEls = document.querySelectorAll(".verse-arabic");
+    const translationEls = document.querySelectorAll(".verse-translation");
 
-const searchInput =
-    document.getElementById("surah-search");
+    arabicEls.forEach(el => {
+        el.style.display = (readerMode === "translation") ? "none" : "block";
+    });
+
+    translationEls.forEach(el => {
+        el.style.display = (readerMode === "arabic") ? "none" : "block";
+    });
+}
 
 let allSurahs = [];
+let selectedSurah = null;
+let readerMode = "both"
 
-/* FETCH SURAHS */
+/* ========================= FETCH SURAHS ========================= */
 
 async function loadSurahs() {
-
     try {
+        const response = await fetch("https://api.alquran.cloud/v1/surah");
+        const data = await response.json();
 
-        const response =
-            await fetch(
-                "https://api.alquran.cloud/v1/surah"
-            );
-
-        const data =
-            await response.json();
-
-        allSurahs =
-            data.data;
-
+        allSurahs = data.data;
         renderSurahs(allSurahs);
 
     } catch (error) {
-
-        console.error(
-            "Failed to load Surahs",
-            error
-        );
+        console.error("Failed to load Surahs", error);
     }
-
 }
 
-/* RENDER */
+/* ========================= RENDER SURAH GRID ========================= */
 
 function renderSurahs(data) {
-
     grid.innerHTML = "";
 
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    let html = "";
+
     data.forEach((surah) => {
+        const isFav = favorites.includes(surah.number);
 
-        const favorites =
-            JSON.parse(
-                localStorage.getItem("favorites")
-            ) || [];
+        html += `
+        <div class="surah-card"
+            data-number="${surah.number}"
+            data-name="${surah.englishName}"
+            data-arabic="${surah.name}"
+            data-ayahs="${surah.numberOfAyahs}"
+            data-type="${surah.revelationType}">
 
-        const active =
-            favorites.includes(
-                surah.number
-            );
+            <button class="favorite-btn ${isFav ? "active" : ""}" data-id="${surah.number}">
+                ★
+            </button>
 
-        grid.innerHTML += `
+            <div class="surah-number">${surah.number}</div>
 
-        <div
-        class="surah-card"
-        data-number="${surah.number}"
-        data-name="${surah.englishName}"
-        data-arabic="${surah.name}"
-        data-ayahs="${surah.numberOfAyahs}"
-        data-type="${surah.revelationType}">
+            <h3>${surah.englishName}</h3>
 
-        <button
-        class="favorite-btn
-        ${active ? "active" : ""}"
-        data-id="${surah.number}">
+            <div class="surah-english">${surah.name}</div>
 
-        ★
-
-        </button>
-
-        <div class="surah-number">
-
-        ${surah.number}
+            <div class="surah-meta">
+                <span>${surah.numberOfAyahs} Ayahs</span>
+                <span>${surah.revelationType}</span>
+            </div>
 
         </div>
-
-        <h3>
-
-        ${surah.englishName}
-
-        </h3>
-
-        <div class="surah-english">
-
-        ${surah.name}
-
-        </div>
-
-        <div class="surah-meta">
-
-        <span>
-
-        ${surah.numberOfAyahs}
-         Ayahs
-
-        </span>
-
-        <span>
-
-        ${surah.revelationType}
-
-        </span>
-
-        </div>
-
-        </div>
-
         `;
-
     });
+
+    grid.innerHTML = html;
 
     activateFavorites();
     activateCards();
-
 }
 
 /* ========================= SEARCH ========================= */
 
-searchInput.addEventListener(
-    "input",
-    () => {
+searchInput.addEventListener("input", () => {
+    const value = searchInput.value.toLowerCase();
 
-        const value =
-            searchInput.value
-                .toLowerCase();
-
-        const filtered =
-            allSurahs.filter((surah) => {
-
-                return (
-
-                    surah.englishName
-                        .toLowerCase()
-                        .includes(value)
-
-                    ||
-
-                    surah.name
-                        .toLowerCase()
-                        .includes(value)
-
-                );
-
-            });
-
-        renderSurahs(filtered);
-
+    const filtered = allSurahs.filter((surah) => {
+        return (
+            surah.englishName.toLowerCase().includes(value) ||
+            surah.name.toLowerCase().includes(value)
+        );
     });
+
+    renderSurahs(filtered);
+});
 
 /* ========================= FAVORITES ========================= */
 
 function activateFavorites() {
+    document.querySelectorAll(".favorite-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
 
-    document
-        .querySelectorAll(".favorite-btn")
-        .forEach((btn) => {
+            const id = Number(btn.dataset.id);
 
-            btn.addEventListener(
-                "click",
-                () => {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-                    const id =
-                        Number(
-                            btn.dataset.id
-                        );
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(item => item !== id);
+            } else {
+                favorites.push(id);
+            }
 
-                    let favorites =
-                        JSON.parse(
-                            localStorage.getItem(
-                                "favorites"
-                            )
-                        ) || [];
+            localStorage.setItem("favorites", JSON.stringify(favorites));
 
-                    if (
-                        favorites.includes(id)
-                    ) {
-
-                        favorites =
-                            favorites.filter(
-                                item => item !== id
-                            );
-
-                    } else {
-
-                        favorites.push(id);
-                    }
-
-                    localStorage.setItem(
-                        "favorites",
-                        JSON.stringify(
-                            favorites
-                        )
-                    );
-
-                    renderSurahs(allSurahs);
-
-                });
+            renderSurahs(allSurahs);
         });
-
+    });
 }
 
-loadSurahs();
-
-/* ========================= SURAH MODAL ========================= */
-
-const surahModal =
-    document.querySelector(
-        ".surah-modal"
-    );
-
-const modalClose =
-    document.querySelector(
-        ".surah-modal-close"
-    );
+/* ========================= SURAH CARD CLICK ========================= */
 
 function activateCards() {
+    document.querySelectorAll(".surah-card").forEach(card => {
+        card.addEventListener("click", () => {
 
-    document
-        .querySelectorAll(".surah-card")
-        .forEach(card => {
+            selectedSurah = Number(card.dataset.number);
 
-            card.addEventListener(
-                "click",
-                () => {
+            document.getElementById("modal-surah-number").textContent = card.dataset.number;
+            document.getElementById("modal-surah-name").textContent = card.dataset.name;
+            document.getElementById("modal-surah-arabic").textContent = card.dataset.arabic;
+            document.getElementById("modal-surah-ayahs").textContent = card.dataset.ayahs + " Ayahs";
+            document.getElementById("modal-surah-type").textContent = card.dataset.type;
 
-                    document.getElementById(
-                        "modal-surah-number"
-                    ).textContent =
-                        card.dataset.number;
+            surahModal.classList.add("active");
 
-                    document.getElementById(
-                        "modal-surah-name"
-                    ).textContent =
-                        card.dataset.name;
-
-                    document.getElementById(
-                        "modal-surah-arabic"
-                    ).textContent =
-                        card.dataset.arabic;
-
-                    document.getElementById(
-                        "modal-surah-ayahs"
-                    ).textContent =
-                        card.dataset.ayahs + " Ayahs";
-
-                    document.getElementById(
-                        "modal-surah-type"
-                    ).textContent =
-                        card.dataset.type;
-
-                    surahModal.classList.add(
-                        "active"
-                    );
-
-                    selectedSurah = card.dataset.number
-
-                    lucide.createIcons();
-
-                });
-
+            lucide.createIcons();
         });
+    });
 }
 
-modalClose.addEventListener(
-    "click",
-    () => {
+/* ========================= MODAL CLOSE ========================= */
 
-        surahModal.classList.remove(
-            "active"
-        );
+modalClose.addEventListener("click", () => {
+    surahModal.classList.remove("active");
+});
 
+document.querySelector(".surah-modal-overlay")
+    .addEventListener("click", () => {
+        surahModal.classList.remove("active");
     });
 
-document
-    .querySelector(
-        ".surah-modal-overlay"
-    )
-    .addEventListener(
-        "click",
-        () => {
+/* ========================= CLEAN BISMILLAH FIX ========================= */
 
-            surahModal.classList.remove(
-                "active"
-            );
+function cleanAyah(text, surahNumber, ayahNumber) {
 
-        });
+    // Surah At-Tawbah (9) → no Bismillah exists
+    if (surahNumber === 9) return text;
 
+    // Surah Al-Fatihah (1) → keep as-is
+    if (surahNumber === 1) return text;
+
+    // Only first ayah of other surahs
+    if (ayahNumber === 1) {
+
+        // SAFER fallback removal (works even if text varies)
+        const words = text.split(" ");
+
+        // If Bismillah is present at start, remove first ~6–7 words
+        if (words.slice(0, 4).join(" ").includes("بِسْمِ")) {
+            return words.slice(4).join(" ").trim();
+        }
+    }
+
+    return text;
+}
 
 /* ========================= READ SURAH ========================= */
 
-readBtn.addEventListener(
-    "click",
-    async () => {
+readBtn.addEventListener("click", async () => {
+    if (!selectedSurah) return;
 
-        if (!selectedSurah) return;
-
-        try {
-
-            const response =
-                await fetch(
-                    `https://api.alquran.cloud/v1/surah/${selectedSurah}/editions/quran-uthmani,en.asad`
-                );
-
-            const data =
-                await response.json();
-
-            const arabic =
-                data.data[0].ayahs;
-
-            const english =
-                data.data[1].ayahs;
-
-            const container =
-                document.getElementById(
-                    "reader-verses"
-                );
-
-            container.innerHTML = "";
-
-            document.getElementById(
-                "reader-title"
-            ).textContent =
-                data.data[0].englishName;
-
-            arabic.forEach(
-                (ayah, index) => {
-
-                    container.innerHTML += `
-    
-    <div class="verse-card">
-    
-    <div class="verse-number">
-    
-    ${ayah.numberInSurah}
-    
-    </div>
-    
-    <div class="verse-arabic">
-    
-    ${ayah.text}
-    
-    </div>
-    
-    <div class="verse-translation">
-    
-    ${english[index].text}
-    
-    </div>
-    
-    </div>
-    
-    `;
-
-                });
-
-            readerModal.classList.add(
-                "active"
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
-    });
-
-readerClose.addEventListener(
-    "click",
-    () => {
-
-        readerModal.classList.remove(
-            "active"
+    try {
+        const response = await fetch(
+            `https://api.alquran.cloud/v1/surah/${selectedSurah}/editions/quran-uthmani,en.asad`
         );
 
-    });
+        const data = await response.json();
 
-document
-    .querySelector(
-        ".reader-overlay"
-    )
-    .addEventListener(
-        "click",
-        () => {
+        const arabic = data.data[0].ayahs;
+        const english = data.data[1].ayahs;
 
-            readerModal.classList.remove(
-                "active"
+        const container = document.getElementById("reader-verses");
+        container.innerHTML = "";
+
+        document.getElementById("reader-title").textContent =
+            data.data[0].englishName;
+
+        document.getElementById("reader-arabic-name").textContent =
+            data.data[0].name;
+
+        document.getElementById("reader-meaning").textContent =
+            data.data[0].englishNameTranslation;
+
+        const bismillahContainer = document.getElementById("bismillah-container");
+
+        if (selectedSurah !== 1 && selectedSurah !== 9) {
+            bismillahContainer.innerHTML = `
+                    <div class="bismillah-header">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                `;
+        } else {
+            bismillahContainer.innerHTML = "";
+        }
+
+        let html = "";
+
+        arabic.forEach((ayah, index) => {
+
+            const cleanedArabic = cleanAyah(
+                ayah.text,
+                selectedSurah,
+                ayah.numberInSurah
             );
 
+            html += `
+            <div class="verse-card">
+
+                <div class="verse-number">
+                    ${ayah.numberInSurah}
+                </div>
+
+                <div class="verse-arabic">
+                    ${cleanedArabic}
+                </div>
+
+                <div class="verse-translation">
+                    ${english[index].text}
+                </div>
+
+                <div class="verse-actions">
+                    <button class="ayah-action">
+                        <i data-lucide="bookmark"></i>
+                    </button>
+
+                    <button class="ayah-action">
+                        <i data-lucide="copy"></i>
+                    </button>
+
+                    <button class="ayah-action">
+                        <i data-lucide="share-2"></i>
+                    </button>
+                </div>
+
+            </div>
+            `;
         });
+
+        container.innerHTML = html;
+
+        updateReaderModeUI();
+
+        readerModal.classList.add("active");
+
+        lucide.createIcons();
+
+    } catch (error) {
+        console.error("Failed to load Surah:", error);
+    }
+});
+
+/* ========================= READER CLOSE ========================= */
+
+readerClose.addEventListener("click", () => {
+    readerModal.classList.remove("active");
+});
+
+document.querySelector(".reader-overlay")
+    .addEventListener("click", () => {
+        readerModal.classList.remove("active");
+    });
+
+/* ========================= INIT ========================= */
+
+loadSurahs();
