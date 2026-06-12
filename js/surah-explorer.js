@@ -8,32 +8,121 @@ const surahModal = document.querySelector(".surah-modal");
 const modalClose = document.querySelector(".surah-modal-close");
 const readBtn = document.getElementById("read-surah-btn");
 
-document.getElementById("show-translation").addEventListener("click", () => {
-    readerMode = "both";
-    updateReaderModeUI();
-});
+// function updateReaderModeUI() {
 
-document.getElementById("hide-translation").addEventListener("click", () => {
-    readerMode = "arabic";
-    updateReaderModeUI();
-});
+//     const arabicEls =
+//         document.querySelectorAll(".verse-arabic");
+
+//     const translationEls =
+//         document.querySelectorAll(".verse-translation");
+
+//     arabicEls.forEach(el => {
+
+//         el.style.display =
+//             readerMode === "translation"
+//                 ? "none"
+//                 : "block";
+
+//     });
+
+//     translationEls.forEach(el => {
+
+//         el.style.display =
+//             readerMode === "arabic"
+//                 ? "none"
+//                 : "block";
+
+//     });
+
+// }
 
 function updateReaderModeUI() {
-    const arabicEls = document.querySelectorAll(".verse-arabic");
-    const translationEls = document.querySelectorAll(".verse-translation");
+
+    const arabicEls =
+        document.querySelectorAll(".verse-arabic");
+
+    const translationEls =
+        document.querySelectorAll(".verse-translation");
 
     arabicEls.forEach(el => {
-        el.style.display = (readerMode === "translation") ? "none" : "block";
+
+        el.style.display =
+            readerMode === "translation"
+                ? "none"
+                : "block";
+
     });
 
     translationEls.forEach(el => {
-        el.style.display = (readerMode === "arabic") ? "none" : "block";
+
+        el.style.display =
+            readerMode === "arabic"
+                ? "none"
+                : "block";
+
     });
+
+    document
+        .querySelectorAll(".toggle-btn")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    if (readerMode === "both")
+        modeBoth.classList.add("active");
+
+    if (readerMode === "arabic")
+        modeArabic.classList.add("active");
+
+    if (readerMode === "translation")
+        modeTranslation.classList.add("active");
 }
 
 let allSurahs = [];
 let selectedSurah = null;
 let readerMode = "both"
+
+const modeBoth =
+    document.getElementById("mode-both");
+
+const modeArabic =
+    document.getElementById("mode-arabic");
+
+const modeTranslation =
+    document.getElementById("mode-translation");
+
+modeBoth.addEventListener("click", () => {
+    readerMode = "both";
+    updateReaderModeUI();
+});
+
+modeArabic.addEventListener("click", () => {
+    readerMode = "arabic";
+    updateReaderModeUI();
+});
+
+modeTranslation.addEventListener("click", () => {
+    readerMode = "translation";
+    updateReaderModeUI();
+});
+
+// document.addEventListener("click", (e) => {
+
+//     if (!e.target.classList.contains("toggle-btn"))
+//         return;
+
+//     readerMode = e.target.dataset.mode;
+
+//     document
+//         .querySelectorAll(".toggle-btn")
+//         .forEach(btn =>
+//             btn.classList.remove("active"));
+
+//     e.target.classList.add("active");
+
+//     updateReaderModeUI();
+
+// });
 
 /* ========================= FETCH SURAHS ========================= */
 
@@ -285,6 +374,38 @@ readBtn.addEventListener("click", async () => {
         console.error("Failed to load Surah:", error);
     }
 });
+
+/* =========================== Theme Switcher ========================== */
+
+const readerContent =
+    document.querySelector(".reader-content");
+
+document
+    .querySelectorAll(".theme-option")
+    .forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            document
+                .querySelectorAll(".theme-option")
+                .forEach(item =>
+                    item.classList.remove("active")
+                );
+
+            btn.classList.add("active");
+
+            readerContent.classList.remove(
+                "dark-theme",
+                "gold-theme",
+                "sepia-theme"
+            );
+
+            readerContent.classList.add(
+                btn.dataset.theme + "-theme"
+            );
+        });
+
+    });
 
 /* ========================= READER CLOSE ========================= */
 

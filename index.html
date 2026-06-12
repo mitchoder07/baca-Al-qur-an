@@ -674,7 +674,7 @@
 
         <div class="reader-overlay"></div>
 
-        <div class="reader-content">
+        <div class="reader-content dark-theme">
 
             <button class="reader-close">
 
@@ -698,19 +698,51 @@
 
                 </p>
 
-                <div class="reader-toggle">
+                <div class="reader-controls">
 
-                    <button id="show-translation" class="toggle-btn active">
+                    <div class="reader-toggle">
 
-                        Translation
+                        <button id="mode-both" class="toggle-btn active">
 
-                    </button>
+                            Arabic + Translation
 
-                    <button id="hide-translation" class="toggle-btn">
+                        </button>
 
-                        Arabic Only
+                        <button id="mode-arabic" class="toggle-btn">
 
-                    </button>
+                            Arabic Only
+
+                        </button>
+
+                        <button id="mode-translation" class="toggle-btn">
+
+                            Translation Only
+
+                        </button>
+
+                    </div>
+
+                    <div class="reader-theme-picker">
+
+                        <button class="theme-option active" data-theme="dark">
+
+                            🌙
+
+                        </button>
+
+                        <button class="theme-option" data-theme="gold">
+
+                            ✨
+
+                        </button>
+
+                        <button class="theme-option" data-theme="sepia">
+
+                            📖
+
+                        </button>
+
+                    </div>
 
                 </div>
 

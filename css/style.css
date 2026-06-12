@@ -862,9 +862,26 @@ body {
   max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
-  background: #0f172a;
+  background: linear-gradient(180deg, #0f172a, #111827);
   border-radius: 30px;
   padding: 2rem;
+}
+
+#reader-title {
+  font-size: 2rem;
+  margin-bottom: .4rem;
+}
+
+.dark-theme {
+  background: linear-gradient(180deg, #0f172a, #111827);
+}
+
+.gold-theme {
+  background: linear-gradient(180deg, #1f2937, #111827);
+}
+
+.sepia-theme {
+  background: #2d2418;
 }
 
 .reader-close {
@@ -882,24 +899,31 @@ body {
 
 .reader-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 2rem;
 }
 
 .reader-header h2 {
   color: white;
   margin-bottom: 0.4rem;
+  font-size: 2rem;
 }
 
 .reader-arabic-name {
   font-family: "Amiri", serif;
-  font-size: 2.5rem;
+  font-size: 3.4rem;
   color: white;
   margin-bottom: 0.5rem;
+  /* text-shadow: 0 0 25px rgba(245, 208, 111, 0.15); */
+  text-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
 }
 
 .reader-meaning {
   color: #94a3b8;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
 }
 
 .bismillah-header {
@@ -952,7 +976,7 @@ body {
 .reader-verses {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 /* PREMIUM READER CARDS */
@@ -965,7 +989,7 @@ body {
   );
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
-  padding: 2.5rem;
+  padding: 3rem;
   transition: 0.4s;
   position: relative;
   overflow: hidden;
@@ -994,26 +1018,24 @@ body {
 }
 
 .verse-number {
-  width: 42px;
-  height: 42px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  /* background: linear-gradient(45deg, #10b981, #059669); */
-  /* background:#f5d06f; */
-  box-shadow: 0 0 20px rgba(245, 208, 111, 0.15);
-  color: white;
+  background: linear-gradient(135deg, #f5d06f, #caa343);
+  color: #111827;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.2rem;
   font-weight: 700;
-  font-size: 0.9rem;
-  /* box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25); */
+  font-size: 1rem;
+  box-shadow: 0 0 20px rgba(245, 208, 111, 0.15);
 }
 
 .verse-arabic {
   font-family: "Amiri", serif;
-  font-size: 2.2rem;
-  line-height: 2.4;
+  font-size: 3rem;
+  line-height: 2.2;
   text-align: center;
   direction: rtl;
   color: white;
@@ -1023,9 +1045,10 @@ body {
 .verse-translation {
   text-align: center;
   color: #cbd5e1;
-  line-height: 1.9;
+  line-height: 2;
+  font-size: 1.05rem;
   max-width: 700px;
-  margin: auto;
+  margin: 1.5rem auto 0;
 }
 
 .verse-actions {
@@ -1049,7 +1072,7 @@ body {
 }
 
 .ayah-action:hover {
-  background: var(--skin-color);
+  background: var(--primary);
 }
 
 .reader-toggle {
@@ -1057,6 +1080,34 @@ body {
   justify-content: center;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.reader-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.reader-theme-picker {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.theme-option {
+  width: 42px;
+  height: 42px;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-size: 1rem;
+}
+
+.theme-option.active {
+  background: var(--primary);
 }
 
 .toggle-btn {
@@ -1069,7 +1120,7 @@ body {
 }
 
 .toggle-btn.active {
-  background: var(--skin-color);
+  background: var(--primary);
 }
 
 /* Search Modal */
@@ -1222,6 +1273,10 @@ body {
   .bismillah-header::before,
   .bismillah-header::after {
     width: 22%;
+  }
+
+  .verse-arabic {
+    font-size: 2.2rem;
   }
 }
 
