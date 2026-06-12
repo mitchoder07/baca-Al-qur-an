@@ -869,7 +869,7 @@ body {
 
 #reader-title {
   font-size: 2rem;
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
 }
 
 .dark-theme {
@@ -924,6 +924,23 @@ body {
   font-size: 1rem;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
+}
+
+.reader-progress {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.reader-progress span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--reader-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .bismillah-header {
@@ -1075,7 +1092,7 @@ body {
   background: var(--primary);
 }
 
-.reader-toggle {
+/* .reader-toggle {
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -1093,7 +1110,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 0.8rem;
-}
+} */
 
 .theme-option {
   width: 42px;
@@ -1121,6 +1138,53 @@ body {
 
 .toggle-btn.active {
   background: var(--primary);
+}
+
+/* ================= READER TOOLBAR ================= */
+
+.reader-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.reader-themes {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.reader-theme-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+
+  transition: 0.3s;
+}
+
+.reader-theme-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* Light Theme Button */
+
+.reader-theme-btn[data-theme="light"] {
+  background: #ffffff;
+  color: #111827;
+}
+
+/* Sepia Theme Button */
+
+.reader-theme-btn[data-theme="sepia"] {
+  background: #e8d8b5;
+  color: #4b2e05;
 }
 
 /* Search Modal */
@@ -1208,6 +1272,52 @@ body {
 
 .search-item svg {
   color: var(--primary);
+}
+
+/* ================= FONT CONTROLS ================= */
+
+.font-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.font-controls button {
+  border: none;
+  cursor: pointer;
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.font-controls button:hover {
+  background: var(--primary);
+}
+
+#font-increase {
+  font-size: 1.1rem;
+}
+
+#font-reset {
+  font-size: 1rem;
+}
+
+#font-decrease {
+  font-size: 0.9rem;
+}
+
+.saved {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #10b981 !important;
+}
+
+.active-reading {
+  border-color: var(--reader-accent);
+  box-shadow: 0 0 0 1px var(--reader-accent), 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 /* Media Responsiveness */

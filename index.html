@@ -469,12 +469,12 @@
                     Last Read
                 </span>
 
-                <h3>
-                    Surah Al-Mulk
+                <h3 id="continue-surah">
+                    No Reading History
                 </h3>
 
-                <p>
-                    Verse 18 of 30
+                <p id="continue-ayah">
+                    Start Reading
                 </p>
 
                 <div class="progress-bar">
@@ -483,8 +483,8 @@
 
                 </div>
 
-                <span class="progress-text">
-                    60% Completed
+                <span class="progress-text" id="continue-progress">
+                    0% Completed
                 </span>
 
             </div>
@@ -694,51 +694,67 @@
 
                 </h2>
 
-                <p id="reader-meaning" class="reader-meaning">
+                <p id="reader-meaning" class="reader-meaning"></p>
 
-                </p>
+                <div class="reader-progress">
 
-                <div class="reader-controls">
+                    <span id="reader-progress-text">
+                        Reading...
+                    </span>
+
+                </div>
+
+                <div class="reader-toolbar">
 
                     <div class="reader-toggle">
 
                         <button id="mode-both" class="toggle-btn active">
-
                             Arabic + Translation
-
                         </button>
 
                         <button id="mode-arabic" class="toggle-btn">
-
                             Arabic Only
-
                         </button>
 
                         <button id="mode-translation" class="toggle-btn">
-
                             Translation Only
-
                         </button>
 
                     </div>
 
-                    <div class="reader-theme-picker">
+                    <div class="reader-themes">
 
-                        <button class="theme-option active" data-theme="dark">
-
+                        <button class="reader-theme-btn" data-theme="dark">
                             🌙
-
                         </button>
 
-                        <button class="theme-option" data-theme="gold">
-
+                        <button class="reader-theme-btn" data-theme="light">
                             ✨
+                        </button>
+
+                        <button class="reader-theme-btn" data-theme="sepia">
+                            📖
+                        </button>
+
+                    </div>
+
+                    <div class="font-controls">
+
+                        <button id="font-decrease">
+
+                            A-
 
                         </button>
 
-                        <button class="theme-option" data-theme="sepia">
+                        <button id="font-reset">
 
-                            📖
+                            A
+
+                        </button>
+
+                        <button id="font-increase">
+
+                            A+
 
                         </button>
 

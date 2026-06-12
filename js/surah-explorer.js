@@ -8,34 +8,6 @@ const surahModal = document.querySelector(".surah-modal");
 const modalClose = document.querySelector(".surah-modal-close");
 const readBtn = document.getElementById("read-surah-btn");
 
-// function updateReaderModeUI() {
-
-//     const arabicEls =
-//         document.querySelectorAll(".verse-arabic");
-
-//     const translationEls =
-//         document.querySelectorAll(".verse-translation");
-
-//     arabicEls.forEach(el => {
-
-//         el.style.display =
-//             readerMode === "translation"
-//                 ? "none"
-//                 : "block";
-
-//     });
-
-//     translationEls.forEach(el => {
-
-//         el.style.display =
-//             readerMode === "arabic"
-//                 ? "none"
-//                 : "block";
-
-//     });
-
-// }
-
 function updateReaderModeUI() {
 
     const arabicEls =
@@ -78,9 +50,34 @@ function updateReaderModeUI() {
         modeTranslation.classList.add("active");
 }
 
+function applyFontSizes() {
+
+    document
+        .querySelectorAll(".verse-arabic")
+        .forEach(el => {
+
+            el.style.fontSize =
+                arabicFontSize + "rem";
+
+        });
+
+    document
+        .querySelectorAll(".verse-translation")
+        .forEach(el => {
+
+            el.style.fontSize =
+                translationFontSize + "rem";
+
+        });
+
+}
+
 let allSurahs = [];
 let selectedSurah = null;
 let readerMode = "both"
+let arabicFontSize = 3;
+let translationFontSize = 1.05;
+
 
 const modeBoth =
     document.getElementById("mode-both");
@@ -105,24 +102,6 @@ modeTranslation.addEventListener("click", () => {
     readerMode = "translation";
     updateReaderModeUI();
 });
-
-// document.addEventListener("click", (e) => {
-
-//     if (!e.target.classList.contains("toggle-btn"))
-//         return;
-
-//     readerMode = e.target.dataset.mode;
-
-//     document
-//         .querySelectorAll(".toggle-btn")
-//         .forEach(btn =>
-//             btn.classList.remove("active"));
-
-//     e.target.classList.add("active");
-
-//     updateReaderModeUI();
-
-// });
 
 /* ========================= FETCH SURAHS ========================= */
 
@@ -330,7 +309,9 @@ readBtn.addEventListener("click", async () => {
             );
 
             html += `
-            <div class="verse-card">
+            <div class="verse-card"
+                data-surah="${selectedSurah}"
+                data-ayah="${ayah.numberInSurah}">
 
                 <div class="verse-number">
                     ${ayah.numberInSurah}
@@ -345,17 +326,32 @@ readBtn.addEventListener("click", async () => {
                 </div>
 
                 <div class="verse-actions">
-                    <button class="ayah-action">
+
+                    <button
+                        class="ayah-action bookmark-btn"
+                        data-surah="${selectedSurah}"
+                        data-ayah="${ayah.numberInSurah}">
+
                         <i data-lucide="bookmark"></i>
+
                     </button>
 
-                    <button class="ayah-action">
+                    <button
+                        class="ayah-action copy-btn"
+                        data-text="${english[index].text}">
+
                         <i data-lucide="copy"></i>
+
                     </button>
 
-                    <button class="ayah-action">
+                    <button
+                        class="ayah-action share-btn"
+                        data-text="${english[index].text}">
+
                         <i data-lucide="share-2"></i>
+
                     </button>
+
                 </div>
 
             </div>
@@ -364,6 +360,7 @@ readBtn.addEventListener("click", async () => {
 
         container.innerHTML = html;
 
+        applyFontSizes();
         updateReaderModeUI();
 
         readerModal.classList.add("active");
@@ -418,6 +415,163 @@ document.querySelector(".reader-overlay")
         readerModal.classList.remove("active");
     });
 
+/* ================= READER THEMES ================= */
+
+document.querySelectorAll(".reader-theme-btn")
+    .forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            const theme =
+                readerThemes[btn.dataset.theme];
+
+            const reader =
+                document.querySelector(".reader-content");
+
+            reader.style.background =
+                theme.bg;
+
+            reader.style.color =
+                theme.text;
+
+            document
+                .querySelectorAll(".verse-card")
+                .forEach(card => {
+
+                    card.style.background =
+                        theme.card;
+
+                    card.style.color =
+                        theme.text;
+                });
+
+            document
+                .querySelectorAll(".verse-arabic")
+                .forEach(el => {
+
+                    el.style.color =
+                        theme.text;
+                });
+
+            document
+                .querySelectorAll(".verse-translation")
+                .forEach(el => {
+
+                    el.style.color =
+                        theme.text;
+                });
+
+        });
+
+    });
+
+/* ================= FONT CONTROLS ================= */
+
+document
+    .getElementById("font-increase")
+    .addEventListener("click", () => {
+
+        arabicFontSize += 0.2;
+        translationFontSize += 0.05;
+
+        applyFontSizes();
+
+    });
+
+document
+    .getElementById("font-decrease")
+    .addEventListener("click", () => {
+
+        arabicFontSize -= 0.2;
+        translationFontSize -= 0.05;
+
+        applyFontSizes();
+
+    });
+
+document
+    .getElementById("font-reset")
+    .addEventListener("click", () => {
+
+        arabicFontSize = 3;
+        translationFontSize = 1.05;
+
+        applyFontSizes();
+
+    });
+
 /* ========================= INIT ========================= */
 
 loadSurahs();
+
+/* ========================= BOOKMARKS ========================= */
+
+document.addEventListener("click", (e) => {
+
+    const bookmarkBtn = e.target.closest(".bookmark-btn");
+
+    if (!bookmarkBtn) return;
+
+    const surah = bookmarkBtn.dataset.surah;
+    const ayah = bookmarkBtn.dataset.ayah;
+
+    const bookmarks =
+        JSON.parse(localStorage.getItem("ayahBookmarks"))
+        || [];
+
+    const exists = bookmarks.find(
+        item =>
+            item.surah == surah &&
+            item.ayah == ayah
+    );
+
+    if (!exists) {
+
+        bookmarks.push({
+            surah,
+            ayah
+        });
+
+        localStorage.setItem(
+            "ayahBookmarks",
+            JSON.stringify(bookmarks)
+        );
+
+        bookmarkBtn.classList.add("saved");
+    }
+
+});
+
+/* ========================= LAST READ ========================= */
+
+document.addEventListener("click", (e) => {
+
+    const verse = e.target.closest(".verse-card");
+
+    if (!verse) return;
+
+    document
+        .querySelectorAll(".verse-card")
+        .forEach(card => {
+            card.classList.remove("active-reading");
+        });
+
+    verse.classList.add("active-reading");
+
+    const surah = verse.dataset.surah;
+    const ayah = verse.dataset.ayah;
+
+    localStorage.setItem(
+        "lastRead",
+        JSON.stringify({
+            surah,
+            ayah
+        })
+    );
+
+    document.getElementById(
+        "reader-progress-text"
+    ).textContent =
+        `Last Read • Surah ${surah} Ayah ${ayah}`;
+
+});
