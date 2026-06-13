@@ -68,6 +68,11 @@ function updateContinueReading() {
     ).textContent =
         `Ayah ${saved.ayah} of ${saved.totalAyahs}`;
 
+    document.getElementById(
+        "continue-meta"
+    ).textContent =
+        `${saved.totalAyahs - saved.ayah} Ayahs Remaining`;
+
     const percent =
         saved.totalAyahs
             ? Math.round(
@@ -75,6 +80,16 @@ function updateContinueReading() {
                     saved.totalAyahs) * 100
             )
             : 0;
+
+    const status =
+        percent >= 100
+            ? "Completed"
+            : "In Progress";
+
+    document.getElementById(
+        "reading-status"
+    ).textContent =
+        status;
 
     document.getElementById(
         "continue-progress"
@@ -87,6 +102,30 @@ function updateContinueReading() {
         percent + "%";
 
 }
+
+// function updateBookmarkCount() {
+
+//     const bookmarks =
+//         JSON.parse(
+//             localStorage.getItem(
+//                 "ayahBookmarks"
+//             )
+//         ) || [];
+
+//     document.getElementById(
+//         "bookmark-count"
+//     ).textContent =
+//         `${bookmarks.length} Bookmarks Saved`;
+
+//     const today =
+//         new Date()
+//             .toDateString();
+
+//     localStorage.setItem(
+//         "lastReadingDay",
+//         today
+//     );
+// }
 
 function applyFontSizes() {
 
@@ -680,4 +719,6 @@ document.addEventListener("click", (e) => {
 
 });
 
+updateStats();
+// updateBookmarkCount();
 updateContinueReading();
