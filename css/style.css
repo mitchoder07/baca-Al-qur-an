@@ -926,34 +926,17 @@ body {
   text-transform: uppercase;
 }
 
-.reader-progress {
-  margin-top: 1rem;
-  text-align: center;
-}
-
-.reader-progress span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--reader-accent);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
 .bismillah-header {
   text-align: center;
   font-family: "Amiri", serif;
   font-size: 2.6rem;
-  color: #f5d06f;
+  color: var(--primary);
   margin: 2rem 0 3rem;
   position: relative;
   letter-spacing: 2px;
   line-height: 2;
   text-shadow: 0 0 25px rgba(245, 208, 111, 0.25);
-  animation: glowBismillah 3s ease-in-out infinite;
+  animation: glowBismillah 5s ease-in-out infinite;
 }
 
 .bismillah-header::before,
@@ -966,7 +949,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(245, 208, 111, 0.5),
+    rgba(16, 185, 129, 1),
     transparent
   );
 }
@@ -1018,7 +1001,7 @@ body {
   inset: 0;
   background: radial-gradient(
     circle at top,
-    rgba(245, 208, 111, 0.08),
+    rgba(16, 185, 129, 0.15),
     transparent
   );
   opacity: 0;
@@ -1031,14 +1014,16 @@ body {
 
 .verse-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(245, 208, 111, 0.3);
+  /* border-color: rgba(245, 208, 111, 0.3); */
+  border-color: rgba(16, 185, 129, 0.3);
 }
 
 .verse-number {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f5d06f, #caa343);
+  /* background: linear-gradient(135deg, #f5d06f, #caa343); */
+  background: linear-gradient(135deg, #34d399, #10b981);
   color: #111827;
   display: flex;
   align-items: center;
@@ -1046,7 +1031,8 @@ body {
   margin: 0 auto 1.2rem;
   font-weight: 700;
   font-size: 1rem;
-  box-shadow: 0 0 20px rgba(245, 208, 111, 0.15);
+  /* box-shadow: 0 0 20px rgba(245, 208, 111, 0.15); */
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
 }
 
 .verse-arabic {
@@ -1092,7 +1078,7 @@ body {
   background: var(--primary);
 }
 
-/* .reader-toggle {
+.reader-toggle {
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -1110,7 +1096,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 0.8rem;
-} */
+}
 
 .theme-option {
   width: 42px;

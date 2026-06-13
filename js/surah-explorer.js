@@ -50,6 +50,44 @@ function updateReaderModeUI() {
         modeTranslation.classList.add("active");
 }
 
+function updateContinueReading() {
+
+    const saved =
+        JSON.parse(
+            localStorage.getItem("lastRead")
+        );
+
+    if (!saved) return;
+
+    document.getElementById(
+        "continue-surah"
+    ).textContent = saved.surahName;
+
+    document.getElementById(
+        "continue-ayah"
+    ).textContent =
+        `Ayah ${saved.ayah} of ${saved.totalAyahs}`;
+
+    const percent =
+        saved.totalAyahs
+            ? Math.round(
+                (saved.ayah /
+                    saved.totalAyahs) * 100
+            )
+            : 0;
+
+    document.getElementById(
+        "continue-progress"
+    ).textContent =
+        `${percent}% Completed`;
+
+    document.querySelector(
+        ".progress-fill"
+    ).style.width =
+        percent + "%";
+
+}
+
 function applyFontSizes() {
 
     document
@@ -75,6 +113,7 @@ function applyFontSizes() {
 let allSurahs = [];
 let selectedSurah = null;
 let readerMode = "both"
+let lastRead = null;
 let arabicFontSize = 3;
 let translationFontSize = 1.05;
 
@@ -360,6 +399,57 @@ readBtn.addEventListener("click", async () => {
 
         container.innerHTML = html;
 
+        const observer = new IntersectionObserver(
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (
+                        entry.isIntersecting &&
+                        entry.intersectionRatio > 0.6
+                    ) {
+
+                        const ayah =
+                            Number(
+                                entry.target.dataset.ayah
+                            );
+
+                        localStorage.setItem(
+                            "lastRead",
+                            JSON.stringify({
+
+                                surah: selectedSurah,
+
+                                surahName:
+                                    data.data[0].englishName,
+
+                                surahArabic:
+                                    data.data[0].name,
+
+                                totalAyahs:
+                                    arabic.length,
+
+                                ayah
+
+                            })
+                        );
+
+                        updateContinueReading();
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.6
+            }
+        );
+
+        document
+            .querySelectorAll(".verse-card")
+            .forEach(card => observer.observe(card));
+
         applyFontSizes();
         updateReaderModeUI();
 
@@ -409,6 +499,52 @@ document
 readerClose.addEventListener("click", () => {
     readerModal.classList.remove("active");
 });
+
+document
+    .getElementById("resume-reading-btn")
+    .addEventListener("click", async () => {
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem("lastRead")
+            );
+        if (
+            !saved ||
+            !saved.totalAyahs
+        ) return;
+
+        // if (!saved) return;
+
+        // selectedSurah =
+        //     saved.surah;
+
+        selectedSurah =
+            Number(saved.surah);
+
+        readBtn.click();
+
+        setTimeout(() => {
+
+            const target =
+                document.querySelector(
+                    `[data-ayah="${saved.ayah}"]`
+                );
+
+            if (target) {
+
+                target.scrollIntoView({
+
+                    behavior: "smooth",
+
+                    block: "center"
+
+                });
+
+            }
+
+        }, 1000);
+
+    });
 
 document.querySelector(".reader-overlay")
     .addEventListener("click", () => {
@@ -504,6 +640,8 @@ document
 
 loadSurahs();
 
+
+
 /* ========================= BOOKMARKS ========================= */
 
 document.addEventListener("click", (e) => {
@@ -542,36 +680,4 @@ document.addEventListener("click", (e) => {
 
 });
 
-/* ========================= LAST READ ========================= */
-
-document.addEventListener("click", (e) => {
-
-    const verse = e.target.closest(".verse-card");
-
-    if (!verse) return;
-
-    document
-        .querySelectorAll(".verse-card")
-        .forEach(card => {
-            card.classList.remove("active-reading");
-        });
-
-    verse.classList.add("active-reading");
-
-    const surah = verse.dataset.surah;
-    const ayah = verse.dataset.ayah;
-
-    localStorage.setItem(
-        "lastRead",
-        JSON.stringify({
-            surah,
-            ayah
-        })
-    );
-
-    document.getElementById(
-        "reader-progress-text"
-    ).textContent =
-        `Last Read • Surah ${surah} Ayah ${ayah}`;
-
-});
+updateContinueReading();
