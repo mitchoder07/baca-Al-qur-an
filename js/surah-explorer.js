@@ -158,12 +158,6 @@ let lastRead = null;
 let arabicFontSize = 3;
 let translationFontSize = 1.05;
 let currentReciter = "ar.alafasy";
-let currentArabicAyahs = [];
-let currentEnglishAyahs = [];
-let readingMode = "verse";
-let currentMushafPage = 1;
-let mushafPages = [];
-let mushafModeActive = false;
 
 const reciterCodes = {
 
@@ -196,7 +190,6 @@ const reciterSelect =
 
 console.log(reciterSelect);
 
-const mushafPageSize = 15;
 
 const modeBoth =
     document.getElementById("mode-both");
@@ -207,11 +200,6 @@ const modeArabic =
 const modeTranslation =
     document.getElementById("mode-translation");
 
-const switchVerseMode =
-    document.getElementById("switch-verse-mode");
-
-const switchMushafMode =
-    document.getElementById("switch-mushaf-mode");
 
 modeBoth.addEventListener("click", () => {
     readerMode = "both";
@@ -229,29 +217,6 @@ modeTranslation.addEventListener("click", () => {
     updateReaderModeUI();
 });
 
-switchVerseMode.addEventListener("click", () => {
-
-    readingMode = "verse";
-
-    switchVerseMode.classList.add("active");
-    switchMushafMode.classList.remove("active");
-
-    mushafModeActive = false;
-});
-
-switchMushafMode.addEventListener("click", () => {
-
-    readingMode = "mushaf";
-
-    switchMushafMode.classList.add("active");
-    switchVerseMode.classList.remove("active");
-
-    mushafModeActive = true;
-
-    currentMushafPage = 1;
-    renderMushafPage(currentMushafPage);
-});
-
 /* ========================= FETCH SURAHS ========================= */
 
 async function loadSurahs() {
@@ -264,30 +229,6 @@ async function loadSurahs() {
 
     } catch (error) {
         console.error("Failed to load Surahs", error);
-    }
-}
-
-/* ========================= LOAD MUSHAF ========================= */
-
-async function loadMushafData() {
-    try {
-        const res = await fetch("https://api.alquran.cloud/v1/quran/quran-uthmani");
-        const data = await res.json();
-
-        const allAyahs = [];
-
-        data.data.surahs.forEach(surah => {
-            surah.ayahs.forEach(ayah => {
-                allAyahs.push(ayah.text);
-            });
-        });
-
-        buildMushafPages(allAyahs);
-
-        console.log("Mushaf loaded:", mushafPages.length, "pages");
-
-    } catch (err) {
-        console.error("Mushaf load failed", err);
     }
 }
 
@@ -448,58 +389,6 @@ function cleanAyah(text, surahNumber, ayahNumber) {
     return text;
 }
 
-function buildMushafPages(allAyahsFlat) {
-    const pages = [];
-    const PAGE_SIZE = 12; // controls how dense each page is
-
-    for (let i = 0; i < allAyahsFlat.length; i += PAGE_SIZE) {
-        pages.push({
-            page: pages.length + 1,
-            lines: allAyahsFlat.slice(i, i + PAGE_SIZE)
-        });
-    }
-
-    mushafPages = pages;
-}
-
-/* ========================= MUSHAF PAGE RENDERING ========================= */
-
-function renderMushafPage(pageNumber) {
-    const page = mushafPages[pageNumber - 1];
-    if (!page) return;
-
-    const container = document.getElementById("reader-verses");
-
-    container.innerHTML = `
-        <div class="mushaf-page-header">
-            Page ${page.page} / ${mushafPages.length}
-        </div>
-
-        <div class="mushaf-content">
-            ${page.lines.map(line => `
-                <div class="mushaf-line">${line}</div>
-            `).join("")}
-        </div>
-    `;
-
-    document.getElementById("page-indicator").textContent =
-        `Page ${page.page} / ${mushafPages.length}`;
-}
-
-function nextMushafPage() {
-    if (currentMushafPage < mushafPages.length) {
-        currentMushafPage++;
-        renderMushafPage(currentMushafPage);
-    }
-}
-
-function prevMushafPage() {
-    if (currentMushafPage > 1) {
-        currentMushafPage--;
-        renderMushafPage(currentMushafPage);
-    }
-}
-
 /* ========================= READ SURAH ========================= */
 
 readBtn.addEventListener("click", async () => {
@@ -512,8 +401,8 @@ readBtn.addEventListener("click", async () => {
 
         const data = await response.json();
 
-        const arabicAyahs = data.data[0].ayahs;
-        const englishAyahs = data.data[1].ayahs;
+        const currentArabicAyahs = data.data[0].ayahs;
+        const currentEnglishAyahs = data.data[1].ayahs;
 
         const container = document.getElementById("reader-verses");
         container.innerHTML = "";
@@ -528,7 +417,7 @@ readBtn.addEventListener("click", async () => {
             data.data[0].englishNameTranslation;
 
         document.getElementById("reader-meta").textContent =
-            `${arabicAyahs.length} Ayahs • ${data.data[0].revelationType}`;
+            `${currentArabicAyahs.length} Ayahs • ${data.data[0].revelationType}`;
 
         const bismillahContainer = document.getElementById("bismillah-container");
 
@@ -544,7 +433,7 @@ readBtn.addEventListener("click", async () => {
 
         let html = "";
 
-        arabicAyahs.forEach((ayah, index) => {
+        currentArabicAyahs.forEach((ayah, index) => {
 
             const cleanedArabic = cleanAyah(
                 ayah.text,
@@ -566,7 +455,7 @@ readBtn.addEventListener("click", async () => {
                 </div>
 
                 <div class="verse-translation">
-                    ${englishAyahs[index].text}
+                    ${currentEnglishAyahs[index].text}
                 </div>
 
                 <div class="verse-actions">
@@ -582,7 +471,7 @@ readBtn.addEventListener("click", async () => {
 
                     <button
                         class="ayah-action copy-btn"
-                        data-copy="${cleanedArabic} - ${englishAyahs[index].text}">
+                        data-copy="${cleanedArabic} - ${currentEnglishAyahs[index].text}">
 
                         <i data-lucide="copy"></i>
 
@@ -590,7 +479,7 @@ readBtn.addEventListener("click", async () => {
 
                     <button
                         class="ayah-action share-btn"
-                        data-share="${cleanedArabic} - ${englishAyahs[index].text}">
+                        data-share="${cleanedArabic} - ${currentEnglishAyahs[index].text}">
 
                         <i data-lucide="share-2"></i>
 
@@ -634,7 +523,7 @@ readBtn.addEventListener("click", async () => {
                                     data.data[0].name,
 
                                 totalAyahs:
-                                    arabicAyahs.length,
+                                    currentArabicAyahs.length,
 
                                 ayah
 
@@ -878,7 +767,6 @@ document.addEventListener(
 
 loadSurahs();
 updateContinueReading();
-loadMushafData();
 
 /* ===================== RECITER SWITCH ============================= */
 
