@@ -194,10 +194,11 @@
 
                 <select id="reciter-select">
 
-                    <option>Ali Jabir</option>
-                    <option>Saad Al-Ghamdi</option>
-                    <option>Mishary Alafasy</option>
-                    <option>Abdul Rahman Al-Sudais</option>
+                    <option value="ar.alafasy">Mishary Alafasy</option>
+                    <option value="ar.abdurahmansudais">Abdul Rahman Al-Sudais</option>
+                    <option value="">Ali Jabir</option>
+                    <option value="">Saad Al-Ghamdi</option>
+                    <option value="ar.husary">Mahmoud Al-Husary</option>
 
                 </select>
 
@@ -700,70 +701,78 @@
 
             <div class="reader-header">
 
-                <div id="reader-arabic-name" class="reader-arabic-name">
+                <div class="surah-header-card">
+
+                    <div id="reader-arabic-name" class="reader-arabic-name">
+                    </div>
+
+                    <h2 id="reader-title" class="reader-surah-title">
+                    </h2>
+
+                    <p id="reader-meaning" class="reader-meaning">
+                    </p>
+
+                    <div id="reader-meta" class="reader-meta">
+                    </div>
 
                 </div>
+                
+                <button id="reader-settings-btn">
 
-                <h2 id="reader-title">
+                    <i data-lucide="settings"></i>
 
-                    Surah
+                    Reader Settings
 
-                </h2>
+                </button>
 
-                <p id="reader-meaning" class="reader-meaning"></p>
+            </div>
 
-                <div class="reader-toolbar">
+            <div class="reader-settings-panel">
+
+                <div class="settings-group">
+
+                    <h4>Reading Mode</h4>
 
                     <div class="reader-toggle">
 
                         <button id="mode-both" class="toggle-btn active">
+
                             Arabic + Translation
+
                         </button>
 
                         <button id="mode-arabic" class="toggle-btn">
+
                             Arabic Only
+
                         </button>
 
                         <button id="mode-translation" class="toggle-btn">
+
                             Translation Only
+
                         </button>
 
                     </div>
 
-                    <div class="reader-themes">
+                </div>
 
-                        <button class="reader-theme-btn" data-theme="dark">
-                            🌙
-                        </button>
+                <div class="settings-group">
 
-                        <button class="reader-theme-btn" data-theme="light">
-                            ✨
-                        </button>
-
-                        <button class="reader-theme-btn" data-theme="sepia">
-                            📖
-                        </button>
-
-                    </div>
+                    <h4>Font Size</h4>
 
                     <div class="font-controls">
 
                         <button id="font-decrease">
-
                             A-
-
                         </button>
 
                         <button id="font-reset">
-
                             A
-
                         </button>
 
                         <button id="font-increase">
-
                             A+
-
                         </button>
 
                     </div>
@@ -773,6 +782,43 @@
             </div>
 
             <div id="bismillah-container">
+
+            </div>
+
+            <div class="reader-audio-card">
+
+                <div class="audio-top">
+
+                    <h4>Listen To This Surah</h4>
+
+                    <select id="reciter-select">
+
+                        <option value="ar.alafasy">
+                            Mishary Alafasy
+                        </option>
+
+                        <option value="ar.abdurrahmaansudais">
+                            Abdul Rahman Al-Sudais
+                        </option>
+
+                        <option value="ar.saoodshuraym">
+                            Saud Al-Shuraim
+                        </option>
+
+                        <option value="ar.mahermuaiqly">
+                            Maher Al-Muaiqly
+                        </option>
+
+                        <option value="ar.husary">
+                            Mahmoud Khalil Al-Husary
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <audio id="surah-audio" controls preload="metadata">
+                </audio>
 
             </div>
 
@@ -838,7 +884,7 @@
         </div>
 
     </div>
-
+    <div class="toast" id="toast"></div>
     <script src="js/script.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>

@@ -1,3 +1,14 @@
+console.log(window.isSecureContext);
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 1200);
+}
 // ============== Surah Explorer ============================ //
 
 const grid = document.getElementById("surah-grid");
@@ -7,6 +18,21 @@ const readerClose = document.querySelector(".reader-close");
 const surahModal = document.querySelector(".surah-modal");
 const modalClose = document.querySelector(".surah-modal-close");
 const readBtn = document.getElementById("read-surah-btn");
+
+const settingsBtn = document.getElementById("reader-settings-btn");
+
+const settingsPanel = document.querySelector(".reader-settings-panel");
+
+settingsBtn.addEventListener(
+    "click",
+    () => {
+
+        settingsPanel.classList.toggle(
+            "active"
+        );
+
+    }
+);
 
 function updateReaderModeUI() {
 
@@ -155,7 +181,7 @@ let readerMode = "both"
 let lastRead = null;
 let arabicFontSize = 3;
 let translationFontSize = 1.05;
-
+let currentReciter = "ar.alafasy"
 
 const modeBoth =
     document.getElementById("mode-both");
@@ -364,6 +390,9 @@ readBtn.addEventListener("click", async () => {
         document.getElementById("reader-meaning").textContent =
             data.data[0].englishNameTranslation;
 
+        document.getElementById("reader-meta").textContent =
+            `${arabic.length} Ayahs • ${data.data[0].revelationType}`;
+
         const bismillahContainer = document.getElementById("bismillah-container");
 
         if (selectedSurah !== 1 && selectedSurah !== 9) {
@@ -416,7 +445,7 @@ readBtn.addEventListener("click", async () => {
 
                     <button
                         class="ayah-action copy-btn"
-                        data-text="${english[index].text}">
+                        data-copy="${cleanedArabic} - ${english[index].text}">
 
                         <i data-lucide="copy"></i>
 
@@ -424,7 +453,7 @@ readBtn.addEventListener("click", async () => {
 
                     <button
                         class="ayah-action share-btn"
-                        data-text="${english[index].text}">
+                        data-share="${cleanedArabic} - ${english[index].text}">
 
                         <i data-lucide="share-2"></i>
 
@@ -437,6 +466,8 @@ readBtn.addEventListener("click", async () => {
         });
 
         container.innerHTML = html;
+
+
 
         const observer = new IntersectionObserver(
             entries => {
@@ -493,6 +524,10 @@ readBtn.addEventListener("click", async () => {
         updateReaderModeUI();
 
         readerModal.classList.add("active");
+
+        requestAnimationFrame(() => {
+            document.querySelector(".reader-content").scrollTop = 0;
+        });
 
         lucide.createIcons();
 
@@ -678,47 +713,134 @@ document
 /* ========================= INIT ========================= */
 
 loadSurahs();
+updateContinueReading();
 
+document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".copy-btn");
+    if (!btn) return;
 
+    const verseCard = btn.closest(".verse-card");
 
-/* ========================= BOOKMARKS ========================= */
+    const arabic = verseCard.querySelector(".verse-arabic")?.innerText || "";
+    const translation = verseCard.querySelector(".verse-translation")?.innerText || "";
 
-document.addEventListener("click", (e) => {
+    const text = `${arabic}\n\n${translation}`;
 
-    const bookmarkBtn = e.target.closest(".bookmark-btn");
+    try {
+        await navigator.clipboard.writeText(text);
 
-    if (!bookmarkBtn) return;
+        btn.classList.add("copied");
+        showToast("Verse copied ✓");
 
-    const surah = bookmarkBtn.dataset.surah;
-    const ayah = bookmarkBtn.dataset.ayah;
+        setTimeout(() => {
+            btn.classList.remove("copied");
+        }, 800);
 
-    const bookmarks =
-        JSON.parse(localStorage.getItem("ayahBookmarks"))
-        || [];
-
-    const exists = bookmarks.find(
-        item =>
-            item.surah == surah &&
-            item.ayah == ayah
-    );
-
-    if (!exists) {
-
-        bookmarks.push({
-            surah,
-            ayah
-        });
-
-        localStorage.setItem(
-            "ayahBookmarks",
-            JSON.stringify(bookmarks)
-        );
-
-        bookmarkBtn.classList.add("saved");
+    } catch (err) {
+        showToast("Copy failed");
     }
-
 });
 
-updateStats();
-// updateBookmarkCount();
-updateContinueReading();
+document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".share-btn");
+    if (!btn) return;
+
+    const verseCard = btn.closest(".verse-card");
+
+    const arabic = verseCard.querySelector(".verse-arabic")?.innerText || "";
+    const translation = verseCard.querySelector(".verse-translation")?.innerText || "";
+
+    const text = `${arabic}\n\n${translation}`;
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: "Qur'an Verse",
+                text
+            });
+            showToast("Shared successfully ✓");
+        } else {
+            await navigator.clipboard.writeText(text);
+            showToast("Sharing not supported — copied instead");
+        }
+    } catch (err) {
+        showToast("Share cancelled");
+    }
+});
+
+// document.addEventListener("click", async (e) => {
+
+//     const copyBtn = e.target.closest(".copy-btn");
+//     const shareBtn = e.target.closest(".share-btn");
+
+//     // If nothing clicked
+//     if (!copyBtn && !shareBtn) return;
+
+//     // ================= COPY =================
+//     if (copyBtn) {
+
+//         const card = copyBtn.closest(".verse-card");
+//         if (!card) return;
+    
+//         const arabic = card.querySelector(".verse-arabic")?.innerText?.trim();
+//         const translation = card.querySelector(".verse-translation")?.innerText?.trim();
+    
+//         const text = `${arabic}\n\n${translation}`;
+    
+//         try {
+//             await navigator.clipboard.writeText(text);
+    
+//             // ✨ animation class
+//             copyBtn.classList.add("copied");
+    
+//             // icon bounce feel
+//             copyBtn.style.transform = "scale(1.15)";
+//             setTimeout(() => {
+//                 copyBtn.style.transform = "scale(1)";
+//             }, 150);
+    
+//             showToast("Copied ✓");
+    
+//             setTimeout(() => {
+//                 copyBtn.classList.remove("copied");
+//             }, 900);
+    
+//         } catch (err) {
+//             console.error(err);
+//             showToast("Copy failed");
+//         }
+//     }
+
+//     // ================= SHARE =================
+//     if (shareBtn) {
+
+//         const card = shareBtn.closest(".verse-card");
+//         if (!card) return;
+
+//         const arabic = card.querySelector(".verse-arabic")?.innerText?.trim();
+//         const translation = card.querySelector(".verse-translation")?.innerText?.trim();
+
+//         const text = `${arabic}\n\n${translation}`;
+
+//         try {
+
+//             if (navigator.share) {
+//                 try {
+//                     await navigator.share({
+//                         title: "Quran Verse",
+//                         text
+//                     });
+//                 } catch (err) {
+//                     console.log("Share cancelled or failed", err);
+//                 }
+//             } else {
+//                 await navigator.clipboard.writeText(text);
+//                 showToast("Copied to clipboard (share not supported)");
+//             }
+//             console.log("SHARED:", text);
+
+//         } catch (err) {
+//             console.error("Share failed:", err);
+//         }
+//     }
+// });

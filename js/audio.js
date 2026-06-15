@@ -1,5 +1,3 @@
-console.log("Audio Player Loaded");
-
 const audio =
 document.getElementById("quran-audio");
 
