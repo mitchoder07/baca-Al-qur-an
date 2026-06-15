@@ -716,7 +716,7 @@
                     </div>
 
                 </div>
-                
+
                 <button id="reader-settings-btn">
 
                     <i data-lucide="settings"></i>
@@ -724,6 +724,22 @@
                     Reader Settings
 
                 </button>
+
+                <div class="reading-mode-switch">
+
+                    <button id="switch-verse-mode" class="toggle-btn active">
+
+                        Verse Mode
+
+                    </button>
+
+                    <button id="switch-mushaf-mode" class="toggle-btn">
+
+                        Mushaf Mode
+
+                    </button>
+
+                </div>
 
             </div>
 
@@ -797,8 +813,28 @@
                             Mishary Alafasy
                         </option>
 
+                        <option value="ar.abdulsamad">
+                            Abdul Basit Abdul Samad
+                        </option>
+
+                        <option value="ar.husary">
+                            Mahmoud Khalil Al-Husary
+                        </option>
+
+                        <option value="ar.husarymujawwad">
+                            Husary Mujawwad
+                        </option>
+
+                        <option value="ar.minshawi">
+                            Muhammad Siddiq Al-Minshawi
+                        </option>
+
+                        <option value="ar.shaatree">
+                            Abu Bakr Ash-Shaatree
+                        </option>
+
                         <option value="ar.abdurrahmaansudais">
-                            Abdul Rahman Al-Sudais
+                            Abdul Rahman As-Sudais
                         </option>
 
                         <option value="ar.saoodshuraym">
@@ -809,8 +845,20 @@
                             Maher Al-Muaiqly
                         </option>
 
-                        <option value="ar.husary">
-                            Mahmoud Khalil Al-Husary
+                        <option value="ar.hudhaify">
+                            Ali Al-Hudhaify
+                        </option>
+
+                        <option value="ar.ahmedajamy">
+                            Ahmed Al-Ajamy
+                        </option>
+
+                        <option value="ar.muhammadjibreel">
+                            Muhammad Jibreel
+                        </option>
+
+                        <option value="ar.muhammadayyoub">
+                            Muhammad Ayyoub
                         </option>
 
                     </select>
@@ -825,6 +873,8 @@
             <div id="reader-verses" class="reader-verses">
 
             </div>
+
+            <audio id="ayah-player" hidden></audio>
 
         </div>
 
@@ -885,8 +935,8 @@
 
     </div>
     <div class="toast" id="toast"></div>
-    <script src="js/script.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/script.js"></script>
     <script>
         lucide.createIcons();
     </script>

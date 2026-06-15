@@ -129,30 +129,6 @@ function updateContinueReading() {
 
 }
 
-// function updateBookmarkCount() {
-
-//     const bookmarks =
-//         JSON.parse(
-//             localStorage.getItem(
-//                 "ayahBookmarks"
-//             )
-//         ) || [];
-
-//     document.getElementById(
-//         "bookmark-count"
-//     ).textContent =
-//         `${bookmarks.length} Bookmarks Saved`;
-
-//     const today =
-//         new Date()
-//             .toDateString();
-
-//     localStorage.setItem(
-//         "lastReadingDay",
-//         today
-//     );
-// }
-
 function applyFontSizes() {
 
     document
@@ -181,7 +157,46 @@ let readerMode = "both"
 let lastRead = null;
 let arabicFontSize = 3;
 let translationFontSize = 1.05;
-let currentReciter = "ar.alafasy"
+let currentReciter = "ar.alafasy";
+let currentArabicAyahs = [];
+let currentEnglishAyahs = [];
+let readingMode = "verse";
+let currentMushafPage = 1;
+let mushafPages = [];
+let mushafModeActive = false;
+
+const reciterCodes = {
+
+    "ar.alafasy":
+        "ar.alafasy",
+
+    "ar.husary":
+        "ar.husary",
+
+    "ar.minshawi":
+        "ar.minshawi",
+
+    "ar.abdulbasitmurattal":
+        "ar.abdulbasitmurattal",
+
+    "ar.mahermuaiqly":
+        "ar.mahermuaiqly"
+
+};
+
+const audioPlayer =
+    document.getElementById(
+        "surah-audio"
+    );
+
+const reciterSelect =
+    document.getElementById(
+        "reciter-select"
+    );
+
+console.log(reciterSelect);
+
+const mushafPageSize = 15;
 
 const modeBoth =
     document.getElementById("mode-both");
@@ -191,6 +206,12 @@ const modeArabic =
 
 const modeTranslation =
     document.getElementById("mode-translation");
+
+const switchVerseMode =
+    document.getElementById("switch-verse-mode");
+
+const switchMushafMode =
+    document.getElementById("switch-mushaf-mode");
 
 modeBoth.addEventListener("click", () => {
     readerMode = "both";
@@ -204,7 +225,31 @@ modeArabic.addEventListener("click", () => {
 
 modeTranslation.addEventListener("click", () => {
     readerMode = "translation";
+
     updateReaderModeUI();
+});
+
+switchVerseMode.addEventListener("click", () => {
+
+    readingMode = "verse";
+
+    switchVerseMode.classList.add("active");
+    switchMushafMode.classList.remove("active");
+
+    mushafModeActive = false;
+});
+
+switchMushafMode.addEventListener("click", () => {
+
+    readingMode = "mushaf";
+
+    switchMushafMode.classList.add("active");
+    switchVerseMode.classList.remove("active");
+
+    mushafModeActive = true;
+
+    currentMushafPage = 1;
+    renderMushafPage(currentMushafPage);
 });
 
 /* ========================= FETCH SURAHS ========================= */
@@ -219,6 +264,30 @@ async function loadSurahs() {
 
     } catch (error) {
         console.error("Failed to load Surahs", error);
+    }
+}
+
+/* ========================= LOAD MUSHAF ========================= */
+
+async function loadMushafData() {
+    try {
+        const res = await fetch("https://api.alquran.cloud/v1/quran/quran-uthmani");
+        const data = await res.json();
+
+        const allAyahs = [];
+
+        data.data.surahs.forEach(surah => {
+            surah.ayahs.forEach(ayah => {
+                allAyahs.push(ayah.text);
+            });
+        });
+
+        buildMushafPages(allAyahs);
+
+        console.log("Mushaf loaded:", mushafPages.length, "pages");
+
+    } catch (err) {
+        console.error("Mushaf load failed", err);
     }
 }
 
@@ -265,6 +334,23 @@ function renderSurahs(data) {
 
     activateFavorites();
     activateCards();
+}
+
+/* ======== Load Audio ============*/
+
+function loadSurahAudio() {
+
+    if (!selectedSurah) return;
+
+    const audioUrl =
+        `https://cdn.islamic.network/quran/audio-surah/128/${currentReciter}/${selectedSurah}.mp3`;
+
+    console.log(audioUrl);
+
+    audioPlayer.src = audioUrl;
+
+    audioPlayer.load();
+
 }
 
 /* ========================= SEARCH ========================= */
@@ -354,13 +440,64 @@ function cleanAyah(text, surahNumber, ayahNumber) {
         // SAFER fallback removal (works even if text varies)
         const words = text.split(" ");
 
-        // If Bismillah is present at start, remove first ~6–7 words
         if (words.slice(0, 4).join(" ").includes("بِسْمِ")) {
             return words.slice(4).join(" ").trim();
         }
     }
 
     return text;
+}
+
+function buildMushafPages(allAyahsFlat) {
+    const pages = [];
+    const PAGE_SIZE = 12; // controls how dense each page is
+
+    for (let i = 0; i < allAyahsFlat.length; i += PAGE_SIZE) {
+        pages.push({
+            page: pages.length + 1,
+            lines: allAyahsFlat.slice(i, i + PAGE_SIZE)
+        });
+    }
+
+    mushafPages = pages;
+}
+
+/* ========================= MUSHAF PAGE RENDERING ========================= */
+
+function renderMushafPage(pageNumber) {
+    const page = mushafPages[pageNumber - 1];
+    if (!page) return;
+
+    const container = document.getElementById("reader-verses");
+
+    container.innerHTML = `
+        <div class="mushaf-page-header">
+            Page ${page.page} / ${mushafPages.length}
+        </div>
+
+        <div class="mushaf-content">
+            ${page.lines.map(line => `
+                <div class="mushaf-line">${line}</div>
+            `).join("")}
+        </div>
+    `;
+
+    document.getElementById("page-indicator").textContent =
+        `Page ${page.page} / ${mushafPages.length}`;
+}
+
+function nextMushafPage() {
+    if (currentMushafPage < mushafPages.length) {
+        currentMushafPage++;
+        renderMushafPage(currentMushafPage);
+    }
+}
+
+function prevMushafPage() {
+    if (currentMushafPage > 1) {
+        currentMushafPage--;
+        renderMushafPage(currentMushafPage);
+    }
 }
 
 /* ========================= READ SURAH ========================= */
@@ -370,13 +507,13 @@ readBtn.addEventListener("click", async () => {
 
     try {
         const response = await fetch(
-            `https://api.alquran.cloud/v1/surah/${selectedSurah}/editions/quran-uthmani,en.asad`
+            `https://api.alquran.cloud/v1/surah/${selectedSurah}/editions/quran-uthmani,en.sahih`
         );
 
         const data = await response.json();
 
-        const arabic = data.data[0].ayahs;
-        const english = data.data[1].ayahs;
+        const arabicAyahs = data.data[0].ayahs;
+        const englishAyahs = data.data[1].ayahs;
 
         const container = document.getElementById("reader-verses");
         container.innerHTML = "";
@@ -391,7 +528,7 @@ readBtn.addEventListener("click", async () => {
             data.data[0].englishNameTranslation;
 
         document.getElementById("reader-meta").textContent =
-            `${arabic.length} Ayahs • ${data.data[0].revelationType}`;
+            `${arabicAyahs.length} Ayahs • ${data.data[0].revelationType}`;
 
         const bismillahContainer = document.getElementById("bismillah-container");
 
@@ -407,7 +544,7 @@ readBtn.addEventListener("click", async () => {
 
         let html = "";
 
-        arabic.forEach((ayah, index) => {
+        arabicAyahs.forEach((ayah, index) => {
 
             const cleanedArabic = cleanAyah(
                 ayah.text,
@@ -429,23 +566,23 @@ readBtn.addEventListener("click", async () => {
                 </div>
 
                 <div class="verse-translation">
-                    ${english[index].text}
+                    ${englishAyahs[index].text}
                 </div>
 
                 <div class="verse-actions">
 
                     <button
-                        class="ayah-action bookmark-btn"
+                        class="ayah-action play-btn"
                         data-surah="${selectedSurah}"
                         data-ayah="${ayah.numberInSurah}">
 
-                        <i data-lucide="bookmark"></i>
+                        <i data-lucide="play"></i>
 
                     </button>
 
                     <button
                         class="ayah-action copy-btn"
-                        data-copy="${cleanedArabic} - ${english[index].text}">
+                        data-copy="${cleanedArabic} - ${englishAyahs[index].text}">
 
                         <i data-lucide="copy"></i>
 
@@ -453,7 +590,7 @@ readBtn.addEventListener("click", async () => {
 
                     <button
                         class="ayah-action share-btn"
-                        data-share="${cleanedArabic} - ${english[index].text}">
+                        data-share="${cleanedArabic} - ${englishAyahs[index].text}">
 
                         <i data-lucide="share-2"></i>
 
@@ -497,7 +634,7 @@ readBtn.addEventListener("click", async () => {
                                     data.data[0].name,
 
                                 totalAyahs:
-                                    arabic.length,
+                                    arabicAyahs.length,
 
                                 ayah
 
@@ -522,8 +659,10 @@ readBtn.addEventListener("click", async () => {
 
         applyFontSizes();
         updateReaderModeUI();
+        loadSurahAudio();
 
         readerModal.classList.add("active");
+        document.body.style.overflow = "hidden";
 
         requestAnimationFrame(() => {
             document.querySelector(".reader-content").scrollTop = 0;
@@ -538,40 +677,13 @@ readBtn.addEventListener("click", async () => {
 
 /* =========================== Theme Switcher ========================== */
 
-const readerContent =
-    document.querySelector(".reader-content");
 
-document
-    .querySelectorAll(".theme-option")
-    .forEach(btn => {
-
-        btn.addEventListener("click", () => {
-
-            document
-                .querySelectorAll(".theme-option")
-                .forEach(item =>
-                    item.classList.remove("active")
-                );
-
-            btn.classList.add("active");
-
-            readerContent.classList.remove(
-                "dark-theme",
-                "gold-theme",
-                "sepia-theme"
-            );
-
-            readerContent.classList.add(
-                btn.dataset.theme + "-theme"
-            );
-        });
-
-    });
 
 /* ========================= READER CLOSE ========================= */
 
 readerClose.addEventListener("click", () => {
     readerModal.classList.remove("active");
+    document.body.style.overflow = "auto";
 });
 
 document
@@ -623,6 +735,7 @@ document
 document.querySelector(".reader-overlay")
     .addEventListener("click", () => {
         readerModal.classList.remove("active");
+        document.body.style.overflow = "auto";
     });
 
 /* ================= READER THEMES ================= */
@@ -710,10 +823,90 @@ document
 
     });
 
+/* ================= PLAY AYAH ================= */
+
+document.addEventListener(
+    "click",
+    async (e) => {
+
+        const playBtn =
+            e.target.closest(".play-btn");
+
+        if (!playBtn) return;
+
+        const surah =
+            playBtn.dataset.surah;
+
+        const ayah =
+            playBtn.dataset.ayah;
+
+        const player =
+            document.getElementById(
+                "ayah-player"
+            );
+
+        try {
+
+            const response =
+                await fetch(
+                    `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/${currentReciter}`
+                );
+
+            const data =
+                await response.json();
+
+            player.src =
+                data.data.audio;
+
+            player.play();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Audio Error:",
+                error
+            );
+
+        }
+
+    }
+);
+
 /* ========================= INIT ========================= */
 
 loadSurahs();
 updateContinueReading();
+loadMushafData();
+
+/* ===================== RECITER SWITCH ============================= */
+
+document.addEventListener(
+    "change",
+    (e) => {
+
+        if (
+            e.target.id ===
+            "reciter-select"
+        ) {
+
+            currentReciter =
+                e.target.value;
+
+            console.log(
+                "Reciter:",
+                currentReciter
+            );
+
+            loadSurahAudio();
+
+        }
+
+    }
+);
+
+/* ===================== COPY ============================= */
 
 document.addEventListener("click", async (e) => {
     const btn = e.target.closest(".copy-btn");
@@ -740,6 +933,8 @@ document.addEventListener("click", async (e) => {
         showToast("Copy failed");
     }
 });
+
+/* ===================== SHARE ============================= */
 
 document.addEventListener("click", async (e) => {
     const btn = e.target.closest(".share-btn");
@@ -768,79 +963,3 @@ document.addEventListener("click", async (e) => {
     }
 });
 
-// document.addEventListener("click", async (e) => {
-
-//     const copyBtn = e.target.closest(".copy-btn");
-//     const shareBtn = e.target.closest(".share-btn");
-
-//     // If nothing clicked
-//     if (!copyBtn && !shareBtn) return;
-
-//     // ================= COPY =================
-//     if (copyBtn) {
-
-//         const card = copyBtn.closest(".verse-card");
-//         if (!card) return;
-    
-//         const arabic = card.querySelector(".verse-arabic")?.innerText?.trim();
-//         const translation = card.querySelector(".verse-translation")?.innerText?.trim();
-    
-//         const text = `${arabic}\n\n${translation}`;
-    
-//         try {
-//             await navigator.clipboard.writeText(text);
-    
-//             // ✨ animation class
-//             copyBtn.classList.add("copied");
-    
-//             // icon bounce feel
-//             copyBtn.style.transform = "scale(1.15)";
-//             setTimeout(() => {
-//                 copyBtn.style.transform = "scale(1)";
-//             }, 150);
-    
-//             showToast("Copied ✓");
-    
-//             setTimeout(() => {
-//                 copyBtn.classList.remove("copied");
-//             }, 900);
-    
-//         } catch (err) {
-//             console.error(err);
-//             showToast("Copy failed");
-//         }
-//     }
-
-//     // ================= SHARE =================
-//     if (shareBtn) {
-
-//         const card = shareBtn.closest(".verse-card");
-//         if (!card) return;
-
-//         const arabic = card.querySelector(".verse-arabic")?.innerText?.trim();
-//         const translation = card.querySelector(".verse-translation")?.innerText?.trim();
-
-//         const text = `${arabic}\n\n${translation}`;
-
-//         try {
-
-//             if (navigator.share) {
-//                 try {
-//                     await navigator.share({
-//                         title: "Quran Verse",
-//                         text
-//                     });
-//                 } catch (err) {
-//                     console.log("Share cancelled or failed", err);
-//                 }
-//             } else {
-//                 await navigator.clipboard.writeText(text);
-//                 showToast("Copied to clipboard (share not supported)");
-//             }
-//             console.log("SHARED:", text);
-
-//         } catch (err) {
-//             console.error("Share failed:", err);
-//         }
-//     }
-// });

@@ -27,7 +27,8 @@ body {
   font-family: "Poppins", sans-serif;
   background: var(--dark);
   color: var(--white);
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
+  overflow: auto;
 }
 
 .bg-glow {
@@ -896,6 +897,7 @@ body {
 .reader-modal.active {
   display: flex;
   animation: fadeInModal 0.25s ease;
+  overflow: hidden;
 }
 
 .reader-modal.active .reader-content {
@@ -1219,11 +1221,36 @@ body {
   margin-top: 1.5rem;
 }
 
+.reading-mode-switch {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
 .reader-controls {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.mushaf-content {
+  font-family: "Amiri", serif;
+  text-align: center;
+  direction: rtl;
+  font-size: 2rem;
+  line-height: 2.5;
+}
+
+.mushaf-line {
+  margin: 12px 0;
+}
+
+.mushaf-page-header {
+  text-align: center;
+  color: #10b981;
+  margin-bottom: 1rem;
 }
 
 .reader-theme-picker {
