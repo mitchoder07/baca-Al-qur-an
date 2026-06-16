@@ -28,8 +28,8 @@ document.getElementById("mute-btn");
 const volumeSlider =
 document.getElementById("volume-slider");
 
-const speedBtn =
-document.getElementById("speed-btn");
+const speedBton =
+document.getElementById("speed-bton");
 
 audio.src =
 "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
@@ -132,7 +132,7 @@ const speeds =
 
 let speedIndex = 0;
 
-speedBtn.addEventListener("click", () => {
+speedBton.addEventListener("click", () => {
 
     speedIndex++;
 
@@ -144,7 +144,7 @@ speedBtn.addEventListener("click", () => {
     audio.playbackRate =
     speeds[speedIndex];
 
-    speedBtn.textContent =
+    speedBton.textContent =
     speeds[speedIndex] + "x";
 });
 

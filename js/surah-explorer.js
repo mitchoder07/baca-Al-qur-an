@@ -19,20 +19,20 @@ const surahModal = document.querySelector(".surah-modal");
 const modalClose = document.querySelector(".surah-modal-close");
 const readBtn = document.getElementById("read-surah-btn");
 
-const settingsBtn = document.getElementById("reader-settings-btn");
+// const settingsBtn = document.getElementById("reader-settings-btn");
 
-const settingsPanel = document.querySelector(".reader-settings-panel");
+// const settingsPanel = document.querySelector(".reader-settings-panel");
 
-settingsBtn.addEventListener(
-    "click",
-    () => {
+// settingsBtn.addEventListener(
+//     "click",
+//     () => {
 
-        settingsPanel.classList.toggle(
-            "active"
-        );
+//         settingsPanel.classList.toggle(
+//             "active"
+//         );
 
-    }
-);
+//     }
+// );
 
 function updateReaderModeUI() {
 
@@ -159,24 +159,6 @@ let arabicFontSize = 3;
 let translationFontSize = 1.05;
 let currentReciter = "ar.alafasy";
 
-const reciterCodes = {
-
-    "ar.alafasy":
-        "ar.alafasy",
-
-    "ar.husary":
-        "ar.husary",
-
-    "ar.minshawi":
-        "ar.minshawi",
-
-    "ar.abdulbasitmurattal":
-        "ar.abdulbasitmurattal",
-
-    "ar.mahermuaiqly":
-        "ar.mahermuaiqly"
-
-};
 
 const audioPlayer =
     document.getElementById(
@@ -762,6 +744,143 @@ document.addEventListener(
 
     }
 );
+
+// ========================= Reader Settings Btn =============================
+
+document
+    .getElementById(
+        "reader-settings-btn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "settings-drawer"
+                )
+                .classList.toggle(
+                    "active"
+                );
+
+        }
+    );
+
+document
+    .getElementById(
+        "reader-audio-btn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "audio-drawer"
+                )
+                .classList.toggle(
+                    "active"
+                );
+
+        }
+    );
+
+const favBtn =
+    document.getElementById(
+        "favorite-reciter"
+    );
+
+favBtn?.addEventListener(
+    "click",
+    () => {
+
+        localStorage.setItem(
+            "favoriteReciter",
+            currentReciter
+        );
+
+        favBtn.textContent =
+            "💚";
+
+    }
+);
+
+const speedBtn =
+    document.getElementById(
+        "speed-btn"
+    );
+
+let playbackRate = 1;
+
+speedBtn?.addEventListener(
+    "click",
+    () => {
+
+        const audio =
+            document.getElementById(
+                "surah-audio"
+            );
+
+        playbackRate += 0.25;
+
+        if (
+            playbackRate > 2
+        ) {
+
+            playbackRate = 1;
+
+        }
+
+        audio.playbackRate =
+            playbackRate;
+
+        speedBtn.textContent =
+            `⚡ ${playbackRate}x`;
+
+    }
+);
+
+document
+    .getElementById(
+        "next-surah-audio"
+    )
+    ?.addEventListener(
+        "click",
+        () => {
+
+            if (
+                selectedSurah < 114
+            ) {
+
+                selectedSurah++;
+
+                readBtn.click();
+
+            }
+
+        }
+    );
+
+document
+    .getElementById(
+        "prev-surah-audio"
+    )
+    ?.addEventListener(
+        "click",
+        () => {
+
+            if (
+                selectedSurah > 1
+            ) {
+
+                selectedSurah--;
+
+                readBtn.click();
+
+            }
+
+        }
+    );
 
 /* ========================= INIT ========================= */
 

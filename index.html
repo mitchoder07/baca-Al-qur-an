@@ -258,7 +258,7 @@
 
                 </div>
 
-                <button id="speed-btn" class="audio-small-btn">
+                <button id="speed-bton" class="audio-small-btn">
 
                     1x
 
@@ -717,51 +717,57 @@
 
                 </div>
 
-                <button id="reader-settings-btn">
+                <div class="reader-toolbar">
 
-                    <i data-lucide="settings"></i>
+                    <button id="reader-settings-btn" class="reader-tool-btn">
 
-                    Reader Settings
+                        <i data-lucide="settings"></i>
+                        Settings
 
-                </button>
+                    </button>
+
+                    <button id="reader-audio-btn" class="reader-tool-btn">
+
+                        <i data-lucide="headphones"></i>
+                        Audio
+
+                    </button>
+
+                </div>
 
             </div>
 
-            <div class="reader-settings-panel">
+            <div class="settings-drawer" id="settings-drawer">
 
-                <div class="settings-group">
+                <h4>Reader Settings</h4>
 
-                    <h4>Reading Mode</h4>
+                <div class="setting-group">
 
-                    <div class="reader-toggle">
+                    <label>Reading Mode</label>
+
+                    <div class="drawer-buttons">
 
                         <button id="mode-both" class="toggle-btn active">
-
-                            Arabic + Translation
-
+                            Both
                         </button>
 
                         <button id="mode-arabic" class="toggle-btn">
-
-                            Arabic Only
-
+                            Arabic
                         </button>
 
                         <button id="mode-translation" class="toggle-btn">
-
-                            Translation Only
-
+                            Translation
                         </button>
 
                     </div>
 
                 </div>
 
-                <div class="settings-group">
+                <div class="setting-group">
 
-                    <h4>Font Size</h4>
+                    <label>Text Size</label>
 
-                    <div class="font-controls">
+                    <div class="drawer-buttons">
 
                         <button id="font-decrease">
                             A-
@@ -785,72 +791,113 @@
 
             </div>
 
-            <div class="reader-audio-card">
+            <div class="reader-audio-card" id="audio-drawer">
 
-                <div class="audio-top">
+                <div class="audio-header">
 
-                    <h4>Listen To This Surah</h4>
+                    <div>
 
-                    <select id="reciter-select">
+                        <h4>
+                            🎧 Listen To This Surah
+                        </h4>
 
-                        <option value="ar.alafasy">
+                        <span id="current-reciter-badge">
+
                             Mishary Alafasy
-                        </option>
 
-                        <option value="ar.abdulsamad">
-                            Abdul Basit Abdul Samad
-                        </option>
+                        </span>
 
-                        <option value="ar.husary">
-                            Mahmoud Khalil Al-Husary
-                        </option>
+                    </div>
 
-                        <option value="ar.husarymujawwad">
-                            Husary Mujawwad
-                        </option>
+                    <button id="favorite-reciter">
 
-                        <option value="ar.minshawi">
-                            Muhammad Siddiq Al-Minshawi
-                        </option>
+                        ❤️
 
-                        <option value="ar.shaatree">
-                            Abu Bakr Ash-Shaatree
-                        </option>
-
-                        <option value="ar.abdurrahmaansudais">
-                            Abdul Rahman As-Sudais
-                        </option>
-
-                        <option value="ar.saoodshuraym">
-                            Saud Al-Shuraim
-                        </option>
-
-                        <option value="ar.mahermuaiqly">
-                            Maher Al-Muaiqly
-                        </option>
-
-                        <option value="ar.hudhaify">
-                            Ali Al-Hudhaify
-                        </option>
-
-                        <option value="ar.ahmedajamy">
-                            Ahmed Al-Ajamy
-                        </option>
-
-                        <option value="ar.muhammadjibreel">
-                            Muhammad Jibreel
-                        </option>
-
-                        <option value="ar.muhammadayyoub">
-                            Muhammad Ayyoub
-                        </option>
-
-                    </select>
+                    </button>
 
                 </div>
 
-                <audio id="surah-audio" controls preload="metadata">
+                <select id="reciter-select">
+
+                    <option value="ar.alafasy">
+                        Mishary Alafasy
+                    </option>
+
+                    <option value="ar.abdulsamad">
+                        Abdul Basit Abdul Samad
+                    </option>
+
+                    <option value="ar.husary">
+                        Mahmoud Khalil Al-Husary
+                    </option>
+
+                    <option value="ar.husarymujawwad">
+                        Husary Mujawwad
+                    </option>
+
+                    <option value="ar.minshawi">
+                        Muhammad Siddiq Al-Minshawi
+                    </option>
+
+                    <option value="ar.shaatree">
+                        Abu Bakr Ash-Shaatree
+                    </option>
+
+                    <option value="ar.abdurrahmaansudais">
+                        Abdul Rahman As-Sudais
+                    </option>
+
+                    <option value="ar.saoodshuraym">
+                        Saud Al-Shuraim
+                    </option>
+
+                    <option value="ar.mahermuaiqly">
+                        Maher Al-Muaiqly
+                    </option>
+
+                    <option value="ar.hudhaify">
+                        Ali Al-Hudhaify
+                    </option>
+
+                    <option value="ar.ahmedajamy">
+                        Ahmed Al-Ajamy
+                    </option>
+
+                    <option value="ar.muhammadjibreel">
+                        Muhammad Jibreel
+                    </option>
+
+                    <option value="ar.muhammadayyoub">
+                        Muhammad Ayyoub
+                    </option>
+
+                </select>
+
+                <audio id="surah-audio" controls>
+
                 </audio>
+
+                <div class="audio-actions">
+
+                    <button id="prev-surah-audio">
+
+                        ⏮ Previous
+
+                    </button>
+
+                    <button id="speed-btn">
+
+                        1x
+
+                    </button>
+
+                    <button id="next-surah-audio">
+
+                        Next ⏭
+
+                    </button>
+
+                </div>
 
             </div>
 
