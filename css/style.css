@@ -27,7 +27,6 @@ body {
   font-family: "Poppins", sans-serif;
   background: var(--dark);
   color: var(--white);
-  /* overflow-x: hidden; */
   overflow: auto;
 }
 
@@ -1434,6 +1433,116 @@ body {
   font-size: 0.9rem;
 }
 
+.custom-player {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 0 3rem 0;
+}
+
+#audio-play-bton {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#audio-play-bton svg {
+  width: 24px;
+  height: 24px;
+}
+
+.player-info {
+  flex: 1;
+  padding-right: 1.5rem;
+}
+
+.player-time {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  color: #cbd5e1;
+}
+
+#audio-progress2 {
+  margin-bottom: 2rem;
+  width: 100%;
+  accent-color: #10b981;
+}
+
+.floating-player {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(95%, 500px);
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 14px 18px;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 9999;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.floating-player.active {
+  display: flex;
+}
+
+.floating-info {
+  min-width: 0;
+}
+
+#floating-surah {
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+#floating-ayah {
+  color: #94a3b8;
+  font-size: 0.82rem;
+}
+
+.floating-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.floating-controls button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #1e293b;
+  color: white;
+  transition: 0.25s;
+}
+
+.floating-controls button:hover {
+  background: #10b981;
+  transform: translateY(-2px);
+}
+
+#mini-play {
+  width: 52px;
+  height: 52px;
+  font-size: 1.15rem;
+  background: #10b981;
+}
+
 /* Search Modal */
 
 .search-modal {
@@ -1656,15 +1765,12 @@ body {
   .verse-arabic {
     font-size: 2.2rem;
   }
-
-
-
 }
 
 @media (max-width: 540px) {
   .bismillah-header::before,
   .bismillah-header::after {
-    /* display: none; */
-    width: 10%;
+    display: none;
+    /* width: 10%; */
   }
 }

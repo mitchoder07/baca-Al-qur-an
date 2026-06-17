@@ -946,8 +946,35 @@
 
                 </select>
 
-                <audio id="surah-audio" controls>
-                </audio>
+                <div class="custom-player">
+
+                    <button id="audio-play-bton">
+
+                        <i data-lucide="play"></i>
+
+                    </button>
+
+                    <div class="player-info">
+
+                        <div class="player-time">
+
+                            <span id="current-time2">
+                                0:00
+                            </span>
+
+                            <span id="duration-time">
+                                0:00
+                            </span>
+
+                        </div>
+
+                        <input type="range" id="audio-progress2" min="0" value="0">
+
+                    </div>
+
+                </div>
+
+                <audio id="surah-audio"></audio>
 
                 <div class="audio-actions">
 
@@ -978,6 +1005,39 @@
             </div>
 
             <audio id="ayah-player" hidden></audio>
+
+        </div>
+
+        <!-- ============== Mini Player ====================== -->
+        <div class="floating-player" id="floating-player">
+
+            <div class="floating-info">
+
+                <div id="floating-surah">
+                    Al-Fatihah
+                </div>
+
+                <div id="floating-ayah">
+                    Ayah 1
+                </div>
+
+            </div>
+
+            <div class="floating-controls">
+
+                <button id="mini-prev">
+                    ⏮️
+                </button>
+
+                <button id="mini-play">
+                    ▶️
+                </button>
+
+                <button id="mini-next">
+                    ⏭️
+                </button>
+
+            </div>
 
         </div>
 
