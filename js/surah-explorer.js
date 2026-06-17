@@ -933,29 +933,26 @@ updateContinueReading();
 
 /* ===================== RECITER SWITCH ============================= */
 
-document.addEventListener(
-    "change",
-    (e) => {
+document.addEventListener("change", (e) => {
 
-        if (
-            e.target.id ===
-            "reciter-select2"
-        ) {
+    if (e.target.id === "reciter-select2") {
 
-            currentReciter =
-                e.target.value;
+        currentReciter = e.target.value;
 
-            console.log(
-                "Reciter:",
-                currentReciter
-            );
+        const selectedName =
+            e.target.options[
+                e.target.selectedIndex
+            ].text;
 
-            loadSurahAudio();
+        document.getElementById(
+            "current-reciter-badge"
+        ).textContent = selectedName;
 
-        }
+        loadSurahAudio();
 
     }
-);
+
+});
 
 /* ===================== COPY ============================= */
 

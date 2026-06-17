@@ -144,10 +144,6 @@
 
             <div class="ayah-actions">
 
-                <!-- <button>
-                    <i data-lucide="play"></i>
-                </button> -->
-
                 <button>
                     <i data-lucide="bookmark"></i>
                 </button>
@@ -789,7 +785,27 @@
 
             <div class="settings-drawer" id="settings-drawer">
 
-                <h4>Reader Settings</h4>
+                <div class="drawer-header">
+
+                    <div class="drawer-icon">
+
+                        <i data-lucide="sliders-horizontal"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Reader Preferences
+                        </h4>
+
+                        <span>
+                            Customize your reading experience
+                        </span>
+
+                    </div>
+
+                </div>
 
                 <div class="setting-group">
 
@@ -842,26 +858,33 @@
             </div>
 
             <div class="reader-audio-card" id="audio-drawer">
+                <div class="audio-top2">
 
-                <div class="audio-header">
+                    <div class="audio-reciter-info">
 
-                    <div>
+                        <div class="audio-icon">
 
-                        <h4>
-                            🎧 Listen To This Surah
-                        </h4>
+                            <i data-lucide="headphones"></i>
 
-                        <span id="current-reciter-badge">
+                        </div>
 
-                            Mishary Alafasy
+                        <div>
 
-                        </span>
+                            <h4 class="audio-title">
+                                Audio Player
+                            </h4>
+
+                            <span id="current-reciter-badge">
+                                Mishary Alafasy
+                            </span>
+
+                        </div>
 
                     </div>
 
                     <button id="favorite-reciter">
 
-                        ❤️
+                        <i data-lucide="heart"></i>
 
                     </button>
 
@@ -925,22 +948,6 @@
 
                 <audio id="surah-audio" controls>
                 </audio>
-
-                <!-- <div class="audio-status">
-
-                    <span id="audio-reciter-name">
-
-                        Mishary Alafasy
-
-                    </span>
-
-                    <span id="audio-speed">
-
-                        1x Speed
-
-                    </span>
-
-                </div> -->
 
                 <div class="audio-actions">
 
