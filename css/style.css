@@ -274,7 +274,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
   padding: 2rem;
-  backdrop-filter: blur(20px);
 }
 
 .audio-top {
@@ -914,19 +913,6 @@ body {
   }
 }
 
-/* .reader-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 4000;
-}
-
-.reader-modal.active {
-  display: flex;
-} */
-
 .reader-overlay {
   position: absolute;
   inset: 0;
@@ -934,18 +920,6 @@ body {
   backdrop-filter: blur(10px);
   pointer-events: none;
 }
-
-/* .reader-content {
-  position: relative;
-  z-index: 2;
-  width: 95%;
-  max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: linear-gradient(180deg, #0f172a, #111827);
-  border-radius: 30px;
-  padding: 2rem;
-} */
 
 .reader-content {
   position: relative;
@@ -1242,11 +1216,12 @@ body {
 
 .settings-drawer {
   display: none;
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
   padding: 1.5rem;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
 .settings-drawer.active {
@@ -1260,8 +1235,11 @@ body {
 
 .setting-group label {
   display: block;
-  margin-bottom: 0.8rem;
-  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .drawer-buttons {
@@ -1273,15 +1251,28 @@ body {
 .drawer-buttons button {
   border: none;
   cursor: pointer;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0.9rem 1.2rem;
+  border-radius: 14px;
+  background: #1e293b;
   color: white;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.drawer-buttons button:hover {
+  background: #10b981;
+  transform: translateY(-2px);
 }
 
 .reader-audio-card {
   display: none;
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
+  margin-bottom: 2.2rem;
+  background: linear-gradient(135deg, #111827, #1e293b);
+  border-radius: 24px;
+  padding: 1.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
 .reader-audio-card.active {
@@ -1305,7 +1296,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1.5rem;
 }
 
 #current-reciter-badge {
@@ -1319,21 +1312,30 @@ body {
 }
 
 #favorite-reciter {
+  width: 50px;
+  height: 50px;
   border: none;
-  background: none;
-  font-size: 1.4rem;
+  border-radius: 50%;
+  background: #1e293b;
+  color: white;
   cursor: pointer;
+  transition: 0.25s;
+}
+
+#favorite-reciter:hover {
+  background: #ef4444;
+  transform: scale(1.08);
 }
 
 .audio-actions {
   display: flex;
   gap: 0.8rem;
   justify-content: center;
-  margin-top: 1rem;
   flex-wrap: wrap;
+  margin-top: 1.3rem;
 }
 
-.audio-actions button {
+/* .audio-actions button {
   border: none;
   padding: 0.8rem 1rem;
   border-radius: 12px;
@@ -1341,11 +1343,50 @@ body {
   background: rgba(255, 255, 255, 0.05);
   color: white;
   transition: 0.25s;
+  min-width: 120px;
+} */
+
+.audio-actions button {
+  border: none;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  background: #1e293b;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
 }
 
 .audio-actions button:hover {
   transform: translateY(-2px);
   background: rgba(16, 185, 129, 0.15);
+}
+
+#reciter-select2 {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: .9rem;
+  background: #1f2937;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+#reciter-select2 option {
+  color: var(--white);
+}
+
+#surah-audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.audio-status {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
 }
 
 /* Search Modal */

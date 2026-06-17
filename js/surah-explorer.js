@@ -19,21 +19,6 @@ const surahModal = document.querySelector(".surah-modal");
 const modalClose = document.querySelector(".surah-modal-close");
 const readBtn = document.getElementById("read-surah-btn");
 
-// const settingsBtn = document.getElementById("reader-settings-btn");
-
-// const settingsPanel = document.querySelector(".reader-settings-panel");
-
-// settingsBtn.addEventListener(
-//     "click",
-//     () => {
-
-//         settingsPanel.classList.toggle(
-//             "active"
-//         );
-
-//     }
-// );
-
 function updateReaderModeUI() {
 
     const arabicEls =
@@ -158,7 +143,7 @@ let lastRead = null;
 let arabicFontSize = 3;
 let translationFontSize = 1.05;
 let currentReciter = "ar.alafasy";
-
+let activePlayButton = null;
 
 const audioPlayer =
     document.getElementById(
@@ -705,16 +690,49 @@ document.addEventListener(
 
         if (!playBtn) return;
 
+        const player =
+            document.getElementById(
+                "ayah-player"
+            );
+
+        const surahAudio =
+            document.getElementById(
+                "surah-audio"
+            );
+
+        if (
+            activePlayButton === playBtn &&
+            !player.paused
+        ) {
+
+            player.pause();
+
+            playBtn.innerHTML =
+                `<i data-lucide="play"></i>`;
+
+            lucide.createIcons();
+
+            return;
+        }
+
+        if (activePlayButton) {
+
+            activePlayButton.innerHTML =
+                `<i data-lucide="play"></i>`;
+
+        }
+
+        if (surahAudio) {
+
+            surahAudio.pause();
+
+        }
+
         const surah =
             playBtn.dataset.surah;
 
         const ayah =
             playBtn.dataset.ayah;
-
-        const player =
-            document.getElementById(
-                "ayah-player"
-            );
 
         try {
 
@@ -731,59 +749,85 @@ document.addEventListener(
 
             player.play();
 
+            activePlayButton =
+                playBtn;
+
+            playBtn.innerHTML =
+                `<i data-lucide="pause"></i>`;
+
+            lucide.createIcons();
+
+            player.onended =
+                () => {
+
+                    playBtn.innerHTML =
+                        `<i data-lucide="play"></i>`;
+
+                    lucide.createIcons();
+
+                };
+
         }
 
         catch (error) {
 
-            console.error(
-                "Audio Error:",
-                error
-            );
+            console.error(error);
 
         }
 
     }
 );
-
 // ========================= Reader Settings Btn =============================
 
-document
-    .getElementById(
+const settingsBtn =
+    document.getElementById(
         "reader-settings-btn"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            document
-                .getElementById(
-                    "settings-drawer"
-                )
-                .classList.toggle(
-                    "active"
-                );
-
-        }
     );
 
-document
-    .getElementById(
+const audioBtn =
+    document.getElementById(
         "reader-audio-btn"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            document
-                .getElementById(
-                    "audio-drawer"
-                )
-                .classList.toggle(
-                    "active"
-                );
-
-        }
     );
+
+const settingsDrawer =
+    document.getElementById(
+        "settings-drawer"
+    );
+
+const audioDrawer =
+    document.getElementById(
+        "audio-drawer"
+    );
+
+settingsBtn.addEventListener(
+    "click",
+    () => {
+
+        audioDrawer.classList.remove(
+            "active"
+        );
+
+        settingsDrawer.classList.toggle(
+            "active"
+        );
+
+    }
+);
+
+audioBtn.addEventListener(
+    "click",
+    () => {
+
+        settingsDrawer.classList.remove(
+            "active"
+        );
+
+        audioDrawer.classList.toggle(
+            "active"
+        );
+
+    }
+);
 
 const favBtn =
     document.getElementById(
@@ -895,7 +939,7 @@ document.addEventListener(
 
         if (
             e.target.id ===
-            "reciter-select"
+            "reciter-select2"
         ) {
 
             currentReciter =
