@@ -46,7 +46,7 @@ const quranAudio     = document.getElementById("quran-audio");
 // ============================================================
 
 let allSurahs           = [];
-let activeFilter        = "all";  // "all" | "juz-N" | "hizb-N" | "makkah" | "madinah"
+let activeFilter        = "all";
 let selectedSurah       = null;
 let readerMode          = "both";
 let arabicFontSize      = 3;
@@ -57,10 +57,69 @@ let currentAyahPlaying  = 1;
 let totalAyahsInSurah   = 0;
 let activeAudioMode     = "surah";
 let repeatMode          = "off";
+let siteTheme           = "dark";   // "dark" | "light"
+let readerThemeKey      = "dark";   // "dark" | "warm" | "sepia" | "light"
 
-// Built from /v1/meta
-window._juzSurahMap  = {};   // juzNumber  (1-30)  → Set of surahNumbers
-window._hizbSurahMap = {};   // hizbNumber (1-60)  → Set of surahNumbers
+// surahNumber → juzNumber (built from API)
+window._surahJuzMap  = {};   // surahNum → juzNum (1-30)
+window._surahHizbMap = {};   // surahNum → hizbNum (1-60, first hizb it appears in)
+window._juzSurahMap  = {};   // juzNum  → Set of surahNums
+window._hizbSurahMap = {};   // hizbNum → Set of surahNums
+
+// ============================================================
+// READER THEMES
+// ============================================================
+
+const readerThemes = {
+    dark: {
+        bg:          "linear-gradient(180deg, #0f172a, #111827)",
+        contentBg:   "#0f172a",
+        card:        "rgba(255,255,255,0.04)",
+        cardBorder:  "rgba(255,255,255,0.08)",
+        text:        "#ffffff",
+        subtext:     "#cbd5e1",
+        arabic:      "#ffffff",
+        number:      "linear-gradient(135deg,#34d399,#10b981)",
+        numberText:  "#111827",
+        bismillah:   "var(--primary)",
+    },
+    warm: {
+        bg:          "linear-gradient(180deg,#1a1208,#231a0c)",
+        contentBg:   "#1a1208",
+        card:        "rgba(255,220,120,0.04)",
+        cardBorder:  "rgba(255,200,80,0.1)",
+        text:        "#f5e6c8",
+        subtext:     "#c4a97a",
+        arabic:      "#f5e6c8",
+        number:      "linear-gradient(135deg,#d4a94e,#b8892c)",
+        numberText:  "#1a1208",
+        bismillah:   "#d4a94e",
+    },
+    sepia: {
+        bg:          "linear-gradient(180deg,#2d1f0e,#3d2a14)",
+        contentBg:   "#2d1f0e",
+        card:        "rgba(255,210,140,0.06)",
+        cardBorder:  "rgba(200,150,80,0.15)",
+        text:        "#ede0c8",
+        subtext:     "#b89a6f",
+        arabic:      "#ede0c8",
+        number:      "linear-gradient(135deg,#c49a45,#a07830)",
+        numberText:  "#2d1f0e",
+        bismillah:   "#c49a45",
+    },
+    light: {
+        bg:          "linear-gradient(180deg,#f8fafc,#f1f5f9)",
+        contentBg:   "#ffffff",
+        card:        "#ffffff",
+        cardBorder:  "rgba(0,0,0,0.07)",
+        text:        "#0f172a",
+        subtext:     "#475569",
+        arabic:      "#0f172a",
+        number:      "linear-gradient(135deg,#34d399,#10b981)",
+        numberText:  "#ffffff",
+        bismillah:   "var(--primary)",
+    },
+};
 
 // ============================================================
 // HELPERS
@@ -84,50 +143,329 @@ function hideFloatingPlayer() {
 }
 
 function syncMiniPlayIcon(playing) {
-    miniPlay.textContent = playing ? "I I" : "▶️";
+    miniPlay.innerHTML = playing
+        ? `<i data-lucide="pause"></i>`
+        : `<i data-lucide="play"></i>`;
+    lucide.createIcons();
 }
 
 function getActiveAudio() {
     return activeAudioMode === "surah" ? audioPlayer : ayahPlayer;
 }
 
-// Scroll + highlight the active verse card
-function scrollToActiveVerse(ayahNumber) {
-    const readerContent = document.querySelector(".reader-content");
-    const card = document.querySelector(`.verse-card[data-ayah="${ayahNumber}"]`);
-    if (!card || !readerContent) return;
+// ============================================================
+// VERSE HIGHLIGHT + SCROLL
+// ============================================================
 
-    const cardTop      = card.offsetTop;
-    const parentHeight = readerContent.clientHeight;
-    const cardHeight   = card.clientHeight;
-    const targetScroll = cardTop - (parentHeight / 2) + (cardHeight / 2);
-
-    readerContent.scrollTo({ top: Math.max(0, targetScroll), behavior: "smooth" });
-
-    // Highlight: add class, remove after 1.8s
-    card.classList.remove("verse-active");
-    void card.offsetWidth; // force reflow so animation restarts
-    card.classList.add("verse-active");
-    setTimeout(() => card.classList.remove("verse-active"), 1800);
-}
-
-// Inject the highlight style once
 (function injectVerseActiveStyle() {
     if (document.getElementById("verse-active-style")) return;
     const s = document.createElement("style");
     s.id = "verse-active-style";
     s.textContent = `
         @keyframes verseHighlight {
-            0%   { border-color: rgba(16,185,129,0.8); box-shadow: 0 0 0 0   rgba(16,185,129,0.35); background: rgba(16,185,129,0.12); }
-            40%  { border-color: rgba(16,185,129,0.9); box-shadow: 0 0 0 6px rgba(16,185,129,0.15); background: rgba(16,185,129,0.16); }
+            0%   { border-color: rgba(16,185,129,0.9); box-shadow: 0 0 0 0   rgba(16,185,129,0.4); background: rgba(16,185,129,0.13); }
+            35%  { border-color: rgba(16,185,129,1);   box-shadow: 0 0 0 7px rgba(16,185,129,0.12); background: rgba(16,185,129,0.18); }
             100% { border-color: rgba(255,255,255,0.08); box-shadow: 0 0 0 0 rgba(16,185,129,0);    background: transparent; }
         }
-        .verse-card.verse-active {
-            animation: verseHighlight 1.8s ease forwards;
-        }
+        .verse-card.verse-active { animation: verseHighlight 1.8s ease forwards; }
     `;
     document.head.appendChild(s);
 })();
+
+function scrollToActiveVerse(ayahNumber) {
+    const readerContent = document.querySelector(".reader-content");
+    const card = document.querySelector(`.verse-card[data-ayah="${ayahNumber}"]`);
+    if (!card || !readerContent) return;
+
+    const targetScroll = card.offsetTop - (readerContent.clientHeight / 2) + (card.clientHeight / 2);
+    readerContent.scrollTo({ top: Math.max(0, targetScroll), behavior: "smooth" });
+
+    card.classList.remove("verse-active");
+    void card.offsetWidth;
+    card.classList.add("verse-active");
+    setTimeout(() => card.classList.remove("verse-active"), 1800);
+}
+
+// ============================================================
+// SITE-WIDE DARK / LIGHT MODE
+// ============================================================
+
+(function injectLightModeStyles() {
+    if (document.getElementById("light-mode-style")) return;
+    const s = document.createElement("style");
+    s.id = "light-mode-style";
+    s.textContent = `
+        body.light-mode {
+            --dark:       #f8fafc;
+            --dark-light: #ffffff;
+            --white:      #0f172a;
+            --text:       #475569;
+            --border:     rgba(0,0,0,0.08);
+            background:   #f1f5f9;
+            color:        #0f172a;
+        }
+        body.light-mode .navbar {
+            background: rgba(248,250,252,0.85);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        body.light-mode .navbar a,
+        body.light-mode .logo { color: #0f172a; }
+        body.light-mode .nav-actions button,
+        body.light-mode .audio-btn,
+        body.light-mode .audio-small-btn {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        body.light-mode .ayah-card,
+        body.light-mode .audio-player,
+        body.light-mode .surah-card,
+        body.light-mode .topic-card,
+        body.light-mode .journey-card,
+        body.light-mode .reciter-card,
+        body.light-mode .continue-card,
+        body.light-mode .reflection-card {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.07);
+            color: #0f172a;
+        }
+        body.light-mode .surah-card h3,
+        body.light-mode .ayah-arabic { color: #0f172a; }
+        body.light-mode .ayah-translation,
+        body.light-mode .surah-meta,
+        body.light-mode .section-header p { color: #475569; }
+        body.light-mode #reciter-select,
+        body.light-mode #reciter-select option { background: #fff; color: #0f172a; }
+        body.light-mode .hero { background: #f8fafc; }
+        body.light-mode .hero h1 { color: #0f172a; }
+        body.light-mode .bg-glow { opacity: 0.07; }
+        body.light-mode .search-container { background: #fff; }
+        body.light-mode .search-header input { color: #0f172a; }
+    `;
+    document.head.appendChild(s);
+})();
+
+function initThemeToggle() {
+    const themeBtn = document.querySelector(".theme-btn");
+    if (!themeBtn) return;
+
+    // Restore saved preference
+    const saved = localStorage.getItem("siteTheme") || "dark";
+    if (saved === "light") {
+        document.body.classList.add("light-mode");
+        siteTheme = "light";
+        themeBtn.innerHTML = `<i data-lucide="sun"></i>`;
+        lucide.createIcons();
+    }
+
+    themeBtn.addEventListener("click", () => {
+        if (siteTheme === "dark") {
+            siteTheme = "light";
+            document.body.classList.add("light-mode");
+            themeBtn.innerHTML = `<i data-lucide="sun"></i>`;
+            localStorage.setItem("siteTheme", "light");
+        } else {
+            siteTheme = "dark";
+            document.body.classList.remove("light-mode");
+            themeBtn.innerHTML = `<i data-lucide="moon"></i>`;
+            localStorage.setItem("siteTheme", "dark");
+        }
+        lucide.createIcons();
+    });
+}
+
+// ============================================================
+// READER THEME SWITCHER (palette button top-left)
+// ============================================================
+
+function injectReaderThemeButton() {
+    if (document.getElementById("reader-theme-btn")) return;
+
+    const readerContent = document.querySelector(".reader-content");
+    if (!readerContent) return;
+
+    // Inject styles
+    if (!document.getElementById("reader-theme-styles")) {
+        const s = document.createElement("style");
+        s.id = "reader-theme-styles";
+        s.textContent = `
+            #reader-theme-btn {
+                position: sticky;
+                top: 0;
+                float: left;
+                border: none;
+                width: 45px;
+                height: 45px;
+                border-radius: 12px;
+                background: rgba(255,255,255,0.06);
+                color: white;
+                cursor: pointer;
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: 0.2s;
+            }
+            #reader-theme-btn:hover { background: rgba(16,185,129,0.15); }
+
+            #reader-theme-panel {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 1.5rem;
+                background: #111827;
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 18px;
+                padding: 1rem;
+                z-index: 3000;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+                animation: filterDrop 0.2s ease;
+            }
+            #reader-theme-panel.open { display: block; }
+
+            .theme-panel-label {
+                font-size: 0.72rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: #64748b;
+                margin-bottom: 0.7rem;
+                font-weight: 700;
+            }
+
+            .theme-swatches {
+                display: flex;
+                gap: 0.6rem;
+            }
+
+            .theme-swatch {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                border: 2px solid transparent;
+                cursor: pointer;
+                transition: 0.2s;
+                position: relative;
+                overflow: hidden;
+            }
+            .theme-swatch:hover { transform: scale(1.08); }
+            .theme-swatch.active { border-color: #10b981; }
+
+            .swatch-dark   { background: linear-gradient(135deg,#0f172a,#1e293b); }
+            .swatch-warm   { background: linear-gradient(135deg,#1a1208,#3d2a0a); }
+            .swatch-sepia  { background: linear-gradient(135deg,#2d1f0e,#4a3015); }
+            .swatch-light  { background: linear-gradient(135deg,#f8fafc,#e2e8f0); border-color: rgba(0,0,0,0.12); }
+
+            .swatch-label {
+                display: block;
+                font-size: 0.65rem;
+                text-align: center;
+                margin-top: 0.3rem;
+                color: #94a3b8;
+                font-weight: 600;
+            }
+        `;
+        document.head.appendChild(s);
+    }
+
+    // Theme button
+    const btn = document.createElement("button");
+    btn.id        = "reader-theme-btn";
+    btn.title     = "Change theme";
+    btn.innerHTML = `<i data-lucide="palette"></i>`;
+    readerContent.insertBefore(btn, readerContent.firstChild);
+
+    // Theme panel
+    const panel = document.createElement("div");
+    panel.id = "reader-theme-panel";
+    panel.innerHTML = `
+        <div class="theme-panel-label">Reader Theme</div>
+        <div class="theme-swatches">
+            <div>
+                <button class="theme-swatch swatch-dark active"  data-theme="dark"  title="Dark"></button>
+                <span class="swatch-label">Dark</span>
+            </div>
+            <div>
+                <button class="theme-swatch swatch-warm"  data-theme="warm"  title="Warm"></button>
+                <span class="swatch-label">Warm</span>
+            </div>
+            <div>
+                <button class="theme-swatch swatch-sepia" data-theme="sepia" title="Sepia"></button>
+                <span class="swatch-label">Sepia</span>
+            </div>
+            <div>
+                <button class="theme-swatch swatch-light" data-theme="light" title="Light"></button>
+                <span class="swatch-label">Light</span>
+            </div>
+        </div>
+    `;
+    readerContent.insertBefore(panel, readerContent.children[1]);
+
+    lucide.createIcons();
+
+    btn.addEventListener("click", e => {
+        e.stopPropagation();
+        panel.classList.toggle("open");
+    });
+
+    document.addEventListener("click", e => {
+        if (!panel.contains(e.target) && e.target !== btn) {
+            panel.classList.remove("open");
+        }
+    });
+
+    panel.querySelectorAll(".theme-swatch").forEach(swatch => {
+        swatch.addEventListener("click", () => {
+            panel.querySelectorAll(".theme-swatch").forEach(s => s.classList.remove("active"));
+            swatch.classList.add("active");
+            applyReaderTheme(swatch.dataset.theme);
+            panel.classList.remove("open");
+        });
+    });
+}
+
+function applyReaderTheme(key) {
+    readerThemeKey = key;
+    const t = readerThemes[key];
+    const reader = document.querySelector(".reader-content");
+    if (!reader) return;
+
+    reader.style.background = t.bg;
+    reader.style.color       = t.text;
+
+    // Update theme button color for light theme visibility
+    const themeBtn = document.getElementById("reader-theme-btn");
+    if (themeBtn) {
+        themeBtn.style.background = key === "light" ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)";
+        themeBtn.style.color      = key === "light" ? "#0f172a" : "white";
+    }
+
+    document.querySelectorAll(".verse-card").forEach(card => {
+        card.style.background   = t.card;
+        card.style.borderColor  = t.cardBorder;
+        card.style.color        = t.text;
+    });
+    document.querySelectorAll(".verse-arabic").forEach(el => {
+        el.style.color = t.arabic;
+    });
+    document.querySelectorAll(".verse-translation").forEach(el => {
+        el.style.color = t.subtext;
+    });
+    document.querySelectorAll(".verse-number").forEach(el => {
+        el.style.background = t.number;
+        el.style.color      = t.numberText;
+    });
+    document.querySelectorAll(".bismillah-header").forEach(el => {
+        el.style.color = t.bismillah;
+    });
+    document.querySelectorAll(".reader-close, .reader-tool-btn, .settings-drawer, .reader-audio-card").forEach(el => {
+        if (key === "light") {
+            el.style.background = key === "light" ? "#f1f5f9" : "";
+            el.style.color      = t.text;
+        } else {
+            el.style.background = "";
+            el.style.color      = "";
+        }
+    });
+}
 
 // ============================================================
 // ANIMATED SEARCH PLACEHOLDER
@@ -138,7 +476,7 @@ function initAnimatedPlaceholder() {
         "Search surah name…",
         "Search by number…",
         "Search surah name…",
-        "e.g. 'Al-Baqarah' or '2'…"
+        "e.g. 'Al-Baqarah' or '2'…",
     ];
     let idx = 0;
 
@@ -153,9 +491,7 @@ function initAnimatedPlaceholder() {
                 100% { opacity: 0; transform: translateY(-5px); }
             }
             #surah-search::placeholder { transition: none; }
-            #surah-search.ph-anim::placeholder {
-                animation: placeholderFade 2.8s ease forwards;
-            }
+            #surah-search.ph-anim::placeholder { animation: placeholderFade 2.8s ease forwards; }
         `;
         document.head.appendChild(style);
     }
@@ -179,13 +515,10 @@ function initAnimatedPlaceholder() {
 function injectFilterBar() {
     if (document.getElementById("explorer-filter-btn")) return;
 
-    // Styles
     if (!document.getElementById("filter-styles")) {
         const s = document.createElement("style");
         s.id = "filter-styles";
         s.textContent = `
-            .explorer-search { position: relative; }
-
             #explorer-filter-btn {
                 position: absolute;
                 right: 12px;
@@ -201,43 +534,40 @@ function injectFilterBar() {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 1.1rem;
                 transition: 0.2s;
                 z-index: 3;
             }
             #explorer-filter-btn:hover,
-            #explorer-filter-btn.active {
-                background: rgba(16,185,129,0.25);
-            }
+            #explorer-filter-btn.filter-active { background: rgba(16,185,129,0.28); }
 
             #filter-dropdown {
                 display: none;
                 position: absolute;
                 top: calc(100% + 10px);
                 right: 0;
-                width: min(420px, 96vw);
+                width: min(440px, 96vw);
                 background: #111827;
                 border: 1px solid rgba(255,255,255,0.08);
                 border-radius: 20px;
-                padding: 1.2rem;
+                padding: 1.3rem;
                 z-index: 100;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.45);
                 animation: filterDrop 0.2s ease;
             }
             #filter-dropdown.open { display: block; }
 
             @keyframes filterDrop {
-                from { opacity: 0; transform: translateY(-8px); }
-                to   { opacity: 1; transform: translateY(0);    }
+                from { opacity:0; transform: translateY(-8px); }
+                to   { opacity:1; transform: translateY(0);    }
             }
 
             .filter-section-label {
-                font-size: 0.75rem;
+                font-size: 0.72rem;
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 1px;
                 color: #64748b;
-                margin: 0.8rem 0 0.5rem;
+                margin: 1rem 0 0.5rem;
             }
             .filter-section-label:first-child { margin-top: 0; }
 
@@ -245,26 +575,29 @@ function injectFilterBar() {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 0.4rem;
+                max-height: 110px;
+                overflow-y: auto;
             }
 
             .fpill {
                 border: none;
-                padding: 0.4rem 0.85rem;
+                padding: 0.38rem 0.85rem;
                 border-radius: 50px;
                 background: rgba(255,255,255,0.05);
                 color: #94a3b8;
                 cursor: pointer;
-                font-size: 0.8rem;
+                font-size: 0.78rem;
                 font-weight: 600;
                 transition: 0.18s;
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
             }
+            .fpill svg { width:14px; height:14px; }
             .fpill:hover  { background: rgba(16,185,129,0.12); color: #10b981; }
             .fpill.active { background: rgba(16,185,129,0.22); color: #10b981; border: 1px solid rgba(16,185,129,0.4); }
 
-            .filter-clear-row {
-                margin-top: 1rem;
-                text-align: right;
-            }
+            .filter-clear-row { margin-top:1rem; text-align:right; }
             #filter-clear-btn {
                 border: none;
                 background: transparent;
@@ -272,12 +605,15 @@ function injectFilterBar() {
                 cursor: pointer;
                 font-size: 0.82rem;
                 font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
                 transition: 0.18s;
             }
             #filter-clear-btn:hover { color: #ef4444; }
+            #filter-clear-btn svg { width:14px; height:14px; }
 
-            /* Give search input right padding so text doesn't overlap the button */
-            #surah-search { padding-right: 60px; }
+            #surah-search { padding-right: 62px; }
         `;
         document.head.appendChild(s);
     }
@@ -286,40 +622,38 @@ function injectFilterBar() {
     if (!searchBox) return;
     searchBox.style.position = "relative";
 
-    // Filter toggle button
+    // Filter button
     const filterBtn = document.createElement("button");
     filterBtn.id        = "explorer-filter-btn";
     filterBtn.title     = "Filter surahs";
-    filterBtn.innerHTML = "⚙️";
+    filterBtn.innerHTML = `<i data-lucide="sliders-horizontal"></i>`;
     searchBox.appendChild(filterBtn);
+    lucide.createIcons();
 
-    // Dropdown panel
+    // Dropdown
     const dropdown = document.createElement("div");
     dropdown.id = "filter-dropdown";
     dropdown.innerHTML = buildFilterDropdownHTML();
     searchBox.appendChild(dropdown);
+    lucide.createIcons();
 
-    // Toggle dropdown
     filterBtn.addEventListener("click", e => {
         e.stopPropagation();
         dropdown.classList.toggle("open");
-        filterBtn.classList.toggle("active");
+        filterBtn.classList.toggle("filter-active");
     });
 
-    // Close on outside click
     document.addEventListener("click", e => {
         if (!dropdown.contains(e.target) && e.target !== filterBtn) {
             dropdown.classList.remove("open");
-            filterBtn.classList.remove("active");
+            filterBtn.classList.remove("filter-active");
         }
     });
 
-    // Pill clicks
     dropdown.addEventListener("click", e => {
         const pill = e.target.closest(".fpill");
         if (!pill) return;
 
-        // If clicking the already-active filter → clear it
         if (pill.classList.contains("active")) {
             pill.classList.remove("active");
             activeFilter = "all";
@@ -331,21 +665,20 @@ function injectFilterBar() {
 
         renderSurahs(getFilteredSurahs());
         dropdown.classList.remove("open");
-        filterBtn.classList.remove("active");
-
-        // Update button to show active state
+        filterBtn.classList.remove("filter-active");
         filterBtn.style.background = activeFilter === "all"
             ? "rgba(16,185,129,0.12)"
             : "rgba(16,185,129,0.3)";
     });
 
-    // Clear button
     document.addEventListener("click", e => {
-        if (e.target.id !== "filter-clear-btn") return;
+        if (e.target.id !== "filter-clear-btn" && !e.target.closest("#filter-clear-btn")) return;
         dropdown.querySelectorAll(".fpill").forEach(p => p.classList.remove("active"));
         activeFilter = "all";
         renderSurahs(getFilteredSurahs());
         filterBtn.style.background = "rgba(16,185,129,0.12)";
+        dropdown.classList.remove("open");
+        filterBtn.classList.remove("filter-active");
     });
 }
 
@@ -361,8 +694,12 @@ function buildFilterDropdownHTML() {
     return `
         <div class="filter-section-label">Place of Revelation</div>
         <div class="filter-pill-row">
-            <button class="fpill" data-filter="makkah">🕋 Makkan</button>
-            <button class="fpill" data-filter="madinah">🕌 Medinan</button>
+            <button class="fpill" data-filter="makkah">
+                <i data-lucide="sun"></i> Makkan
+            </button>
+            <button class="fpill" data-filter="madinah">
+                <i data-lucide="building-2"></i> Medinan
+            </button>
         </div>
 
         <div class="filter-section-label">By Juz</div>
@@ -372,16 +709,85 @@ function buildFilterDropdownHTML() {
         <div class="filter-pill-row">${hizbPills}</div>
 
         <div class="filter-clear-row">
-            <button id="filter-clear-btn">Clear filter</button>
+            <button id="filter-clear-btn">
+                <i data-lucide="x"></i> Clear filter
+            </button>
         </div>
     `;
 }
+
+// ============================================================
+// LOAD JUZ / HIZB META  ← FIXED
+// ============================================================
+// The /v1/meta endpoint returns data.data.surahs.references[] where
+// each item is { number, name, ... } but NOT juz info directly.
+// The reliable structure is data.data.juzs[] where each juz has
+// { number, startingVerseKey, endingVerseKey, verseCount, surahs: {surahNum: startAyah} }
+// BUT the API also has data.data.surahs.references[].juzStartingAyah... let's log and use the correct path.
+// Safest: fetch /v1/surah and use each surah's juz from a separate call, OR
+// use the fact that /v1/juz/{n} returns the surahs in that juz.
+// Most reliable: fetch all 30 juz pages (too slow).
+// BEST FIX: fetch /v1/meta, use data.data.juzs[i].surahs which IS the correct key
+// confirmed from alquran.cloud API source:
+//   juzs[i] = { number, startingVerseKey, endingVerseKey, verseCount,
+//               surahs: { "surahNum": startAyahInSurah, ... } }
+
+async function loadJuzData() {
+    try {
+        const res  = await fetch("https://api.alquran.cloud/v1/meta");
+        const meta = await res.json();
+        const d    = meta.data;
+
+        // --- JUZ MAP ---
+        if (d.juzs && Array.isArray(d.juzs)) {
+            d.juzs.forEach(juz => {
+                const juzNum = Number(juz.number);
+                window._juzSurahMap[juzNum] = new Set();
+                if (juz.surahs && typeof juz.surahs === "object") {
+                    Object.keys(juz.surahs).forEach(sNum => {
+                        window._juzSurahMap[juzNum].add(Number(sNum));
+                        window._surahJuzMap[Number(sNum)] = juzNum;
+                    });
+                }
+            });
+        }
+
+        // --- HIZB MAP ---
+        // hizbQuarters is an array of 240 items (240 = 60 hizbs × 4 quarters)
+        // Each item: { surah: surahNum, ayah: ayahNum, juz, quarter }
+        const hq = d.hizbQuarters || [];
+        hq.forEach((item, i) => {
+            // Every 4 quarters = 1 hizb; quarter index 0 = start of hizb
+            const hizbNum = Math.floor(i / 4) + 1; // 1-60
+            if (!window._hizbSurahMap[hizbNum]) window._hizbSurahMap[hizbNum] = new Set();
+
+            // item.surah may be a number or string depending on API version
+            const sNum = Number(item.surah);
+            if (!isNaN(sNum)) {
+                window._hizbSurahMap[hizbNum].add(sNum);
+                window._surahHizbMap[sNum] = window._surahHizbMap[sNum] || hizbNum;
+            }
+        });
+
+        // DEBUG: log a sample to verify
+        console.log("[Juz 1 surahs]", [...(window._juzSurahMap[1] || [])]);
+        console.log("[Hizb 1 surahs]", [...(window._hizbSurahMap[1] || [])]);
+
+    } catch (err) {
+        console.error("Failed to load juz/hizb meta:", err);
+    } finally {
+        injectFilterBar();
+    }
+}
+
+// ============================================================
+// FILTER LOGIC
+// ============================================================
 
 function getFilteredSurahs() {
     const val = searchInput.value.trim().toLowerCase();
     let base  = allSurahs;
 
-    // Apply active filter
     if (activeFilter === "makkah") {
         base = allSurahs.filter(s => s.revelationType === "Meccan");
     } else if (activeFilter === "madinah") {
@@ -396,7 +802,6 @@ function getFilteredSurahs() {
         base = allSurahs.filter(s => allowed.has(s.number));
     }
 
-    // Apply search (name or number only)
     if (!val) return base;
     return base.filter(s =>
         s.englishName.toLowerCase().includes(val) ||
@@ -405,48 +810,7 @@ function getFilteredSurahs() {
     );
 }
 
-// ============================================================
-// LOAD JUZ / HIZB META
-// ============================================================
-
-async function loadJuzData() {
-    try {
-        const res  = await fetch("https://api.alquran.cloud/v1/meta");
-        const data = await res.json();
-
-        // Build juz → surah map
-        data.data.juzs.forEach((juz, i) => {
-            const juzNum = i + 1;
-            window._juzSurahMap[juzNum] = new Set();
-            if (juz.surahs) {
-                Object.keys(juz.surahs).forEach(n => window._juzSurahMap[juzNum].add(Number(n)));
-            }
-        });
-
-        // Build hizb → surah map (240 quarter entries, 4 per hizb → 60 hizbGroups)
-        data.data.hizbQuarters.forEach((hq, i) => {
-            const hizbNum = Math.floor(i / 4) + 1;
-            if (!window._hizbSurahMap[hizbNum]) window._hizbSurahMap[hizbNum] = new Set();
-            window._hizbSurahMap[hizbNum].add(Number(hq.surah));
-        });
-
-        // Now that maps are ready, inject the filter bar
-        injectFilterBar();
-
-    } catch (err) {
-        console.error("Failed to load juz/hizb meta:", err);
-        // Still inject filter bar — juz/hizb pills just won't match anything
-        injectFilterBar();
-    }
-}
-
-// ============================================================
-// SEARCH INPUT
-// ============================================================
-
-searchInput.addEventListener("input", () => {
-    renderSurahs(getFilteredSurahs());
-});
+searchInput.addEventListener("input", () => renderSurahs(getFilteredSurahs()));
 
 // ============================================================
 // DAILY AYAH
@@ -483,11 +847,9 @@ async function loadDailyAyah() {
         if (infoSpan) infoSpan.textContent = `Verse ${ayahInSurah}`;
 
         if (quranAudio) quranAudio.src = audioUrl;
-
         wireHomepageAudioPlayer(audioUrl);
 
         window._dailyAyah = { arabicText, translationText, surahName, ayahInSurah, audioUrl };
-
     } catch (err) {
         console.error("Failed to load daily ayah:", err);
     }
@@ -510,8 +872,7 @@ function wireHomepageAudioPlayer(audioUrl) {
 
     quranAudio.src    = audioUrl;
     quranAudio.volume = 0.8;
-
-    let homeSpeed = 1;
+    let homeSpeed     = 1;
 
     playBtn.onclick = () => {
         if (quranAudio.paused) {
@@ -539,18 +900,12 @@ function wireHomepageAudioPlayer(audioUrl) {
         });
     }
 
-    if (volumeSlider) {
-        volumeSlider.addEventListener("input", () => {
-            quranAudio.volume = volumeSlider.value / 100;
-        });
-    }
+    if (volumeSlider) volumeSlider.addEventListener("input", () => { quranAudio.volume = volumeSlider.value / 100; });
 
     if (muteBtn) {
         muteBtn.onclick = () => {
             quranAudio.muted = !quranAudio.muted;
-            muteBtn.innerHTML = quranAudio.muted
-                ? `<i data-lucide="volume-x"></i>`
-                : `<i data-lucide="volume-2"></i>`;
+            muteBtn.innerHTML = quranAudio.muted ? `<i data-lucide="volume-x"></i>` : `<i data-lucide="volume-2"></i>`;
             lucide.createIcons();
         };
     }
@@ -577,9 +932,7 @@ function wireHomepageAudioPlayer(audioUrl) {
                 quranAudio.src = d.data.audio;
                 quranAudio.load();
                 if (playBtn) { playBtn.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
-            } catch (err) {
-                console.error("Reciter switch failed:", err);
-            }
+            } catch (err) { console.error("Reciter switch failed:", err); }
         });
     }
 
@@ -596,19 +949,41 @@ function injectRepeatButton() {
     const actions = document.querySelector(".audio-actions");
     if (!actions || document.getElementById("repeat-btn")) return;
     const btn = document.createElement("button");
-    btn.id          = "repeat-btn";
-    btn.textContent = "🔁 Off";
-    btn.title       = "Repeat mode";
+    btn.id        = "repeat-btn";
+    btn.innerHTML = `<i data-lucide="repeat"></i> Off`;
+    btn.title     = "Repeat mode";
     actions.appendChild(btn);
+    lucide.createIcons();
+
     btn.addEventListener("click", () => {
         if (repeatMode === "off") {
-            repeatMode = "surah"; btn.textContent = "🔂 Surah"; showToast("Repeat: current Surah");
+            repeatMode = "surah";
+            btn.innerHTML = `<i data-lucide="repeat-1"></i> Surah`;
+            showToast("Repeat: current Surah");
         } else if (repeatMode === "surah") {
-            repeatMode = "quran"; btn.textContent = "🔁 Qur'an"; showToast("Repeat: whole Qur'an");
+            repeatMode = "quran";
+            btn.innerHTML = `<i data-lucide="repeat"></i> Qur'an`;
+            showToast("Repeat: whole Qur'an");
         } else {
-            repeatMode = "off";   btn.textContent = "🔁 Off";    showToast("Repeat: off");
+            repeatMode = "off";
+            btn.innerHTML = `<i data-lucide="repeat"></i> Off`;
+            showToast("Repeat: off");
         }
+        lucide.createIcons();
     });
+}
+
+// ============================================================
+// FLOATING PLAYER ICON BUTTONS (HTML uses emoji — fix them once)
+// ============================================================
+
+function fixFloatingPlayerIcons() {
+    // Mini buttons already have text content set by syncMiniPlayIcon.
+    // Just ensure initial state is lucide.
+    miniPlay.innerHTML = `<i data-lucide="play"></i>`;
+    miniPrev.innerHTML = `<i data-lucide="skip-back"></i>`;
+    miniNext.innerHTML = `<i data-lucide="skip-forward"></i>`;
+    lucide.createIcons();
 }
 
 // ============================================================
@@ -906,6 +1281,9 @@ readBtn.addEventListener("click", async () => {
         updateReaderModeUI();
         loadSurahAudio();
         injectRepeatButton();
+        injectReaderThemeButton();
+        // Re-apply current reader theme to new verse cards
+        applyReaderTheme(readerThemeKey);
 
         readerModal.classList.add("active");
         document.body.style.overflow = "hidden";
@@ -953,7 +1331,9 @@ audioBtn.addEventListener("click",    () => { settingsDrawer.classList.remove("a
 
 document.getElementById("favorite-reciter")?.addEventListener("click", () => {
     localStorage.setItem("favoriteReciter", currentReciter);
-    document.getElementById("favorite-reciter").textContent = "💚";
+    document.getElementById("favorite-reciter").innerHTML = `<i data-lucide="heart"></i>`;
+    document.getElementById("favorite-reciter").style.color = "#10b981";
+    lucide.createIcons();
 });
 
 // ============================================================
@@ -1010,9 +1390,7 @@ document.addEventListener("click", async e => {
 
         playBtn.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons();
 
-        // Scroll + highlight
         scrollToActiveVerse(currentAyahPlaying);
-
         showFloatingPlayer(document.getElementById("reader-title").textContent, `Ayah ${ayah}`);
         syncMiniPlayIcon(true);
 
@@ -1045,7 +1423,7 @@ miniPlay.addEventListener("click", () => {
         if (activeAudioMode === "surah") { playButton.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons(); }
     } else {
         audio.pause(); syncMiniPlayIcon(false);
-        if (activeAudioMode === "surah") { playButton.innerHTML = `<i data-lucide="play"></i>`;  lucide.createIcons(); }
+        if (activeAudioMode === "surah") { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
     }
 });
 
@@ -1084,21 +1462,6 @@ miniPrev.addEventListener("click", () => {
 });
 
 // ============================================================
-// READER THEMES
-// ============================================================
-
-document.querySelectorAll(".reader-theme-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const theme  = readerThemes[btn.dataset.theme];
-        const reader = document.querySelector(".reader-content");
-        reader.style.background = theme.bg;
-        reader.style.color      = theme.text;
-        document.querySelectorAll(".verse-card").forEach(card => { card.style.background = theme.card; card.style.color = theme.text; });
-        document.querySelectorAll(".verse-arabic, .verse-translation").forEach(el => { el.style.color = theme.text; });
-    });
-});
-
-// ============================================================
 // COPY
 // ============================================================
 
@@ -1127,8 +1490,8 @@ document.addEventListener("click", async e => {
     const translation = card.querySelector(".verse-translation")?.innerText || "";
     const text = `${arabic}\n\n${translation}`;
     try {
-        if (navigator.share) { await navigator.share({ title: "Qur'an Verse", text }); showToast("Shared successfully ✓"); }
-        else                  { await navigator.clipboard.writeText(text); showToast("Sharing not supported — copied instead"); }
+        if (navigator.share) { await navigator.share({ title: "Qur'an Verse", text }); showToast("Shared ✓"); }
+        else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
     } catch { showToast("Share cancelled"); }
 });
 
@@ -1140,4 +1503,6 @@ loadSurahs();
 loadJuzData();
 loadDailyAyah();
 initAnimatedPlaceholder();
+initThemeToggle();
+fixFloatingPlayerIcons();
 updateContinueReading();
