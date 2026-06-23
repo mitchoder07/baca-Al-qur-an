@@ -1,0 +1,570 @@
+/* =====================================================
+   VERSE HIGHLIGHT ANIMATION
+   ===================================================== */
+
+@keyframes verseHighlight {
+    0% {
+        border-color: rgba(var(--reader-accent-rgb), 0.9);
+        box-shadow: 0 0 0 0 rgba(var(--reader-accent-rgb), 0.35);
+        background: rgba(var(--reader-accent-rgb), 0.12);
+    }
+
+    35% {
+        border-color: rgba(var(--reader-accent-rgb), 1);
+        box-shadow: 0 0 0 7px rgba(var(--reader-accent-rgb), 0.12);
+        background: rgba(var(--reader-accent-rgb), 0.18);
+    }
+
+    100% {
+        border-color: var(--reader-card-border);
+        box-shadow: 0 0 0 0 rgba(var(--reader-accent-rgb), 0);
+        background: transparent;
+    }
+}
+
+.verse-card.verse-active {
+    animation: verseHighlight 1.8s ease forwards;
+}
+
+/* =====================================================
+   READER THEME — sticky wrapper keeps panel with button
+   ===================================================== */
+
+.reader-theme-wrap {
+    position: sticky;
+    top: 0;
+    float: left;
+    z-index: 2000;
+}
+
+#reader-theme-btn {
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+#reader-theme-btn:hover {
+    background: rgba(var(--reader-accent-rgb), 0.15);
+}
+
+/* =====================================================
+   READER THEME PANEL — anchored below the sticky button
+   ===================================================== */
+
+#reader-theme-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 1rem 1.1rem;
+    z-index: 9999;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    animation: themePanelIn 0.18s ease;
+    min-width: 220px;
+}
+
+#reader-theme-panel.open {
+    display: block;
+}
+
+@keyframes themePanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.theme-panel-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+}
+
+.theme-swatches {
+    display: flex;
+    gap: 0.7rem;
+}
+
+.theme-swatch-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.theme-swatch {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.theme-swatch:hover {
+    transform: scale(1.08);
+}
+
+.theme-swatch.active {
+    border-color: var(--reader-accent, #10b981) !important;
+}
+
+.swatch-dark {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+.swatch-warm {
+    background: linear-gradient(135deg, #1a1208, #3d2a0a);
+}
+
+.swatch-olive {
+    background: linear-gradient(135deg, #1a2010, #2c3a18);
+}
+
+.swatch-light {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    border-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+.swatch-label {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* =====================================================
+   FILTER DROPDOWN (beside search)
+   ===================================================== */
+
+@keyframes filterDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#explorer-filter-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    z-index: 3;
+}
+
+#explorer-filter-btn:hover,
+#explorer-filter-btn.filter-active {
+    background: rgba(16, 185, 129, 0.28);
+}
+
+#filter-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: min(440px, 96vw);
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 1.3rem;
+    z-index: 200;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    animation: filterDrop 0.2s ease;
+}
+
+#filter-dropdown.open {
+    display: block;
+}
+
+.filter-section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin: 1rem 0 0.5rem;
+}
+
+.filter-section-label:first-child {
+    margin-top: 0;
+}
+
+.filter-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    max-height: 110px;
+    overflow-y: auto;
+}
+
+.fpill {
+    border: none;
+    padding: 0.38rem 0.85rem;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: background 0.18s, color 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.fpill svg {
+    width: 14px;
+    height: 14px;
+}
+
+.fpill:hover {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+
+.fpill.active {
+    background: rgba(16, 185, 129, 0.22);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.filter-clear-row {
+    margin-top: 1rem;
+    text-align: right;
+}
+
+.filter-loading,
+.filter-error {
+    font-size: 0.82rem;
+    color: #64748b;
+    padding: 0.25rem 0;
+}
+
+.filter-error {
+    color: #f87171;
+}
+
+#filter-clear-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.18s;
+}
+
+#filter-clear-btn:hover {
+    color: #ef4444;
+}
+
+#filter-clear-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+#surah-search {
+    padding-right: 62px;
+}
+
+/* =====================================================
+   ANIMATED PLACEHOLDER
+   ===================================================== */
+
+@keyframes placeholderFade {
+    0% {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    18% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    78% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+}
+
+#surah-search::placeholder {
+    transition: none;
+}
+
+#surah-search.ph-anim::placeholder {
+    animation: placeholderFade 2.8s ease forwards;
+}
+
+/* =====================================================
+   SITE-WIDE LIGHT MODE
+   ===================================================== */
+
+body.light-mode {
+    --dark: #f8fafc;
+    --dark-light: #ffffff;
+    --white: #0f172a;
+    --text: #475569;
+    --border: rgba(0, 0, 0, 0.08);
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+body.light-mode .navbar {
+    background: rgba(248, 250, 252, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .nav-links a {
+    color: #0f172a;
+}
+
+body.light-mode .nav-links a:hover {
+    color: var(--primary);
+}
+
+body.light-mode .logo {
+    color: var(--primary);
+}
+
+body.light-mode .nav-actions button {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+/* Hero */
+body.light-mode .hero {
+    background: #f8fafc;
+}
+
+body.light-mode .hero h1 {
+    color: #0f172a;
+}
+
+body.light-mode .hero p {
+    color: #475569;
+}
+
+body.light-mode .bg-glow {
+    opacity: 0.06;
+}
+
+/* Buttons that were white text on dark bg */
+body.light-mode .btn-secondary {
+    color: #0f172a;
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .hero-badge {
+    color: var(--primary);
+}
+
+/* Cards */
+body.light-mode .ayah-card,
+body.light-mode .audio-player,
+body.light-mode .surah-card,
+body.light-mode .topic-card,
+body.light-mode .journey-card,
+body.light-mode .reciter-card,
+body.light-mode .continue-card,
+body.light-mode .reflection-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.07);
+    color: #0f172a;
+}
+
+body.light-mode .surah-card h3,
+body.light-mode .topic-card h3,
+body.light-mode .journey-card h3,
+body.light-mode .reciter-card h3,
+body.light-mode .journey-card p,
+body.light-mode .reciter-card span,
+body.light-mode .reflection-card blockquote {
+    color: #0f172a;
+}
+
+body.light-mode .ayah-arabic {
+    color: #0f172a;
+}
+
+body.light-mode .ayah-translation,
+body.light-mode .surah-meta,
+body.light-mode .audio-info span,
+body.light-mode .section-header p,
+body.light-mode #continue-ayah,
+body.light-mode .continue-meta,
+body.light-mode .progress-text {
+    color: #475569;
+}
+
+body.light-mode #continue-surah {
+    color: #0f172a;
+}
+
+body.light-mode .surah-english {
+    color: #0f172a;
+}
+
+/* Audio player controls */
+body.light-mode .audio-btn,
+body.light-mode .audio-small-btn {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-mode .audio-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+body.light-mode #reciter-select,
+body.light-mode #reciter-select option {
+    background: #fff;
+    color: #0f172a;
+}
+
+body.light-mode .audio-progress {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .audio-time {
+    color: #64748b;
+}
+
+/* Section headers */
+body.light-mode .section-header h2 {
+    color: #0f172a;
+}
+
+/* Explorer search */
+body.light-mode .explorer-search input {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+}
+
+body.light-mode .explorer-search input::placeholder {
+    color: #94a3b8;
+}
+
+/* Search modal */
+body.light-mode .search-container {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .search-header {
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .search-header input {
+    color: #0f172a;
+}
+
+body.light-mode .search-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-mode .close-search {
+    color: #0f172a;
+}
+
+/* Surah modal */
+body.light-mode .surah-modal-content {
+    background: #ffffff;
+}
+
+body.light-mode .surah-modal-close {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-mode #modal-surah-name {
+    color: #0f172a;
+}
+
+body.light-mode .modal-meta {
+    color: #64748b;
+}
+
+/* Floating player */
+body.light-mode .floating-player {
+    background: rgba(248, 250, 252, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode #floating-surah {
+    color: #0f172a;
+}
+
+body.light-mode #floating-ayah {
+    color: #64748b;
+}
+
+body.light-mode .floating-controls button {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-mode #mini-play {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Progress bar */
+body.light-mode .progress-bar {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+/* Topic / journey cards */
+body.light-mode .topic-card svg {
+    color: var(--primary);
+}
+
+body.light-mode .journey-card button {
+    background: var(--primary);
+    color: #fff;
+}

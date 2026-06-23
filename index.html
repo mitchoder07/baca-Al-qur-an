@@ -15,6 +15,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/reader-themes.css">
 
 </head>
 
@@ -45,6 +46,8 @@
             <a href="#">Journey</a>
 
             <a href="#">Daily Ayah</a>
+
+            <a href="#bookmarks">Bookmarks</a>
 
         </nav>
 
@@ -144,7 +147,7 @@
 
             <div class="ayah-actions">
 
-                <button>
+                <button class="daily-bookmark-btn" id="daily-bookmark-btn" title="Bookmark this ayah">
                     <i data-lucide="bookmark"></i>
                 </button>
 
@@ -333,11 +336,44 @@
         </div>
 
         <div class="explorer-search">
-
             <i data-lucide="search"></i>
-
             <input type="text" id="surah-search" placeholder="Search Surah name...">
 
+            <!-- Filter button -->
+            <button id="explorer-filter-btn" title="Filter surahs">
+                <i data-lucide="sliders-horizontal"></i>
+            </button>
+
+            <!-- Filter dropdown panel -->
+            <div id="filter-dropdown">
+
+                <div class="filter-section-label">Place of Revelation</div>
+                <div class="filter-pill-row">
+                    <button class="fpill" data-filter="makkah">
+                        <i data-lucide="sun"></i> Makkan
+                    </button>
+                    <button class="fpill" data-filter="madinah">
+                        <i data-lucide="building-2"></i> Medinan
+                    </button>
+                </div>
+
+                <div class="filter-section-label">By Juz</div>
+                <div class="filter-pill-row" id="juz-pills">
+                    <!-- Populated by JS after meta fetch -->
+                </div>
+
+                <div class="filter-section-label">By Hizb</div>
+                <div class="filter-pill-row" id="hizb-pills">
+                    <!-- Populated by JS after meta fetch -->
+                </div>
+
+                <div class="filter-clear-row">
+                    <button id="filter-clear-btn">
+                        <i data-lucide="x"></i> Clear filter
+                    </button>
+                </div>
+
+            </div>
         </div>
 
         <div class="surah-grid" id="surah-grid">
@@ -562,6 +598,39 @@
 
     </section>
 
+    <!-- ================= BOOKMARKS SECTION ================= -->
+
+    <section class="bookmarks-section" id="bookmarks">
+
+        <div class="section-header">
+
+            <h2>Saved Bookmarks</h2>
+
+            <p>
+                Verses you have saved for reflection and review.
+            </p>
+
+        </div>
+
+        <div class="bookmarks-toolbar">
+            <span class="bookmarks-count" id="bookmarks-count">0 saved</span>
+            <button type="button" class="bookmarks-clear-btn" id="bookmarks-clear-btn">
+                <i data-lucide="trash-2"></i>
+                Clear all
+            </button>
+        </div>
+
+        <div class="bookmarks-list" id="bookmarks-list">
+
+            <div class="bookmarks-empty" id="bookmarks-empty">
+                <i data-lucide="bookmark"></i>
+                <p>No bookmarks yet. Save verses from the reader or daily ayah.</p>
+            </div>
+
+        </div>
+
+    </section>
+
     <!-- ================= RECITERS SECTION ================= -->
 
     <section class="featured-reciters">
@@ -738,6 +807,34 @@
         <div class="reader-overlay"></div>
 
         <div class="reader-content dark-theme">
+
+            <div class="reader-theme-wrap">
+                <button id="reader-theme-btn" title="Change theme" type="button">
+                    <i data-lucide="palette"></i>
+                </button>
+
+                <div id="reader-theme-panel">
+                    <div class="theme-panel-label">Reader Theme</div>
+                    <div class="theme-swatches">
+                        <div class="theme-swatch-wrap">
+                            <button class="theme-swatch swatch-dark active" data-theme="dark" title="Dark" type="button"></button>
+                            <span class="swatch-label">Dark</span>
+                        </div>
+                        <div class="theme-swatch-wrap">
+                            <button class="theme-swatch swatch-warm" data-theme="warm" title="Warm" type="button"></button>
+                            <span class="swatch-label">Warm</span>
+                        </div>
+                        <div class="theme-swatch-wrap">
+                            <button class="theme-swatch swatch-olive" data-theme="olive" title="Olive" type="button"></button>
+                            <span class="swatch-label">Olive</span>
+                        </div>
+                        <div class="theme-swatch-wrap">
+                            <button class="theme-swatch swatch-light" data-theme="light" title="Light" type="button"></button>
+                            <span class="swatch-label">Light</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <button class="reader-close">
 
@@ -991,9 +1088,11 @@
                     </button>
 
                     <button id="next-surah-audio">
-
                         Next ⏭
+                    </button>
 
+                    <button id="repeat-btn" title="Repeat mode">
+                        <i data-lucide="repeat"></i> Off
                     </button>
 
                 </div>
