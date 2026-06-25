@@ -1,4 +1,104 @@
 /* =====================================================
+   ARABIC FONT UPGRADE
+   Noto Naskh Arabic — clean, professional, widely
+   supported, designed specifically for Qur'anic text
+   ===================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
+
+/* Override all arabic font references to Noto Naskh Arabic */
+.verse-arabic,
+.ayah-arabic,
+.bismillah-header,
+.reader-arabic-name,
+.modal-arabic,
+.surah-english,
+.bookmark-arabic {
+    font-family: "Noto Naskh Arabic", "Amiri", serif !important;
+}
+
+/* =====================================================
+   OLIVE THEME — redesigned to match screenshot:
+   Very dark teal-slate bg, cool muted text,
+   cyan/teal accent. Inspired by Quran app dark UI.
+   ===================================================== */
+
+/* Override the olive swatch to reflect the new palette */
+.swatch-olive {
+    background: linear-gradient(135deg, #0d1c1b, #0f2928) !important;
+}
+
+/* Olive theme token updates applied via JS applyReaderTheme().
+   We patch the readerThemes object values by overriding
+   the CSS custom properties directly when data-theme="olive" */
+
+.reader-content[data-theme="olive"] {
+    background: linear-gradient(180deg, #0a1918, #0d1f1e) !important;
+    color: #d4e8e6 !important;
+
+    --reader-accent: #2dd4bf;
+    --reader-accent-rgb: 45, 212, 191;
+    --reader-text: #e8f5f4;
+    --reader-subtext: #8fb5b2;
+    --reader-arabic: #f0faf9;
+    --reader-card-bg: rgba(45, 212, 191, 0.04);
+    --reader-card-border: rgba(45, 212, 191, 0.1);
+    --reader-header-border: rgba(45, 212, 191, 0.1);
+    --reader-tool-bg: rgba(45, 212, 191, 0.07);
+    --reader-drawer-bg: #0d1f1e;
+}
+
+/* =====================================================
+   SAPPHIRE THEME — new: deep navy/indigo with
+   electric violet-blue accent. Calm, focused, premium.
+   ===================================================== */
+
+.swatch-sapphire {
+    background: linear-gradient(135deg, #0c0f1d, #111827);
+    border-color: rgba(99, 102, 241, 0.2) !important;
+}
+
+.reader-content[data-theme="sapphire"] {
+    background: linear-gradient(180deg, #080c1a, #0e1225) !important;
+    color: #c7d2fe !important;
+
+    --reader-accent: #818cf8;
+    --reader-accent-rgb: 129, 140, 248;
+    --reader-text: #e0e7ff;
+    --reader-subtext: #7c86b5;
+    --reader-arabic: #f0f4ff;
+    --reader-card-bg: rgba(129, 140, 248, 0.05);
+    --reader-card-border: rgba(129, 140, 248, 0.12);
+    --reader-header-border: rgba(129, 140, 248, 0.12);
+    --reader-tool-bg: rgba(129, 140, 248, 0.08);
+    --reader-drawer-bg: #0e1225;
+}
+
+/* Sapphire-specific accent overrides for elements
+   that still reference the old green accent directly */
+.reader-content[data-theme="sapphire"] .bismillah-header {
+    color: var(--reader-accent);
+}
+
+.reader-content[data-theme="sapphire"] #audio-play-bton {
+    background: linear-gradient(135deg, #818cf8, #6366f1);
+}
+
+.reader-content[data-theme="sapphire"] #audio-progress2 {
+    accent-color: #818cf8;
+}
+
+/* =====================================================
+   THEME PANEL — add sapphire swatch layout support
+   ===================================================== */
+
+.theme-swatches {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+/* =====================================================
    VERSE HIGHLIGHT ANIMATION
    ===================================================== */
 
