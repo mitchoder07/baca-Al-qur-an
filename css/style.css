@@ -415,7 +415,7 @@ body {
   align-items: center;
 }
 
-.explorer-search svg {
+.explorer-search > svg {
   position: absolute;
   left: 18px;
   top: 50%;

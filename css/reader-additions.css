@@ -1,0 +1,124 @@
+/* =====================================================
+   VERSE TRANSLITERATION
+   Sits between Arabic and translation
+   ===================================================== */
+
+.verse-transliteration {
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.97rem;
+    font-style: italic;
+    color: var(--reader-accent);
+    opacity: 0.82;
+    margin: -0.4rem auto 0.6rem;
+    letter-spacing: 0.3px;
+    line-height: 1.7;
+    max-width: 680px;
+}
+
+/* =====================================================
+   TAFSIR PANEL — inline below verse card
+   ===================================================== */
+
+.tafsir-panel {
+    margin-top: 1.4rem;
+    background: var(--reader-drawer-bg);
+    border: 1px solid var(--reader-card-border);
+    border-left: 3px solid var(--reader-accent);
+    border-radius: 16px;
+    padding: 1.2rem 1.4rem;
+    animation: fadeDrawer 0.22s ease;
+}
+
+.tafsir-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+}
+
+.tafsir-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(var(--reader-accent-rgb), 0.12);
+    color: var(--reader-accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.tafsir-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--reader-subtext);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.tafsir-close:hover {
+    background: rgba(var(--reader-accent-rgb), 0.15);
+    color: var(--reader-accent);
+}
+
+.tafsir-close svg {
+    width: 14px;
+    height: 14px;
+}
+
+.tafsir-body {
+    color: var(--reader-subtext);
+    font-size: 0.93rem;
+    line-height: 1.85;
+    margin: 0;
+}
+
+.tafsir-error {
+    color: #f87171;
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+.tafsir-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--reader-subtext);
+    font-size: 0.9rem;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* =====================================================
+   LIGHT THEME adjustments for tafsir
+   ===================================================== */
+
+.reader-content[data-theme="light"] .tafsir-panel {
+    background: #f1f5f9;
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+.reader-content[data-theme="light"] .tafsir-close {
+    background: rgba(0, 0, 0, 0.06);
+    color: #475569;
+}

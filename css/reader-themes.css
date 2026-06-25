@@ -183,8 +183,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    line-height: 1;
     transition: background 0.2s;
     z-index: 3;
+}
+
+#explorer-filter-btn i,
+#explorer-filter-btn svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    margin: 0;
 }
 
 #explorer-filter-btn:hover,
@@ -419,6 +429,7 @@ body.light-mode .reflection-card {
 body.light-mode .surah-card h3,
 body.light-mode .topic-card h3,
 body.light-mode .journey-card h3,
+body.light-mode .audio-info h3,
 body.light-mode .reciter-card h3,
 body.light-mode .journey-card p,
 body.light-mode .reciter-card span,
@@ -460,10 +471,14 @@ body.light-mode .audio-btn:hover {
     color: #fff;
 }
 
-body.light-mode #reciter-select,
+
 body.light-mode #reciter-select option {
     background: #fff;
     color: #0f172a;
+}
+
+body.light-mode #reciter-select {
+    background: #64748b;
 }
 
 body.light-mode .audio-progress {
@@ -567,4 +582,156 @@ body.light-mode .topic-card svg {
 body.light-mode .journey-card button {
     background: var(--primary);
     color: #fff;
+}
+
+/* =====================================================
+   MINI SETTINGS DRAWER (floating player)
+   ===================================================== */
+
+#mini-settings-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: #1e293b;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+#mini-settings-btn:hover {
+    background: #10b981;
+}
+
+#mini-settings-btn svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+#mini-settings-drawer {
+    display: none;
+    width: 100%;
+    padding: 0.8rem 0 0.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 0.6rem;
+    animation: miniDrawerIn 0.18s ease;
+}
+
+#mini-settings-drawer.open {
+    display: block;
+}
+
+@keyframes miniDrawerIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mini-drawer-section {
+    margin-bottom: 0.65rem;
+}
+
+.mini-drawer-section:last-child {
+    margin-bottom: 0;
+}
+
+.mini-drawer-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #64748b;
+    margin-bottom: 0.4rem;
+}
+
+.mini-drawer-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.mini-drawer-row button {
+    border: none;
+    padding: 0.38rem 0.8rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: background 0.18s, color 0.18s;
+    font-family: inherit;
+}
+
+.mini-drawer-row button:hover,
+.mini-drawer-row button.active {
+    background: rgba(16, 185, 129, 0.22);
+    color: #10b981;
+}
+
+/* Floating player needs column layout to accommodate the drawer */
+.floating-player.active {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* The original info + controls sit in a row */
+.floating-player-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Light mode adjustments for mini drawer */
+body.light-mode #mini-settings-btn {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-mode #mini-settings-drawer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .mini-drawer-label {
+    color: #94a3b8;
+}
+
+body.light-mode .mini-drawer-row button {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-mode .mini-drawer-row button:hover,
+body.light-mode .mini-drawer-row button.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+}
+
+/* =====================================================
+   FILTER LOADING / ERROR
+   ===================================================== */
+
+.filter-loading,
+.filter-error {
+    font-size: 0.8rem;
+    color: #64748b;
+    padding: 0.3rem 0.2rem;
+    font-style: italic;
+}
+
+.filter-error {
+    color: #f87171;
 }

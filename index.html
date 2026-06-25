@@ -16,6 +16,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/reader-themes.css">
+    <link rel="stylesheet" href="css/reader-additions.css">
 
 </head>
 
@@ -817,19 +818,23 @@
                     <div class="theme-panel-label">Reader Theme</div>
                     <div class="theme-swatches">
                         <div class="theme-swatch-wrap">
-                            <button class="theme-swatch swatch-dark active" data-theme="dark" title="Dark" type="button"></button>
+                            <button class="theme-swatch swatch-dark active" data-theme="dark" title="Dark"
+                                type="button"></button>
                             <span class="swatch-label">Dark</span>
                         </div>
                         <div class="theme-swatch-wrap">
-                            <button class="theme-swatch swatch-warm" data-theme="warm" title="Warm" type="button"></button>
+                            <button class="theme-swatch swatch-warm" data-theme="warm" title="Warm"
+                                type="button"></button>
                             <span class="swatch-label">Warm</span>
                         </div>
                         <div class="theme-swatch-wrap">
-                            <button class="theme-swatch swatch-olive" data-theme="olive" title="Olive" type="button"></button>
+                            <button class="theme-swatch swatch-olive" data-theme="olive" title="Olive"
+                                type="button"></button>
                             <span class="swatch-label">Olive</span>
                         </div>
                         <div class="theme-swatch-wrap">
-                            <button class="theme-swatch swatch-light" data-theme="light" title="Light" type="button"></button>
+                            <button class="theme-swatch swatch-light" data-theme="light" title="Light"
+                                type="button"></button>
                             <span class="swatch-label">Light</span>
                         </div>
                     </div>
@@ -1074,27 +1079,10 @@
                 <audio id="surah-audio"></audio>
 
                 <div class="audio-actions">
-
-                    <button id="prev-surah-audio">
-
-                        ⏮ Previous
-
-                    </button>
-
-                    <button id="speed-btn">
-
-                        1x
-
-                    </button>
-
-                    <button id="next-surah-audio">
-                        Next ⏭
-                    </button>
-
-                    <button id="repeat-btn" title="Repeat mode">
-                        <i data-lucide="repeat"></i> Off
-                    </button>
-
+                    <button id="prev-surah-audio"><i data-lucide="skip-back"></i> Previous</button>
+                    <button id="speed-btn">1x</button>
+                    <button id="next-surah-audio">Next <i data-lucide="skip-forward"></i></button>
+                    <button id="repeat-btn" title="Repeat mode"><i data-lucide="repeat"></i> Off</button>
                 </div>
 
             </div>
@@ -1110,31 +1098,41 @@
         <!-- ============== Mini Player ====================== -->
         <div class="floating-player" id="floating-player">
 
-            <div class="floating-info">
+            <div class="floating-player-top-row">
 
-                <div id="floating-surah">
-                    Al-Fatihah
+                <div class="floating-info">
+                    <div id="floating-surah">Al-Fatihah</div>
+                    <div id="floating-ayah">Ayah 1</div>
                 </div>
 
-                <div id="floating-ayah">
-                    Ayah 1
+                <div class="floating-controls">
+                    <button id="mini-prev" title="Previous"><i data-lucide="skip-back"></i></button>
+                    <button id="mini-play" title="Play / Pause"><i data-lucide="play"></i></button>
+                    <button id="mini-next" title="Next"><i data-lucide="skip-forward"></i></button>
+                    <button id="mini-settings-btn" title="Reader settings"><i data-lucide="settings-2"></i></button>
                 </div>
 
             </div>
 
-            <div class="floating-controls">
+            <div id="mini-settings-drawer">
 
-                <button id="mini-prev">
-                    ⏮️
-                </button>
+                <div class="mini-drawer-section">
+                    <span class="mini-drawer-label">Text Size</span>
+                    <div class="mini-drawer-row">
+                        <button id="mini-font-decrease">A−</button>
+                        <button id="mini-font-reset">A</button>
+                        <button id="mini-font-increase">A+</button>
+                    </div>
+                </div>
 
-                <button id="mini-play">
-                    ▶️
-                </button>
-
-                <button id="mini-next">
-                    ⏭️
-                </button>
+                <div class="mini-drawer-section">
+                    <span class="mini-drawer-label">Reading Mode</span>
+                    <div class="mini-drawer-row">
+                        <button class="mini-mode-btn active" data-mode="both">Both</button>
+                        <button class="mini-mode-btn" data-mode="arabic">Arabic</button>
+                        <button class="mini-mode-btn" data-mode="translation">Translation</button>
+                    </div>
+                </div>
 
             </div>
 
@@ -1202,8 +1200,6 @@
     <script>
         lucide.createIcons();
     </script>
-    <script src="js/audio.js"></script>
-    <script src="js/surah-explorer.js"></script>
 </body>
 
 </html>
