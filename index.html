@@ -139,19 +139,18 @@
             </div>
 
             <div class="ayah-actions">
-
-                <button class="daily-bookmark-btn" id="daily-bookmark-btn" title="Bookmark this ayah">
+                <button class="daily-bookmark-btn" id="daily-bookmark-btn" title="Bookmark">
                     <i data-lucide="bookmark"></i>
                 </button>
-
-                <button>
+                <button id="daily-copy-btn" title="Copy verse">
                     <i data-lucide="copy"></i>
                 </button>
-
-                <button>
+                <button id="daily-share-btn" title="Share verse">
                     <i data-lucide="share-2"></i>
                 </button>
-
+                <button id="daily-tafsir-btn" title="View Tafsir">
+                    <i data-lucide="book-open-text"></i>
+                </button>
             </div>
 
         </div>
@@ -625,8 +624,23 @@
     </section>
 
     <!-- ================= RECITERS SECTION ================= -->
+    <section class="featured-reciters">
 
-    <section class="featured-reciters" id="featured-reciters">
+        <div class="section-header">
+            <h2>Featured Reciters</h2>
+            <p>Choose a reciter and listen to the entire Qur'an in their voice.</p>
+        </div>
+
+        <div class="reciters-search-wrap">
+            <i data-lucide="search"></i>
+            <input type="text" id="reciters-search" placeholder="Search reciters…">
+        </div>
+
+        <div class="reciters-grid" id="reciters-grid"></div>
+
+    </section>
+
+    <!-- <section class="featured-reciters" id="featured-reciters">
 
         <div class="section-header">
 
@@ -691,7 +705,7 @@
 
         </div>
 
-    </section>
+    </section> -->
 
     <!-- ================= DAILY REFLECTION SECTION ================= -->
 

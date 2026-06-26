@@ -150,30 +150,31 @@ const CDN = {
 // ============================================================
 
 const RECITERS = [
-    // ── Tier 1: Most popular ──────────────────────────────────
+    // ── Most Popular ─────────────────────────────────────────
     { id: "mishari", name: "Mishary Rashid Alafasy", folder: "Alafasy_128kbps" },
     { id: "sudais", name: "Abdul Rahman As-Sudais", folder: "Abdurrahmaan_As-Sudais_192kbps" },
     { id: "ali_jaber", name: "Ali Abdullah Jabir (رحمه الله)", folder: "Ali_Jaber_64kbps" },
+    { id: "abdulbasit", name: "Abdul Basit Abdul Samad (Murattal)", folder: "Abdul_Basit_Murattal_192kbps" },
+    { id: "abdulbasit_mj", name: "Abdul Basit Abdul Samad (Mujawwad)", folder: "Abdul_Basit_Mujawwad_128kbps" },
     { id: "husary", name: "Mahmoud Khalil Al-Husary", folder: "Husary_128kbps" },
-    { id: "husary_muj", name: "Al-Husary (Mujawwad)", folder: "Husary_Mujawwad_128kbps" },
-    { id: "abdulbasit", name: "Abdul Basit (Murattal)", folder: "Abdul_Basit_Murattal_192kbps" },
-    { id: "abdulbasit_mj", name: "Abdul Basit (Mujawwad)", folder: "Abdul_Basit_Mujawwad_128kbps" },
+    { id: "husary_muj", name: "Al-Husary (Mujawwad)", folder: "Husary_128kbps_Mujawwad" },  // FIXED
     { id: "minshawi", name: "Muhammad Siddiq Al-Minshawi", folder: "Minshawy_Murattal_128kbps" },
     { id: "shaatree", name: "Abu Bakr Ash-Shaatree", folder: "Abu_Bakr_Ash-Shaatree_128kbps" },
-    { id: "muaiqly", name: "Maher Al-Muaiqly", folder: "MaherAlMuaiqly_64kbps" },
+    { id: "muaiqly", name: "Maher Al-Muaiqly", folder: "MaherAlMuaiqly_64kbps" },    // FIXED — no underscore before 64
     { id: "shuraym", name: "Saud Al-Shuraim", folder: "Saood_ash-Shuraym_128kbps" },
-    // ── Tier 2: Well-known ───────────────────────────────────
-    { id: "hudhaify", name: "Ali Al-Hudhaify", folder: "Ali_Hajjaj_AlSuissi_128kbps" },
-    { id: "ajamy", name: "Ahmed Ibn Ali Al-Ajamy", folder: "ahmed_ibn_ali_al_ajamy_128kbps" },
+    // ── Well Known ───────────────────────────────────────────
+    { id: "hudhaify", name: "Ali Al-Hudhaify", folder: "Hudhaify_128kbps" },          // FIXED — was Ali_Hajjaj_AlSuissi
+    { id: "ajamy", name: "Ahmed Ibn Ali Al-Ajamy", folder: "ahmed_ibn_ali_al_ajamy_128kbps" }, // FIXED — lowercase
     { id: "jibreel", name: "Muhammad Jibreel", folder: "Muhammad_Jibreel_128kbps" },
     { id: "ayyoub", name: "Muhammad Ayyoub", folder: "Muhammad_Ayyoub_128kbps" },
-    { id: "ghamdi", name: "Saad Al-Ghamdi", folder: "Saad_Al-Ghamdi_128kbps" },
+    { id: "ghamdi", name: "Saad Al-Ghamdi", folder: "Ghamadi_40kbps" },            // FIXED — Ghamadi not Ghamdi, 40kbps
     { id: "basfar", name: "Abdullah Basfar", folder: "Abdullah_Basfar_192kbps" },
     { id: "matroud", name: "Abdullah Matroud", folder: "Abdullah_Matroud_128kbps" },
-    { id: "johany", name: "Abdullah Al-Johany", folder: "Abdullah_Al-Johany_128kbps" },
-    { id: "tablawi", name: "Mohamed Al-Tablawi", folder: "Mohammad_al_Tablawi_128kbps" },
+    { id: "juhaynee", name: "Abdullah Al-Juhaynee", folder: "Abdullaah_3awwaad_Al-Juhaynee_128kbps" },
+    { id: "johany", name: "Abdullah Al-Johany", folder: "Abdullah_Al-Johany_128kbps" }, // FIXED — was wrong folder
+    { id: "tablawi", name: "Mohamed Al-Tablawi", folder: "Mohammad_al_Tablawi_128kbps" },// FIXED — Mohammad not Mohamed
     { id: "rifai", name: "Hani Ar-Rifai", folder: "Hani_Rifai_192kbps" },
-    { id: "qasim", name: "Abdul Muhsin Al-Qasim", folder: "Abdul_Muhsin_Al-Qasim_128kbps" },
+    { id: "qasim", name: "Abdul Muhsin Al-Qasim", folder: "Abdul_Muhsin_Al-Qasim_128kbps" }, // FIXED — was wrong folder
     { id: "neana", name: "Ahmed Neana", folder: "Ahmed_Neana_128kbps" },
     { id: "ayman_swed", name: "Ayman Swed", folder: "Ayman_Sowaid_64kbps" },
 ];
@@ -803,6 +804,90 @@ async function loadDailyAyah() {
     } catch (err) {
         console.error("Daily ayah failed:", err);
     }
+}
+
+function initDailyAyahActions() {
+
+    // ── COPY ──
+    document.getElementById("daily-copy-btn")?.addEventListener("click", async () => {
+        if (!dailyAyahData) return;
+        const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, Ayah ${dailyAyahData.ayah}`;
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast("Verse copied ✓");
+        } catch {
+            showToast("Copy failed");
+        }
+    });
+
+    // ── SHARE ──
+    document.getElementById("daily-share-btn")?.addEventListener("click", async () => {
+        if (!dailyAyahData) return;
+        const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, Ayah ${dailyAyahData.ayah}`;
+        try {
+            if (navigator.share) {
+                await navigator.share({ title: "Daily Ayah — Al Furqan", text });
+                showToast("Shared ✓");
+            } else {
+                await navigator.clipboard.writeText(text);
+                showToast("Copied to clipboard");
+            }
+        } catch {
+            showToast("Share cancelled");
+        }
+    });
+
+    // ── TAFSIR ──
+    const tafsirBtn = document.getElementById("daily-tafsir-btn");
+    const tafsirPanel = createDailyTafsirPanel();
+
+    tafsirBtn?.addEventListener("click", async () => {
+        if (!dailyAyahData) return;
+
+        // Toggle
+        if (tafsirPanel.classList.contains("active")) {
+            tafsirPanel.classList.remove("active");
+            tafsirBtn.title = "View Tafsir";
+            return;
+        }
+
+        tafsirPanel.classList.add("active");
+        tafsirBtn.title = "Close Tafsir";
+        tafsirPanel.innerHTML = `<div class="daily-tafsir-loading"><i data-lucide="loader-2" class="spin"></i> Loading tafsir…</div>`;
+        lucide.createIcons();
+
+        try {
+            const CDN_TAFSIR = `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${dailyAyahData.surah}/${dailyAyahData.ayah}.json`;
+            const res = await fetch(CDN_TAFSIR);
+            const data = await res.json();
+            const text = data.text || data.tafsir || "No tafsir available for this verse.";
+            tafsirPanel.innerHTML = `
+        <div class="daily-tafsir-header">
+          <span class="daily-tafsir-badge">Ibn Kathir — ${dailyAyahData.surahName} · Ayah ${dailyAyahData.ayah}</span>
+          <button class="daily-tafsir-close" title="Close"><i data-lucide="x"></i></button>
+        </div>
+        <p class="daily-tafsir-body">${text}</p>`;
+            lucide.createIcons();
+            tafsirPanel.querySelector(".daily-tafsir-close")?.addEventListener("click", () => {
+                tafsirPanel.classList.remove("active");
+                tafsirBtn.title = "View Tafsir";
+            });
+        } catch {
+            tafsirPanel.innerHTML = `<p class="daily-tafsir-error">Could not load tafsir. Please try again.</p>`;
+        }
+    });
+}
+
+function createDailyTafsirPanel() {
+    const existing = document.getElementById("daily-tafsir-panel");
+    if (existing) return existing;
+    const panel = document.createElement("div");
+    panel.id = "daily-tafsir-panel";
+    panel.className = "daily-tafsir-panel";
+    // Insert after .ayah-card
+    const card = document.querySelector(".ayah-card");
+    card?.parentNode?.insertBefore(panel, card.nextSibling);
+    return panel;
 }
 
 function wireHomepageAudioPlayer() {
@@ -1586,12 +1671,85 @@ function fixFloatingPlayerIcons() {
 }
 
 // ============================================================
+// RECITER PROFILES (for dropdown and search)
+// ============================================================
+
+const RECITER_PROFILES = [
+    { id: "mishari", name: "Mishary Alafasy", country: "Kuwait", style: "Murattal", image: "images/reciters/mishari.jpg" },
+    { id: "sudais", name: "Abdul Rahman As-Sudais", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/sudais.jpg" },
+    { id: "ali_jaber", name: "Ali Abdullah Jabir", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ali_jaber.jpg" },
+    { id: "abdulbasit", name: "Abdul Basit (Murattal)", country: "Egypt", style: "Murattal", image: "images/reciters/abdulbasit.jpg" },
+    { id: "abdulbasit_mj", name: "Abdul Basit (Mujawwad)", country: "Egypt", style: "Mujawwad", image: "images/reciters/abdulbasit.jpg" },
+    { id: "husary", name: "Mahmoud Al-Husary", country: "Egypt", style: "Murattal", image: "images/reciters/husary.jpg" },
+    { id: "husary_muj", name: "Al-Husary (Mujawwad)", country: "Egypt", style: "Mujawwad", image: "images/reciters/husary.jpg" },
+    { id: "minshawi", name: "Muhammad Al-Minshawi", country: "Egypt", style: "Murattal", image: "images/reciters/minshawi.jpg" },
+    { id: "shaatree", name: "Abu Bakr Ash-Shaatree", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/shaatree.jpg" },
+    { id: "muaiqly", name: "Maher Al-Muaiqly", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/muaiqly.jpg" },
+    { id: "shuraym", name: "Saud Al-Shuraim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/shuraym.jpg" },
+    { id: "hudhaify", name: "Ali Al-Hudhaify", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/hudhaify.jpg" },
+    { id: "ajamy", name: "Ahmed Al-Ajamy", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ajamy.jpg" },
+    { id: "jibreel", name: "Muhammad Jibreel", country: "Egypt", style: "Murattal", image: "images/reciters/jibreel.jpg" },
+    { id: "ayyoub", name: "Muhammad Ayyoub", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ayyoub.jpg" },
+    { id: "ghamdi", name: "Saad Al-Ghamdi", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ghamdi.jpg" },
+    { id: "basfar", name: "Abdullah Basfar", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/basfar.jpg" },
+    { id: "matroud", name: "Abdullah Matroud", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/matroud.jpg" },
+    { id: "juhaynee", name: "Abdullah Al-Juhaynee", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/juhaynee.jpg" },
+    { id: "johany", name: "Abdullah Al-Johany", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/johany.jpg" },
+    { id: "tablawi", name: "Mohamed Al-Tablawi", country: "Egypt", style: "Murattal", image: "images/reciters/tablawi.jpg" },
+    { id: "rifai", name: "Hani Ar-Rifai", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/rifai.jpg" },
+    { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/qasim.jpg" },
+    { id: "neana", name: "Ahmed Neana", country: "Egypt", style: "Murattal", image: "images/reciters/neana.jpg" },
+    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", style: "Murattal", image: "images/reciters/ayman_swed.jpg" },
+];
+
+function initRecitersGrid() {
+    const gridEl = document.getElementById("reciters-grid");
+    const searchEl = document.getElementById("reciters-search");
+    if (!gridEl) return;
+
+    function renderGrid(list) {
+        if (!list.length) {
+            gridEl.innerHTML = `<div class="reciters-empty">No reciters match your search.</div>`;
+            return;
+        }
+        gridEl.innerHTML = list.map(r => `
+      <a class="reciter-card" href="reciters/reciter.html?r=${r.id}" title="Open ${r.name}'s profile">
+        <div class="reciter-avatar">
+          <img src="${r.image}" alt="${r.name}"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center">
+            <i data-lucide="mic"></i>
+          </span>
+        </div>
+        <h3>${r.name}</h3>
+        <div class="rc-country">${r.country}</div>
+        <span class="rc-style">${r.style}</span>
+      </a>`).join("");
+        lucide.createIcons();
+    }
+
+    renderGrid(RECITER_PROFILES);
+
+    searchEl?.addEventListener("input", e => {
+        const q = e.target.value.trim().toLowerCase();
+        renderGrid(q
+            ? RECITER_PROFILES.filter(r =>
+                r.name.toLowerCase().includes(q) ||
+                r.country.toLowerCase().includes(q) ||
+                r.style.toLowerCase().includes(q))
+            : RECITER_PROFILES
+        );
+    });
+}
+
+// ============================================================
 // INIT
 // ============================================================
 
 populateReciterSelects();
 loadSurahs();
 loadDailyAyah();
+initDailyAyahActions();
 initAnimatedPlaceholder();
 initThemeToggle();
 initFilterBar();
@@ -1599,5 +1757,6 @@ initRepeatButton();
 initReaderThemePanel();
 initMiniSettingsDrawer();
 initBookmarks();
+initRecitersGrid();
 fixFloatingPlayerIcons();
 updateContinueReading();
