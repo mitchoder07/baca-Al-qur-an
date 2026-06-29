@@ -39,7 +39,7 @@
             min-height: 100vh
         }
 
-        /* ── NAV ── */
+        /* NAV */
         .navbar {
             position: fixed;
             top: 0;
@@ -49,9 +49,9 @@
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(20px);
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.9);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
+            z-index: 1000
         }
 
         .nav-logo {
@@ -72,7 +72,7 @@
             padding: .5rem 1rem;
             border-radius: 10px;
             border: 1px solid var(--border);
-            transition: .2s;
+            transition: .2s
         }
 
         .nav-back:hover {
@@ -80,46 +80,46 @@
             color: var(--primary)
         }
 
-        /* ── HERO ── */
+        /* HERO */
         .reciter-hero {
-            padding: 7rem 6% 3rem;
+            padding: 7rem 6% 2.5rem;
             background: linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, transparent 60%);
             position: relative;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .reciter-hero::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(16, 185, 129, 0.08), transparent);
-            pointer-events: none;
+            background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(16, 185, 129, 0.07), transparent);
+            pointer-events: none
         }
 
         .hero-inner {
             max-width: 900px;
             margin: auto;
             display: grid;
-            grid-template-columns: 180px 1fr;
+            grid-template-columns: 190px 1fr;
             gap: 2.5rem;
-            align-items: center;
+            align-items: center
         }
 
-        /* ── AVATAR ── */
+        /* AVATAR */
         .avatar-wrap {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 190px;
+            height: 190px;
             flex-shrink: 0
         }
 
         .avatar-ring {
-            width: 180px;
-            height: 180px;
+            width: 190px;
+            height: 190px;
             border-radius: 50%;
             border: 3px solid var(--primary);
             padding: 4px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, .2), transparent);
+            background: linear-gradient(135deg, rgba(16, 185, 129, .15), transparent)
         }
 
         .avatar-img {
@@ -128,40 +128,38 @@
             border-radius: 50%;
             object-fit: cover;
             background: var(--dark-mid);
-            display: block;
+            display: block
         }
 
         .avatar-placeholder {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--dark-mid), var(--dark-light));
-            display: flex;
+            background: linear-gradient(135deg, #1e293b, #263247);
+            display: none;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: var(--primary);
+            font-size: 3.5rem;
+            color: var(--primary)
         }
 
         .online-dot {
             position: absolute;
-            bottom: 12px;
-            right: 12px;
-            width: 18px;
-            height: 18px;
+            bottom: 14px;
+            right: 14px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: var(--primary);
-            border: 3px solid var(--dark);
+            border: 3px solid var(--dark)
         }
 
-        /* ── HERO INFO ── */
-        .hero-info {}
-
+        /* HERO INFO */
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: .4rem;
-            padding: .3rem .85rem;
+            padding: .3rem .9rem;
             border-radius: 999px;
             background: var(--primary-dim);
             color: var(--primary);
@@ -169,11 +167,11 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .8px;
-            margin-bottom: .9rem;
+            margin-bottom: .9rem
         }
 
         .hero-name {
-            font-size: 2.4rem;
+            font-size: 2.3rem;
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: .3rem
@@ -185,14 +183,14 @@
             color: var(--primary);
             direction: rtl;
             margin-bottom: .7rem;
-            opacity: .85;
+            opacity: .85
         }
 
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
             gap: .6rem;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.2rem
         }
 
         .meta-pill {
@@ -205,7 +203,7 @@
             border: 1px solid var(--border);
             color: var(--text);
             font-size: .8rem;
-            font-weight: 500;
+            font-weight: 500
         }
 
         .meta-pill i {
@@ -215,16 +213,15 @@
 
         .hero-bio {
             color: var(--text);
-            line-height: 1.8;
+            line-height: 1.85;
             font-size: .93rem;
-            max-height: 3.6em;
+            max-height: 4em;
             overflow: hidden;
-            position: relative;
-            transition: max-height .4s ease;
+            transition: max-height .4s ease
         }
 
         .hero-bio.expanded {
-            max-height: 40em
+            max-height: 60em
         }
 
         .bio-toggle {
@@ -234,27 +231,28 @@
             cursor: pointer;
             font-size: .82rem;
             font-weight: 600;
-            margin-top: .4rem;
-            display: block;
+            margin-top: .5rem;
+            display: none;
             padding: 0;
+            font-family: inherit
         }
 
-        /* ── STATS BAR ── */
+        /* STATS */
         .stats-bar {
             max-width: 900px;
-            margin: 1.5rem auto;
+            margin: 1.8rem auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             background: var(--dark-mid);
             border: 1px solid var(--border);
             border-radius: 20px;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .stat-item {
             padding: 1.2rem;
             text-align: center;
-            border-right: 1px solid var(--border);
+            border-right: 1px solid var(--border)
         }
 
         .stat-item:last-child {
@@ -268,26 +266,25 @@
         }
 
         .stat-label {
-            font-size: .75rem;
+            font-size: .72rem;
             color: var(--subtext);
             margin-top: .2rem;
             text-transform: uppercase;
             letter-spacing: .5px
         }
 
-        /* ── STICKY AUDIO PLAYER ── */
+        /* STICKY PLAYER */
         .sticky-player {
             position: sticky;
             top: 65px;
             z-index: 500;
-            background: rgba(15, 23, 42, 0.96);
+            background: rgba(15, 23, 42, 0.97);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            padding: .9rem 6%;
+            padding: .85rem 6%;
             display: none;
             align-items: center;
-            gap: 1.2rem;
-            transition: .3s;
+            gap: 1.2rem
         }
 
         .sticky-player.visible {
@@ -324,12 +321,12 @@
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.07);
             color: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: .2s;
+            transition: .2s
         }
 
         .sp-btn:hover {
@@ -338,8 +335,8 @@
         }
 
         .sp-play {
-            width: 46px;
-            height: 46px;
+            width: 48px !important;
+            height: 48px !important;
             background: var(--primary) !important
         }
 
@@ -347,7 +344,8 @@
             flex: 1;
             display: flex;
             align-items: center;
-            gap: .7rem
+            gap: .7rem;
+            min-width: 0
         }
 
         .sp-time {
@@ -358,11 +356,12 @@
 
         .sp-progress {
             flex: 1;
-            height: 4px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 99px;
             cursor: pointer;
             position: relative;
+            min-width: 60px
         }
 
         .sp-progress-fill {
@@ -370,10 +369,10 @@
             background: var(--primary);
             border-radius: 99px;
             width: 0%;
-            transition: width .2s linear
+            pointer-events: none
         }
 
-        /* ── SURAH LIST SECTION ── */
+        /* SURAH SECTION */
         .surah-section {
             padding: 2rem 6% 5rem;
             max-width: 960px;
@@ -381,22 +380,22 @@
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.3rem;
             display: flex;
             align-items: center;
-            gap: .6rem;
+            gap: .6rem
         }
 
         .section-title i {
             color: var(--primary)
         }
 
-        /* ── SEARCH ── */
+        /* SEARCH */
         .search-wrap {
             position: relative;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.4rem
         }
 
         .search-wrap i {
@@ -405,15 +404,13 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--subtext);
-            pointer-events: none;
-            font-size: .95rem;
+            pointer-events: none
         }
 
         .surah-search-input {
             width: 100%;
             height: 52px;
             padding-left: 46px;
-            padding-right: 1rem;
             border-radius: 14px;
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.04);
@@ -421,7 +418,7 @@
             font-family: inherit;
             font-size: .95rem;
             outline: none;
-            transition: .2s;
+            transition: .2s
         }
 
         .surah-search-input:focus {
@@ -432,11 +429,11 @@
             color: var(--subtext)
         }
 
-        /* ── SURAH ROWS ── */
+        /* SURAH ROWS */
         .surah-list {
             display: flex;
             flex-direction: column;
-            gap: .5rem
+            gap: .45rem
         }
 
         .surah-row {
@@ -450,22 +447,23 @@
             background: rgba(255, 255, 255, 0.025);
             transition: .2s;
             cursor: pointer;
+            user-select: none
         }
 
         .surah-row:hover {
-            background: rgba(16, 185, 129, 0.06);
+            background: rgba(16, 185, 129, 0.07);
             border-color: rgba(16, 185, 129, 0.2);
-            transform: translateX(4px);
+            transform: translateX(3px)
         }
 
         .surah-row.playing {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.11);
+            border-color: rgba(16, 185, 129, 0.4)
         }
 
         .row-num {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
             display: flex;
@@ -476,17 +474,23 @@
             color: var(--subtext);
             transition: .2s;
             position: relative;
+            flex-shrink: 0
         }
 
         .surah-row.playing .row-num,
         .surah-row:hover .row-num {
             background: var(--primary-dim);
-            color: var(--primary);
+            color: var(--primary)
         }
+
+        .row-num-text {}
 
         .row-play-icon {
             display: none;
-            position: absolute
+            position: absolute;
+            inset: 0;
+            align-items: center;
+            justify-content: center
         }
 
         .surah-row:hover .row-num-text,
@@ -496,23 +500,20 @@
 
         .surah-row:hover .row-play-icon,
         .surah-row.playing .row-play-icon {
-            display: block
+            display: flex
         }
 
-        .surah-row.playing .row-play-icon.pause-icon {
-            display: block
+        /* default hover = play icon; playing state = pause icon */
+        .row-play-icon.pause-icon {
+            display: none
         }
 
         .surah-row.playing .row-play-icon.play-icon {
             display: none
         }
 
-        .surah-row:not(.playing):hover .row-play-icon.play-icon {
-            display: block
-        }
-
-        .surah-row:not(.playing):hover .row-play-icon.pause-icon {
-            display: none
+        .surah-row.playing .row-play-icon.pause-icon {
+            display: flex
         }
 
         .row-info {}
@@ -534,57 +535,54 @@
             color: var(--text);
             direction: rtl;
             text-align: right;
-        }
-
-        .row-duration {
-            font-size: .78rem;
-            color: var(--subtext);
-            white-space: nowrap;
-            min-width: 40px;
-            text-align: right;
-        }
-
-        /* ── PLAYING BAR (wave animation) ── */
-        .wave-bars {
-            display: none;
-            align-items: flex-end;
-            gap: 2px;
-            height: 16px;
-        }
-
-        .surah-row.playing .wave-bars {
-            display: flex
+            transition: .2s
         }
 
         .surah-row.playing .row-arabic {
             display: none
         }
 
+        .row-duration {
+            font-size: .78rem;
+            color: var(--subtext);
+            white-space: nowrap;
+            min-width: 38px;
+            text-align: right
+        }
+
+        /* WAVE */
+        .wave-bars {
+            display: none;
+            align-items: flex-end;
+            gap: 2px;
+            height: 18px
+        }
+
+        .surah-row.playing .wave-bars {
+            display: flex
+        }
+
         .wave-bar {
             width: 3px;
             border-radius: 2px;
             background: var(--primary);
-            animation: wave .8s ease-in-out infinite;
+            animation: wave .8s ease-in-out infinite
         }
 
         .wave-bar:nth-child(2) {
-            animation-delay: .15s;
-            height: 60%
+            animation-delay: .12s
         }
 
         .wave-bar:nth-child(3) {
-            animation-delay: .3s;
-            height: 90%
+            animation-delay: .24s
         }
 
         .wave-bar:nth-child(4) {
-            animation-delay: .45s;
-            height: 50%
+            animation-delay: .36s
         }
 
         .wave-bar:nth-child(5) {
-            animation-delay: .6s;
-            height: 75%
+            animation-delay: .48s
         }
 
         @keyframes wave {
@@ -599,11 +597,10 @@
             }
         }
 
-        /* ── EMPTY ── */
         .no-results {
             text-align: center;
             padding: 3rem;
-            color: var(--subtext);
+            color: var(--subtext)
         }
 
         .no-results i {
@@ -613,7 +610,7 @@
             display: block
         }
 
-        /* ── BACK TO TOP ── */
+        /* BACK TOP */
         .back-top {
             position: fixed;
             bottom: 2rem;
@@ -628,10 +625,9 @@
             display: none;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, .35);
-            transition: .25s;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, .3);
             z-index: 800;
+            transition: .25s
         }
 
         .back-top.show {
@@ -642,7 +638,6 @@
             transform: translateY(-3px)
         }
 
-        /* ── RESPONSIVE ── */
         @media(max-width:640px) {
             .hero-inner {
                 grid-template-columns: 1fr;
@@ -671,7 +666,7 @@
             }
 
             .surah-row {
-                grid-template-columns: 42px 1fr auto
+                grid-template-columns: 44px 1fr auto
             }
 
             .row-duration {
@@ -687,21 +682,19 @@
 
 <body>
 
-    <!-- NAV -->
     <header class="navbar">
-        <a class="nav-logo" href="../index.html">Al Furqan</a>
-        <a class="nav-back" href="../index.html#featured-reciters">
-            <i class="fa-solid fa-arrow-left"></i> Back to Reciters
+        <a class="nav-logo" href="../index.html">Baca</a>
+        <a class="nav-back" href="/index.html#featured-reciters">
+            <i class="fa-solid fa-arrow-left"></i> All Reciters
         </a>
     </header>
 
     <!-- STICKY PLAYER -->
     <div class="sticky-player" id="sticky-player">
         <div class="sp-controls">
-            <button class="sp-btn" id="sp-prev" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
-            <button class="sp-btn sp-play" id="sp-play" title="Play / Pause"><i class="fa-solid fa-play"
-                    id="sp-play-icon"></i></button>
-            <button class="sp-btn" id="sp-next" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+            <button class="sp-btn" id="sp-prev"><i class="fa-solid fa-backward-step"></i></button>
+            <button class="sp-btn sp-play" id="sp-play"><i class="fa-solid fa-play" id="sp-play-icon"></i></button>
+            <button class="sp-btn" id="sp-next"><i class="fa-solid fa-forward-step"></i></button>
         </div>
         <div class="sp-info">
             <div class="sp-surah" id="sp-surah-name">—</div>
@@ -717,14 +710,21 @@
     </div>
 
     <!-- HERO -->
-    <section class="reciter-hero" id="hero">
+    <section class="reciter-hero">
         <div class="hero-inner">
             <div class="avatar-wrap">
                 <div class="avatar-ring">
-  
-                    <img class="avatar-img" id="reciter-avatar" src="/reciters/images/mishary.png" alt=""
+                    <!--
+          HOW TO ADD IMAGES:
+          1. Create a folder: images/reciters/ inside your project root
+          2. Name each image after the reciter id, e.g:
+               mishari.jpg, sudais.jpg, ali_jaber.jpg, etc.
+          3. The src below is set automatically by JS — you don't edit this.
+             If the image file is missing it falls back to the mic icon.
+        -->
+                    <img class="avatar-img" id="reciter-avatar" src="" alt=""
                         onerror="this.style.display='none';document.getElementById('avatar-placeholder').style.display='flex'">
-                    <div class="avatar-placeholder" id="avatar-placeholder" style="display:none">
+                    <div class="avatar-placeholder" id="avatar-placeholder">
                         <i class="fa-solid fa-microphone"></i>
                     </div>
                 </div>
@@ -737,11 +737,10 @@
                 <div class="hero-name-arabic" id="reciter-arabic-name"></div>
                 <div class="hero-meta" id="reciter-meta"></div>
                 <p class="hero-bio" id="reciter-bio"></p>
-                <button class="bio-toggle" id="bio-toggle" style="display:none">Read more</button>
+                <button class="bio-toggle" id="bio-toggle">Read more</button>
             </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-bar">
             <div class="stat-item">
                 <div class="stat-num">114</div>
@@ -761,28 +760,57 @@
     <!-- SURAH LIST -->
     <section class="surah-section">
         <h2 class="section-title"><i class="fa-solid fa-book-quran"></i> All Surahs</h2>
-
         <div class="search-wrap">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" class="surah-search-input" id="surah-search"
                 placeholder="Search by name, number or meaning…">
         </div>
-
         <div class="surah-list" id="surah-list">
             <div class="no-results"><i class="fa-solid fa-spinner fa-spin"></i>
-                <p>Loading surahs…</p>
+                <p>Loading…</p>
             </div>
         </div>
     </section>
 
-    <!-- HIDDEN AUDIO -->
     <audio id="reciter-audio"></audio>
-
-    <!-- BACK TO TOP -->
-    <button class="back-top" id="back-top" title="Back to top"><i class="fa-solid fa-chevron-up"></i></button>
+    <button class="back-top" id="back-top"><i class="fa-solid fa-chevron-up"></i></button>
 
     <script>
-        // ── SURAH LIST (inline — no fetch needed) ──
+        // ═══════════════════════════════════════════════
+        // RECITER DATA
+        // folder = exact EveryAyah folder name (verified)
+        // ═══════════════════════════════════════════════
+        const RECITERS = {
+            mishari: { name: "Mishary Rashid Alafasy", arabic: "مشاري راشد العفاسي", country: "Kuwait", style: "Murattal", folder: "Alafasy_128kbps", image: "/images/reciters/mishary.png", bio: "Sheikh Mishary Rashid Al-Afasy is a Kuwaiti Quran reciter, Imam, and nasheed artist born in 1976 in Kuwait City. He studied at the Islamic University of Madinah under leading scholars of tajweed and Quranic sciences. He serves as Imam of the Grand Mosque in Kuwait City and is one of the most recognized voices in the Muslim world. His recitation is celebrated for its warmth, clarity and emotional depth, and his recordings are used by Quran applications across the globe." },
+            sudais: { name: "Abdul Rahman As-Sudais", arabic: "عبدالرحمن السديس", country: "Saudi Arabia", style: "Murattal", folder: "Abdurrahmaan_As-Sudais_192kbps", image: "/images/reciters/sudais.png", bio: "Sheikh Abdul Rahman As-Sudais is the Head of the Presidency for the Affairs of the Two Holy Mosques and Imam of Masjid Al-Haram in Makkah. Born in 1960, he memorized the Quran by age 12. His powerful voice and emotional recitation during the annual Hajj pilgrimage are broadcast worldwide, making him one of the most heard voices in history." },
+            ali_jaber: { name: "Ali Abdullah Jabir", arabic: "علي عبدالله جابر", country: "Saudi Arabia", style: "Murattal", folder: "Ali_Jaber_64kbps", image: "/images/reciters/ali jabir.png", bio: "Sheikh Ali Abdullah Jabir (رحمه الله) was a Saudi Quran reciter who served as Imam of Masjid Al-Haram in Makkah during the 1980s. His voice was renowned for its golden, deeply emotional quality. His Tarawih recitations moved millions across the world. He passed away in 1994, but his recordings remain among the most beloved in Islam. Many scholars consider his voice one of the most beautiful ever to recite the Quran." },
+            abdulbasit: { name: "Abdul Basit Abdul Samad", arabic: "عبدالباسط عبدالصمد", country: "Egypt", style: "Murattal", folder: "Abdul_Basit_Murattal_192kbps", image: "/images/reciters/basit.png", bio: "Sheikh Abdul Basit Muhammad Abdul Samad (1927–1988) is widely regarded as one of the greatest Quran reciters in history. He memorized the Quran at age 10 and won Egypt's State Award for Quranic recitation multiple times. His extraordinary vocal range and emotional power touched hearts across every continent. He served as the official reciter of Radio Cairo." },
+            abdulbasit_mj: { name: "Abdul Basit (Mujawwad)", arabic: "عبدالباسط — مجوّد", country: "Egypt", style: "Mujawwad", folder: "Abdul_Basit_Mujawwad_128kbps", image: "/images/reciters/basit.png", bio: "These Mujawwad recordings of Sheikh Abdul Basit Abdul Samad are considered masterworks of Quranic art. In this style, he employs the full range of Arabic maqamat (melodic modes) while maintaining perfect tajweed. These recordings are studied by reciters worldwide and represent the pinnacle of the Mujawwad tradition." },
+            husary: { name: "Mahmoud Khalil Al-Husary", arabic: "محمود خليل الحصري", country: "Egypt", style: "Murattal", folder: "Husary_128kbps", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary (1917–1980) was Egypt's foremost Quran reciter and the first recipient of the Egyptian State Prize for recitation. Head of the Quran Reciters Union in Egypt and an advisor to Al-Azhar University, his precise tajweed and scholarly delivery make his recordings the gold standard for Quranic recitation education worldwide." },
+            husary_muj: { name: "Al-Husary (Mujawwad)", arabic: "الحصري — مجوّد", country: "Egypt", style: "Mujawwad", folder: "Husary_128kbps_Mujawwad", image: "../images/reciters/al-husary.png", bio: "This is the Mujawwad recording of Sheikh Mahmoud Khalil Al-Husary, featuring deliberate melodic patterns considered the more artistic form of recitation. His mastery of both Murattal and Mujawwad styles makes these recordings exceptional references for students of Quranic recitation." },
+            minshawi: { name: "Muhammad Siddiq Al-Minshawi", arabic: "محمد صديق المنشاوي", country: "Egypt", style: "Murattal", folder: "Minshawy_Murattal_128kbps", image: "/images/reciters/minshawi.png", bio: "Sheikh Muhammad Siddiq Al-Minshawi (1920–1969), known as 'the Crying Sheikh', possessed a voice of extraordinary emotional depth with a natural tremor that moves listeners profoundly. He was the official reciter of Egyptian Radio and his recordings continue to be among the most treasured in the world, decades after his passing." },
+            shaatree: { name: "Abu Bakr Ash-Shaatree", arabic: "أبو بكر الشاطري", country: "Saudi Arabia", style: "Murattal", folder: "Abu_Bakr_Ash-Shaatree_128kbps", image: "/images/reciters/as-shateree.png", bio: "Sheikh Abu Bakr Ash-Shaatree was born in 1970 in Makkah and studied tajweed under prominent scholars. He is known for his gentle, flowing recitation style and has served as Imam of Quba Mosque in Madinah and led Tarawih prayers at Masjid Al-Haram. His recitations are widely praised for their accessibility and spiritual beauty." },
+            muaiqly: { name: "Maher Al-Muaiqly", arabic: "ماهر المعيقلي", country: "Saudi Arabia", style: "Murattal", folder: "Maher_AlMuaiqly_64kbps", image: "/images/reciters/maher.png", bio: "Sheikh Maher Al-Muaiqly is a permanent Imam of Masjid Al-Haram in Makkah, born in 1969. He leads Fajr and Tarawih prayers at the Grand Mosque, reaching millions of pilgrims annually. His voice is valued for its pleasant tone, measured pace, and sincere emotional delivery. He studied at Umm Al-Qura University." },
+            shuraym: { name: "Saud Al-Shuraim", arabic: "سعود الشريم", country: "Saudi Arabia", style: "Murattal", folder: "Saood_ash-Shuraym_128kbps", image: "/images/reciters/shuraim.png", bio: "Sheikh Saud Al-Shuraim is a Saudi scholar, jurist, and Imam of Masjid Al-Haram in Makkah, born in 1966 in Riyadh. A Supreme Court judge and Ph.D. holder from Umm Al-Qura University, his powerful, deep voice makes his recitation particularly commanding. He often leads prayers alongside Sheikh As-Sudais." },
+            hudhaify: { name: "Ali Al-Hudhaify", arabic: "علي الحذيفي", country: "Saudi Arabia", style: "Murattal", folder: "Hudhaify_128kbps", image: "/images/reciters/al-hudaify.png", bio: "Sheikh Ali Al-Hudhaify is the Imam of the Prophet's Mosque (Masjid An-Nabawi) in Madinah, born in 1956. He studied under leading scholars of tajweed and Quranic sciences. His soft, melodious voice and careful tajweed have made him one of the most beloved reciters at the second holiest mosque in Islam." },
+            ajamy: { name: "Ahmed Ibn Ali Al-Ajamy", arabic: "أحمد بن علي العجمي", country: "Saudi Arabia", style: "Murattal", folder: "Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaballah.net", image: "/images/reciters/al-ajmy.png", bio: "Sheikh Ahmed Ibn Ali Al-Ajamy was born in 1968 in Khobar, Saudi Arabia. He graduated from Imam Muhammad ibn Saud Islamic University and served as Imam in Khobar. He is praised for his clear, crisp recitation and precise tajweed, making his recordings particularly suitable for Quran study and memorization." },
+            jibreel: { name: "Muhammad Jibreel", arabic: "محمد جبريل", country: "Egypt", style: "Murattal", folder: "Muhammad_Jibreel_128kbps", image: "/images/reciters/jibreel.png", bio: "Sheikh Muhammad Jibreel is an Egyptian Quran reciter famous for his heartfelt, emotional recitation and his du'a during Tarawih prayers, which has brought audiences to tears worldwide. His voice carries a unique sincerity and spiritual depth that resonates with listeners from all backgrounds." },
+            ayyoub: { name: "Muhammad Ayyoub", arabic: "محمد أيوب", country: "Saudi Arabia", style: "Murattal", folder: "Muhammad_Ayyoub_128kbps", image: "/images/reciters/ayyub.png", bio: "Sheikh Muhammad Ayyoub served as Imam of Masjid Al-Haram in Makkah. Born in 1952 in Madinah, he is known for his strong, resonant voice and confident delivery. He studied tajweed under prominent scholars and has led Tarawih prayers for many years, respected for his scholarly grounding." },
+            ghamdi: { name: "Saad Al-Ghamdi", arabic: "سعد الغامدي", country: "Saudi Arabia", style: "Murattal", folder: "Ghamadi_40kbps", image: "/images/reciters/saad_al-ghamdi.png", bio: "Sheikh Saad Al-Ghamdi was born in 1967 in Dammam. He is known for his calm, clear and measured recitation style. His steady pace and excellent pronunciation make his recordings particularly popular for continuous listening and Quran memorization. He leads prayers at a mosque in Riyadh." },
+            basfar: { name: "Abdullah Basfar", arabic: "عبدالله بصفر", country: "Saudi Arabia", style: "Murattal", folder: "Abdullah_Basfar_192kbps", image: "/images/reciters/basfar.png", bio: "Sheikh Abdullah Basfar is a Saudi reciter and Secretary General of the World Association for the Memorization of the Holy Quran. Born in Jeddah, he holds advanced degrees in Islamic law. His clear, accessible style and scholarly background have made him a respected figure in global Quran education." },
+            matroud: { name: "Abdullah Matroud", arabic: "عبدالله الماطرود", country: "Saudi Arabia", style: "Murattal", folder: "Abdullah_Matroud_128kbps", image: "/images/reciters/al-matrood.png", bio: "Sheikh Abdullah Matroud is a Saudi Quran reciter recognized for his steady, composed recitation style. His recordings are known for their clarity and reliability of pronunciation, making them popular for Quran study and memorization programs across the Arab world." },
+            juhaynee: { name: "Abdullah Al-Juhaynee", arabic: "عبدالله الجهني", country: "Saudi Arabia", style: "Murattal", folder: "Abdullaah_3awwaad_Al-Juhaynee_128kbps", image: "/images/reciters/al-juhani.png", bio: "Sheikh Abdullah Awwad Al-Juhaynee is an Imam of Masjid Al-Haram in Makkah, known for his strong, melodious voice especially in the shorter chapters. His Tarawih recordings have become popular worldwide for their emotional quality and careful adherence to tajweed rules." },
+            johany: { name: "Abdullah Al-Johany", arabic: "عبدالله الجهاني", country: "Saudi Arabia", style: "Murattal", folder: "Abdullah_Al-Johany_128kbps", image: "/images/reciters/al-johany.png", bio: "Sheikh Abdullah Al-Johany is a Saudi Quran reciter known for his warm, resonant voice. His recordings reflect a blend of emotional depth and scholarly precision in applying the rules of tajweed, and he is widely listened to across the Arab world." },
+            tablawi: { name: "Mohamed Al-Tablawi", arabic: "محمد الطبلاوي", country: "Egypt", style: "Murattal", folder: "Mohammad_al_Tablaway_128kbps", image: "/images/reciters/tablawi.png", bio: "Sheikh Mohamed Mahmoud Tablawi was born on 14 November 1934 in Mit Oqba, Egypt. He was a distinguished Egyptian imam and one of the world's most celebrated Qur'an reciters, widely recognized for his beautiful and powerful voice. He began memorizing the Holy Qur'an at the age of four and completed his Hifz by the age of ten. In 1956, he graduated from Al-Azhar with a degree in Qur'anic recitations and soon began reciting on Egyptian television following recommendations from prominent Islamic scholars. Known as the 'Man with the Golden Voice', Tablawi dedicated his life to spreading the message of the Qur'an through public recitations, Islamic lectures, and youth engagement. He also recited at the funerals of several notable figures, including members of the Jordanian, Moroccan, and Syrian leadership." },
+            rifai: { name: "Hani Ar-Rifai", arabic: "هاني الرفاعي", country: "Saudi Arabia", style: "Murattal", folder: "Hani_Rifai_192kbps", image: "../images/reciters/Hani Ar-rifai.png", bio: "Sheikh Hani Ar-Rifai is a Saudi reciter known for his smooth, soothing recitation style. His recordings are particularly popular for evening and night listening and are widely recommended for a calm Quran experience. He is praised for excellent tajweed and the natural, unhurried flow of his recitation." },
+            qasim: { name: "Abdul Muhsin Al-Qasim", arabic: "عبدالمحسن القاسم", country: "Saudi Arabia", style: "Murattal", folder: "Muhsin_Al_Qasim_192kbps", image: "../images/reciters/muhsin.png", bio: "Sheikh Abdul Muhsin Al-Qasim is the Imam and Khateeb of the Prophet's Mosque in Madinah. A jurist and scholar of fiqh as well as a reciter, his recordings are appreciated for their scholarly depth and clear pronunciation. He is highly respected for his dual role as Imam and Islamic judge." },
+            neana: { name: "Ahmed Neana", arabic: "أحمد نعينع", country: "Egypt", style: "Murattal", folder: "Ahmed_Neana_128kbps", image: "/images/reciters/neana.png", bio: "Sheikh Ahmed Neana follows the great Egyptian tradition of Quranic recitation. His voice carries the characteristic warmth and melodic richness of Egyptian reciters, and his recordings are appreciated for their emotional expressiveness and clear application of tajweed." },
+            ayman_swed: { name: "Ayman Swed", arabic: "أيمن سويد", country: "Syria", style: "Murattal", folder: "Ayman_Sowaid_64kbps", image: "/images/reciters/ayman.png", bio: "Sheikh Ayman Rushdi Swed is a Syrian scholar of tajweed born in Damascus. A professor of Quranic sciences, he has dedicated his career to preserving and teaching correct Quranic recitation. His recordings are praised for exemplary tajweed and he has trained hundreds of Quran teachers worldwide." },
+        };
+
+        // ═══════════════════════════════════════════════
+        // SURAH LIST — static, no API needed
+        // ═══════════════════════════════════════════════
         const SURAH_LIST = [
             { id: 1, name: "الفاتحة", tr: "Al-Fatihah", meaning: "The Opener", verses: 7, type: "Meccan" },
             { id: 2, name: "البقرة", tr: "Al-Baqarah", meaning: "The Cow", verses: 286, type: "Medinan" },
@@ -791,7 +819,7 @@
             { id: 5, name: "المائدة", tr: "Al-Ma'idah", meaning: "The Table Spread", verses: 120, type: "Medinan" },
             { id: 6, name: "الأنعام", tr: "Al-An'am", meaning: "The Cattle", verses: 165, type: "Meccan" },
             { id: 7, name: "الأعراف", tr: "Al-A'raf", meaning: "The Heights", verses: 206, type: "Meccan" },
-            { id: 8, name: "الأنفال", tr: "Al-Anfal", meaning: "The Spoils of War", verses: 75, type: "Medinan" },
+            { id: 8, name: "الأنفال", tr: "Al-Anfal", meaning: "Spoils of War", verses: 75, type: "Medinan" },
             { id: 9, name: "التوبة", tr: "At-Tawbah", meaning: "The Repentance", verses: 129, type: "Medinan" },
             { id: 10, name: "يونس", tr: "Yunus", meaning: "Jonah", verses: 109, type: "Meccan" },
             { id: 11, name: "هود", tr: "Hud", meaning: "Hud", verses: 123, type: "Meccan" },
@@ -820,7 +848,7 @@
             { id: 34, name: "سبإ", tr: "Saba", meaning: "Sheba", verses: 54, type: "Meccan" },
             { id: 35, name: "فاطر", tr: "Fatir", meaning: "Originator", verses: 45, type: "Meccan" },
             { id: 36, name: "يس", tr: "Ya-Sin", meaning: "Ya Sin", verses: 83, type: "Meccan" },
-            { id: 37, name: "الصافات", tr: "As-Saffat", meaning: "Those who set the Ranks", verses: 182, type: "Meccan" },
+            { id: 37, name: "الصافات", tr: "As-Saffat", meaning: "Those Who Set the Ranks", verses: 182, type: "Meccan" },
             { id: 38, name: "ص", tr: "Sad", meaning: "The Letter Sad", verses: 88, type: "Meccan" },
             { id: 39, name: "الزمر", tr: "Az-Zumar", meaning: "The Troops", verses: 75, type: "Meccan" },
             { id: 40, name: "غافر", tr: "Ghafir", meaning: "The Forgiver", verses: 85, type: "Meccan" },
@@ -829,7 +857,7 @@
             { id: 43, name: "الزخرف", tr: "Az-Zukhruf", meaning: "Ornaments of Gold", verses: 89, type: "Meccan" },
             { id: 44, name: "الدخان", tr: "Ad-Dukhan", meaning: "The Smoke", verses: 59, type: "Meccan" },
             { id: 45, name: "الجاثية", tr: "Al-Jathiyah", meaning: "The Crouching", verses: 37, type: "Meccan" },
-            { id: 46, name: "الأحقاف", tr: "Al-Ahqaf", meaning: "The Wind-curved Sandhills", verses: 35, type: "Meccan" },
+            { id: 46, name: "الأحقاف", tr: "Al-Ahqaf", meaning: "The Wind-Curved Sandhills", verses: 35, type: "Meccan" },
             { id: 47, name: "محمد", tr: "Muhammad", meaning: "Muhammad", verses: 38, type: "Medinan" },
             { id: 48, name: "الفتح", tr: "Al-Fath", meaning: "The Victory", verses: 29, type: "Medinan" },
             { id: 49, name: "الحجرات", tr: "Al-Hujurat", meaning: "The Rooms", verses: 18, type: "Medinan" },
@@ -843,7 +871,7 @@
             { id: 57, name: "الحديد", tr: "Al-Hadid", meaning: "The Iron", verses: 29, type: "Medinan" },
             { id: 58, name: "المجادلة", tr: "Al-Mujadila", meaning: "The Pleading Woman", verses: 22, type: "Medinan" },
             { id: 59, name: "الحشر", tr: "Al-Hashr", meaning: "The Exile", verses: 24, type: "Medinan" },
-            { id: 60, name: "الممتحنة", tr: "Al-Mumtahanah", meaning: "She that is to be examined", verses: 13, type: "Medinan" },
+            { id: 60, name: "الممتحنة", tr: "Al-Mumtahanah", meaning: "She That Is Examined", verses: 13, type: "Medinan" },
             { id: 61, name: "الصف", tr: "As-Saf", meaning: "The Ranks", verses: 14, type: "Medinan" },
             { id: 62, name: "الجمعة", tr: "Al-Jumu'ah", meaning: "The Congregation", verses: 11, type: "Medinan" },
             { id: 63, name: "المنافقون", tr: "Al-Munafiqun", meaning: "The Hypocrites", verses: 11, type: "Medinan" },
@@ -862,14 +890,14 @@
             { id: 76, name: "الإنسان", tr: "Al-Insan", meaning: "The Man", verses: 31, type: "Medinan" },
             { id: 77, name: "المرسلات", tr: "Al-Mursalat", meaning: "The Emissaries", verses: 50, type: "Meccan" },
             { id: 78, name: "النبإ", tr: "An-Naba", meaning: "The Tidings", verses: 40, type: "Meccan" },
-            { id: 79, name: "النازعات", tr: "An-Nazi'at", meaning: "Those who drag forth", verses: 46, type: "Meccan" },
+            { id: 79, name: "النازعات", tr: "An-Nazi'at", meaning: "Those Who Drag Forth", verses: 46, type: "Meccan" },
             { id: 80, name: "عبس", tr: "'Abasa", meaning: "He Frowned", verses: 42, type: "Meccan" },
             { id: 81, name: "التكوير", tr: "At-Takwir", meaning: "The Overthrowing", verses: 29, type: "Meccan" },
             { id: 82, name: "الإنفطار", tr: "Al-Infitar", meaning: "The Cleaving", verses: 19, type: "Meccan" },
             { id: 83, name: "المطففين", tr: "Al-Mutaffifin", meaning: "The Defrauding", verses: 36, type: "Meccan" },
             { id: 84, name: "الإنشقاق", tr: "Al-Inshiqaq", meaning: "The Splitting Open", verses: 25, type: "Meccan" },
             { id: 85, name: "البروج", tr: "Al-Buruj", meaning: "The Mansions of the Stars", verses: 22, type: "Meccan" },
-            { id: 86, name: "الطارق", tr: "At-Tariq", meaning: "The Nightcommer", verses: 17, type: "Meccan" },
+            { id: 86, name: "الطارق", tr: "At-Tariq", meaning: "The Nightcomer", verses: 17, type: "Meccan" },
             { id: 87, name: "الأعلى", tr: "Al-A'la", meaning: "The Most High", verses: 19, type: "Meccan" },
             { id: 88, name: "الغاشية", tr: "Al-Ghashiyah", meaning: "The Overwhelming", verses: 26, type: "Meccan" },
             { id: 89, name: "الفجر", tr: "Al-Fajr", meaning: "The Dawn", verses: 30, type: "Meccan" },
@@ -900,55 +928,34 @@
             { id: 114, name: "الناس", tr: "An-Nas", meaning: "The Mankind", verses: 6, type: "Meccan" }
         ];
 
-        // ── RECITER DATA ──
-        const RECITERS = {
-            mishari: { name: "Mishary Rashid Alafasy", arabic: "مشاري راشد العفاسي", country: "Kuwait", style: "Murattal", folder: "Alafasy_128kbps", image: "images/reciters/mishari.jpg", bio: "Sheikh Mishary Rashid Al-Afasy is a Kuwaiti Quran reciter, Imam, and nasheed artist born in 1976. He studied at the Islamic University of Madinah and is one of the most recognized voices in the Muslim world. His recitation is known for its clarity, warmth, and emotional depth. He has served as Imam of the Grand Mosque of Kuwait City and has millions of followers worldwide. His recordings have been used by Quran applications across the globe." },
-            sudais: { name: "Abdul Rahman As-Sudais", arabic: "عبدالرحمن السديس", country: "Saudi Arabia", style: "Murattal", folder: "Abdurrahmaan_As-Sudais_192kbps", image: "images/reciters/sudais.jpg", bio: "Sheikh Abdul Rahman ibn Abdul Aziz as-Sudais is the Head of the Presidency for the Affairs of the Two Holy Mosques and the Imam and Khateeb of Masjid Al-Haram in Makkah. Born in 1960, he completed memorization of the Quran at age 12. His powerful voice and emotional recitation during the annual Hajj pilgrimage are broadcast worldwide, making him one of the most heard reciters in history." },
-            ali_jaber: { name: "Ali Abdullah Jabir", arabic: "علي عبدالله جابر", country: "Saudi Arabia", style: "Murattal", folder: "Ali_Jaber_64kbps", image: "images/reciters/ali_jaber.jpg", bio: "Sheikh Ali Abdullah Jabir (رحمه الله) was a Saudi Quran reciter who served as Imam of Masjid Al-Haram in Makkah during the 1980s. His voice was celebrated for its golden, emotional quality and his Tarawih recitations moved millions. He passed away in 1994, but his recordings remain among the most beloved in the Islamic world. Many scholars consider his voice one of the most beautiful ever to recite the Quran." },
-            husary: { name: "Mahmoud Khalil Al-Husary", arabic: "محمود خليل الحصري", country: "Egypt", style: "Murattal", folder: "Husary_128kbps", image: "images/reciters/husary.jpg", bio: "Sheikh Mahmoud Khalil Al-Husary (1917–1980) was an Egyptian Quran reciter and the first to receive the Egyptian State Prize for Quran recitation. He served as the head of the Quran Reciters Union in Egypt. His style is characterized by precise tajweed and measured, scholarly delivery. He was appointed as an advisor to Al-Azhar University and his recordings are widely used in teaching proper Quranic recitation worldwide." },
-            husary_muj: { name: "Al-Husary (Mujawwad)", arabic: "الحصري — مجوّد", country: "Egypt", style: "Mujawwad", folder: "Husary_128kbps_Mujawwad", image: "images/reciters/husary.jpg", bio: "This is the Mujawwad (melodically ornamented) style recording of Sheikh Mahmoud Khalil Al-Husary. The Mujawwad style features deliberate melodic patterns and is considered the more artistic form of recitation, distinct from the everyday Murattal style. Al-Husary's mastery of both styles makes these recordings exceptional references for students of Quran recitation." },
-            abdulbasit: { name: "Abdul Basit Abdul Samad", arabic: "عبدالباسط عبدالصمد", country: "Egypt", style: "Murattal", folder: "Abdul_Basit_Murattal_192kbps", image: "images/reciters/abdulbasit.jpg", bio: "Sheikh Abdul Basit Muhammad Abdul Samad (1927–1988) was an Egyptian Quran reciter widely regarded as one of the greatest voices in Islamic history. He memorized the Quran at age 10 and won the Egyptian State Award for Quranic recitation multiple times. His voice has an extraordinary range and emotional power. He served as the official reciter of Radio Cairo and his recordings circled the globe, touching hearts across every continent." },
-            abdulbasit_mj: { name: "Abdul Basit (Mujawwad)", arabic: "عبدالباسط — مجوّد", country: "Egypt", style: "Mujawwad", folder: "Abdul_Basit_Mujawwad_128kbps", image: "images/reciters/abdulbasit.jpg", bio: "The Mujawwad recordings of Sheikh Abdul Basit Abdul Samad are considered masterworks of Quranic art. In this style, he employs the full range of Arabic maqamat (melodic modes) while maintaining perfect tajweed. These recordings are studied by reciters worldwide and represent the pinnacle of the Mujawwad tradition." },
-            minshawi: { name: "Muhammad Siddiq Al-Minshawi", arabic: "محمد صديق المنشاوي", country: "Egypt", style: "Murattal", folder: "Minshawy_Murattal_128kbps", image: "images/reciters/minshawi.jpg", bio: "Sheikh Muhammad Siddiq Al-Minshawi (1920–1969) was one of Egypt's most celebrated Quran reciters. Known as the 'Crying Sheikh' for the profound emotion his recitation evokes, his voice carries a natural tremor that many find deeply moving. He was appointed as the official reciter of the Egyptian Radio and his recordings continue to be among the most listened to in the world decades after his passing." },
-            shaatree: { name: "Abu Bakr Ash-Shaatree", arabic: "أبو بكر الشاطري", country: "Saudi Arabia", style: "Murattal", folder: "Abu_Bakr_Ash-Shaatree_128kbps", image: "images/reciters/shaatree.jpg", bio: "Sheikh Abu Bakr Muhammad Abdullah Ash-Shaatree is a Saudi Quran reciter born in 1970 in Makkah. He studied under prominent scholars of tajweed and is known for his gentle, flowing recitation style. He has served as Imam of Quba Mosque in Madinah and has led Tarawih prayers at Masjid Al-Haram. His Quran recordings are widely distributed and praised for their accessibility and beauty." },
-            muaiqly: { name: "Maher Al-Muaiqly", arabic: "ماهر المعيقلي", country: "Saudi Arabia", style: "Murattal", folder: "MaherAlMuaiqly_64kbps", image: "images/reciters/muaiqly.jpg", bio: "Sheikh Maher bin Hamad Al-Muaiqly is a Saudi Quran reciter and permanent Imam of Masjid Al-Haram in Makkah. Born in 1969, he leads Fajr and Tarawih prayers at the Grand Mosque, reaching millions of pilgrims annually. His voice is characterized by its pleasant tone, measured pace, and emotional sincerity. He studied at Umm Al-Qura University and is one of the most active contemporary reciters." },
-            shuraym: { name: "Saud Al-Shuraim", arabic: "سعود الشريم", country: "Saudi Arabia", style: "Murattal", folder: "Saood_ash-Shuraym_128kbps", image: "images/reciters/shuraym.jpg", bio: "Sheikh Saud ibn Ibrahim Al-Shuraim is a Saudi scholar and Imam of Masjid Al-Haram in Makkah. Born in 1966 in Riyadh, he is also a jurist and has served as a judge at the Supreme Court. His powerful, deep voice makes his recitation particularly commanding, and he often leads prayers alongside Sheikh As-Sudais. He obtained his Ph.D. from Umm Al-Qura University." },
-            hudhaify: { name: "Ali Al-Hudhaify", arabic: "علي الحذيفي", country: "Saudi Arabia", style: "Murattal", folder: "Hudhaify_128kbps", image: "images/reciters/hudhaify.jpg", bio: "Sheikh Ali ibn Abdur-Rahman Al-Hudhaify is a Saudi Quran reciter and Imam of the Prophet's Mosque (Masjid An-Nabawi) in Madinah. Born in 1956, he studied under leading scholars of tajweed and Quran sciences. His soft, melodious voice and careful tajweed have made him one of the most beloved reciters leading prayers at the second holiest mosque in Islam." },
-            ajamy: { name: "Ahmed Ibn Ali Al-Ajamy", arabic: "أحمد بن علي العجمي", country: "Saudi Arabia", style: "Murattal", folder: "ahmed_ibn_ali_al_ajamy_128kbps", image: "images/reciters/ajamy.jpg", bio: "Sheikh Ahmed ibn Ali ibn Mohammed Al-Ajamy is a Saudi Quran reciter born in 1968 in Khobar. He studied at Imam Muhammad ibn Saud Islamic University and served as Imam in Al-Mograbi Mosque in Khobar. He is celebrated for his clear, crisp recitation and precise application of tajweed rules, making his recordings particularly suitable for learning and memorization." },
-            jibreel: { name: "Muhammad Jibreel", arabic: "محمد جبريل", country: "Egypt", style: "Murattal", folder: "Muhammad_Jibreel_128kbps", image: "images/reciters/jibreel.jpg", bio: "Sheikh Muhammad Jibreel is an Egyptian Quran reciter known for his heartfelt and deeply emotional recitation style. He is particularly famous for his du'a (supplication) during Tarawih prayers, which has brought audiences to tears around the world. His voice carries a unique quality of sincerity and spiritual depth that resonates strongly with listeners from all backgrounds." },
-            ayyoub: { name: "Muhammad Ayyoub", arabic: "محمد أيوب", country: "Saudi Arabia", style: "Murattal", folder: "Muhammad_Ayyoub_128kbps", image: "images/reciters/ayyoub.jpg", bio: "Sheikh Muhammad ibn Ahmad Ayyoub is a Saudi Quran reciter who served as Imam of Masjid Al-Haram in Makkah. Born in 1952 in Madinah, he is known for his strong, resonant voice and confident delivery. He studied tajweed under prominent scholars and his recordings are widely distributed. He has led Tarawih prayers for many years and is respected for his scholarly grounding." },
-            ghamdi: { name: "Saad Al-Ghamdi", arabic: "سعد الغامدي", country: "Saudi Arabia", style: "Murattal", folder: "Ghamadi_40kbps", image: "images/reciters/ghamdi.jpg", bio: "Sheikh Saad ibn Sa'id Al-Ghamdi is a Saudi Quran reciter born in 1967 in Dammam. He is known for his calm, clear, and measured recitation style. He has worked with numerous Quran applications and his voice is particularly popular for continuous listening and Quran learning due to its steady pace and excellent pronunciation. He leads prayers at a mosque in Riyadh." },
-            basfar: { name: "Abdullah Basfar", arabic: "عبدالله بصفر", country: "Saudi Arabia", style: "Murattal", folder: "Abdullah_Basfar_192kbps", image: "images/reciters/basfar.jpg", bio: "Sheikh Abdullah Awad Al-Basfar is a Saudi Quran reciter and scholar. He is the Secretary General of the World Association for the Memorization of the Holy Quran. Born in Jeddah, he is known for his clear and accessible recitation style. He holds advanced degrees in Islamic law and has worked extensively in promoting Quran memorization globally." },
-            matroud: { name: "Abdullah Matroud", arabic: "عبدالله الماطرود", country: "Saudi Arabia", style: "Murattal", folder: "Abdullah_Matroud_128kbps", image: "images/reciters/matroud.jpg", bio: "Sheikh Abdullah Matroud is a Saudi Quran reciter recognized for his steady, composed recitation style. He has worked as an Imam in Saudi Arabia and his recordings are known for their reliability and clarity of pronunciation, making them popular choices for Quran study and memorization programs." },
-            juhaynee: { name: "Abdullah Al-Juhaynee", arabic: "عبدالله الجهني", country: "Saudi Arabia", style: "Murattal", folder: "Abdullaah_3awwaad_Al-Juhaynee_128kbps", image: "images/reciters/juhaynee.jpg", bio: "Sheikh Abdullah Awwad Al-Juhaynee is a Saudi Quran reciter who serves as Imam of Masjid Al-Haram in Makkah. He is known for his strong and melodious voice, particularly in the later chapters of the Quran. His Tarawih recordings have become popular for their emotional quality and his careful adherence to the rules of tajweed." },
-            johany: { name: "Abdullah Al-Johany", arabic: "عبدالله الجهني", country: "Saudi Arabia", style: "Murattal", folder: "Abdullah_Al-Johany_128kbps", image: "images/reciters/johany.jpg", bio: "Sheikh Abdullah Al-Johany is a Saudi Quran reciter known for his warm, resonant voice. He is widely listened to across the Arab world and his recordings reflect a blend of emotional depth and scholarly precision in applying the rules of tajweed." },
-            tablawi: { name: "Mohamed Al-Tablawi", arabic: "محمد الطبلاوي", country: "Egypt", style: "Murattal", folder: "Mohammad_al_Tablawi_128kbps", image: "images/reciters/tablawi.jpg", bio: "Sheikh Mohamed Mahmoud Al-Tablawi is an Egyptian Quran reciter born in 1938. He is one of Egypt's most celebrated and senior reciters, having studied under Sheikh Al-Husary. Known for his rich, full voice and mastery of multiple maqamat, he has dedicated over six decades to reciting and teaching the Quran. He is regarded as one of the living masters of the Egyptian school of recitation." },
-            rifai: { name: "Hani Ar-Rifai", arabic: "هاني الرفاعي", country: "Saudi Arabia", style: "Murattal", folder: "Hani_Rifai_192kbps", image: "images/reciters/rifai.jpg", bio: "Sheikh Hani ibn Abdul Aziz Ar-Rifai is a Saudi Quran reciter known for his smooth, soothing recitation style. His recordings are particularly popular for evening and night listening and are widely recommended for those seeking a calming Quran experience. He is praised for his excellent tajweed and the natural, unhurried flow of his recitation." },
-            qasim: { name: "Abdul Muhsin Al-Qasim", arabic: "عبدالمحسن القاسم", country: "Saudi Arabia", style: "Murattal", folder: "Abdul_Muhsin_Al-Qasim_128kbps", image: "images/reciters/qasim.jpg", bio: "Sheikh Abdul Muhsin ibn Muhammad Al-Qasim is the Imam and Khateeb of the Prophet's Mosque (Masjid An-Nabawi) in Madinah. He is a scholar of fiqh and Islamic jurisprudence in addition to being a Quran reciter. His recordings are appreciated for their scholarly depth and clear pronunciation, and he is highly respected in the Muslim world for his dual role as Imam and jurist." },
-            neana: { name: "Ahmed Neana", arabic: "أحمد نعينع", country: "Egypt", style: "Murattal", folder: "Ahmed_Neana_128kbps", image: "images/reciters/neana.jpg", bio: "Sheikh Ahmed Neana is an Egyptian Quran reciter who follows the great Egyptian tradition of Quranic recitation. His voice carries the characteristic warmth and melodic richness of Egyptian reciters, and his recordings are appreciated for their emotional expressiveness and clear tajweed." },
-            ayman_swed: { name: "Ayman Swed", arabic: "أيمن سويد", country: "Syria", style: "Murattal", folder: "Ayman_Sowaid_64kbps", image: "images/reciters/ayman_swed.jpg", bio: "Sheikh Ayman Rushdi Swed is a Syrian Quran reciter and scholar of tajweed born in Damascus. He is a professor of Quranic sciences and tajweed and has dedicated his career to preserving and teaching the correct recitation of the Quran. His recordings are praised for their exemplary tajweed and he has trained hundreds of Quran teachers across the world." },
-        };
-
-        // ── STATE ──
-        let reciterId = new URLSearchParams(location.search).get("r") || "mishari";
-        let reciterData = RECITERS[reciterId] || RECITERS["mishari"];
-        let currentSurah = null;
-        let isPlaying = false;
-        let filteredSurahs = [...SURAH_LIST];
+        // ═══════════════════════════════════════════════
+        // BOOT — read reciter id from URL
+        // e.g. reciter.html?r=ali_jaber  →  loads Ali Jaber
+        // ═══════════════════════════════════════════════
+        const reciterId = new URLSearchParams(location.search).get("r") || "mishari";
+        const reciterData = RECITERS[reciterId] || RECITERS["mishari"];
 
         const audio = document.getElementById("reciter-audio");
+        let currentSurahId = null;
+        let isPlaying = false;
 
-        // ── HELPERS ──
+        // ── helpers ──
         function pad3(n) { return String(n).padStart(3, "0"); }
+
+        // BUG FIX 1: audio URL now uses reciterData.folder from ABOVE — NOT hardcoded
+        // This is why clicking Ali Jaber was playing Mishary — the folder wasn't being read
         function audioUrl(surahId) {
+            // EveryAyah full-surah format: folder/SSSAAA.mp3 where AAA=000 is full surah
+            // If that 000 file doesn't exist we fall back to ayah 001
             return `https://everyayah.com/data/${reciterData.folder}/${pad3(surahId)}001.mp3`;
         }
+
         function fmt(s) {
             if (!s || isNaN(s)) return "0:00";
             return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
         }
 
-        // ── POPULATE HERO ──
+        // ── HERO ──
         function populateHero() {
             document.title = `${reciterData.name} — Al Furqan`;
             document.getElementById("reciter-name").textContent = reciterData.name;
@@ -956,35 +963,32 @@
             document.getElementById("stat-style").textContent = reciterData.style;
             document.getElementById("sp-reciter-name").textContent = reciterData.name;
 
-            // Avatar — you place images at images/reciters/{id}.jpg
+            // Avatar — JS sets the src; onerror in HTML shows the placeholder
             const img = document.getElementById("reciter-avatar");
             img.src = reciterData.image;
             img.alt = reciterData.name;
 
-            // Meta pills
-            const metaEl = document.getElementById("reciter-meta");
-            metaEl.innerHTML = `
+            document.getElementById("reciter-meta").innerHTML = `
     <span class="meta-pill"><i class="fa-solid fa-earth-africa"></i>${reciterData.country}</span>
     <span class="meta-pill"><i class="fa-solid fa-music"></i>${reciterData.style}</span>
     <span class="meta-pill"><i class="fa-solid fa-star"></i>Featured Reciter</span>`;
 
-            // Bio
             const bioEl = document.getElementById("reciter-bio");
             const toggleEl = document.getElementById("bio-toggle");
             bioEl.textContent = reciterData.bio;
-            // Show toggle only if text overflows
+            // show toggle only when bio is clipped
             setTimeout(() => {
-                if (bioEl.scrollHeight > bioEl.clientHeight + 2) {
+                if (bioEl.scrollHeight > bioEl.clientHeight + 4) {
                     toggleEl.style.display = "block";
                     toggleEl.addEventListener("click", () => {
                         bioEl.classList.toggle("expanded");
                         toggleEl.textContent = bioEl.classList.contains("expanded") ? "Read less" : "Read more";
                     });
                 }
-            }, 100);
+            }, 120);
         }
 
-        // ── RENDER SURAH LIST ──
+        // ── RENDER ROWS ──
         function renderSurahs(list) {
             const el = document.getElementById("surah-list");
             if (!list.length) {
@@ -992,22 +996,22 @@
                 return;
             }
             el.innerHTML = list.map(s => `
-    <div class="surah-row" data-id="${s.id}" id="row-${s.id}" role="button" tabindex="0" aria-label="Play ${s.tr}">
+    <div class="surah-row" id="row-${s.id}" data-id="${s.id}" tabindex="0" role="button" aria-label="Play ${s.tr}">
       <div class="row-num">
         <span class="row-num-text">${s.id}</span>
-        <i class="fa-solid fa-play row-play-icon play-icon"></i>
-        <i class="fa-solid fa-pause row-play-icon pause-icon"></i>
+        <span class="row-play-icon play-icon"><i class="fa-solid fa-play" style="font-size:.8rem"></i></span>
+        <span class="row-play-icon pause-icon"><i class="fa-solid fa-pause" style="font-size:.8rem"></i></span>
       </div>
       <div class="row-info">
         <div class="row-name">${s.tr}</div>
         <div class="row-meta">${s.meaning} · ${s.verses} verses · ${s.type}</div>
       </div>
       <div class="wave-bars">
-        <div class="wave-bar" style="height:40%"></div>
-        <div class="wave-bar" style="height:60%"></div>
-        <div class="wave-bar" style="height:90%"></div>
-        <div class="wave-bar" style="height:50%"></div>
-        <div class="wave-bar" style="height:75%"></div>
+        <div class="wave-bar" style="height:35%"></div>
+        <div class="wave-bar" style="height:65%"></div>
+        <div class="wave-bar" style="height:100%"></div>
+        <div class="wave-bar" style="height:55%"></div>
+        <div class="wave-bar" style="height:80%"></div>
       </div>
       <div class="row-arabic">${s.name}</div>
       <div class="row-duration" id="dur-${s.id}">—</div>
@@ -1019,50 +1023,60 @@
             });
         }
 
-        // ── PLAY / PAUSE LOGIC ──
+        // ── PLAY LOGIC ──
+        // BUG FIX 2: was playing only ayah 1 because the surah player wasn't
+        // auto-advancing. Now it plays ayah-by-ayah through the entire surah.
+        let surahAyahCursor = 1;
+
         function toggleSurah(id) {
-            if (currentSurah === id) {
-                if (isPlaying) { audio.pause(); setPlaying(false); }
-                else { audio.play(); setPlaying(true); }
+            if (currentSurahId === id) {
+                isPlaying ? audio.pause() : audio.play();
                 return;
             }
-            playSurah(id);
+            playSurahFromStart(id);
         }
 
-        function playSurah(id) {
+        function playSurahFromStart(id) {
             const s = SURAH_LIST.find(x => x.id === id);
             if (!s) return;
-            // Clear old row
-            if (currentSurah) {
-                document.getElementById(`row-${currentSurah}`)?.classList.remove("playing");
-            }
-            currentSurah = id;
-            audio.src = audioUrl(id);
-            audio.load();
-            audio.play().catch(() => { });
-            setPlaying(true);
-            // Update sticky player
-            document.getElementById("sp-surah-name").textContent = `${s.tr} (${s.name})`;
+            if (currentSurahId) document.getElementById(`row-${currentSurahId}`)?.classList.remove("playing");
+            currentSurahId = id;
+            surahAyahCursor = 1;
+            loadAndPlayAyah(id, 1, s.verses);
+            document.getElementById("sp-surah-name").textContent = `${s.tr} · ${s.name}`;
             document.getElementById("sticky-player").classList.add("visible");
             document.getElementById(`row-${id}`)?.classList.add("playing");
             document.getElementById(`row-${id}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
 
+        function loadAndPlayAyah(surahId, ayahNum, totalAyahs) {
+            // BUG FIX 2 (continued): load each ayah then auto-advance
+            audio.src = `https://everyayah.com/data/${reciterData.folder}/${pad3(surahId)}${pad3(ayahNum)}.mp3`;
+            audio.load();
+            audio.play().then(() => { setPlaying(true); }).catch(() => { setPlaying(false); });
+
+            audio.onended = () => {
+                if (ayahNum < totalAyahs) {
+                    surahAyahCursor = ayahNum + 1;
+                    loadAndPlayAyah(surahId, surahAyahCursor, totalAyahs);
+                } else {
+                    // Surah finished — auto-advance to next surah
+                    const nextId = surahId < 114 ? surahId + 1 : null;
+                    if (nextId) playSurahFromStart(nextId);
+                    else setPlaying(false);
+                }
+            };
+        }
+
         function setPlaying(state) {
             isPlaying = state;
-            const icon = document.getElementById("sp-play-icon");
-            icon.className = state ? "fa-solid fa-pause" : "fa-solid fa-play";
-            // Row pause icon
-            if (currentSurah) {
-                const row = document.getElementById(`row-${currentSurah}`);
-                if (row) {
-                    if (state) row.classList.add("playing");
-                    else row.classList.remove("playing");
-                }
+            document.getElementById("sp-play-icon").className = state ? "fa-solid fa-pause" : "fa-solid fa-play";
+            if (currentSurahId) {
+                document.getElementById(`row-${currentSurahId}`)?.classList.toggle("playing", state);
             }
         }
 
-        // ── AUDIO EVENTS ──
+        // ── AUDIO PROGRESS ──
         audio.addEventListener("timeupdate", () => {
             if (!audio.duration) return;
             const pct = (audio.currentTime / audio.duration) * 100;
@@ -1070,55 +1084,43 @@
             document.getElementById("sp-current").textContent = fmt(audio.currentTime);
             document.getElementById("sp-duration").textContent = fmt(audio.duration);
         });
-
         audio.addEventListener("loadedmetadata", () => {
-            if (currentSurah) document.getElementById(`dur-${currentSurah}`).textContent = fmt(audio.duration);
+            if (currentSurahId) document.getElementById(`dur-${currentSurahId}`).textContent = fmt(audio.duration);
         });
+        audio.addEventListener("play", () => setPlaying(true));
+        audio.addEventListener("pause", () => setPlaying(false));
 
-        audio.addEventListener("ended", () => {
-            // Auto-advance
-            const next = currentSurah < 114 ? currentSurah + 1 : null;
-            if (next) playSurah(next);
-            else setPlaying(false);
-        });
-
-        // ── STICKY PLAYER CONTROLS ──
+        // ── STICKY CONTROLS ──
         document.getElementById("sp-play").addEventListener("click", () => {
-            if (!currentSurah) return;
-            if (isPlaying) { audio.pause(); setPlaying(false); }
-            else { audio.play(); setPlaying(true); }
+            if (!currentSurahId) return;
+            isPlaying ? audio.pause() : audio.play();
         });
         document.getElementById("sp-prev").addEventListener("click", () => {
-            if (currentSurah > 1) playSurah(currentSurah - 1);
+            if (currentSurahId > 1) playSurahFromStart(currentSurahId - 1);
         });
         document.getElementById("sp-next").addEventListener("click", () => {
-            if (currentSurah < 114) playSurah(currentSurah + 1);
+            if (currentSurahId < 114) playSurahFromStart(currentSurahId + 1);
         });
-
-        // Progress click
         document.getElementById("sp-progress-bar").addEventListener("click", e => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+            const r = e.currentTarget.getBoundingClientRect();
+            audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
         });
 
         // ── SEARCH ──
         document.getElementById("surah-search").addEventListener("input", e => {
             const q = e.target.value.trim().toLowerCase();
-            filteredSurahs = q
+            renderSurahs(q
                 ? SURAH_LIST.filter(s =>
                     s.tr.toLowerCase().includes(q) ||
                     s.meaning.toLowerCase().includes(q) ||
                     s.name.includes(q) ||
                     String(s.id) === q)
-                : [...SURAH_LIST];
-            renderSurahs(filteredSurahs);
+                : [...SURAH_LIST]);
         });
 
         // ── BACK TO TOP ──
         const backTop = document.getElementById("back-top");
-        window.addEventListener("scroll", () => {
-            backTop.classList.toggle("show", window.scrollY > 400);
-        });
+        window.addEventListener("scroll", () => backTop.classList.toggle("show", window.scrollY > 400));
         backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
         // ── INIT ──

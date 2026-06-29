@@ -150,31 +150,29 @@ const CDN = {
 // ============================================================
 
 const RECITERS = [
-    // ── Most Popular ─────────────────────────────────────────
     { id: "mishari", name: "Mishary Rashid Alafasy", folder: "Alafasy_128kbps" },
     { id: "sudais", name: "Abdul Rahman As-Sudais", folder: "Abdurrahmaan_As-Sudais_192kbps" },
     { id: "ali_jaber", name: "Ali Abdullah Jabir (رحمه الله)", folder: "Ali_Jaber_64kbps" },
     { id: "abdulbasit", name: "Abdul Basit Abdul Samad (Murattal)", folder: "Abdul_Basit_Murattal_192kbps" },
     { id: "abdulbasit_mj", name: "Abdul Basit Abdul Samad (Mujawwad)", folder: "Abdul_Basit_Mujawwad_128kbps" },
     { id: "husary", name: "Mahmoud Khalil Al-Husary", folder: "Husary_128kbps" },
-    { id: "husary_muj", name: "Al-Husary (Mujawwad)", folder: "Husary_128kbps_Mujawwad" },  // FIXED
+    { id: "husary_muj", name: "Al-Husary (Mujawwad)", folder: "Husary_128kbps_Mujawwad" },
     { id: "minshawi", name: "Muhammad Siddiq Al-Minshawi", folder: "Minshawy_Murattal_128kbps" },
     { id: "shaatree", name: "Abu Bakr Ash-Shaatree", folder: "Abu_Bakr_Ash-Shaatree_128kbps" },
-    { id: "muaiqly", name: "Maher Al-Muaiqly", folder: "MaherAlMuaiqly_64kbps" },    // FIXED — no underscore before 64
+    { id: "muaiqly", name: "Maher Al-Muaiqly", folder: "Maher_AlMuaiqly_64kbps" },
     { id: "shuraym", name: "Saud Al-Shuraim", folder: "Saood_ash-Shuraym_128kbps" },
-    // ── Well Known ───────────────────────────────────────────
-    { id: "hudhaify", name: "Ali Al-Hudhaify", folder: "Hudhaify_128kbps" },          // FIXED — was Ali_Hajjaj_AlSuissi
-    { id: "ajamy", name: "Ahmed Ibn Ali Al-Ajamy", folder: "ahmed_ibn_ali_al_ajamy_128kbps" }, // FIXED — lowercase
+    { id: "hudhaify", name: "Ali Al-Hudhaify", folder: "Hudhaify_128kbps" },
+    { id: "ajamy", name: "Ahmed Ibn Ali Al-Ajamy", folder: "ahmed_ibn_ali_al_ajamy_128kbps" },
     { id: "jibreel", name: "Muhammad Jibreel", folder: "Muhammad_Jibreel_128kbps" },
     { id: "ayyoub", name: "Muhammad Ayyoub", folder: "Muhammad_Ayyoub_128kbps" },
-    { id: "ghamdi", name: "Saad Al-Ghamdi", folder: "Ghamadi_40kbps" },            // FIXED — Ghamadi not Ghamdi, 40kbps
+    { id: "ghamdi", name: "Saad Al-Ghamdi", folder: "Ghamadi_40kbps" },
     { id: "basfar", name: "Abdullah Basfar", folder: "Abdullah_Basfar_192kbps" },
     { id: "matroud", name: "Abdullah Matroud", folder: "Abdullah_Matroud_128kbps" },
     { id: "juhaynee", name: "Abdullah Al-Juhaynee", folder: "Abdullaah_3awwaad_Al-Juhaynee_128kbps" },
-    { id: "johany", name: "Abdullah Al-Johany", folder: "Abdullah_Al-Johany_128kbps" }, // FIXED — was wrong folder
-    { id: "tablawi", name: "Mohamed Al-Tablawi", folder: "Mohammad_al_Tablawi_128kbps" },// FIXED — Mohammad not Mohamed
+    { id: "johany", name: "Abdullah Al-Johany", folder: "Abdullah_Al-Johany_128kbps" },
+    { id: "tablawi", name: "Mohamed Al-Tablawi", folder: "Mohammad_al_Tablaway_128kbps" },
     { id: "rifai", name: "Hani Ar-Rifai", folder: "Hani_Rifai_192kbps" },
-    { id: "qasim", name: "Abdul Muhsin Al-Qasim", folder: "Abdul_Muhsin_Al-Qasim_128kbps" }, // FIXED — was wrong folder
+    { id: "qasim", name: "Abdul Muhsin Al-Qasim", folder: "Muhsin_Al_Qasim_192kbps" },
     { id: "neana", name: "Ahmed Neana", folder: "Ahmed_Neana_128kbps" },
     { id: "ayman_swed", name: "Ayman Swed", folder: "Ayman_Sowaid_64kbps" },
 ];
@@ -1675,31 +1673,31 @@ function fixFloatingPlayerIcons() {
 // ============================================================
 
 const RECITER_PROFILES = [
-    { id: "mishari", name: "Mishary Alafasy", country: "Kuwait", style: "Murattal", image: "images/reciters/mishari.jpg" },
-    { id: "sudais", name: "Abdul Rahman As-Sudais", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/sudais.jpg" },
-    { id: "ali_jaber", name: "Ali Abdullah Jabir", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ali_jaber.jpg" },
-    { id: "abdulbasit", name: "Abdul Basit (Murattal)", country: "Egypt", style: "Murattal", image: "images/reciters/abdulbasit.jpg" },
-    { id: "abdulbasit_mj", name: "Abdul Basit (Mujawwad)", country: "Egypt", style: "Mujawwad", image: "images/reciters/abdulbasit.jpg" },
-    { id: "husary", name: "Mahmoud Al-Husary", country: "Egypt", style: "Murattal", image: "images/reciters/husary.jpg" },
-    { id: "husary_muj", name: "Al-Husary (Mujawwad)", country: "Egypt", style: "Mujawwad", image: "images/reciters/husary.jpg" },
-    { id: "minshawi", name: "Muhammad Al-Minshawi", country: "Egypt", style: "Murattal", image: "images/reciters/minshawi.jpg" },
-    { id: "shaatree", name: "Abu Bakr Ash-Shaatree", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/shaatree.jpg" },
-    { id: "muaiqly", name: "Maher Al-Muaiqly", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/muaiqly.jpg" },
-    { id: "shuraym", name: "Saud Al-Shuraim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/shuraym.jpg" },
-    { id: "hudhaify", name: "Ali Al-Hudhaify", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/hudhaify.jpg" },
-    { id: "ajamy", name: "Ahmed Al-Ajamy", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ajamy.jpg" },
-    { id: "jibreel", name: "Muhammad Jibreel", country: "Egypt", style: "Murattal", image: "images/reciters/jibreel.jpg" },
-    { id: "ayyoub", name: "Muhammad Ayyoub", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ayyoub.jpg" },
-    { id: "ghamdi", name: "Saad Al-Ghamdi", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ghamdi.jpg" },
-    { id: "basfar", name: "Abdullah Basfar", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/basfar.jpg" },
-    { id: "matroud", name: "Abdullah Matroud", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/matroud.jpg" },
-    { id: "juhaynee", name: "Abdullah Al-Juhaynee", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/juhaynee.jpg" },
-    { id: "johany", name: "Abdullah Al-Johany", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/johany.jpg" },
-    { id: "tablawi", name: "Mohamed Al-Tablawi", country: "Egypt", style: "Murattal", image: "images/reciters/tablawi.jpg" },
-    { id: "rifai", name: "Hani Ar-Rifai", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/rifai.jpg" },
-    { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/qasim.jpg" },
-    { id: "neana", name: "Ahmed Neana", country: "Egypt", style: "Murattal", image: "images/reciters/neana.jpg" },
-    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", style: "Murattal", image: "images/reciters/ayman_swed.jpg" },
+    { id: "mishari", name: "Mishary Alafasy", country: "Kuwait", style: "Murattal", image: "images/reciters/mishary.png" },
+    { id: "sudais", name: "Abdul Rahman As-Sudais", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/sudais.png" },
+    { id: "ali_jaber", name: "Ali Abdullah Jabir", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ali jabir.png" },
+    { id: "abdulbasit", name: "Abdul Basit (Murattal)", country: "Egypt", style: "Murattal", image: "images/reciters/basit.png" },
+    { id: "abdulbasit_mj", name: "Abdul Basit (Mujawwad)", country: "Egypt", style: "Mujawwad", image: "images/reciters/basit.png" },
+    { id: "husary", name: "Mahmoud Al-Husary", country: "Egypt", style: "Murattal", image: "images/reciters/al-husary.png" },
+    { id: "husary_muj", name: "Al-Husary (Mujawwad)", country: "Egypt", style: "Mujawwad", image: "images/reciters/al-husary.png" },
+    { id: "minshawi", name: "Muhammad Al-Minshawi", country: "Egypt", style: "Murattal", image: "images/reciters/minshawi.png" },
+    { id: "shaatree", name: "Abu Bakr Ash-Shaatree", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/as-shateree.png" },
+    { id: "muaiqly", name: "Maher Al-Muaiqly", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/maher.png" },
+    { id: "shuraym", name: "Saud Al-Shuraim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/shuraim.png" },
+    { id: "hudhaify", name: "Ali Al-Hudhaify", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/al-hudaify.png" },
+    { id: "ajamy", name: "Ahmed Al-Ajamy", country: "Saudi Arabia", style: "Murattal", image: "images/reciters//al-ajmy.png" },
+    { id: "jibreel", name: "Muhammad Jibreel", country: "Egypt", style: "Murattal", image: "images/reciters/jibreel.png" },
+    { id: "ayyoub", name: "Muhammad Ayyoub", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ayyub.png" },
+    { id: "ghamdi", name: "Saad Al-Ghamdi", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/saad_al-ghamdi.png" },
+    { id: "basfar", name: "Abdullah Basfar", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/basfar.png" },
+    { id: "matroud", name: "Abdullah Matroud", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/al-matrood.png" },
+    { id: "juhaynee", name: "Abdullah Al-Juhaynee", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/al-juhani.png" },
+    { id: "johany", name: "Abdullah Al-Johany", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/al-johany.png" },
+    { id: "tablawi", name: "Mohamed Al-Tablawi", country: "Egypt", style: "Murattal", image: "images/reciters/tablawi.png" },
+    { id: "rifai", name: "Hani Ar-Rifai", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/Hani Ar-rifai.png" },
+    { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/muhsin.png" },
+    { id: "neana", name: "Ahmed Neana", country: "Egypt", style: "Murattal", image: "images/reciters/neana.png" },
+    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", style: "Murattal", image: "images/reciters/ayman.png" },
 ];
 
 function initRecitersGrid() {

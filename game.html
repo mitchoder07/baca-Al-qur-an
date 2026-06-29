@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran Word Game — Al Furqan</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dim: rgba(16, 185, 129, 0.12);
+            --dark: #0f172a;
+            --dark-mid: #1e293b;
+            --dark-light: #263247;
+            --white: #fff;
+            --text: #cbd5e1;
+            --subtext: #64748b;
+            --border: rgba(255, 255, 255, 0.07);
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --warn: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
+
+        /* NAV */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: .9rem 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.92);
+            border-bottom: 1px solid var(--border);
+            z-index: 100
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none
+        }
+
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: .85rem;
+            font-weight: 500;
+            padding: .45rem .9rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            transition: .2s
+        }
+
+        .nav-back:hover {
+            border-color: var(--primary);
+            color: var(--primary)
+        }
+
+        /* MAIN */
+        .game-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5.5rem 1.5rem 3rem;
+            max-width: 720px;
+            margin: auto;
+            width: 100%
+        }
+
+        /* HEADER */
+        .game-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%
+        }
+
+        .game-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: .3rem
+        }
+
+        .game-title span {
+            color: var(--primary)
+        }
+
+        .game-subtitle {
+            color: var(--subtext);
+            font-size: .88rem
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            gap: .7rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .45rem 1rem;
+            border-radius: 999px;
+            background: var(--dark-mid);
+            border: 1px solid var(--border);
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        .stat-pill.correct {
+            border-color: rgba(16, 185, 129, .35);
+            color: var(--correct)
+        }
+
+        .stat-pill.wrong {
+            border-color: rgba(239, 68, 68, .35);
+            color: var(--wrong)
+        }
+
+        .stat-pill.streak {
+            border-color: rgba(245, 158, 11, .35);
+            color: var(--warn)
+        }
+
+        .stat-pill.level {
+            border-color: rgba(139, 92, 246, .35);
+            color: #a78bfa
+        }
+
+        /* PROGRESS */
+        .progress-wrap {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 99px;
+            margin-bottom: 1.8rem;
+            overflow: hidden
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #34d399);
+            border-radius: 99px;
+            transition: width .5s ease
+        }
+
+        /* CARD */
+        .game-card {
+            width: 100%;
+            background: var(--dark-mid);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .3s;
+        }
+
+        .game-card.correct-card {
+            border-color: var(--correct);
+            box-shadow: 0 0 30px rgba(16, 185, 129, .15)
+        }
+
+        .game-card.wrong-card {
+            border-color: var(--wrong);
+            box-shadow: 0 0 30px rgba(239, 68, 68, .12)
+        }
+
+        /* WORD DISPLAY */
+        .word-arabic {
+            font-family: "Amiri", serif;
+            font-size: 4.5rem;
+            line-height: 1.4;
+            color: var(--white);
+            direction: rtl;
+            margin-bottom: .4rem;
+            text-shadow: 0 2px 20px rgba(16, 185, 129, .12);
+        }
+
+        .word-translit {
+            font-size: .9rem;
+            color: var(--primary);
+            font-style: italic;
+            margin-bottom: .3rem
+        }
+
+        .word-location {
+            font-size: .75rem;
+            color: var(--subtext)
+        }
+
+        /* HINT BUTTON */
+        .hint-btn {
+            margin-top: .9rem;
+            border: none;
+            background: rgba(245, 158, 11, .1);
+            color: var(--warn);
+            padding: .4rem .9rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: .78rem;
+            font-weight: 600;
+            font-family: inherit;
+            transition: .2s;
+        }
+
+        .hint-btn:hover {
+            background: rgba(245, 158, 11, .2)
+        }
+
+        .hint-text {
+            font-size: .82rem;
+            color: var(--warn);
+            margin-top: .6rem;
+            min-height: 1.2em
+        }
+
+        /* OPTIONS */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .85rem;
+            width: 100%;
+            margin-bottom: 1.3rem
+        }
+
+        .option-btn {
+            padding: 1.1rem 1rem;
+            border-radius: 18px;
+            border: 1.5px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--white);
+            font-family: inherit;
+            font-size: .93rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-dim);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-dim)
+        }
+
+        .option-btn.correct-ans {
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, .18);
+            color: var(--correct)
+        }
+
+        .option-btn.wrong-ans {
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, .15);
+            color: var(--wrong)
+        }
+
+        .option-btn:disabled {
+            cursor: default
+        }
+
+        /* BOTTOM ROW */
+        .bottom-row {
+            display: flex;
+            gap: .8rem;
+            width: 100%;
+            justify-content: center
+        }
+
+        .action-btn {
+            padding: .9rem 2rem;
+            border-radius: 14px;
+            border: none;
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-confirm {
+            background: var(--primary);
+            color: #fff;
+            flex: 1;
+            max-width: 220px
+        }
+
+        .btn-confirm:disabled {
+            opacity: .35;
+            cursor: default
+        }
+
+        .btn-skip {
+            background: rgba(255, 255, 255, .07);
+            color: var(--text);
+            padding: .9rem 1.4rem
+        }
+
+        .btn-skip:hover {
+            background: rgba(255, 255, 255, .12)
+        }
+
+        /* FEEDBACK TOAST */
+        .feedback-toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            padding: .7rem 1.4rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: .9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: .25s;
+            z-index: 200;
+            white-space: nowrap;
+        }
+
+        .feedback-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0)
+        }
+
+        .feedback-toast.correct {
+            background: rgba(16, 185, 129, .9);
+            color: #fff
+        }
+
+        .feedback-toast.wrong {
+            background: rgba(239, 68, 68, .9);
+            color: #fff
+        }
+
+        /* RESULT SCREEN */
+        .result-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .result-screen.show {
+            display: flex
+        }
+
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem
+        }
+
+        .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: .5rem
+        }
+
+        .result-score {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 2rem
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 2rem
+        }
+
+        .result-stat {
+            background: var(--dark-mid);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.2rem
+        }
+
+        .result-stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary)
+        }
+
+        .result-stat-label {
+            font-size: .75rem;
+            color: var(--subtext);
+            margin-top: .2rem
+        }
+
+        .btn-restart {
+            background: var(--primary);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, .35)
+        }
+
+        /* DIFFICULTY SELECT */
+        .diff-row {
+            display: flex;
+            gap: .6rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap
+        }
+
+        .diff-btn {
+            padding: .4rem 1rem;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--subtext);
+            font-family: inherit;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .diff-btn.active {
+            border-color: var(--primary);
+            background: var(--primary-dim);
+            color: var(--primary)
+        }
+
+        @media(max-width:480px) {
+            .options-grid {
+                grid-template-columns: 1fr
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .word-arabic {
+                font-size: 3.2rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a class="nav-logo" href="index.html">Al Furqan</a>
+        <a class="nav-back" href="index.html">← Back</a>
+    </header>
+
+    <div class="game-wrap">
+        <div class="game-header">
+            <h1 class="game-title">Quran <span>Word Quiz</span></h1>
+            <p class="game-subtitle">Learn the meaning of Quranic words — one verse at a time</p>
+        </div>
+
+        <!-- DIFFICULTY -->
+        <div class="diff-row" id="diff-row">
+            <button class="diff-btn active" data-diff="easy">🌱 Easy</button>
+            <button class="diff-btn" data-diff="medium">🔥 Medium</button>
+            <button class="diff-btn" data-diff="hard">⚡ Hard</button>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+            <div class="stat-pill correct">✓ Correct: <span id="stat-correct">0</span></div>
+            <div class="stat-pill wrong">✗ Wrong: <span id="stat-wrong">0</span></div>
+            <div class="stat-pill streak">🔥 Streak: <span id="stat-streak">0</span></div>
+            <div class="stat-pill level">⭐ Level: <span id="stat-level">1</span></div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-wrap">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+
+        <!-- MAIN GAME -->
+        <div id="game-area" style="width:100%">
+            <!-- WORD CARD -->
+            <div class="game-card" id="game-card">
+                <div class="word-arabic" id="word-arabic">—</div>
+                <div class="word-translit" id="word-translit"></div>
+                <div class="word-location" id="word-location"></div>
+                <button class="hint-btn" id="hint-btn">💡 Show Hint</button>
+                <div class="hint-text" id="hint-text"></div>
+            </div>
+
+            <!-- OPTIONS -->
+            <div class="options-grid" id="options-grid"></div>
+
+            <!-- BOTTOM ROW -->
+            <div class="bottom-row">
+                <button class="action-btn btn-skip" id="btn-skip">Skip →</button>
+                <button class="action-btn btn-confirm" id="btn-confirm" disabled>Confirm</button>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div class="result-screen" id="result-screen">
+            <div class="result-emoji" id="result-emoji">🎉</div>
+            <h2 class="result-title" id="result-title">Round Complete!</h2>
+            <p class="result-score" id="result-score"></p>
+            <div class="result-grid">
+                <div class="result-stat">
+                    <div class="result-stat-num" id="res-correct">0</div>
+                    <div class="result-stat-label">Correct</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-num" id="res-wrong">0</div>
+                    <div class="result-stat-label">Wrong</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-num" id="res-best">0</div>
+                    <div class="result-stat-label">Best Streak</div>
+                </div>
+            </div>
+            <button class="btn-restart" id="btn-restart">Play Again 🔁</button>
+        </div>
+    </div>
+
+    <!-- FEEDBACK TOAST -->
+    <div class="feedback-toast" id="feedback-toast"></div>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // WORD BANK — 120 common Quranic words
+        // Each entry: { arabic, translit, meaning, hint, surah, ayah, difficulty }
+        // difficulty: 1=easy, 2=medium, 3=hard
+        // ═══════════════════════════════════════════════
+        const WORD_BANK = [
+            // EASY
+            { arabic: "اللَّهُ", translit: "Allahu", meaning: "Allah (God)", hint: "The name of God in Arabic", surah: 1, ayah: 1, diff: 1 },
+            { arabic: "الرَّحْمَٰنِ", translit: "Ar-Rahmani", meaning: "The Most Gracious", hint: "One of Allah's beautiful names", surah: 1, ayah: 1, diff: 1 },
+            { arabic: "الرَّحِيمِ", translit: "Ar-Raheem", meaning: "The Most Merciful", hint: "Related to rahma (mercy)", surah: 1, ayah: 1, diff: 1 },
+            { arabic: "الْحَمْدُ", translit: "Al-Hamdu", meaning: "All praise", hint: "Used in 'Alhamdulillah'", surah: 1, ayah: 2, diff: 1 },
+            { arabic: "رَبِّ", translit: "Rabbi", meaning: "Lord / My Lord", hint: "Used in du'a: 'Rabbi zidni...'", surah: 1, ayah: 2, diff: 1 },
+            { arabic: "الْعَالَمِينَ", translit: "Al-'Alameen", meaning: "The worlds / all creation", hint: "Used in Surah Al-Fatihah", surah: 1, ayah: 2, diff: 1 },
+            { arabic: "إِيَّاكَ", translit: "Iyyaka", meaning: "You alone", hint: "Expresses exclusive devotion", surah: 1, ayah: 5, diff: 1 },
+            { arabic: "نَعْبُدُ", translit: "Na'budu", meaning: "We worship", hint: "From 'ibadah (worship)", surah: 1, ayah: 5, diff: 1 },
+            { arabic: "نَسْتَعِينُ", translit: "Nasta'eenu", meaning: "We seek help", hint: "From isti'ana (to seek aid)", surah: 1, ayah: 5, diff: 1 },
+            { arabic: "الصِّرَاطَ", translit: "As-Sirat", meaning: "The path / way", hint: "Used in 'Sirat Al-Mustaqeem'", surah: 1, ayah: 6, diff: 1 },
+            { arabic: "النَّاسِ", translit: "An-Nas", meaning: "The people / mankind", hint: "Name of the last surah", surah: 114, ayah: 1, diff: 1 },
+            { arabic: "قُلْ", translit: "Qul", meaning: "Say", hint: "Command given to the Prophet ﷺ", surah: 112, ayah: 1, diff: 1 },
+            { arabic: "أَحَدٌ", translit: "Ahad", meaning: "One / Unique", hint: "Used in Surah Al-Ikhlas", surah: 112, ayah: 1, diff: 1 },
+            { arabic: "الصَّمَدُ", translit: "As-Samad", meaning: "The Self-Sufficient", hint: "None is independent of Him", surah: 112, ayah: 2, diff: 1 },
+            { arabic: "نُورٌ", translit: "Noor", meaning: "Light", hint: "Allah is the light of the heavens", surah: 24, ayah: 35, diff: 1 },
+            { arabic: "كِتَابٌ", translit: "Kitaab", meaning: "Book", hint: "Al-Kitab = The Book (Quran)", surah: 2, ayah: 2, diff: 1 },
+            { arabic: "هُدًى", translit: "Hudan", meaning: "Guidance", hint: "The Quran is hudal lil-muttaqeen", surah: 2, ayah: 2, diff: 1 },
+            { arabic: "قَلْبٌ", translit: "Qalb", meaning: "Heart", hint: "The seat of faith in Islam", surah: 2, ayah: 7, diff: 1 },
+            { arabic: "صَلَاةٌ", translit: "Salah", meaning: "Prayer", hint: "One of the five pillars of Islam", surah: 2, ayah: 3, diff: 1 },
+            { arabic: "جَنَّةٌ", translit: "Jannah", meaning: "Paradise / Garden", hint: "The eternal reward of the believers", surah: 2, ayah: 25, diff: 1 },
+            { arabic: "نَارٌ", translit: "Naar", meaning: "Fire / Hellfire", hint: "Place of punishment in the Quran", surah: 2, ayah: 24, diff: 1 },
+            { arabic: "مَاءٌ", translit: "Ma'", meaning: "Water", hint: "Allah created every living thing from it", surah: 21, ayah: 30, diff: 1 },
+            { arabic: "سَمَاءٌ", translit: "Sama'", meaning: "Sky / Heaven", hint: "Allah raised it without pillars", surah: 13, ayah: 2, diff: 1 },
+            { arabic: "أَرْضٌ", translit: "Ard", meaning: "Earth / Land", hint: "Allah spread it out for mankind", surah: 2, ayah: 22, diff: 1 },
+            { arabic: "رَحْمَةٌ", translit: "Rahma", meaning: "Mercy", hint: "Allah's mercy encompasses all things", surah: 7, ayah: 156, diff: 1 },
+            // MEDIUM
+            { arabic: "تَقْوَى", translit: "Taqwa", meaning: "God-consciousness / piety", hint: "Being aware of Allah at all times", surah: 2, ayah: 2, diff: 2 },
+            { arabic: "صَبْرٌ", translit: "Sabr", meaning: "Patience / Perseverance", hint: "Allah is with the patient ones", surah: 2, ayah: 153, diff: 2 },
+            { arabic: "شُكْرٌ", translit: "Shukr", meaning: "Gratitude / Thankfulness", hint: "If you are grateful, He will increase you", surah: 14, ayah: 7, diff: 2 },
+            { arabic: "تَوْبَةٌ", translit: "Tawbah", meaning: "Repentance / Return", hint: "Name of the 9th Surah", surah: 9, ayah: 3, diff: 2 },
+            { arabic: "أَمَانَةٌ", translit: "Amanah", meaning: "Trust / Trustworthiness", hint: "The trust offered to the heavens", surah: 33, ayah: 72, diff: 2 },
+            { arabic: "عِلْمٌ", translit: "'Ilm", meaning: "Knowledge", hint: "Read! (Iqra) — the first word revealed", surah: 96, ayah: 1, diff: 2 },
+            { arabic: "عَقْلٌ", translit: "'Aql", meaning: "Reason / Intellect", hint: "'Will you not reason?' (afala ta'qiloon)", surah: 2, ayah: 44, diff: 2 },
+            { arabic: "عَدْلٌ", translit: "'Adl", meaning: "Justice / Fairness", hint: "Allah commands it alongside ihsan", surah: 16, ayah: 90, diff: 2 },
+            { arabic: "إِحْسَانٌ", translit: "Ihsan", meaning: "Excellence / Goodness", hint: "Worship Allah as if you see Him", surah: 16, ayah: 90, diff: 2 },
+            { arabic: "صِدْقٌ", translit: "Sidq", meaning: "Truthfulness", hint: "Be with the truthful ones (sadiqeen)", surah: 9, ayah: 119, diff: 2 },
+            { arabic: "فِتْنَةٌ", translit: "Fitnah", meaning: "Trial / Temptation", hint: "And We will surely test you", surah: 2, ayah: 155, diff: 2 },
+            { arabic: "بَلَاءٌ", translit: "Bala'", meaning: "Trial / Affliction", hint: "Tests from Allah for believers", surah: 2, ayah: 49, diff: 2 },
+            { arabic: "نِعْمَةٌ", translit: "Ni'mah", meaning: "Blessing / Favor", hint: "And if you count Allah's blessings…", surah: 14, ayah: 34, diff: 2 },
+            { arabic: "دُعَاءٌ", translit: "Du'a", meaning: "Supplication / Prayer", hint: "Call upon Me and I will respond", surah: 40, ayah: 60, diff: 2 },
+            { arabic: "ذِكْرٌ", translit: "Dhikr", meaning: "Remembrance", hint: "Verily in the remembrance of Allah do hearts find rest", surah: 13, ayah: 28, diff: 2 },
+            { arabic: "غَفَرَ", translit: "Ghafara", meaning: "He forgave", hint: "Root of Ghafoor (the Forgiving)", surah: 2, ayah: 52, diff: 2 },
+            { arabic: "هِدَايَةٌ", translit: "Hidayah", meaning: "Guidance", hint: "The greatest gift from Allah", surah: 2, ayah: 53, diff: 2 },
+            { arabic: "آيَةٌ", translit: "Ayah", meaning: "Sign / Verse", hint: "Signs of Allah in creation and Quran", surah: 2, ayah: 39, diff: 2 },
+            { arabic: "سُورَةٌ", translit: "Surah", meaning: "Chapter", hint: "The Quran has 114 of these", surah: 2, ayah: 23, diff: 2 },
+            { arabic: "مَسْجِدٌ", translit: "Masjid", meaning: "Mosque / Place of prostration", hint: "From sajada (to prostrate)", surah: 2, ayah: 114, diff: 2 },
+            // HARD
+            { arabic: "اسْتِغْفَارٌ", translit: "Istighfar", meaning: "Seeking forgiveness", hint: "Astaghfirullah — I seek Allah's forgiveness", surah: 3, ayah: 17, diff: 3 },
+            { arabic: "تَوَكُّلٌ", translit: "Tawakkul", meaning: "Reliance on Allah", hint: "Then when you decide, rely upon Allah", surah: 3, ayah: 159, diff: 3 },
+            { arabic: "خُشُوعٌ", translit: "Khushu'", meaning: "Humility / Awe in prayer", hint: "Successful are the believers who have it", surah: 23, ayah: 2, diff: 3 },
+            { arabic: "إِخْلَاصٌ", translit: "Ikhlas", meaning: "Sincerity / Purity of intention", hint: "Name of Surah 112", surah: 112, ayah: 1, diff: 3 },
+            { arabic: "زَكَاةٌ", translit: "Zakah", meaning: "Purification / Almsgiving", hint: "One of the five pillars", surah: 2, ayah: 43, diff: 3 },
+            { arabic: "مُتَّقِينَ", translit: "Muttaqeen", meaning: "The righteous / God-fearing", hint: "The Quran is guidance for them", surah: 2, ayah: 2, diff: 3 },
+            { arabic: "الْفُرْقَانُ", translit: "Al-Furqan", meaning: "The Criterion (distinguishing truth from falsehood)", hint: "Name of Surah 25 and also the Quran", surah: 25, ayah: 1, diff: 3 },
+            { arabic: "مِيزَانٌ", translit: "Mizan", meaning: "Balance / Scale of deeds", hint: "The scales will be set up on the Day of Judgment", surah: 21, ayah: 47, diff: 3 },
+            { arabic: "حِسَابٌ", translit: "Hisab", meaning: "Reckoning / Accounting", hint: "Yawm al-Hisab = Day of Reckoning", surah: 38, ayah: 16, diff: 3 },
+            { arabic: "بَرْزَخٌ", translit: "Barzakh", meaning: "The Barrier / Intermediate realm", hint: "The state between death and resurrection", surah: 23, ayah: 100, diff: 3 },
+            { arabic: "الصِّرَاطَ الْمُسْتَقِيمَ", translit: "As-Sirat Al-Mustaqeem", meaning: "The Straight Path", hint: "We are guided to it in every salah", surah: 1, ayah: 6, diff: 3 },
+            { arabic: "مُؤْمِنٌ", translit: "Mu'min", meaning: "Believer", hint: "One of Allah's names too (Al-Mu'min)", surah: 2, ayah: 8, diff: 3 },
+            { arabic: "مُنَافِقٌ", translit: "Munafiq", meaning: "Hypocrite", hint: "Outwardly Muslim, inwardly rejecting", surah: 2, ayah: 8, diff: 3 },
+            { arabic: "سُجُودٌ", translit: "Sujood", meaning: "Prostration", hint: "The position closest to Allah in salah", surah: 2, ayah: 43, diff: 3 },
+            { arabic: "تَزْكِيَةٌ", translit: "Tazkiyah", meaning: "Purification of the soul", hint: "A mission of the Prophet ﷺ", surah: 62, ayah: 2, diff: 3 },
+        ];
+
+        // ── ALL MEANINGS (for building wrong options) ──
+        const ALL_MEANINGS = [...new Set(WORD_BANK.map(w => w.meaning))];
+
+        function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+        function randFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        // ── STATE ──
+        let difficulty = 1;   // 1=easy, 2=medium, 3=hard
+        let score = { correct: 0, wrong: 0, streak: 0, bestStreak: 0 };
+        let questionNum = 0;
+        const ROUND_LEN = 10;
+        let currentWord = null;
+        let correctAnswer = "";
+        let selected = null;
+        let hintUsed = false;
+        let answered = false;
+
+        // ── DIFFICULTY BUTTONS ──
+        document.querySelectorAll(".diff-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                difficulty = Number(btn.dataset.diff);
+                startRound();
+            });
+        });
+
+        // ── NEXT QUESTION ──
+        function nextQuestion() {
+            if (questionNum >= ROUND_LEN) { showResult(); return; }
+
+            hintUsed = false; answered = false; selected = null;
+            document.getElementById("hint-text").textContent = "";
+            document.getElementById("hint-btn").disabled = false;
+            document.getElementById("game-card").className = "game-card";
+            document.getElementById("btn-confirm").disabled = true;
+
+            // Pick word matching difficulty (or easier if not enough)
+            const pool = WORD_BANK.filter(w => w.diff <= difficulty);
+            currentWord = randFrom(pool);
+            correctAnswer = currentWord.meaning;
+
+            document.getElementById("word-arabic").textContent = currentWord.arabic;
+            document.getElementById("word-translit").textContent = currentWord.translit;
+            document.getElementById("word-location").textContent = `Surah ${currentWord.surah}, Ayah ${currentWord.ayah}`;
+
+            // Build 4 options: 1 correct + 3 wrong
+            const wrongs = shuffle(ALL_MEANINGS.filter(m => m !== correctAnswer)).slice(0, 3);
+            const options = shuffle([correctAnswer, ...wrongs]);
+
+            const grid = document.getElementById("options-grid");
+            grid.innerHTML = options.map(opt => `
+    <button class="option-btn" data-val="${opt.replace(/"/g, '&quot;')}">${opt}</button>`).join("");
+
+            grid.querySelectorAll(".option-btn").forEach(btn => {
+                btn.addEventListener("click", () => selectOption(btn));
+            });
+
+            updateProgress();
+        }
+
+        function selectOption(btn) {
+            if (answered) return;
+            document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            selected = btn.dataset.val;
+            document.getElementById("btn-confirm").disabled = false;
+        }
+
+        function confirmAnswer() {
+            if (!selected || answered) return;
+            answered = true;
+            questionNum++;
+            document.getElementById("btn-confirm").disabled = true;
+
+            const isCorrect = selected === correctAnswer;
+
+            // Highlight answers
+            document.querySelectorAll(".option-btn").forEach(btn => {
+                btn.disabled = true;
+                if (btn.dataset.val === correctAnswer) btn.classList.add("correct-ans");
+                else if (btn.dataset.val === selected) btn.classList.add("wrong-ans");
+            });
+
+            // Card feedback
+            document.getElementById("game-card").classList.add(isCorrect ? "correct-card" : "wrong-card");
+
+            // Score
+            if (isCorrect) {
+                score.correct++;
+                score.streak++;
+                if (score.streak > score.bestStreak) score.bestStreak = score.streak;
+                // Bonus for hint not used
+                const pts = hintUsed ? 1 : (difficulty === 3 ? 3 : difficulty === 2 ? 2 : 1);
+                showToast(`✓ Correct! +${pts}`, "correct");
+            } else {
+                score.wrong++;
+                score.streak = 0;
+                showToast(`✗ It was: "${correctAnswer}"`, "wrong");
+            }
+            updateStats();
+
+            // Auto-advance after delay
+            setTimeout(nextQuestion, 1600);
+        }
+
+        // ── HINT ──
+        document.getElementById("hint-btn").addEventListener("click", () => {
+            hintUsed = true;
+            document.getElementById("hint-text").textContent = "💡 " + currentWord.hint;
+            document.getElementById("hint-btn").disabled = true;
+        });
+
+        // ── SKIP ──
+        document.getElementById("btn-skip").addEventListener("click", () => {
+            if (answered) return;
+            answered = true; questionNum++;
+            score.streak = 0; updateStats();
+            showToast("Skipped →", "wrong");
+            // Reveal correct
+            document.querySelectorAll(".option-btn").forEach(btn => {
+                btn.disabled = true;
+                if (btn.dataset.val === correctAnswer) btn.classList.add("correct-ans");
+            });
+            setTimeout(nextQuestion, 1400);
+        });
+
+        // ── CONFIRM ──
+        document.getElementById("btn-confirm").addEventListener("click", confirmAnswer);
+
+        // ── RESULT ──
+        function showResult() {
+            document.getElementById("game-area").style.display = "none";
+            document.getElementById("result-screen").classList.add("show");
+            const pct = Math.round((score.correct / ROUND_LEN) * 100);
+            const emoji = pct >= 80 ? "🏆" : pct >= 60 ? "🌟" : pct >= 40 ? "👍" : "📖";
+            const title = pct >= 80 ? "Excellent!" : pct >= 60 ? "Well Done!" : pct >= 40 ? "Good Effort" : "Keep Learning!";
+            document.getElementById("result-emoji").textContent = emoji;
+            document.getElementById("result-title").textContent = title;
+            document.getElementById("result-score").textContent = `You scored ${pct}% — ${score.correct} correct out of ${ROUND_LEN} words`;
+            document.getElementById("res-correct").textContent = score.correct;
+            document.getElementById("res-wrong").textContent = score.wrong;
+            document.getElementById("res-best").textContent = score.bestStreak;
+        }
+
+        document.getElementById("btn-restart").addEventListener("click", startRound);
+
+        // ── UI HELPERS ──
+        function updateStats() {
+            document.getElementById("stat-correct").textContent = score.correct;
+            document.getElementById("stat-wrong").textContent = score.wrong;
+            document.getElementById("stat-streak").textContent = score.streak;
+            document.getElementById("stat-level").textContent = difficulty;
+        }
+
+        function updateProgress() {
+            const pct = (questionNum / ROUND_LEN) * 100;
+            document.getElementById("progress-fill").style.width = pct + "%";
+        }
+
+        function showToast(msg, type) {
+            const el = document.getElementById("feedback-toast");
+            el.textContent = msg;
+            el.className = `feedback-toast ${type} show`;
+            setTimeout(() => el.classList.remove("show"), 1400);
+        }
+
+        function startRound() {
+            score = { correct: 0, wrong: 0, streak: 0, bestStreak: 0 };
+            questionNum = 0;
+            document.getElementById("game-area").style.display = "block";
+            document.getElementById("result-screen").classList.remove("show");
+            updateStats(); updateProgress();
+            nextQuestion();
+        }
+
+        // ── INIT ──
+        startRound();
+    </script>
+</body>
+
+</html>
