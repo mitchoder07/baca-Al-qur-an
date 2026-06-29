@@ -1740,6 +1740,101 @@ function initRecitersGrid() {
     });
 }
 
+// ==================== Reciter Picker for "Listen" Button ====================
+
+const RECITER_PROFILES_FOR_PICKER = [
+    { id: "mishari", name: "Mishary Rashid Alafasy", country: "Kuwait", image: "images/reciters/mishari.jpg" },
+    { id: "sudais", name: "Abdul Rahman As-Sudais", country: "Saudi Arabia", image: "images/reciters/sudais.jpg" },
+    { id: "ali_jaber", name: "Ali Abdullah Jabir (رحمه الله)", country: "Saudi Arabia", image: "images/reciters/ali_jaber.jpg" },
+    { id: "abdulbasit", name: "Abdul Basit Abdul Samad (Murattal)", country: "Egypt", image: "images/reciters/abdulbasit.jpg" },
+    { id: "abdulbasit_mj", name: "Abdul Basit Abdul Samad (Mujawwad)", country: "Egypt", image: "images/reciters/abdulbasit.jpg" },
+    { id: "husary", name: "Mahmoud Khalil Al-Husary", country: "Egypt", image: "images/reciters/husary.jpg" },
+    { id: "husary_muj", name: "Al-Husary (Mujawwad)", country: "Egypt", image: "images/reciters/husary.jpg" },
+    { id: "minshawi", name: "Muhammad Siddiq Al-Minshawi", country: "Egypt", image: "images/reciters/minshawi.jpg" },
+    { id: "shaatree", name: "Abu Bakr Ash-Shaatree", country: "Saudi Arabia", image: "images/reciters/shaatree.jpg" },
+    { id: "muaiqly", name: "Maher Al-Muaiqly", country: "Saudi Arabia", image: "images/reciters/muaiqly.jpg" },
+    { id: "shuraym", name: "Saud Al-Shuraim", country: "Saudi Arabia", image: "images/reciters/shuraym.jpg" },
+    { id: "hudhaify", name: "Ali Al-Hudhaify", country: "Saudi Arabia", image: "images/reciters/hudhaify.jpg" },
+    { id: "ajamy", name: "Ahmed Ibn Ali Al-Ajamy", country: "Saudi Arabia", image: "images/reciters/ajamy.jpg" },
+    { id: "jibreel", name: "Muhammad Jibreel", country: "Egypt", image: "images/reciters/jibreel.jpg" },
+    { id: "ayyoub", name: "Muhammad Ayyoub", country: "Saudi Arabia", image: "images/reciters/ayyoub.jpg" },
+    { id: "ghamdi", name: "Saad Al-Ghamdi", country: "Saudi Arabia", image: "images/reciters/ghamdi.jpg" },
+    { id: "basfar", name: "Abdullah Basfar", country: "Saudi Arabia", image: "images/reciters/basfar.jpg" },
+    { id: "matroud", name: "Abdullah Matroud", country: "Saudi Arabia", image: "images/reciters/matroud.jpg" },
+    { id: "juhaynee", name: "Abdullah Al-Juhaynee", country: "Saudi Arabia", image: "images/reciters/juhaynee.jpg" },
+    { id: "johany", name: "Abdullah Al-Johany", country: "Saudi Arabia", image: "images/reciters/johany.jpg" },
+    { id: "tablawi", name: "Mohamed Al-Tablawi", country: "Egypt", image: "images/reciters/tablawi.jpg" },
+    { id: "rifai", name: "Hani Ar-Rifai", country: "Saudi Arabia", image: "images/reciters/rifai.jpg" },
+    { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", image: "images/reciters/qasim.jpg" },
+    { id: "neana", name: "Ahmed Neana", country: "Egypt", image: "images/reciters/neana.jpg" },
+    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", image: "images/reciters/ayman_swed.jpg" },
+];
+
+function initReciterPicker() {
+    const modal = document.getElementById("reciter-picker-modal");
+    const overlay = document.getElementById("reciter-picker-overlay");
+    const closeBtn = document.getElementById("picker-close");
+    const search = document.getElementById("picker-search");
+    const list = document.getElementById("picker-list");
+    const listenBtn = document.getElementById("listen-surah-btn");
+    if (!modal || !listenBtn) return;
+
+    // "Listen" button in surah modal opens the picker
+    listenBtn.addEventListener("click", () => {
+        const surahName = document.getElementById("modal-surah-name")?.textContent || "this Surah";
+        document.getElementById("picker-surah-label").textContent = `for Surah ${surahName}`;
+        search.value = "";
+        renderPickerList("");
+        modal.classList.add("active");
+        lucide.createIcons();
+        setTimeout(() => search.focus(), 200);
+    });
+
+    function renderPickerList(query) {
+        const q = query.toLowerCase();
+        const filtered = q
+            ? RECITER_PROFILES_FOR_PICKER.filter(r =>
+                r.name.toLowerCase().includes(q) || r.country.toLowerCase().includes(q))
+            : RECITER_PROFILES_FOR_PICKER;
+
+        list.innerHTML = filtered.map(r => `
+      <div class="picker-reciter-row" data-id="${r.id}">
+        <div class="picker-reciter-avatar">
+          <img src="${r.image}" alt="${r.name}"
+            onerror="this.style.display='none';this.parentElement.innerHTML='🎙️'">
+        </div>
+        <div>
+          <div class="picker-reciter-name">${r.name}</div>
+          <div class="picker-reciter-country">${r.country}</div>
+        </div>
+        <span class="picker-reciter-arrow">›</span>
+      </div>`).join("") ||
+            `<p style="text-align:center;color:#64748b;padding:2rem">No reciters found</p>`;
+
+        list.querySelectorAll(".picker-reciter-row").forEach(row => {
+            row.addEventListener("click", () => {
+                const reciterId = row.dataset.id;
+                const surahNum = selectedSurah || 1;
+                // Close modals
+                modal.classList.remove("active");
+                surahModal.classList.remove("active");
+                // Navigate to reciter profile page, auto-playing the selected surah
+                window.location.href = `reciters/reciter.html?r=${reciterId}&surah=${surahNum}`;
+            });
+        });
+    }
+
+    search.addEventListener("input", e => renderPickerList(e.target.value));
+
+    function closePicker() {
+        modal.classList.remove("active");
+        search.value = "";
+    }
+    closeBtn?.addEventListener("click", closePicker);
+    overlay?.addEventListener("click", closePicker);
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closePicker(); });
+}
+
 // ============================================================
 // INIT
 // ============================================================
@@ -1754,6 +1849,7 @@ initFilterBar();
 initRepeatButton();
 initReaderThemePanel();
 initMiniSettingsDrawer();
+initReciterPicker();
 initBookmarks();
 initRecitersGrid();
 fixFloatingPlayerIcons();

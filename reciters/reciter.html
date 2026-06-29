@@ -483,6 +483,7 @@
             color: var(--primary)
         }
 
+        /* 
         .row-num-text {}
 
         .row-play-icon {
@@ -491,9 +492,9 @@
             inset: 0;
             align-items: center;
             justify-content: center
-        }
+        } */
 
-        .surah-row:hover .row-num-text,
+        /* .surah-row:hover .row-num-text,
         .surah-row.playing .row-num-text {
             display: none
         }
@@ -503,7 +504,6 @@
             display: flex
         }
 
-        /* default hover = play icon; playing state = pause icon */
         .row-play-icon.pause-icon {
             display: none
         }
@@ -514,9 +514,51 @@
 
         .surah-row.playing .row-play-icon.pause-icon {
             display: flex
+        } */
+
+        .row-num-text {
+            display: flex;
         }
 
-        .row-info {}
+        .row-play-icon {
+            display: none;
+            position: absolute;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .surah-row:not(.playing):hover .row-num-text {
+            display: none;
+        }
+
+        .surah-row:not(.playing):hover .row-play-icon.play-icon {
+            display: flex;
+        }
+
+        .surah-row:not(.playing):hover .row-play-icon.pause-icon {
+            display: none;
+        }
+
+        .surah-row.playing .row-num-text {
+            display: none;
+        }
+
+        .surah-row.playing .row-play-icon.pause-icon {
+            display: flex;
+        }
+
+        .surah-row.playing .row-play-icon.play-icon {
+            display: none;
+        }
+
+        .surah-row.playing:hover .row-play-icon.play-icon {
+            display: flex;
+        }
+
+        .surah-row.playing:hover .row-play-icon.pause-icon {
+            display: none;
+        }
 
         .row-name {
             font-weight: 600;
@@ -1126,6 +1168,11 @@
         // ── INIT ──
         populateHero();
         renderSurahs(SURAH_LIST);
+
+        const autoSurah = Number(new URLSearchParams(location.search).get("surah"));
+        if (autoSurah >= 1 && autoSurah <= 114) {
+            setTimeout(() => playSurahFromStart(autoSurah), 800);
+        }
     </script>
 </body>
 

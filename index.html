@@ -42,9 +42,9 @@
 
             <a href="mushaf.html">Read Quran</a>
 
-            <a href="#">Topics</a>
+            <a href="#topics">Topics</a>
 
-            <a href="#">Journey</a>
+            <a href="#journeys">Journey</a>
 
             <a href="#daily-ayah">Daily Ayah</a>
 
@@ -98,9 +98,9 @@
 
             <div class="hero-buttons">
 
-                <a href="#" class="btn-primary"> Start Reading </a>
+                <a href="#surah-explorer" class="btn-primary"> Explore Surahs </a>
 
-                <a href="#" class="btn-secondary"> Today's Ayah </a>
+                <a href="#audio-player-section" class="btn-secondary"> Today's Ayah </a>
 
             </div>
 
@@ -161,7 +161,7 @@
 
     <!-- ================= AUDIO PLAYER SECTION ================= -->
 
-    <section class="audio-player-section">
+    <section class="audio-player-section" id="audio-player-section">
 
         <div class="section-header">
 
@@ -317,7 +317,7 @@
 
     <!-- ================= AYAH EXPLORER ================= -->
 
-    <section class="ayah-explorer">
+    <section class="ayah-explorer" id="surah-explorer">
 
         <div class="section-header">
 
@@ -378,7 +378,7 @@
 
     <!-- ================= TOPICS SECTION ================= -->
 
-    <section class="topics">
+    <section class="topics" id="topics">
 
         <div class="section-header">
 
@@ -428,7 +428,7 @@
 
     <!-- ================= JOURNEY SECTION ================= -->
 
-    <section class="journeys">
+    <section class="journeys" id="journeys">
 
         <div class="section-header">
 
@@ -1207,6 +1207,22 @@
         </div>
 
     </div>
+
+    <!-- Reader Picker Modal -->
+
+    <div class="reciter-picker-modal" id="reciter-picker-modal">
+        <div class="reciter-picker-overlay" id="reciter-picker-overlay"></div>
+        <div class="reciter-picker-content">
+            <div class="picker-header">
+                <h3 class="picker-title">Choose a Reciter</h3>
+                <p class="picker-subtitle" id="picker-surah-label">for Surah Al-Fatihah</p>
+                <button class="picker-close" id="picker-close"><i data-lucide="x"></i></button>
+            </div>
+            <input type="text" class="picker-search" id="picker-search" placeholder="Search reciter…">
+            <div class="picker-list" id="picker-list"></div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/script.js"></script>
