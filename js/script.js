@@ -1835,6 +1835,25 @@ function initReciterPicker() {
     document.addEventListener("keydown", e => { if (e.key === "Escape") closePicker(); });
 }
 
+// Mobile nav toggle
+document.getElementById("hamburger-btn")?.addEventListener("click", () => {
+    document.getElementById("mobile-nav")?.classList.toggle("open");
+});
+
+// Close menu when any link inside it is clicked
+document.querySelectorAll(".mobile-nav a").forEach(link => {
+    link.addEventListener("click", () => {
+        document.getElementById("mobile-nav")?.classList.remove("open");
+    });
+});
+
+// Close menu when clicking outside it
+document.addEventListener("click", e => {
+    if (!e.target.closest(".navbar") && !e.target.closest(".mobile-nav")) {
+        document.getElementById("mobile-nav")?.classList.remove("open");
+    }
+});
+
 // ============================================================
 // INIT
 // ============================================================

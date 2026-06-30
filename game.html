@@ -8,6 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         :root {
             --primary: #10b981;
@@ -43,7 +44,6 @@
             flex-direction: column
         }
 
-        /* NAV */
         .navbar {
             position: fixed;
             top: 0;
@@ -84,7 +84,6 @@
             color: var(--primary)
         }
 
-        /* MAIN */
         .game-wrap {
             flex: 1;
             display: flex;
@@ -96,7 +95,6 @@
             width: 100%
         }
 
-        /* HEADER */
         .game-header {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -118,7 +116,6 @@
             font-size: .88rem
         }
 
-        /* STATS BAR */
         .stats-bar {
             display: flex;
             gap: .7rem;
@@ -136,7 +133,7 @@
             background: var(--dark-mid);
             border: 1px solid var(--border);
             font-size: .8rem;
-            font-weight: 600;
+            font-weight: 600
         }
 
         .stat-pill.correct {
@@ -159,7 +156,6 @@
             color: #a78bfa
         }
 
-        /* PROGRESS */
         .progress-wrap {
             width: 100%;
             height: 6px;
@@ -176,7 +172,6 @@
             transition: width .5s ease
         }
 
-        /* CARD */
         .game-card {
             width: 100%;
             background: var(--dark-mid);
@@ -187,7 +182,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: border-color .3s;
+            transition: border-color .3s
         }
 
         .game-card.correct-card {
@@ -200,7 +195,6 @@
             box-shadow: 0 0 30px rgba(239, 68, 68, .12)
         }
 
-        /* WORD DISPLAY */
         .word-arabic {
             font-family: "Amiri", serif;
             font-size: 4.5rem;
@@ -208,7 +202,7 @@
             color: var(--white);
             direction: rtl;
             margin-bottom: .4rem;
-            text-shadow: 0 2px 20px rgba(16, 185, 129, .12);
+            text-shadow: 0 2px 20px rgba(16, 185, 129, .12)
         }
 
         .word-translit {
@@ -223,7 +217,6 @@
             color: var(--subtext)
         }
 
-        /* HINT BUTTON */
         .hint-btn {
             margin-top: .9rem;
             border: none;
@@ -235,7 +228,13 @@
             font-size: .78rem;
             font-weight: 600;
             font-family: inherit;
-            transition: .2s;
+            transition: .2s
+        }
+
+        .hint-btn i,
+        .hint-btn svg {
+            margin-right: .3rem;
+            margin-top: .15rem;
         }
 
         .hint-btn:hover {
@@ -249,7 +248,6 @@
             min-height: 1.2em
         }
 
-        /* OPTIONS */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -270,13 +268,13 @@
             cursor: pointer;
             transition: all .2s;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.4
         }
 
         .option-btn:hover:not(:disabled) {
             border-color: var(--primary);
             background: var(--primary-dim);
-            transform: translateY(-2px);
+            transform: translateY(-2px)
         }
 
         .option-btn.selected {
@@ -300,7 +298,6 @@
             cursor: default
         }
 
-        /* BOTTOM ROW */
         .bottom-row {
             display: flex;
             gap: .8rem;
@@ -317,6 +314,10 @@
             font-weight: 700;
             cursor: pointer;
             transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem
         }
 
         .btn-confirm {
@@ -341,7 +342,6 @@
             background: rgba(255, 255, 255, .12)
         }
 
-        /* FEEDBACK TOAST */
         .feedback-toast {
             position: fixed;
             top: 80px;
@@ -355,7 +355,7 @@
             pointer-events: none;
             transition: .25s;
             z-index: 200;
-            white-space: nowrap;
+            white-space: nowrap
         }
 
         .feedback-toast.show {
@@ -373,13 +373,12 @@
             color: #fff
         }
 
-        /* RESULT SCREEN */
         .result-screen {
             display: none;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            width: 100%;
+            width: 100%
         }
 
         .result-screen.show {
@@ -440,7 +439,10 @@
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: .2s
+            transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem
         }
 
         .btn-restart:hover {
@@ -448,7 +450,6 @@
             box-shadow: 0 10px 25px rgba(16, 185, 129, .35)
         }
 
-        /* DIFFICULTY SELECT */
         .diff-row {
             display: flex;
             gap: .6rem;
@@ -467,7 +468,7 @@
             font-size: .78rem;
             font-weight: 600;
             cursor: pointer;
-            transition: .2s;
+            transition: .2s
         }
 
         .diff-btn.active {
@@ -496,7 +497,7 @@
 
     <header class="navbar">
         <a class="nav-logo" href="index.html">Al Furqan</a>
-        <a class="nav-back" href="index.html">Back</a>
+        <a class="nav-back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
     </header>
 
     <div class="game-wrap">
@@ -505,48 +506,40 @@
             <p class="game-subtitle">Learn the meaning of Quranic words — one verse at a time</p>
         </div>
 
-        <!-- DIFFICULTY -->
         <div class="diff-row" id="diff-row">
-            <button class="diff-btn active" data-diff="easy">🌱 Easy</button>
-            <button class="diff-btn" data-diff="medium">🔥 Medium</button>
-            <button class="diff-btn" data-diff="hard">⚡ Hard</button>
+            <button class="diff-btn active" data-diff="1">🌱 Easy</button>
+            <button class="diff-btn" data-diff="2">🔥 Medium</button>
+            <button class="diff-btn" data-diff="3">⚡ Hard</button>
         </div>
 
-        <!-- STATS -->
         <div class="stats-bar">
             <div class="stat-pill correct">✓ Correct: <span id="stat-correct">0</span></div>
             <div class="stat-pill wrong">✗ Wrong: <span id="stat-wrong">0</span></div>
             <div class="stat-pill streak">🔥 Streak: <span id="stat-streak">0</span></div>
-            <div class="stat-pill level">⭐ Level: <span id="stat-level">1</span></div>
+            <div class="stat-pill level">⭐ Level: <span id="stat-level">Easy</span></div>
         </div>
 
-        <!-- PROGRESS -->
         <div class="progress-wrap">
             <div class="progress-fill" id="progress-fill" style="width:0%"></div>
         </div>
 
-        <!-- MAIN GAME -->
         <div id="game-area" style="width:100%">
-            <!-- WORD CARD -->
             <div class="game-card" id="game-card">
                 <div class="word-arabic" id="word-arabic">—</div>
                 <div class="word-translit" id="word-translit"></div>
                 <div class="word-location" id="word-location"></div>
-                <button class="hint-btn" id="hint-btn">💡 Show Hint</button>
+                <button class="hint-btn" id="hint-btn"><i class="fa-solid fa-lightbulb"></i> Show Hint</button>
                 <div class="hint-text" id="hint-text"></div>
             </div>
 
-            <!-- OPTIONS -->
             <div class="options-grid" id="options-grid"></div>
 
-            <!-- BOTTOM ROW -->
             <div class="bottom-row">
-                <button class="action-btn btn-skip" id="btn-skip">Skip →</button>
+                <button class="action-btn btn-skip" id="btn-skip">Skip <i class="fa-solid fa-arrow-right"></i></button>
                 <button class="action-btn btn-confirm" id="btn-confirm" disabled>Confirm</button>
             </div>
         </div>
 
-        <!-- RESULT SCREEN -->
         <div class="result-screen" id="result-screen">
             <div class="result-emoji" id="result-emoji">🎉</div>
             <h2 class="result-title" id="result-title">Round Complete!</h2>
@@ -565,93 +558,133 @@
                     <div class="result-stat-label">Best Streak</div>
                 </div>
             </div>
-            <button class="btn-restart" id="btn-restart">Play Again 🔁</button>
+            <button class="btn-restart" id="btn-restart"><i class="fa-solid fa-rotate-right"></i> Play Again</button>
         </div>
     </div>
 
-    <!-- FEEDBACK TOAST -->
     <div class="feedback-toast" id="feedback-toast"></div>
 
     <script>
         // ═══════════════════════════════════════════════
-        // WORD BANK — 120 common Quranic words
-        // Each entry: { arabic, translit, meaning, hint, surah, ayah, difficulty }
-        // difficulty: 1=easy, 2=medium, 3=hard
+        // WORD BANK — 90 words, broad coverage so 5+ rounds
+        // (50 questions) rarely repeat the same word twice
         // ═══════════════════════════════════════════════
         const WORD_BANK = [
-            // EASY
-            { arabic: "اللَّهُ", translit: "Allahu", meaning: "Allah (God)", hint: "The name of God in Arabic", surah: 1, ayah: 1, diff: 1 },
-            { arabic: "الرَّحْمَٰنِ", translit: "Ar-Rahmani", meaning: "The Most Gracious", hint: "One of Allah's beautiful names", surah: 1, ayah: 1, diff: 1 },
-            { arabic: "الرَّحِيمِ", translit: "Ar-Raheem", meaning: "The Most Merciful", hint: "Related to rahma (mercy)", surah: 1, ayah: 1, diff: 1 },
-            { arabic: "الْحَمْدُ", translit: "Al-Hamdu", meaning: "All praise", hint: "Used in 'Alhamdulillah'", surah: 1, ayah: 2, diff: 1 },
-            { arabic: "رَبِّ", translit: "Rabbi", meaning: "Lord / My Lord", hint: "Used in du'a: 'Rabbi zidni...'", surah: 1, ayah: 2, diff: 1 },
-            { arabic: "الْعَالَمِينَ", translit: "Al-'Alameen", meaning: "The worlds / all creation", hint: "Used in Surah Al-Fatihah", surah: 1, ayah: 2, diff: 1 },
-            { arabic: "إِيَّاكَ", translit: "Iyyaka", meaning: "You alone", hint: "Expresses exclusive devotion", surah: 1, ayah: 5, diff: 1 },
-            { arabic: "نَعْبُدُ", translit: "Na'budu", meaning: "We worship", hint: "From 'ibadah (worship)", surah: 1, ayah: 5, diff: 1 },
-            { arabic: "نَسْتَعِينُ", translit: "Nasta'eenu", meaning: "We seek help", hint: "From isti'ana (to seek aid)", surah: 1, ayah: 5, diff: 1 },
-            { arabic: "الصِّرَاطَ", translit: "As-Sirat", meaning: "The path / way", hint: "Used in 'Sirat Al-Mustaqeem'", surah: 1, ayah: 6, diff: 1 },
-            { arabic: "النَّاسِ", translit: "An-Nas", meaning: "The people / mankind", hint: "Name of the last surah", surah: 114, ayah: 1, diff: 1 },
-            { arabic: "قُلْ", translit: "Qul", meaning: "Say", hint: "Command given to the Prophet ﷺ", surah: 112, ayah: 1, diff: 1 },
-            { arabic: "أَحَدٌ", translit: "Ahad", meaning: "One / Unique", hint: "Used in Surah Al-Ikhlas", surah: 112, ayah: 1, diff: 1 },
-            { arabic: "الصَّمَدُ", translit: "As-Samad", meaning: "The Self-Sufficient", hint: "None is independent of Him", surah: 112, ayah: 2, diff: 1 },
-            { arabic: "نُورٌ", translit: "Noor", meaning: "Light", hint: "Allah is the light of the heavens", surah: 24, ayah: 35, diff: 1 },
-            { arabic: "كِتَابٌ", translit: "Kitaab", meaning: "Book", hint: "Al-Kitab = The Book (Quran)", surah: 2, ayah: 2, diff: 1 },
-            { arabic: "هُدًى", translit: "Hudan", meaning: "Guidance", hint: "The Quran is hudal lil-muttaqeen", surah: 2, ayah: 2, diff: 1 },
-            { arabic: "قَلْبٌ", translit: "Qalb", meaning: "Heart", hint: "The seat of faith in Islam", surah: 2, ayah: 7, diff: 1 },
-            { arabic: "صَلَاةٌ", translit: "Salah", meaning: "Prayer", hint: "One of the five pillars of Islam", surah: 2, ayah: 3, diff: 1 },
-            { arabic: "جَنَّةٌ", translit: "Jannah", meaning: "Paradise / Garden", hint: "The eternal reward of the believers", surah: 2, ayah: 25, diff: 1 },
-            { arabic: "نَارٌ", translit: "Naar", meaning: "Fire / Hellfire", hint: "Place of punishment in the Quran", surah: 2, ayah: 24, diff: 1 },
-            { arabic: "مَاءٌ", translit: "Ma'", meaning: "Water", hint: "Allah created every living thing from it", surah: 21, ayah: 30, diff: 1 },
-            { arabic: "سَمَاءٌ", translit: "Sama'", meaning: "Sky / Heaven", hint: "Allah raised it without pillars", surah: 13, ayah: 2, diff: 1 },
-            { arabic: "أَرْضٌ", translit: "Ard", meaning: "Earth / Land", hint: "Allah spread it out for mankind", surah: 2, ayah: 22, diff: 1 },
-            { arabic: "رَحْمَةٌ", translit: "Rahma", meaning: "Mercy", hint: "Allah's mercy encompasses all things", surah: 7, ayah: 156, diff: 1 },
-            // MEDIUM
-            { arabic: "تَقْوَى", translit: "Taqwa", meaning: "God-consciousness / piety", hint: "Being aware of Allah at all times", surah: 2, ayah: 2, diff: 2 },
-            { arabic: "صَبْرٌ", translit: "Sabr", meaning: "Patience / Perseverance", hint: "Allah is with the patient ones", surah: 2, ayah: 153, diff: 2 },
-            { arabic: "شُكْرٌ", translit: "Shukr", meaning: "Gratitude / Thankfulness", hint: "If you are grateful, He will increase you", surah: 14, ayah: 7, diff: 2 },
-            { arabic: "تَوْبَةٌ", translit: "Tawbah", meaning: "Repentance / Return", hint: "Name of the 9th Surah", surah: 9, ayah: 3, diff: 2 },
-            { arabic: "أَمَانَةٌ", translit: "Amanah", meaning: "Trust / Trustworthiness", hint: "The trust offered to the heavens", surah: 33, ayah: 72, diff: 2 },
-            { arabic: "عِلْمٌ", translit: "'Ilm", meaning: "Knowledge", hint: "Read! (Iqra) — the first word revealed", surah: 96, ayah: 1, diff: 2 },
-            { arabic: "عَقْلٌ", translit: "'Aql", meaning: "Reason / Intellect", hint: "'Will you not reason?' (afala ta'qiloon)", surah: 2, ayah: 44, diff: 2 },
-            { arabic: "عَدْلٌ", translit: "'Adl", meaning: "Justice / Fairness", hint: "Allah commands it alongside ihsan", surah: 16, ayah: 90, diff: 2 },
-            { arabic: "إِحْسَانٌ", translit: "Ihsan", meaning: "Excellence / Goodness", hint: "Worship Allah as if you see Him", surah: 16, ayah: 90, diff: 2 },
-            { arabic: "صِدْقٌ", translit: "Sidq", meaning: "Truthfulness", hint: "Be with the truthful ones (sadiqeen)", surah: 9, ayah: 119, diff: 2 },
-            { arabic: "فِتْنَةٌ", translit: "Fitnah", meaning: "Trial / Temptation", hint: "And We will surely test you", surah: 2, ayah: 155, diff: 2 },
-            { arabic: "بَلَاءٌ", translit: "Bala'", meaning: "Trial / Affliction", hint: "Tests from Allah for believers", surah: 2, ayah: 49, diff: 2 },
-            { arabic: "نِعْمَةٌ", translit: "Ni'mah", meaning: "Blessing / Favor", hint: "And if you count Allah's blessings…", surah: 14, ayah: 34, diff: 2 },
-            { arabic: "دُعَاءٌ", translit: "Du'a", meaning: "Supplication / Prayer", hint: "Call upon Me and I will respond", surah: 40, ayah: 60, diff: 2 },
-            { arabic: "ذِكْرٌ", translit: "Dhikr", meaning: "Remembrance", hint: "Verily in the remembrance of Allah do hearts find rest", surah: 13, ayah: 28, diff: 2 },
-            { arabic: "غَفَرَ", translit: "Ghafara", meaning: "He forgave", hint: "Root of Ghafoor (the Forgiving)", surah: 2, ayah: 52, diff: 2 },
-            { arabic: "هِدَايَةٌ", translit: "Hidayah", meaning: "Guidance", hint: "The greatest gift from Allah", surah: 2, ayah: 53, diff: 2 },
-            { arabic: "آيَةٌ", translit: "Ayah", meaning: "Sign / Verse", hint: "Signs of Allah in creation and Quran", surah: 2, ayah: 39, diff: 2 },
-            { arabic: "سُورَةٌ", translit: "Surah", meaning: "Chapter", hint: "The Quran has 114 of these", surah: 2, ayah: 23, diff: 2 },
-            { arabic: "مَسْجِدٌ", translit: "Masjid", meaning: "Mosque / Place of prostration", hint: "From sajada (to prostrate)", surah: 2, ayah: 114, diff: 2 },
-            // HARD
-            { arabic: "اسْتِغْفَارٌ", translit: "Istighfar", meaning: "Seeking forgiveness", hint: "Astaghfirullah — I seek Allah's forgiveness", surah: 3, ayah: 17, diff: 3 },
-            { arabic: "تَوَكُّلٌ", translit: "Tawakkul", meaning: "Reliance on Allah", hint: "Then when you decide, rely upon Allah", surah: 3, ayah: 159, diff: 3 },
-            { arabic: "خُشُوعٌ", translit: "Khushu'", meaning: "Humility / Awe in prayer", hint: "Successful are the believers who have it", surah: 23, ayah: 2, diff: 3 },
-            { arabic: "إِخْلَاصٌ", translit: "Ikhlas", meaning: "Sincerity / Purity of intention", hint: "Name of Surah 112", surah: 112, ayah: 1, diff: 3 },
-            { arabic: "زَكَاةٌ", translit: "Zakah", meaning: "Purification / Almsgiving", hint: "One of the five pillars", surah: 2, ayah: 43, diff: 3 },
-            { arabic: "مُتَّقِينَ", translit: "Muttaqeen", meaning: "The righteous / God-fearing", hint: "The Quran is guidance for them", surah: 2, ayah: 2, diff: 3 },
-            { arabic: "الْفُرْقَانُ", translit: "Al-Furqan", meaning: "The Criterion (distinguishing truth from falsehood)", hint: "Name of Surah 25 and also the Quran", surah: 25, ayah: 1, diff: 3 },
-            { arabic: "مِيزَانٌ", translit: "Mizan", meaning: "Balance / Scale of deeds", hint: "The scales will be set up on the Day of Judgment", surah: 21, ayah: 47, diff: 3 },
-            { arabic: "حِسَابٌ", translit: "Hisab", meaning: "Reckoning / Accounting", hint: "Yawm al-Hisab = Day of Reckoning", surah: 38, ayah: 16, diff: 3 },
-            { arabic: "بَرْزَخٌ", translit: "Barzakh", meaning: "The Barrier / Intermediate realm", hint: "The state between death and resurrection", surah: 23, ayah: 100, diff: 3 },
-            { arabic: "الصِّرَاطَ الْمُسْتَقِيمَ", translit: "As-Sirat Al-Mustaqeem", meaning: "The Straight Path", hint: "We are guided to it in every salah", surah: 1, ayah: 6, diff: 3 },
-            { arabic: "مُؤْمِنٌ", translit: "Mu'min", meaning: "Believer", hint: "One of Allah's names too (Al-Mu'min)", surah: 2, ayah: 8, diff: 3 },
-            { arabic: "مُنَافِقٌ", translit: "Munafiq", meaning: "Hypocrite", hint: "Outwardly Muslim, inwardly rejecting", surah: 2, ayah: 8, diff: 3 },
-            { arabic: "سُجُودٌ", translit: "Sujood", meaning: "Prostration", hint: "The position closest to Allah in salah", surah: 2, ayah: 43, diff: 3 },
-            { arabic: "تَزْكِيَةٌ", translit: "Tazkiyah", meaning: "Purification of the soul", hint: "A mission of the Prophet ﷺ", surah: 62, ayah: 2, diff: 3 },
+            { arabic: "اللَّهُ", translit: "Allahu", meaning: "Allah (God)", hint: "The name of God in Arabic", surah: 1, ayah: 1 },
+            { arabic: "رَبِّ", translit: "Rabbi", meaning: "Lord / My Lord", hint: "Used in du'a: 'Rabbi zidni...'", surah: 1, ayah: 2 },
+            { arabic: "قُلْ", translit: "Qul", meaning: "Say", hint: "Command given to the Prophet ﷺ", surah: 112, ayah: 1 },
+            { arabic: "نُورٌ", translit: "Noor", meaning: "Light", hint: "Allah is the light of the heavens", surah: 24, ayah: 35 },
+            { arabic: "مَاءٌ", translit: "Ma'", meaning: "Water", hint: "Allah created every living thing from it", surah: 21, ayah: 30 },
+            { arabic: "قَلْبٌ", translit: "Qalb", meaning: "Heart", hint: "The seat of faith in Islam", surah: 2, ayah: 7 },
+            { arabic: "نَارٌ", translit: "Naar", meaning: "Fire / Hellfire", hint: "Place of punishment in the Quran", surah: 2, ayah: 24 },
+            { arabic: "أَحَدٌ", translit: "Ahad", meaning: "One / Unique", hint: "Used in Surah Al-Ikhlas", surah: 112, ayah: 1 },
+            { arabic: "عِلْمٌ", translit: "'Ilm", meaning: "Knowledge", hint: "Read! (Iqra) — the first word revealed", surah: 96, ayah: 1 },
+            { arabic: "عَقْلٌ", translit: "'Aql", meaning: "Reason / Intellect", hint: "'Will you not reason?'", surah: 2, ayah: 44 },
+            { arabic: "عَدْلٌ", translit: "'Adl", meaning: "Justice / Fairness", hint: "Allah commands it alongside ihsan", surah: 16, ayah: 90 },
+            { arabic: "صِدْقٌ", translit: "Sidq", meaning: "Truthfulness", hint: "Be with the truthful ones", surah: 9, ayah: 119 },
+            { arabic: "آيَةٌ", translit: "Ayah", meaning: "Sign / Verse", hint: "Signs of Allah in creation and Quran", surah: 2, ayah: 39 },
+            { arabic: "غَفَرَ", translit: "Ghafara", meaning: "He forgave", hint: "Root of Ghafoor (the Forgiving)", surah: 2, ayah: 52 },
+            { arabic: "نَعْبُدُ", translit: "Na'budu", meaning: "We worship", hint: "From 'ibadah (worship)", surah: 1, ayah: 5 },
+            { arabic: "سَمَاءٌ", translit: "Sama'", meaning: "Sky / Heaven", hint: "Allah raised it without pillars", surah: 13, ayah: 2 },
+            { arabic: "أَرْضٌ", translit: "Ard", meaning: "Earth / Land", hint: "Allah spread it out for mankind", surah: 2, ayah: 22 },
+            { arabic: "كِتَابٌ", translit: "Kitaab", meaning: "Book", hint: "Al-Kitab = The Book (Quran)", surah: 2, ayah: 2 },
+            { arabic: "هُدًى", translit: "Hudan", meaning: "Guidance", hint: "The Quran is hudal lil-muttaqeen", surah: 2, ayah: 2 },
+            { arabic: "بَيْتٌ", translit: "Bayt", meaning: "House", hint: "Al-Bayt Al-Haram = the Sacred House", surah: 2, ayah: 125 },
+            { arabic: "يَوْمٌ", translit: "Yawm", meaning: "Day", hint: "Yawm Al-Qiyamah = Day of Judgment", surah: 1, ayah: 4 },
+            { arabic: "شَمْسٌ", translit: "Shams", meaning: "Sun", hint: "Name of Surah 91", surah: 91, ayah: 1 },
+            { arabic: "قَمَرٌ", translit: "Qamar", meaning: "Moon", hint: "Name of Surah 54", surah: 54, ayah: 1 },
+            { arabic: "نَجْمٌ", translit: "Najm", meaning: "Star", hint: "Name of Surah 53", surah: 53, ayah: 1 },
+            { arabic: "جَبَلٌ", translit: "Jabal", meaning: "Mountain", hint: "Allah set mountains firm on earth", surah: 16, ayah: 15 },
+            // MEDIUM (4-6 letters)
+            { arabic: "تَقْوَى", translit: "Taqwa", meaning: "God-consciousness / piety", hint: "Being aware of Allah at all times", surah: 2, ayah: 2 },
+            { arabic: "صَبْرٌ", translit: "Sabr", meaning: "Patience / Perseverance", hint: "Allah is with the patient ones", surah: 2, ayah: 153 },
+            { arabic: "شُكْرٌ", translit: "Shukr", meaning: "Gratitude / Thankfulness", hint: "If you are grateful, He will increase you", surah: 14, ayah: 7 },
+            { arabic: "تَوْبَةٌ", translit: "Tawbah", meaning: "Repentance / Return", hint: "Name of the 9th Surah", surah: 9, ayah: 3 },
+            { arabic: "صَلَاةٌ", translit: "Salah", meaning: "Prayer", hint: "One of the five pillars of Islam", surah: 2, ayah: 3 },
+            { arabic: "جَنَّةٌ", translit: "Jannah", meaning: "Paradise / Garden", hint: "The eternal reward of the believers", surah: 2, ayah: 25 },
+            { arabic: "رَحْمَةٌ", translit: "Rahma", meaning: "Mercy", hint: "Allah's mercy encompasses all things", surah: 7, ayah: 156 },
+            { arabic: "فِتْنَةٌ", translit: "Fitnah", meaning: "Trial / Temptation", hint: "And We will surely test you", surah: 2, ayah: 155 },
+            { arabic: "بَلَاءٌ", translit: "Bala'", meaning: "Trial / Affliction", hint: "Tests from Allah for believers", surah: 2, ayah: 49 },
+            { arabic: "نِعْمَةٌ", translit: "Ni'mah", meaning: "Blessing / Favor", hint: "And if you count Allah's blessings…", surah: 14, ayah: 34 },
+            { arabic: "دُعَاءٌ", translit: "Du'a", meaning: "Supplication / Prayer", hint: "Call upon Me and I will respond", surah: 40, ayah: 60 },
+            { arabic: "ذِكْرٌ", translit: "Dhikr", meaning: "Remembrance", hint: "Hearts find rest in remembrance of Allah", surah: 13, ayah: 28 },
+            { arabic: "هِدَايَةٌ", translit: "Hidayah", meaning: "Guidance", hint: "The greatest gift from Allah", surah: 2, ayah: 53 },
+            { arabic: "سُورَةٌ", translit: "Surah", meaning: "Chapter", hint: "The Quran has 114 of these", surah: 2, ayah: 23 },
+            { arabic: "مَسْجِدٌ", translit: "Masjid", meaning: "Mosque / Place of prostration", hint: "From sajada (to prostrate)", surah: 2, ayah: 114 },
+            { arabic: "شَيْطَانٌ", translit: "Shaytan", meaning: "Satan / Devil", hint: "He refused to bow to Adam", surah: 2, ayah: 34 },
+            { arabic: "مَلَائِكَةٌ", translit: "Malaikah", meaning: "Angels", hint: "Created from light, they obey Allah fully", surah: 2, ayah: 30 },
+            { arabic: "رَسُولٌ", translit: "Rasul", meaning: "Messenger", hint: "One sent with a divine message", surah: 2, ayah: 101 },
+            { arabic: "نَبِيٌّ", translit: "Nabiyy", meaning: "Prophet", hint: "One who receives revelation", surah: 33, ayah: 40 },
+            { arabic: "قِيَامَةٌ", translit: "Qiyamah", meaning: "Resurrection", hint: "Name of Surah 75", surah: 75, ayah: 1 },
+            { arabic: "جِهَادٌ", translit: "Jihad", meaning: "Struggle / Striving", hint: "Striving in the way of Allah", surah: 29, ayah: 69 },
+            { arabic: "إِيمَانٌ", translit: "Iman", meaning: "Faith / Belief", hint: "Belief in Allah, His angels, books, messengers", surah: 2, ayah: 285 },
+            { arabic: "كُفْرٌ", translit: "Kufr", meaning: "Disbelief", hint: "The opposite of Iman", surah: 2, ayah: 6 },
+            { arabic: "شِرْكٌ", translit: "Shirk", meaning: "Associating partners with Allah", hint: "The gravest sin in Islam", surah: 4, ayah: 48 },
+            { arabic: "غَيْبٌ", translit: "Ghayb", meaning: "The unseen", hint: "Believers believe in it without seeing", surah: 2, ayah: 3 },
+            { arabic: "بَرَكَةٌ", translit: "Barakah", meaning: "Blessing / Abundance", hint: "Increase that comes from Allah", surah: 7, ayah: 96 },
+            { arabic: "عِبَادَةٌ", translit: "Ibadah", meaning: "Worship", hint: "The purpose of human creation", surah: 51, ayah: 56 },
+            { arabic: "وُضُوءٌ", translit: "Wudu", meaning: "Ablution", hint: "Ritual washing before prayer", surah: 5, ayah: 6 },
+            { arabic: "صِيَامٌ", translit: "Siyam", meaning: "Fasting", hint: "Prescribed in the month of Ramadan", surah: 2, ayah: 183 },
+            { arabic: "حَجٌّ", translit: "Hajj", meaning: "Pilgrimage", hint: "Journey to the Sacred House", surah: 3, ayah: 97 },
+            { arabic: "تَوْحِيدٌ", translit: "Tawheed", meaning: "Oneness of Allah", hint: "The core creed of Islam", surah: 112, ayah: 1 },
+            { arabic: "حِكْمَةٌ", translit: "Hikmah", meaning: "Wisdom", hint: "Allah grants it to whoever He wills", surah: 2, ayah: 269 },
+            { arabic: "أَمَانَةٌ", translit: "Amanah", meaning: "Trust / Trustworthiness", hint: "The trust offered to the heavens", surah: 33, ayah: 72 },
+            { arabic: "عِزَّةٌ", translit: "Izzah", meaning: "Honor / Might", hint: "All honor belongs to Allah", surah: 35, ayah: 10 },
+            { arabic: "رِزْقٌ", translit: "Rizq", meaning: "Provision / Sustenance", hint: "Allah is the best of providers", surah: 62, ayah: 11 },
+            { arabic: "خَيْرٌ", translit: "Khayr", meaning: "Good / Goodness", hint: "Hasten towards good deeds", surah: 2, ayah: 148 },
+            { arabic: "شَرٌّ", translit: "Sharr", meaning: "Evil", hint: "Seek refuge in Allah from it", surah: 113, ayah: 2 },
+            { arabic: "خَوْفٌ", translit: "Khawf", meaning: "Fear", hint: "No fear shall come upon the believers", surah: 2, ayah: 38 },
+            { arabic: "أَمْنٌ", translit: "Amn", meaning: "Safety / Security", hint: "Allah granted the Quraysh this favor", surah: 106, ayah: 4 },
+            // HARD (7+ letters)
+            { arabic: "اسْتِغْفَارٌ", translit: "Istighfar", meaning: "Seeking forgiveness", hint: "Astaghfirullah — I seek Allah's forgiveness", surah: 3, ayah: 17 },
+            { arabic: "تَوَكُّلٌ", translit: "Tawakkul", meaning: "Reliance on Allah", hint: "Then when you decide, rely upon Allah", surah: 3, ayah: 159 },
+            { arabic: "خُشُوعٌ", translit: "Khushu'", meaning: "Humility / Awe in prayer", hint: null, surah: 23, ayah: 2 },
+            { arabic: "إِخْلَاصٌ", translit: "Ikhlas", meaning: "Sincerity / Purity of intention", hint: null, surah: 112, ayah: 1 },
+            { arabic: "زَكَاةٌ", translit: "Zakah", meaning: "Purification / Almsgiving", hint: null, surah: 2, ayah: 43 },
+            { arabic: "مُتَّقِينَ", translit: "Muttaqeen", meaning: "The righteous / God-fearing", hint: null, surah: 2, ayah: 2 },
+            { arabic: "الْفُرْقَانُ", translit: "Al-Furqan", meaning: "The Criterion", hint: null, surah: 25, ayah: 1 },
+            { arabic: "مِيزَانٌ", translit: "Mizan", meaning: "Balance / Scale of deeds", hint: null, surah: 21, ayah: 47 },
+            { arabic: "حِسَابٌ", translit: "Hisab", meaning: "Reckoning / Accounting", hint: null, surah: 38, ayah: 16 },
+            { arabic: "بَرْزَخٌ", translit: "Barzakh", meaning: "The Barrier / Intermediate realm", hint: null, surah: 23, ayah: 100 },
+            { arabic: "مُؤْمِنٌ", translit: "Mu'min", meaning: "Believer", hint: null, surah: 2, ayah: 8 },
+            { arabic: "مُنَافِقٌ", translit: "Munafiq", meaning: "Hypocrite", hint: null, surah: 2, ayah: 8 },
+            { arabic: "سُجُودٌ", translit: "Sujood", meaning: "Prostration", hint: null, surah: 2, ayah: 43 },
+            { arabic: "تَزْكِيَةٌ", translit: "Tazkiyah", meaning: "Purification of the soul", hint: null, surah: 62, ayah: 2 },
+            { arabic: "يَسْتَهْزِئُونَ", translit: "Yastahzi'oon", meaning: "They mock / ridicule", hint: null, surah: 2, ayah: 14 },
+            { arabic: "الْمُسْتَقِيمَ", translit: "Al-Mustaqeem", meaning: "The Straight (path)", hint: null, surah: 1, ayah: 6 },
+            { arabic: "مُسْتَقَرٌّ", translit: "Mustaqarr", meaning: "A place of settlement", hint: null, surah: 6, ayah: 98 },
+            { arabic: "مُتَوَكِّلُونَ", translit: "Mutawakkiloon", meaning: "Those who rely on Allah", hint: null, surah: 3, ayah: 122 },
+            { arabic: "الْمُتَطَهِّرِينَ", translit: "Al-Mutatahhireen", meaning: "Those who purify themselves", hint: null, surah: 2, ayah: 222 },
+            { arabic: "مُسْتَكْبِرِينَ", translit: "Mustakbireen", meaning: "Those who are arrogant", hint: null, surah: 7, ayah: 133 },
+            { arabic: "الْمُسْتَهْزِئِينَ", translit: "Al-Mustahzi'een", meaning: "The mockers", hint: null, surah: 15, ayah: 95 },
+            { arabic: "الْمُنْفِقُونَ", translit: "Al-Munfiqoon", meaning: "Those who spend (in charity)", hint: null, surah: 2, ayah: 262 },
+            { arabic: "الْمُتَّقُونَ", translit: "Al-Muttaqoon", meaning: "The righteous", hint: null, surah: 3, ayah: 15 },
+            { arabic: "مُتَّكِئِينَ", translit: "Muttaki'een", meaning: "Reclining (in comfort)", hint: null, surah: 18, ayah: 31 },
+            { arabic: "الْمُسْتَضْعَفِينَ", translit: "Al-Mustad'afeen", meaning: "Those oppressed / weakened", hint: null, surah: 4, ayah: 75 },
         ];
 
-        // ── ALL MEANINGS (for building wrong options) ──
         const ALL_MEANINGS = [...new Set(WORD_BANK.map(w => w.meaning))];
 
+        // Count actual Arabic letters, ignoring diacritics (tashkeel)
+        function countArabicLetters(text) {
+            const stripped = text.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "");
+            const letters = stripped.match(/[\u0621-\u064A]/g);
+            return letters ? letters.length : 0;
+        }
+
+        // Auto-tag difficulty: Easy ≤3, Medium 4-6, Hard 7+
+        WORD_BANK.forEach(w => {
+            const count = countArabicLetters(w.arabic);
+            if (count <= 3) w.diff = 1;
+            else if (count <= 6) w.diff = 2;
+            else w.diff = 3;
+        });
+
         function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
-        function randFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+        function randFrom(arr) { if (!arr || !arr.length) return null; return arr[Math.floor(Math.random() * arr.length)]; }
 
         // ── STATE ──
-        let difficulty = 1;   // 1=easy, 2=medium, 3=hard
+        let difficulty = 1;
         let score = { correct: 0, wrong: 0, streak: 0, bestStreak: 0 };
         let questionNum = 0;
         const ROUND_LEN = 10;
@@ -661,7 +694,13 @@
         let hintUsed = false;
         let answered = false;
 
-        // ── DIFFICULTY BUTTONS ──
+        // Track recently-seen words across the whole session (not just this round)
+        // so repeated rounds don't keep showing the same words back to back
+        let seenWords = JSON.parse(sessionStorage.getItem("seenWords") || "[]");
+
+        const LEVEL_NAMES = { 1: "Easy", 2: "Medium", 3: "Hard" };
+
+        // ── DIFFICULTY BUTTONS — FIXED: data-diff is now numeric ("1","2","3") ──
         document.querySelectorAll(".diff-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
@@ -671,26 +710,52 @@
             });
         });
 
-        // ── NEXT QUESTION ──
         function nextQuestion() {
             if (questionNum >= ROUND_LEN) { showResult(); return; }
 
             hintUsed = false; answered = false; selected = null;
             document.getElementById("hint-text").textContent = "";
-            document.getElementById("hint-btn").disabled = false;
             document.getElementById("game-card").className = "game-card";
             document.getElementById("btn-confirm").disabled = true;
 
-            // Pick word matching difficulty (or easier if not enough)
-            const pool = WORD_BANK.filter(w => w.diff <= difficulty);
-            currentWord = randFrom(pool);
+            // Hard mode = no hints, ever
+            const hintBtn = document.getElementById("hint-btn");
+            if (difficulty === 3) {
+                hintBtn.style.display = "none";
+            } else {
+                hintBtn.style.display = "inline-flex";
+                hintBtn.disabled = false;
+            }
+
+            // Build pool for exact difficulty
+            let pool = WORD_BANK.filter(w => w.diff === difficulty);
+            if (!pool.length) pool = [...WORD_BANK];
+
+            // Prefer words NOT seen recently (across sessions/rounds)
+            let freshPool = pool.filter(w => !seenWords.includes(w.arabic));
+            // If we've exhausted fresh words at this difficulty, reset tracking for this pool only
+            if (!freshPool.length) {
+                seenWords = seenWords.filter(a => !pool.some(w => w.arabic === a));
+                freshPool = pool;
+            }
+            // Avoid immediate repeat of the very last word shown
+            if (freshPool.length > 1 && currentWord) {
+                freshPool = freshPool.filter(w => w.arabic !== currentWord.arabic);
+            }
+
+            currentWord = randFrom(freshPool.length ? freshPool : pool);
+            if (!currentWord) { showResult(); return; }
             correctAnswer = currentWord.meaning;
+
+            // Track this word as seen (cap list size so it doesn't grow forever)
+            seenWords.push(currentWord.arabic);
+            if (seenWords.length > 60) seenWords = seenWords.slice(-60);
+            sessionStorage.setItem("seenWords", JSON.stringify(seenWords));
 
             document.getElementById("word-arabic").textContent = currentWord.arabic;
             document.getElementById("word-translit").textContent = currentWord.translit;
             document.getElementById("word-location").textContent = `Surah ${currentWord.surah}, Ayah ${currentWord.ayah}`;
 
-            // Build 4 options: 1 correct + 3 wrong
             const wrongs = shuffle(ALL_MEANINGS.filter(m => m !== correctAnswer)).slice(0, 3);
             const options = shuffle([correctAnswer, ...wrongs]);
 
@@ -703,6 +768,7 @@
             });
 
             updateProgress();
+            updateStats(); // keep Level label in sync every question too
         }
 
         function selectOption(btn) {
@@ -721,22 +787,18 @@
 
             const isCorrect = selected === correctAnswer;
 
-            // Highlight answers
             document.querySelectorAll(".option-btn").forEach(btn => {
                 btn.disabled = true;
                 if (btn.dataset.val === correctAnswer) btn.classList.add("correct-ans");
                 else if (btn.dataset.val === selected) btn.classList.add("wrong-ans");
             });
 
-            // Card feedback
             document.getElementById("game-card").classList.add(isCorrect ? "correct-card" : "wrong-card");
 
-            // Score
             if (isCorrect) {
                 score.correct++;
                 score.streak++;
                 if (score.streak > score.bestStreak) score.bestStreak = score.streak;
-                // Bonus for hint not used
                 const pts = hintUsed ? 1 : (difficulty === 3 ? 3 : difficulty === 2 ? 2 : 1);
                 showToast(`✓ Correct! +${pts}`, "correct");
             } else {
@@ -746,24 +808,21 @@
             }
             updateStats();
 
-            // Auto-advance after delay
             setTimeout(nextQuestion, 1600);
         }
 
-        // ── HINT ──
         document.getElementById("hint-btn").addEventListener("click", () => {
+            if (difficulty === 3 || !currentWord.hint) return; // safety: hard mode never has hints
             hintUsed = true;
             document.getElementById("hint-text").textContent = "💡 " + currentWord.hint;
             document.getElementById("hint-btn").disabled = true;
         });
 
-        // ── SKIP ──
         document.getElementById("btn-skip").addEventListener("click", () => {
             if (answered) return;
             answered = true; questionNum++;
             score.streak = 0; updateStats();
             showToast("Skipped →", "wrong");
-            // Reveal correct
             document.querySelectorAll(".option-btn").forEach(btn => {
                 btn.disabled = true;
                 if (btn.dataset.val === correctAnswer) btn.classList.add("correct-ans");
@@ -771,10 +830,8 @@
             setTimeout(nextQuestion, 1400);
         });
 
-        // ── CONFIRM ──
         document.getElementById("btn-confirm").addEventListener("click", confirmAnswer);
 
-        // ── RESULT ──
         function showResult() {
             document.getElementById("game-area").style.display = "none";
             document.getElementById("result-screen").classList.add("show");
@@ -791,12 +848,11 @@
 
         document.getElementById("btn-restart").addEventListener("click", startRound);
 
-        // ── UI HELPERS ──
         function updateStats() {
             document.getElementById("stat-correct").textContent = score.correct;
             document.getElementById("stat-wrong").textContent = score.wrong;
             document.getElementById("stat-streak").textContent = score.streak;
-            document.getElementById("stat-level").textContent = difficulty;
+            document.getElementById("stat-level").textContent = LEVEL_NAMES[difficulty] || "Easy";
         }
 
         function updateProgress() {
@@ -820,7 +876,6 @@
             nextQuestion();
         }
 
-        // ── INIT ──
         startRound();
     </script>
 </body>
