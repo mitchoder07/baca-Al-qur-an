@@ -1087,7 +1087,8 @@ function renderSurahs(data) {
       <button class="favorite-btn ${isFav ? "active" : ""}" data-id="${s.id}" title="Favourite">★</button>
       <div class="surah-number">${s.id}</div>
       <h3>${s.transliteration}</h3>
-      <div class="surah-english">${s.name}</div>
+      <div class="surah-arabic-name">${s.name}</div>
+      <div class="surah-meaning">${s.translation}</div>
       <div class="surah-meta"><span>${s.total_verses} Ayahs</span><span>${capitalizeType(s.type)}</span></div>
     </div>`;
     }).join("");
@@ -1235,7 +1236,8 @@ async function openReader(surahNum, scrollToAyah = null) {
                     const ayah = Number(entry.target.dataset.ayah);
                     localStorage.setItem("lastRead", JSON.stringify({
                         surah: surahNum, surahName: meta.transliteration,
-                        surahArabic: meta.name, totalAyahs: verses.length, ayah
+                        surahArabic: meta.name, totalAyahs: verses.length, ayah,
+                        savedAt: Date.now()
                     }));
                     updateContinueReading();
                 }
@@ -1854,6 +1856,50 @@ document.addEventListener("click", e => {
     }
 });
 
+// =========================== Continue Reading Hint =================================
+
+function initContinueReadingHint() {
+    const saved = (() => { try { return JSON.parse(localStorage.getItem("lastRead")); } catch { return null; } })();
+    if (!saved?.surahName) return; // no history yet
+
+    // Only show if they've been here before (more than 5 minutes ago)
+    const fiveMin = 5 * 60 * 1000;
+    if (saved.savedAt && Date.now() - saved.savedAt < fiveMin) return;
+
+    // Create hint toast
+    const hint = document.createElement("div");
+    hint.id = "continue-hint";
+    hint.innerHTML = `
+      <div class="continue-hint-inner">
+        <span class="continue-hint-icon">📖</span>
+        <div class="continue-hint-text">
+          <strong>Welcome back!</strong>
+          <span>Continue from <em>${saved.surahName}</em>, Ayah ${saved.ayah}</span>
+        </div>
+        <button class="continue-hint-btn" id="continue-hint-btn">Resume</button>
+        <button class="continue-hint-dismiss" id="continue-hint-dismiss">✕</button>
+      </div>`;
+    document.body.appendChild(hint);
+
+    // Show after a short delay so page feels settled
+    setTimeout(() => hint.classList.add("visible"), 1200);
+
+    document.getElementById("continue-hint-btn").addEventListener("click", () => {
+        hint.remove();
+        openReader(Number(saved.surah), saved.ayah);
+    });
+    document.getElementById("continue-hint-dismiss").addEventListener("click", () => {
+        hint.classList.remove("visible");
+        setTimeout(() => hint.remove(), 400);
+    });
+
+    // Auto-dismiss after 8 seconds
+    setTimeout(() => {
+        hint.classList.remove("visible");
+        setTimeout(() => hint.remove(), 400);
+    }, 8000);
+}
+
 // ============================================================
 // INIT
 // ============================================================
@@ -1873,3 +1919,4 @@ initBookmarks();
 initRecitersGrid();
 fixFloatingPlayerIcons();
 updateContinueReading();
+initContinueReadingHint();

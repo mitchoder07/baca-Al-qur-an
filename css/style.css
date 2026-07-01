@@ -125,10 +125,46 @@ body.light-mode .section-header h2 {
   gap: 1rem;
 }
 
-.logo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--primary);
+
+.topbar-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.topbar-logo:hover {
+  transform: scale(1.03);
+}
+
+.baca-logo-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.25));
+}
+
+.topbar-logo:hover .baca-logo-icon {
+  filter: drop-shadow(0 3px 8px rgba(16, 185, 129, 0.4));
+}
+
+.topbar-logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Poppins", sans-serif;
+}
+
+body.light-mode .topbar-logo-text {
+  background: linear-gradient(135deg, #059669, #0891b2, #4f46e5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nav-links {
@@ -675,15 +711,31 @@ body.light-mode .section-header h2 {
   margin-bottom: 0.5rem;
 }
 
-.surah-english {
+.surah-arabic-name {
   color: #f8fafc;
   font-size: 1.7rem;
   font-weight: 600;
   text-align: right;
   direction: rtl;
   line-height: 1.8;
-  margin-bottom: 1rem;
+  margin-bottom: .2rem;
   font-family: "Amiri", "Noto Naskh Arabic", serif;
+}
+
+.surah-meaning {
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 500;
+  margin-bottom: .8rem;
+  opacity: .85;
+}
+
+body.light-mode .surah-arabic-name {
+  color: #0f172a;
+}
+
+body.light-mode .surah-meaning {
+  color: var(--primary);
 }
 
 .surah-meta {
@@ -907,40 +959,117 @@ body.light-mode .section-header h2 {
   }
 }
 
+/* Continue Reading Hint */
+
+#continue-hint {
+  position: fixed;
+  bottom: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  transition: bottom 0.45s cubic-bezier(.34, 1.56, .64, 1);
+  width: min(480px, 94vw);
+}
+
+#continue-hint.visible {
+  bottom: 24px;
+}
+
+.continue-hint-inner {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  background: #1e293b;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 18px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+}
+
+body.light-mode .continue-hint-inner {
+  background: #ffffff;
+  border-color: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.continue-hint-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.continue-hint-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  min-width: 0;
+}
+
+.continue-hint-text strong {
+  font-size: .82rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.continue-hint-text span {
+  font-size: .78rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.continue-hint-text em {
+  font-style: normal;
+  color: var(--white);
+  font-weight: 600;
+}
+
+body.light-mode .continue-hint-text em {
+  color: #0f172a;
+}
+
+.continue-hint-btn {
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: .55rem 1.1rem;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: .2s;
+}
+
+.continue-hint-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, .3);
+}
+
+.continue-hint-dismiss {
+  background: none;
+  border: none;
+  color: var(--subtext);
+  cursor: pointer;
+  font-size: .9rem;
+  flex-shrink: 0;
+  padding: .2rem;
+  line-height: 1;
+  transition: color .2s;
+}
+
+.continue-hint-dismiss:hover {
+  color: var(--wrong);
+}
+
 /* Reciters Section */
 
 .featured-reciters {
   padding: 6rem 8%;
 }
-
-/*
-.reciters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.reciter-card {
-  background: var(--dark-light);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 2rem;
-  text-align: center;
-  transition: 0.3s;
-}
-
-.reciter-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--primary);
-}
-
-.reciter-card h3 {
-  margin-bottom: 0.5rem;
-}
-
-.reciter-card span {
-  color: var(--text);
-} */
 
 .reciters-search-wrap {
   max-width: 500px;
@@ -1265,18 +1394,6 @@ body.light-mode .section-header h2 {
   font-size: 2rem;
   margin-bottom: 0.4rem;
 }
-
-/* .dark-theme {
-  background: linear-gradient(180deg, #0f172a, #111827);
-}
-
-.gold-theme {
-  background: linear-gradient(180deg, #1f2937, #111827);
-}
-
-.sepia-theme {
-  background: #2d2418;
-} */
 
 .reader-close {
   position: sticky;
@@ -2194,6 +2311,64 @@ body.light-mode .section-header h2 {
   font-size: .9rem;
 }
 
+body.light-mode .reciter-picker-content {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .picker-header {
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .picker-title {
+  color: #0f172a;
+}
+
+body.light-mode .picker-subtitle {
+  color: #64748b;
+}
+
+body.light-mode .picker-close {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+body.light-mode .picker-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+body.light-mode .picker-search {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #0f172a;
+}
+
+body.light-mode .picker-search::placeholder {
+  color: #94a3b8;
+}
+
+body.light-mode .picker-reciter-row:hover {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+body.light-mode .picker-reciter-name {
+  color: #0f172a;
+}
+
+body.light-mode .picker-reciter-country {
+  color: #64748b;
+}
+
+body.light-mode .picker-reciter-avatar {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+body.light-mode .reciter-picker-overlay {
+  background: rgba(0, 0, 0, 0.35);
+}
+
 /* Bookmarks section */
 .bookmarks-section {
   padding: 5rem 8%;
@@ -2472,4 +2647,16 @@ body.light-mode .bookmark-actions button {
     display: none;
     /* width: 10%; */
   }
+
+  .ayah-actions button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .ayah-action {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
 }

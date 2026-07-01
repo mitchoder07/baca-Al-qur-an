@@ -680,6 +680,184 @@
             transform: translateY(-3px)
         }
 
+        /* ── LIGHT MODE ── */
+        body.light-mode {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        body.light-mode .navbar {
+            background: rgba(248, 250, 252, 0.97);
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .nav-logo {
+            color: var(--primary);
+        }
+
+        body.light-mode .nav-back {
+            color: #475569;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .nav-back:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        body.light-mode .reciter-hero {
+            background: linear-gradient(180deg, rgba(16, 185, 129, .03) 0%, transparent 60%);
+        }
+
+        body.light-mode .hero-name {
+            color: #0f172a;
+        }
+
+        body.light-mode .hero-bio {
+            color: #475569;
+        }
+
+        body.light-mode .meta-pill {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #475569;
+        }
+
+        body.light-mode .stats-bar {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.07);
+        }
+
+        body.light-mode .stat-item {
+            border-right-color: rgba(0, 0, 0, 0.07);
+        }
+
+        body.light-mode .stat-label {
+            color: #94a3b8;
+        }
+
+        body.light-mode .sticky-player {
+            background: rgba(248, 250, 252, 0.98);
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .sp-surah {
+            color: #0f172a;
+        }
+
+        body.light-mode .sp-reciter {
+            color: #64748b;
+        }
+
+        body.light-mode .sp-btn {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        body.light-mode .sp-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        body.light-mode .sp-progress {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .sp-time {
+            color: #94a3b8;
+        }
+
+        body.light-mode .section-title {
+            color: #0f172a;
+        }
+
+        body.light-mode .surah-search-input {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #0f172a;
+        }
+
+        body.light-mode .surah-search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        body.light-mode .surah-row {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: transparent;
+        }
+
+        body.light-mode .surah-row:hover {
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        body.light-mode .surah-row.playing {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        body.light-mode .row-num {
+            background: rgba(0, 0, 0, 0.05);
+            color: #64748b;
+        }
+
+        body.light-mode .surah-row.playing .row-num,
+        body.light-mode .surah-row:hover .row-num {
+            background: var(--primary-dim);
+            color: var(--primary);
+        }
+
+        body.light-mode .row-name {
+            color: #0f172a;
+        }
+
+        body.light-mode .row-meta {
+            color: #64748b;
+        }
+
+        body.light-mode .row-arabic {
+            color: #475569;
+        }
+
+        body.light-mode .row-duration {
+            color: #94a3b8;
+        }
+
+        body.light-mode .side-panel {
+            background: rgba(248, 250, 252, 0.99);
+            border-left-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .panel-hd {
+            border-bottom-color: rgba(0, 0, 0, 0.07);
+        }
+
+        body.light-mode .panel-hd-title {
+            color: #0f172a;
+        }
+
+        body.light-mode .panel-srch {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #0f172a;
+        }
+
+        body.light-mode .panel-en {
+            color: #0f172a;
+        }
+
+        body.light-mode .panel-pg {
+            color: #94a3b8;
+        }
+
+        body.light-mode .panel-row:hover {
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        body.light-mode .back-top {
+            box-shadow: 0 8px 20px rgba(16, 185, 129, .2);
+        }
+
         @media(max-width:640px) {
             .hero-inner {
                 grid-template-columns: 1fr;
@@ -818,9 +996,15 @@
     <button class="back-top" id="back-top"><i class="fa-solid fa-chevron-up"></i></button>
 
     <script>
+
+        // Sync light mode with main site preference
+        if (localStorage.getItem("siteTheme") === "light") {
+            document.body.classList.add("light-mode");
+        }
+
         // ═══════════════════════════════════════════════
         // RECITER DATA
-        // folder = exact EveryAyah folder name (verified)
+        // folder = exact EveryAyah folder name
         // ═══════════════════════════════════════════════
         const RECITERS = {
             mishari: { name: "Mishary Rashid Alafasy", arabic: "مشاري راشد العفاسي", country: "Kuwait", style: "Murattal", folder: "Alafasy_128kbps", image: "/images/reciters/mishary.png", bio: "Sheikh Mishary Rashid Al-Afasy is a Kuwaiti Quran reciter, Imam, and nasheed artist born in 1976 in Kuwait City. He studied at the Islamic University of Madinah under leading scholars of tajweed and Quranic sciences. He serves as Imam of the Grand Mosque in Kuwait City and is one of the most recognized voices in the Muslim world. His recitation is celebrated for its warmth, clarity and emotional depth, and his recordings are used by Quran applications across the globe." },

@@ -1,917 +1,405 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Read Quran — Al Furqan</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --page-bg: #fdf8f0;
-            --accent: #8b6914;
-            --border: #d4b896;
-            --ui-bg: #0a0f1e;
-            --ui-text: #f1f5f9;
-            --ui-border: rgba(255, 255, 255, 0.08);
-            --green: #10b981;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca — Mushaf</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Fonts: Poppins (UI) + Amiri Quran + Amiri + Noto Naskh Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Baca core styles (shared variables with index.html) -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Mushaf-specific styles -->
+    <link rel="stylesheet" href="css/mushaf.css">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            height: 100%;
-            background: var(--ui-bg);
-            font-family: "Poppins", sans-serif;
-            overflow: hidden;
-        }
-
-        /* ── REAL QURAN GLYPH FONT (QCF4) — this is what quran.com uses ── */
-        @font-face {
-            font-family: "QCF4_Hafs_01";
-            src: url("https://cdn.jsdelivr.net/gh/MohamadHajjRabee/quran-qcf4@main/fonts-woff2/QCF4_Hafs_01_W.woff2") format("woff2");
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: "QCF4_QBSML";
-            src: url("https://cdn.jsdelivr.net/gh/MohamadHajjRabee/quran-qcf4@main/fonts-woff2/QCF4_QBSML_W.woff2") format("woff2");
-            font-display: swap;
-        }
-
-        /* ── TOP BAR — fixed squish: wraps gracefully, no overlap ── */
-        .topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 54px;
-            z-index: 100;
-            background: rgba(10, 15, 30, 0.97);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--ui-border);
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: .5rem;
-            padding: 0 .7rem;
-        }
-
-        .tb-logo {
-            color: var(--green);
-            font-weight: 700;
-            font-size: 1.05rem;
-            text-decoration: none;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .tb-nav-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: .3rem;
-            min-width: 0;
-        }
-
-        .tb-btn {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.07);
-            color: var(--ui-text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: .78rem;
-            transition: .18s;
-            flex-shrink: 0;
-            user-select: none;
-        }
-
-        .tb-btn:hover:not(:disabled) {
-            background: var(--green);
-        }
-
-        .tb-btn:disabled {
-            opacity: .3;
-            cursor: default;
-        }
-
-        .tb-center-info {
-            text-align: center;
-            min-width: 0;
-            flex-shrink: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 .3rem;
-        }
-
-        .tb-page-label {
-            color: var(--ui-text);
-            font-size: .72rem;
-            font-weight: 700;
-            white-space: nowrap;
-            line-height: 1.2;
-        }
-
-        .tb-surah-label {
-            color: #64748b;
-            font-size: .62rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.2;
-        }
-
-        .tb-right-group {
-            display: flex;
-            align-items: center;
-            gap: .35rem;
-            flex-shrink: 0;
-        }
-
-        .page-jump {
-            width: 42px;
-            height: 28px;
-            text-align: center;
-            border-radius: 7px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.07);
-            color: var(--ui-text);
-            font-family: inherit;
-            font-size: .7rem;
-            outline: none;
-        }
-
-        .page-jump:focus {
-            border-color: var(--green);
-        }
-
-        /* ── MAIN ── */
-        .main {
-            position: fixed;
-            top: 54px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(ellipse at center, #111827 0%, #0a0f1e 100%);
-            overflow: hidden;
-        }
-
-        /* ── SPREAD (desktop: 2 pages) ── */
-        .spread {
-            display: flex;
-            align-items: stretch;
-            height: calc(100vh - 54px - 16px);
-            max-height: 880px;
-            filter: drop-shadow(0 24px 64px rgba(0, 0, 0, 0.7));
-        }
-
-        .mpage {
-            background: var(--page-bg);
-            width: min(40vw, 410px);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mpage.rp {
-            border-radius: 6px 0 0 6px;
-        }
-
-        .mpage.lp {
-            border-radius: 0 6px 6px 0;
-        }
-
-        .mpage.rp::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 14px;
-            background: linear-gradient(to left, rgba(0, 0, 0, 0.15), transparent);
-            pointer-events: none;
-        }
-
-        .mpage.lp::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 14px;
-            background: linear-gradient(to right, rgba(0, 0, 0, 0.15), transparent);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .page-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 16px 7px;
-            border-bottom: 1.5px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .page-top span {
-            font-size: .66rem;
-            color: var(--accent);
-            font-family: "Amiri", serif;
-            font-weight: 700;
-        }
-
-        .page-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 10px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 2px;
-            direction: rtl;
-        }
-
-        .page-content::-webkit-scrollbar {
-            width: 0;
-        }
-
-        /* Each line gets a touch more breathing room so 15-line pages
-       fill the page height evenly, like a real printed Mushaf */
-        .mushaf-line {
-            margin-bottom: 6px;
-        }
-
-        /* Mushaf line — justified like the real printed page */
-        .mushaf-line {
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            flex-wrap: nowrap;
-            direction: rtl;
-            min-height: 34px;
-            width: 100%;
-        }
-
-        .mushaf-line.justify-line {
-            justify-content: space-between;
-        }
-
-        /* Surah name header band — distinct box, own line, breathing room */
-        .surah-header-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px 0 4px;
-            padding: 8px 12px;
-            border-top: 1.5px solid var(--border);
-            border-bottom: 1.5px solid var(--border);
-            background: rgba(139, 105, 20, 0.05);
-            font-family: "Amiri", serif;
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--accent);
-            direction: rtl;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        /* Bismillah — its own centered line, separated visually from surah name */
-        .bismillah-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 4px 0 14px;
-            font-family: "QCF4_Hafs_01", "Amiri", serif;
-            font-size: 1.5rem;
-            color: #1a0a00;
-            direction: rtl;
-        }
-
-        .qcf-word {
-            font-family: "QCF4_Hafs_01", "Amiri", serif;
-            font-size: 1.55rem;
-            color: #1a0a00;
-            line-height: 1.9;
-            white-space: nowrap;
-        }
-
-        /* Verse-end marker — small circular ornament with the number inside,
-       NOT raw "V1" text. This matches how a real Mushaf prints ayah numbers. */
-        .verse-end-circle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 1.55em;
-            height: 1.55em;
-            margin: 0 3px;
-            border-radius: 50%;
-            border: 1.3px solid var(--accent);
-            background: rgba(139, 105, 20, 0.06);
-            font-family: "Amiri", serif;
-            font-weight: 700;
-            font-size: 0.62rem;
-            color: var(--accent);
-            vertical-align: middle;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-
-        .page-bot {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 6px 16px 10px;
-            border-top: 1.5px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .page-diamond {
-            width: 24px;
-            height: 24px;
-            border: 1.5px solid var(--border);
-            transform: rotate(45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .page-diamond span {
-            transform: rotate(-45deg);
-            font-size: .58rem;
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .page-loading {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: "Amiri", serif;
-            color: var(--accent);
-            font-size: 1rem;
-            direction: ltr;
-        }
-
-        /* ── SIDE PANEL ── */
-        .side-panel {
-            position: fixed;
-            top: 54px;
-            right: 0;
-            bottom: 0;
-            width: 260px;
-            background: rgba(10, 15, 30, 0.99);
-            border-left: 1px solid var(--ui-border);
-            display: flex;
-            flex-direction: column;
-            z-index: 90;
-            transform: translateX(100%);
-            transition: transform .25s ease;
-        }
-
-        .side-panel.open {
-            transform: translateX(0);
-        }
-
-        .panel-hd {
-            padding: .8rem .9rem;
-            border-bottom: 1px solid var(--ui-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .panel-hd-title {
-            color: var(--ui-text);
-            font-weight: 700;
-            font-size: .85rem;
-        }
-
-        .panel-close {
-            background: none;
-            border: none;
-            color: #64748b;
-            cursor: pointer;
-            font-size: 1rem;
-            line-height: 1;
-        }
-
-        .panel-srch {
-            margin: .6rem .8rem;
-            height: 34px;
-            border-radius: 9px;
-            border: 1px solid var(--ui-border);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--ui-text);
-            padding: 0 .7rem;
-            font-family: inherit;
-            font-size: .78rem;
-            outline: none;
-        }
-
-        .panel-srch:focus {
-            border-color: var(--green);
-        }
-
-        .panel-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: .3rem 0;
-        }
-
-        .panel-row {
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            padding: .5rem .8rem;
-            cursor: pointer;
-            transition: .15s;
-        }
-
-        .panel-row:hover {
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .panel-num {
-            width: 24px;
-            height: 24px;
-            border-radius: 7px;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--green);
-            font-size: .65rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .panel-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .panel-en {
-            font-size: .76rem;
-            color: var(--ui-text);
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .panel-ar {
-            font-family: "Amiri", serif;
-            font-size: .85rem;
-            color: #94a3b8;
-            direction: rtl;
-        }
-
-        .panel-pg {
-            font-size: .65rem;
-            color: #475569;
-            flex-shrink: 0;
-        }
-
-        .panel-list::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .panel-list::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 3px;
-        }
-
-        /* ── MOBILE — ONE page at a time, true single-page paging ── */
-        @media(max-width:680px) {
-            .topbar {
-                grid-template-columns: auto 1fr auto;
-                padding: 0 .5rem;
-            }
-
-            .tb-logo {
-                font-size: .92rem;
-            }
-
-            .tb-btn {
-                width: 28px;
-                height: 28px;
-                font-size: .7rem;
-            }
-
-            .page-jump {
-                width: 36px;
-                height: 26px;
-                font-size: .65rem;
-            }
-
-            .tb-page-label {
-                font-size: .66rem;
-            }
-
-            .tb-surah-label {
-                font-size: .58rem;
-                max-width: 90px;
-            }
-
-            .spread {
-                height: calc(100vh - 54px - 12px);
-            }
-
-            .mpage {
-                width: min(94vw, 420px);
-            }
-
-            .mpage.lp {
-                display: none !important;
-            }
-
-            .mpage.rp {
-                border-radius: 6px;
-                width: 94vw;
-            }
-
-            .mpage.rp::after {
-                display: none;
-            }
-
-            .qcf-word {
-                font-size: 1.3rem;
-            }
-
-            .surah-header-line {
-                font-size: 1.3rem;
-            }
-
-            .bismillah-line {
-                font-size: 1.25rem;
-            }
-        }
-    </style>
 </head>
 
-<body>
+<body data-mushaf-theme="dark">
 
-    <header class="topbar">
-        <a class="tb-logo" href="index.html">Al Furqan</a>
+    <!-- Pre-load: apply saved theme ASAP to avoid flash of wrong theme -->
+    <script>
+        (function() {
+            try {
+                // Determine the starting theme:
+                // 1. If user has a saved mushaf theme, use it
+                // 2. Otherwise, sync with siteTheme from index.html
+                var t = localStorage.getItem("mushafTheme");
+                if (!t) {
+                    var st = localStorage.getItem("siteTheme") || "dark";
+                    t = st === "light" ? "light" : "dark";
+                }
+                document.body.setAttribute("data-mushaf-theme", t);
+                if (t === "light") document.body.classList.add("light-mode");
+            } catch (e) {}
+        })();
+    </script>
 
-        <div class="tb-nav-group">
-            <button class="tb-btn" id="btn-first" title="First">⏮</button>
-            <button class="tb-btn" id="btn-prev" title="Previous">◀</button>
-            <div class="tb-center-info">
-                <div class="tb-page-label" id="page-label">Page 1 / 604</div>
-                <div class="tb-surah-label" id="surah-label">Al-Fatihah · Juz 1</div>
-            </div>
-            <button class="tb-btn" id="btn-next" title="Next">▶</button>
-            <button class="tb-btn" id="btn-last" title="Last">⏭</button>
-        </div>
+    <!-- ================= MINIMAL TOP BAR (Logo + Back button) ================= -->
 
-        <div class="tb-right-group">
-            <input class="page-jump" id="page-jump" type="number" min="1" max="604" placeholder="p.">
-            <button class="tb-btn" id="btn-panel" title="Surah list">☰</button>
-        </div>
+    <header class="mushaf-topbar">
+        <a href="index.html" class="topbar-logo" aria-label="Baca — Home">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <!-- Open book (Quran) silhouette -->
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.18"/>
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>
+                <!-- Center spine -->
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>
+                <!-- Decorative star/crescent above book -->
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.9"/>
+                <!-- Page lines (left) -->
+                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <!-- Page lines (right) -->
+                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <defs>
+                    <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#10b981"/>
+                        <stop offset="0.5" stop-color="#06b6d4"/>
+                        <stop offset="1" stop-color="#6366f1"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span class="topbar-logo-text">Baca</span>
+        </a>
+        <div class="topbar-spacer"></div>
+        <a href="index.html" class="back-btn" title="Back to Home">
+            <i data-lucide="arrow-left"></i>
+            <span>Back</span>
+        </a>
     </header>
 
-    <div class="main">
-        <div class="spread" id="spread">
-            <div class="mpage rp" id="rp">
-                <div class="page-top" id="rp-top" style="display:none">
-                    <span id="rp-surah">—</span><span id="rp-juz">—</span><span id="rp-num">—</span>
-                </div>
-                <div class="page-content" id="rp-content">
-                    <div class="page-loading" id="rp-loading">Loading page…</div>
-                </div>
-                <div class="page-bot" id="rp-bot" style="display:none">
-                    <div class="page-diamond"><span id="rp-dn">1</span></div>
+    <!-- ================= MUSHAF TOOLBAR (sticky, below navbar) ================= -->
+
+    <div class="mushaf-toolbar" id="mushaf-toolbar">
+
+        <!-- Navigator: Page # navigation -->
+        <div class="nav-navigator" id="nav-navigator">
+            <button id="nav-prev-btn" class="nav-arrow" title="Previous">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <div class="nav-selector-wrap">
+                <button id="nav-selector-btn" class="nav-selector-btn" title="Jump to surah / page / juz">
+                    <span id="nav-selector-label">Page 1</span>
+                    <i data-lucide="chevron-down"></i>
+                </button>
+                <div class="nav-dropdown" id="nav-dropdown" hidden>
+                    <div class="nav-dropdown-tabs">
+                        <button class="nav-tab active" data-tab="surah">Surah</button>
+                        <button class="nav-tab" data-tab="juz">Juz</button>
+                        <button class="nav-tab" data-tab="page">Page</button>
+                    </div>
+                    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Search surah…">
+                    <div class="nav-list" id="nav-list"></div>
                 </div>
             </div>
-            <div class="mpage lp" id="lp">
-                <div class="page-top" id="lp-top" style="display:none">
-                    <span id="lp-surah">—</span><span id="lp-juz">—</span><span id="lp-num">—</span>
+            <button id="nav-next-btn" class="nav-arrow" title="Next">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Tools: translations, tajweed, reciter, settings -->
+        <div class="tools-group">
+
+            <button class="tool-btn" id="translations-tool" title="Translations">
+                <i data-lucide="languages"></i>
+                <span class="tool-label">Translations</span>
+            </button>
+
+            <button class="tool-btn" id="tajweed-tool" title="Tajweed colors">
+                <i data-lucide="sparkles"></i>
+                <span class="tool-label">Tajweed</span>
+                <span class="tool-indicator active" id="tajweed-indicator">On</span>
+            </button>
+
+            <button class="tool-btn" id="reciter-tool" title="Reciter">
+                <i data-lucide="mic"></i>
+                <span class="tool-label">Reciter</span>
+                <span class="tool-indicator" id="reciter-indicator">Alafasy</span>
+            </button>
+
+            <button class="tool-btn" id="settings-tool" title="Reader settings">
+                <i data-lucide="settings"></i>
+                <span class="tool-label">Settings</span>
+            </button>
+
+            <button class="tool-btn" id="bookmarks-tool" title="My bookmarks">
+                <i data-lucide="bookmark"></i>
+                <span class="tool-label">Bookmarks</span>
+                <span class="tool-indicator" id="bookmark-count">0</span>
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ================= READ AREA ================= -->
+
+    <main class="mushaf-read-area" id="mushaf-read-area">
+
+        <!-- Loading skeleton (shown while data fetches) -->
+        <div class="mushaf-loader" id="mushaf-loader">
+            <div class="loader-circle"><i data-lucide="loader-2" class="spin"></i></div>
+            <p>Loading Mushaf…</p>
+        </div>
+
+        <!-- PAGE VIEW: single page at a time, book-like layout -->
+        <section class="page-view" id="page-view" hidden>
+            <div class="page-container" id="page-container">
+                <article class="mushaf-page" id="page-current"></article>
+            </div>
+            <div class="page-bottom-bar">
+                <span class="page-num-label" id="page-num-label">Page 1 of 604</span>
+                <div class="page-jump-bar">
+                    <input type="range" id="page-slider" min="1" max="604" value="1" />
                 </div>
-                <div class="page-content" id="lp-content">
-                    <div class="page-loading" id="lp-loading">Loading page…</div>
+            </div>
+        </section>
+
+        <!-- SURAH VIEW: kept hidden (page view is the only mode now, but we keep
+             the element so JS doesn't error on missing refs) -->
+        <section class="surah-view" id="surah-view" hidden>
+            <header class="surah-banner" id="surah-banner">
+                <div class="surah-banner-arabic" id="surah-banner-arabic"></div>
+                <h2 class="surah-banner-title" id="surah-banner-title"></h2>
+                <p class="surah-banner-meta" id="surah-banner-meta"></p>
+                <div class="bismillah-header" id="surah-bismillah" hidden></div>
+            </header>
+            <div class="surah-verses" id="surah-verses"></div>
+        </section>
+
+    </main>
+
+    <!-- ================= TRANSLATIONS DRAWER (right) ================= -->
+
+    <aside class="side-drawer" id="translations-drawer" data-side="right">
+        <div class="drawer-head">
+            <h3><i data-lucide="languages"></i> Translations</h3>
+            <button class="drawer-close" data-drawer="translations-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="drawer-body">
+            <p class="drawer-hint">Pick one or more translations to show under each verse.</p>
+            <div class="translation-list" id="translation-list">
+                <!-- Populated by JS -->
+            </div>
+            <div class="drawer-section">
+                <label class="drawer-label">Display mode</label>
+                <div class="drawer-buttons" id="display-mode-buttons">
+                    <button class="toggle-btn active" data-mode="both">Both</button>
+                    <button class="toggle-btn" data-mode="arabic">Arabic only</button>
+                    <button class="toggle-btn" data-mode="translation">Translation only</button>
                 </div>
-                <div class="page-bot" id="lp-bot" style="display:none">
-                    <div class="page-diamond"><span id="lp-dn">2</span></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================= RECITER DRAWER ================= -->
+
+    <aside class="side-drawer" id="reciter-drawer" data-side="right">
+        <div class="drawer-head">
+            <h3><i data-lucide="mic"></i> Choose Reciter</h3>
+            <button class="drawer-close" data-drawer="reciter-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="drawer-body">
+            <input type="text" class="drawer-search" id="reciter-search" placeholder="Search reciter…">
+            <div class="reciter-list" id="reciter-list"></div>
+        </div>
+    </aside>
+
+    <!-- ================= SETTINGS DRAWER ================= -->
+
+    <aside class="side-drawer" id="settings-drawer" data-side="right">
+        <div class="drawer-head">
+            <h3><i data-lucide="settings"></i> Reader Settings</h3>
+            <button class="drawer-close" data-drawer="settings-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="drawer-body">
+
+            <div class="drawer-section">
+                <label class="drawer-label">Theme</label>
+                <div class="theme-swatches">
+                    <button class="theme-swatch swatch-dark active" data-theme="dark" title="Dark"></button>
+                    <button class="theme-swatch swatch-warm" data-theme="warm" title="Warm"></button>
+                    <button class="theme-swatch swatch-olive" data-theme="olive" title="Teal"></button>
+                    <button class="theme-swatch swatch-sapphire" data-theme="sapphire" title="Sapphire"></button>
+                    <button class="theme-swatch swatch-light" data-theme="light" title="Light"></button>
                 </div>
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Arabic text size</label>
+                <div class="drawer-buttons">
+                    <button id="font-decrease">A−</button>
+                    <button id="font-reset">A</button>
+                    <button id="font-increase">A+</button>
+                </div>
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Tajweed colors</label>
+                <div class="drawer-buttons">
+                    <button id="tajweed-on" class="toggle-btn active">On</button>
+                    <button id="tajweed-off" class="toggle-btn">Off</button>
+                </div>
+                <div class="tajweed-legend" id="tajweed-legend">
+                    <span><i class="taj-dot" style="background:#aa6610"></i> Ghunnah</span>
+                    <span><i class="taj-dot" style="background:#ff5a5a"></i> Ikhfa</span>
+                    <span><i class="taj-dot" style="background:#ff7e00"></i> Idgham</span>
+                    <span><i class="taj-dot" style="background:#1b80c4"></i> Iqlab</span>
+                    <span><i class="taj-dot" style="background:#1aa855"></i> Qalqalah</span>
+                    <span><i class="taj-dot" style="background:#a35bff"></i> Madd</span>
+                </div>
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Reading mode</label>
+                <div class="drawer-buttons">
+                    <button id="reading-both" class="toggle-btn active">Both</button>
+                    <button id="reading-arabic" class="toggle-btn">Arabic</button>
+                    <button id="reading-translation" class="toggle-btn">Translation</button>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- ================= BOOKMARKS DRAWER ================= -->
+
+    <aside class="side-drawer" id="bookmarks-drawer" data-side="right">
+        <div class="drawer-head">
+            <h3><i data-lucide="bookmark"></i> Bookmarks</h3>
+            <button class="drawer-close" data-drawer="bookmarks-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="drawer-body">
+            <div class="bookmarks-toolbar">
+                <span id="bookmarks-count">0 saved</span>
+                <button id="bookmarks-clear-btn" class="danger-btn">
+                    <i data-lucide="trash-2"></i> Clear all
+                </button>
+            </div>
+            <div class="bookmarks-list" id="bookmarks-list">
+                <div class="bookmarks-empty">
+                    <i data-lucide="bookmark"></i>
+                    <p>No bookmarks yet. Tap the bookmark icon on any verse to save it here.</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================= TAFSIR DRAWER ================= -->
+
+    <aside class="side-drawer tafsir-drawer" id="tafsir-drawer" data-side="right">
+        <div class="drawer-head">
+            <h3><i data-lucide="book-open-text"></i> Tafsir</h3>
+            <button class="drawer-close" data-drawer="tafsir-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="drawer-body">
+            <div class="tafsir-tabs">
+                <button class="tafsir-tab active" data-source="ibnkathir">Ibn Kathir <small>(EN)</small></button>
+                <button class="tafsir-tab" data-source="maarif">Maarif-ul-Quran <small>(EN)</small></button>
+                <button class="tafsir-tab" data-source="jalalayn">Jalalayn <small>(AR)</small></button>
+            </div>
+            <div class="tafsir-content" id="tafsir-content">
+                <p class="tafsir-empty">Click the tafsir icon on any verse to load its commentary here.</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================= WORD-BY-WORD MODAL ================= -->
+
+    <div class="word-modal-overlay" id="word-modal-overlay" hidden>
+        <div class="word-modal" id="word-modal" role="dialog" aria-modal="true">
+            <button class="word-modal-close" id="word-modal-close"><i data-lucide="x"></i></button>
+            <div class="word-modal-body" id="word-modal-body"></div>
+            <div class="word-modal-nav" id="word-modal-nav" hidden>
+                <button id="word-prev" title="Previous word"><i data-lucide="chevron-right"></i></button>
+                <button id="word-next" title="Next word"><i data-lucide="chevron-left"></i></button>
             </div>
         </div>
     </div>
 
-    <div class="side-panel" id="side-panel">
-        <div class="panel-hd">
-            <span class="panel-hd-title">Jump to Surah</span>
-            <button class="panel-close" id="panel-close">✕</button>
+    <!-- ================= SEARCH MODAL ================= -->
+
+    <div class="search-modal" id="search-modal">
+        <div class="search-modal-overlay" id="search-modal-overlay"></div>
+        <div class="search-modal-content">
+            <div class="search-modal-head">
+                <i data-lucide="search"></i>
+                <input type="text" id="mushaf-search-input" placeholder="Search surah name, number, or jump to page (e.g. 'Baqarah', '36', 'page 100')">
+                <button id="search-modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="search-modal-results" id="search-modal-results">
+                <p class="search-hint">Start typing to search surahs by name or number.</p>
+            </div>
         </div>
-        <input class="panel-srch" id="panel-srch" placeholder="Search surah…">
-        <div class="panel-list" id="panel-list"></div>
     </div>
 
+    <!-- ================= FLOATING MINI PLAYER ================= -->
+
+    <div class="floating-player" id="floating-player" hidden>
+        <div class="floating-player-top">
+            <div class="floating-info">
+                <div id="floating-surah">Al-Fatihah</div>
+                <div id="floating-ayah">Ayah 1</div>
+            </div>
+            <div class="floating-controls">
+                <button id="mini-prev" title="Previous"><i data-lucide="skip-back"></i></button>
+                <button id="mini-play" title="Play / Pause"><i data-lucide="play"></i></button>
+                <button id="mini-next" title="Next"><i data-lucide="skip-forward"></i></button>
+                <button id="mini-repeat" title="Repeat"><i data-lucide="repeat"></i></button>
+            </div>
+        </div>
+        <div class="floating-player-progress">
+            <input type="range" id="mini-progress" min="0" max="100" value="0">
+            <span id="mini-time">0:00 / 0:00</span>
+        </div>
+    </div>
+
+    <!-- ================= AYAH-ACTION POPOVER (mobile-friendly) ================= -->
+
+    <div class="ayah-popover" id="ayah-popover" hidden>
+        <div class="ayah-popover-head">
+            <span id="ayah-popover-ref">Al-Fatihah : 1</span>
+            <button id="ayah-popover-close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="ayah-popover-body" id="ayah-popover-body"></div>
+    </div>
+
+    <!-- ================= TOAST ================= -->
+
+    <div class="toast" id="toast"></div>
+
+    <!-- ================= AUDIO ELEMENTS ================= -->
+
+    <audio id="ayah-audio" preload="metadata"></audio>
+
+    <!-- ================= SCRIPTS ================= -->
+
+    <script src="js/data.js"></script>
+    <script src="js/mushaf.js"></script>
     <script>
-        // ═══════════════════════════════════════════════════════
-        // IS MOBILE? — determines 1-page vs 2-page mode
-        // ═══════════════════════════════════════════════════════
-        function isMobile() { return window.innerWidth <= 680; }
-
-        // ═══════════════════════════════════════════════════════
-        // SURAH META — for header labels & jump panel
-        // ═══════════════════════════════════════════════════════
-        const SM = [
-            { id: 1, en: "Al-Fatihah", ar: "الفاتحة", p: 1 }, { id: 2, en: "Al-Baqarah", ar: "البقرة", p: 2 },
-            { id: 3, en: "Ali 'Imran", ar: "آل عمران", p: 50 }, { id: 4, en: "An-Nisa", ar: "النساء", p: 77 },
-            { id: 5, en: "Al-Ma'idah", ar: "المائدة", p: 106 }, { id: 6, en: "Al-An'am", ar: "الأنعام", p: 128 },
-            { id: 7, en: "Al-A'raf", ar: "الأعراف", p: 151 }, { id: 8, en: "Al-Anfal", ar: "الأنفال", p: 177 },
-            { id: 9, en: "At-Tawbah", ar: "التوبة", p: 187 }, { id: 10, en: "Yunus", ar: "يونس", p: 208 },
-            { id: 11, en: "Hud", ar: "هود", p: 221 }, { id: 12, en: "Yusuf", ar: "يوسف", p: 235 },
-            { id: 13, en: "Ar-Ra'd", ar: "الرعد", p: 249 }, { id: 14, en: "Ibrahim", ar: "إبراهيم", p: 255 },
-            { id: 15, en: "Al-Hijr", ar: "الحجر", p: 262 }, { id: 16, en: "An-Nahl", ar: "النحل", p: 267 },
-            { id: 17, en: "Al-Isra", ar: "الإسراء", p: 282 }, { id: 18, en: "Al-Kahf", ar: "الكهف", p: 293 },
-            { id: 19, en: "Maryam", ar: "مريم", p: 305 }, { id: 20, en: "Ta-Ha", ar: "طه", p: 312 },
-            { id: 21, en: "Al-Anbiya", ar: "الأنبياء", p: 322 }, { id: 22, en: "Al-Hajj", ar: "الحج", p: 332 },
-            { id: 23, en: "Al-Mu'minun", ar: "المؤمنون", p: 342 }, { id: 24, en: "An-Nur", ar: "النور", p: 350 },
-            { id: 25, en: "Al-Furqan", ar: "الفرقان", p: 359 }, { id: 26, en: "Ash-Shu'ara", ar: "الشعراء", p: 367 },
-            { id: 27, en: "An-Naml", ar: "النمل", p: 377 }, { id: 28, en: "Al-Qasas", ar: "القصص", p: 385 },
-            { id: 29, en: "Al-'Ankabut", ar: "العنكبوت", p: 396 }, { id: 30, en: "Ar-Rum", ar: "الروم", p: 404 },
-            { id: 31, en: "Luqman", ar: "لقمان", p: 411 }, { id: 32, en: "As-Sajdah", ar: "السجدة", p: 415 },
-            { id: 33, en: "Al-Ahzab", ar: "الأحزاب", p: 418 }, { id: 34, en: "Saba", ar: "سبإ", p: 428 },
-            { id: 35, en: "Fatir", ar: "فاطر", p: 434 }, { id: 36, en: "Ya-Sin", ar: "يس", p: 440 },
-            { id: 37, en: "As-Saffat", ar: "الصافات", p: 446 }, { id: 38, en: "Sad", ar: "ص", p: 453 },
-            { id: 39, en: "Az-Zumar", ar: "الزمر", p: 458 }, { id: 40, en: "Ghafir", ar: "غافر", p: 467 },
-            { id: 41, en: "Fussilat", ar: "فصلت", p: 477 }, { id: 42, en: "Ash-Shuraa", ar: "الشورى", p: 483 },
-            { id: 43, en: "Az-Zukhruf", ar: "الزخرف", p: 489 }, { id: 44, en: "Ad-Dukhan", ar: "الدخان", p: 496 },
-            { id: 45, en: "Al-Jathiyah", ar: "الجاثية", p: 499 }, { id: 46, en: "Al-Ahqaf", ar: "الأحقاف", p: 502 },
-            { id: 47, en: "Muhammad", ar: "محمد", p: 507 }, { id: 48, en: "Al-Fath", ar: "الفتح", p: 511 },
-            { id: 49, en: "Al-Hujurat", ar: "الحجرات", p: 515 }, { id: 50, en: "Qaf", ar: "ق", p: 518 },
-            { id: 51, en: "Adh-Dhariyat", ar: "الذاريات", p: 520 }, { id: 52, en: "At-Tur", ar: "الطور", p: 523 },
-            { id: 53, en: "An-Najm", ar: "النجم", p: 526 }, { id: 54, en: "Al-Qamar", ar: "القمر", p: 528 },
-            { id: 55, en: "Ar-Rahman", ar: "الرحمن", p: 531 }, { id: 56, en: "Al-Waqi'ah", ar: "الواقعة", p: 534 },
-            { id: 57, en: "Al-Hadid", ar: "الحديد", p: 537 }, { id: 58, en: "Al-Mujadila", ar: "المجادلة", p: 542 },
-            { id: 59, en: "Al-Hashr", ar: "الحشر", p: 545 }, { id: 60, en: "Al-Mumtahanah", ar: "الممتحنة", p: 549 },
-            { id: 61, en: "As-Saf", ar: "الصف", p: 551 }, { id: 62, en: "Al-Jumu'ah", ar: "الجمعة", p: 553 },
-            { id: 63, en: "Al-Munafiqun", ar: "المنافقون", p: 554 }, { id: 64, en: "At-Taghabun", ar: "التغابن", p: 556 },
-            { id: 65, en: "At-Talaq", ar: "الطلاق", p: 558 }, { id: 66, en: "At-Tahrim", ar: "التحريم", p: 560 },
-            { id: 67, en: "Al-Mulk", ar: "الملك", p: 562 }, { id: 68, en: "Al-Qalam", ar: "القلم", p: 564 },
-            { id: 69, en: "Al-Haqqah", ar: "الحاقة", p: 566 }, { id: 70, en: "Al-Ma'arij", ar: "المعارج", p: 568 },
-            { id: 71, en: "Nuh", ar: "نوح", p: 570 }, { id: 72, en: "Al-Jinn", ar: "الجن", p: 572 },
-            { id: 73, en: "Al-Muzzammil", ar: "المزمل", p: 574 }, { id: 74, en: "Al-Muddaththir", ar: "المدثر", p: 575 },
-            { id: 75, en: "Al-Qiyamah", ar: "القيامة", p: 577 }, { id: 76, en: "Al-Insan", ar: "الإنسان", p: 578 },
-            { id: 77, en: "Al-Mursalat", ar: "المرسلات", p: 580 }, { id: 78, en: "An-Naba", ar: "النبإ", p: 582 },
-            { id: 79, en: "An-Nazi'at", ar: "النازعات", p: 583 }, { id: 80, en: "'Abasa", ar: "عبس", p: 585 },
-            { id: 81, en: "At-Takwir", ar: "التكوير", p: 586 }, { id: 82, en: "Al-Infitar", ar: "الإنفطار", p: 587 },
-            { id: 83, en: "Al-Mutaffifin", ar: "المطففين", p: 587 }, { id: 84, en: "Al-Inshiqaq", ar: "الإنشقاق", p: 589 },
-            { id: 85, en: "Al-Buruj", ar: "البروج", p: 590 }, { id: 86, en: "At-Tariq", ar: "الطارق", p: 591 },
-            { id: 87, en: "Al-A'la", ar: "الأعلى", p: 591 }, { id: 88, en: "Al-Ghashiyah", ar: "الغاشية", p: 592 },
-            { id: 89, en: "Al-Fajr", ar: "الفجر", p: 593 }, { id: 90, en: "Al-Balad", ar: "البلد", p: 594 },
-            { id: 91, en: "Ash-Shams", ar: "الشمس", p: 595 }, { id: 92, en: "Al-Layl", ar: "الليل", p: 595 },
-            { id: 93, en: "Ad-Duha", ar: "الضحى", p: 596 }, { id: 94, en: "Ash-Sharh", ar: "الشرح", p: 596 },
-            { id: 95, en: "At-Tin", ar: "التين", p: 597 }, { id: 96, en: "Al-'Alaq", ar: "العلق", p: 597 },
-            { id: 97, en: "Al-Qadr", ar: "القدر", p: 598 }, { id: 98, en: "Al-Bayyinah", ar: "البينة", p: 598 },
-            { id: 99, en: "Az-Zalzalah", ar: "الزلزلة", p: 599 }, { id: 100, en: "Al-'Adiyat", ar: "العاديات", p: 599 },
-            { id: 101, en: "Al-Qari'ah", ar: "القارعة", p: 600 }, { id: 102, en: "At-Takathur", ar: "التكاثر", p: 600 },
-            { id: 103, en: "Al-'Asr", ar: "العصر", p: 601 }, { id: 104, en: "Al-Humazah", ar: "الهمزة", p: 601 },
-            { id: 105, en: "Al-Fil", ar: "الفيل", p: 601 }, { id: 106, en: "Quraysh", ar: "قريش", p: 602 },
-            { id: 107, en: "Al-Ma'un", ar: "الماعون", p: 602 }, { id: 108, en: "Al-Kawthar", ar: "الكوثر", p: 602 },
-            { id: 109, en: "Al-Kafirun", ar: "الكافرون", p: 603 }, { id: 110, en: "An-Nasr", ar: "النصر", p: 603 },
-            { id: 111, en: "Al-Masad", ar: "المسد", p: 603 }, { id: 112, en: "Al-Ikhlas", ar: "الإخلاص", p: 604 },
-            { id: 113, en: "Al-Falaq", ar: "الفلق", p: 604 }, { id: 114, en: "An-Nas", ar: "الناس", p: 604 },
-        ];
-        const JUZ_P = [1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 221, 241, 261, 281, 301, 321, 341, 361, 381, 401, 421, 441, 461, 481, 501, 521, 542, 562, 582];
-        function getJuz(p) { let j = 1; for (let i = 0; i < JUZ_P.length; i++) { if (p >= JUZ_P[i]) j = i + 1; else break; } return j; }
-        function getSurah(p) { let s = SM[0]; for (const x of SM) { if (x.p <= p) s = x; else break; } return s; }
-
-        // ═══════════════════════════════════════════════════════
-        // FETCH + RENDER A SINGLE PAGE (using real QCF4 glyph JSON)
-        // ═══════════════════════════════════════════════════════
-        const pageCache = {};
-
-        async function fetchPageData(n) {
-            if (pageCache[n]) return pageCache[n];
-            const p = String(n).padStart(3, "0");
-            // jsDelivr mirrors GitHub raw files WITH proper CORS headers —
-            // raw.githubusercontent.com often fails fetch() from browsers (CORS),
-            // even though the file itself loads fine if opened directly in a tab.
-            const primaryUrl = `https://cdn.jsdelivr.net/gh/MohamadHajjRabee/quran-qcf4@main/pages/${p}.json`;
-            const fallbackUrl = `https://raw.githubusercontent.com/MohamadHajjRabee/quran-qcf4/main/pages/${p}.json`;
-
-            let res;
-            try {
-                res = await fetch(primaryUrl);
-                if (!res.ok) throw new Error("jsDelivr status " + res.status);
-            } catch (e1) {
-                console.warn("jsDelivr fetch failed, trying raw.githubusercontent fallback:", e1);
-                res = await fetch(fallbackUrl);
-                if (!res.ok) throw new Error("Both sources failed: " + res.status);
-            }
-
-            const data = await res.json();
-            pageCache[n] = data;
-            return data;
-        }
-
-        // Convert ayah number to Arabic-Indic numerals (١٢٣ style) like a real Mushaf
-        function toArabicNumeral(num) {
-            const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-            return String(num).split("").map(d => arabicDigits[parseInt(d)] ?? d).join("");
-        }
-
-        function renderLineHtml(line) {
-            // Surah header line — name only, own distinct band (no Bismillah merged in)
-            const headerWord = line.words.find(w => w.type === "surah_header");
-            if (headerWord) {
-                return `<div class="surah-header-line">${headerWord.text}</div>`;
-            }
-
-            // Build words for this line
-            const wordsHtml = line.words.map(w => {
-                if (w.type === "end") {
-                    // w.text looks like "V1", "V2" etc — extract just the number
-                    const num = (w.text.match(/\d+/) || ["?"])[0];
-                    const arabicNum = toArabicNumeral(num);
-                    return `<span class="verse-end-circle">${arabicNum}</span>`;
-                }
-                return `<span class="qcf-word">${w.text}</span>`;
-            }).join(" ");
-
-            return `<div class="mushaf-line justify-line">${wordsHtml}</div>`;
-        }
-
-        async function loadPage(side, n) {
-            const content = document.getElementById(`${side}-content`);
-            const top = document.getElementById(`${side}-top`);
-            const bot = document.getElementById(`${side}-bot`);
-
-            content.innerHTML = `<div class="page-loading">Loading page…</div>`;
-            top.style.display = "none";
-            bot.style.display = "none";
-
-            const s = getSurah(n);
-            const j = getJuz(n);
-            document.getElementById(`${side}-surah`).textContent = s.en;
-            document.getElementById(`${side}-juz`).textContent = "Juz " + j;
-            document.getElementById(`${side}-num`).textContent = "Page " + n;
-            document.getElementById(`${side}-dn`).textContent = n;
-
-            try {
-                const data = await fetchPageData(n);
-
-                // Check for Bismillah special line (every surah except 1 and 9 starts with it,
-                // but the QCF4 data already encodes it inline as part of line words typically;
-                // if not present, we don't force-add one to avoid duplicating data)
-                const linesHtml = data.lines.map(renderLineHtml).join("");
-                content.innerHTML = linesHtml;
-
-                top.style.display = "flex";
-                bot.style.display = "flex";
-            } catch (err) {
-                // Diagnostic message — tells you exactly WHY it failed, not just that it did
-                const isSandboxed = window.self !== window.top;
-                const hint = isSandboxed
-                    ? "This looks like a sandboxed preview (fetch() to external sites is often blocked here). Try opening this file directly in a real browser tab, or upload it to your live site — it should work there."
-                    : `Network error: ${err.message}`;
-                content.innerHTML = `<div class="page-loading" style="flex-direction:column;gap:8px;padding:1.5rem;text-align:center;">
-      <div>Could not load page ${n}.</div>
-      <div style="font-size:.7rem;opacity:.75;direction:ltr;max-width:280px;">${hint}</div>
-    </div>`;
-                console.error("Mushaf page load error:", err);
-            }
-        }
-
-        function hidePage(side) {
-            document.getElementById(side).style.display = "none";
-        }
-        function showPage(side) {
-            document.getElementById(side).style.display = "flex";
-        }
-
-        // ═══════════════════════════════════════════════════════
-        // STATE + NAVIGATION
-        // ═══════════════════════════════════════════════════════
-        let cur = Math.max(1, Math.min(604, Number(localStorage.getItem("mushafPage") || 1)));
-
-        function go(n) {
-            n = Math.max(1, Math.min(604, n));
-            cur = n;
-            localStorage.setItem("mushafPage", n);
-
-            const mobile = isMobile();
-            const s = getSurah(n);
-            const j = getJuz(n);
-
-            document.getElementById("page-label").textContent = mobile ? `Page ${n} / 604` : `Page ${n}-${Math.min(n + 1, 604)} / 604`;
-            document.getElementById("surah-label").textContent = `${s.en} · Juz ${j}`;
-            document.getElementById("page-jump").value = n;
-
-            document.getElementById("btn-prev").disabled = n <= 1;
-            document.getElementById("btn-first").disabled = n <= 1;
-            document.getElementById("btn-next").disabled = mobile ? n >= 604 : n >= 603;
-            document.getElementById("btn-last").disabled = mobile ? n >= 604 : n >= 603;
-
-            if (mobile) {
-                // ── MOBILE: exactly ONE page, left page hidden entirely ──
-                showPage("rp");
-                hidePage("lp");
-                loadPage("rp", n);
-            } else {
-                // ── DESKTOP: two-page spread, right=current(odd), left=current+1 ──
-                let rightP = n % 2 === 0 ? n - 1 : n;
-                let leftP = rightP + 1;
-                showPage("rp");
-                loadPage("rp", rightP);
-                if (leftP <= 604) {
-                    showPage("lp");
-                    loadPage("lp", leftP);
-                } else {
-                    hidePage("lp");
-                }
-            }
-        }
-
-        document.getElementById("btn-first").onclick = () => go(1);
-        document.getElementById("btn-prev").onclick = () => go(isMobile() ? cur - 1 : cur - 2);
-        document.getElementById("btn-next").onclick = () => go(isMobile() ? cur + 1 : cur + 2);
-        document.getElementById("btn-last").onclick = () => go(isMobile() ? 604 : 603);
-
-        document.getElementById("page-jump").addEventListener("change", e => {
-            const v = parseInt(e.target.value) || 1;
-            go(v);
-        });
-
-        document.addEventListener("keydown", e => {
-            if (e.target.tagName === "INPUT") return;
-            const step = isMobile() ? 1 : 2;
-            if (e.key === "ArrowRight" || e.key === "ArrowUp") go(cur - step);
-            if (e.key === "ArrowLeft" || e.key === "ArrowDown") go(cur + step);
-            if (e.key === "Home") go(1);
-            if (e.key === "End") go(isMobile() ? 604 : 603);
-        });
-
-        // Re-render on resize crossing the mobile breakpoint
-        let lastMobileState = isMobile();
-        window.addEventListener("resize", () => {
-            const nowMobile = isMobile();
-            if (nowMobile !== lastMobileState) {
-                lastMobileState = nowMobile;
-                go(cur);
-            }
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // SURAH PANEL
-        // ═══════════════════════════════════════════════════════
-        function buildPanel(q = "") {
-            const list = document.getElementById("panel-list");
-            const lc = q.toLowerCase();
-            const items = SM.filter(s => !lc || s.en.toLowerCase().includes(lc) || s.ar.includes(lc) || String(s.id) === lc);
-            list.innerHTML = items.map(s => `
-    <div class="panel-row" data-p="${s.p}">
-      <div class="panel-num">${s.id}</div>
-      <div class="panel-info"><div class="panel-en">${s.en}</div><div class="panel-ar">${s.ar}</div></div>
-      <div class="panel-pg">p.${s.p}</div>
-    </div>`).join("");
-            list.querySelectorAll(".panel-row").forEach(r => {
-                r.onclick = () => { go(Number(r.dataset.p)); closePanel(); };
-            });
-        }
-        function closePanel() { document.getElementById("side-panel").classList.remove("open"); }
-        document.getElementById("btn-panel").onclick = () => document.getElementById("side-panel").classList.toggle("open");
-        document.getElementById("panel-close").onclick = closePanel;
-        document.getElementById("panel-srch").addEventListener("input", e => buildPanel(e.target.value));
-
-        // ═══════════════════════════════════════════════════════
-        // INIT — wait for fonts before first render to avoid FOUC
-        // ═══════════════════════════════════════════════════════
-        buildPanel();
-
-        Promise.all([
-            document.fonts.load("1rem QCF4_Hafs_01"),
-            document.fonts.load("1rem QCF4_QBSML"),
-        ]).finally(() => {
-            go(cur);
-        });
-
-        // Fallback: render anyway after 2.5s even if fonts haven't resolved
-        setTimeout(() => { if (!document.getElementById("rp-content").children.length || document.getElementById("rp-content").querySelector(".page-loading")) go(cur); }, 2500);
+        lucide.createIcons();
     </script>
+
 </body>
 
 </html>
