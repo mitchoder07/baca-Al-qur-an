@@ -628,9 +628,15 @@ function initFilterBar() {
 
 function surahInJuz(surahId, juzNum) {
     const juzIdx = juzNum - 1;
-    const [startS] = JUZ_STARTS[juzIdx];
-    const [endS] = JUZ_STARTS[juzIdx + 1] || [115, 1];
-    return surahId >= startS && surahId < endS;
+    const [startS, startA] = JUZ_STARTS[juzIdx];
+    const [endS, endA] = JUZ_STARTS[juzIdx + 1] || [115, 1];
+    // Fix: when juz starts and ends in the SAME surah (e.g. juz 2 = 2:142 to 2:253),
+    // the old code surahId >= startS && surahId < endS would fail (2 >= 2 && 2 < 2 = false).
+    // Now we correctly include the surah if any part of it falls in the juz range.
+    if (surahId < startS) return false;
+    if (surahId > endS) return false;
+    if (surahId === endS && endA === 1) return false;
+    return true;
 }
 
 function surahInHizb(surahId, hizbNum) {
@@ -1920,3 +1926,574 @@ initRecitersGrid();
 fixFloatingPlayerIcons();
 updateContinueReading();
 initContinueReadingHint();
+// ============================================================
+// GAMIFICATION — Reading Stats, Streaks, Challenges, Achievements
+// ============================================================
+
+const GAMIFICATION = {
+    // Default daily goal (pages)
+    dailyGoal: 5,
+
+    // Achievement definitions
+    achievements: [
+        { id: "first-page",    icon: "book-open",       name: "First Steps",       desc: "Read your first page",          check: s => s.pagesRead >= 1 },
+        { id: "first-surah",   icon: "book-check",      name: "Surah Complete",     desc: "Complete your first surah",     check: s => s.completedSurahs >= 1 },
+        { id: "streak-3",      icon: "flame",            name: "On Fire",            desc: "3-day reading streak",          check: s => s.streak >= 3 },
+        { id: "streak-7",      icon: "zap",              name: "Week Warrior",       desc: "7-day reading streak",          check: s => s.streak >= 7 },
+        { id: "streak-30",     icon: "award",            name: "Monthly Master",     desc: "30-day reading streak",         check: s => s.streak >= 30 },
+        { id: "pages-50",      icon: "layers",           name: "Half Century",       desc: "Read 50 pages",                 check: s => s.pagesRead >= 50 },
+        { id: "pages-100",     icon: "library",          name: "Century Club",       desc: "Read 100 pages",                check: s => s.pagesRead >= 100 },
+        { id: "juz-1",         icon: "bookmark",         name: "Juz Explorer",       desc: "Explore your first juz",        check: s => s.juzExplored >= 1 },
+        { id: "surahs-10",     icon: "trophy",           name: "Dedicated Reader",   desc: "Complete 10 surahs",            check: s => s.completedSurahs >= 10 },
+        { id: "time-1h",       icon: "clock",            name: "Hour Power",         desc: "Read for 1 hour total",         check: s => s.readingTime >= 3600 },
+        { id: "challenges-5",  icon: "target",           name: "Challenge Chaser",   desc: "Complete 5 daily challenges",   check: s => s.challengesCompleted >= 5 },
+        { id: "verses-100",    icon: "scroll",           name: "Verse Voyager",      desc: "Read 100 verses",               check: s => s.versesRead >= 100 },
+    ],
+
+    // Daily challenges (cycled by day)
+    challenges: [
+        { title: "Read 3 pages of the Qur'an",           desc: "Complete this challenge to earn 50 XP",  target: 3,  unit: "pages",  xp: 50 },
+        { title: "Read 5 pages of the Qur'an",           desc: "Complete this challenge to earn 80 XP",  target: 5,  unit: "pages",  xp: 80 },
+        { title: "Complete a full surah",                desc: "Complete this challenge to earn 100 XP", target: 1,  unit: "surah",  xp: 100 },
+        { title: "Read for 10 minutes",                  desc: "Complete this challenge to earn 60 XP",  target: 10, unit: "minutes",xp: 60 },
+        { title: "Read 10 verses",                       desc: "Complete this challenge to earn 40 XP",  target: 10, unit: "verses", xp: 40 },
+    ],
+};
+
+// Load stats from localStorage
+function loadStats() {
+    try {
+        return JSON.parse(localStorage.getItem("bacaStats")) || {
+            streak: 0,
+            lastReadDate: null,
+            readingTime: 0,         // seconds
+            pagesRead: 0,
+            versesRead: 0,
+            juzExplored: 0,
+            completedSurahs: [],
+            totalDays: 0,
+            challengesCompleted: 0,
+            todayPages: 0,
+            todayDate: null,
+            xp: 0,
+            unlockedAchievements: [],
+        };
+    } catch {
+        return { streak: 0, lastReadDate: null, readingTime: 0, pagesRead: 0, versesRead: 0, juzExplored: 0, completedSurahs: [], totalDays: 0, challengesCompleted: 0, todayPages: 0, todayDate: null, xp: 0, unlockedAchievements: [] };
+    }
+}
+
+function saveStats(stats) {
+    localStorage.setItem("bacaStats", JSON.stringify(stats));
+}
+
+function getTodayStr() {
+    return new Date().toISOString().split("T")[0];
+}
+
+// Update streak when user reads
+function updateStreak(stats) {
+    const today = getTodayStr();
+    if (stats.lastReadDate === today) return; // already updated today
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+    if (stats.lastReadDate === yesterdayStr) {
+        stats.streak = (stats.streak || 0) + 1;
+    } else if (stats.lastReadDate === null) {
+        stats.streak = 1;
+    } else {
+        stats.streak = 1; // reset
+    }
+
+    stats.lastReadDate = today;
+    stats.totalDays = (stats.totalDays || 0) + 1;
+}
+
+// Track a page read
+function trackPageRead(pageNum) {
+    const stats = loadStats();
+    const today = getTodayStr();
+
+    // Reset daily counter if new day
+    if (stats.todayDate !== today) {
+        stats.todayDate = today;
+        stats.todayPages = 0;
+    }
+
+    stats.pagesRead = (stats.pagesRead || 0) + 1;
+    stats.todayPages = (stats.todayPages || 0) + 1;
+    updateStreak(stats);
+
+    // Track juz explored
+    const juzNum = Math.ceil(pageNum / 20.13); // approx 20 pages per juz
+    if (juzNum > (stats.juzExplored || 0)) {
+        stats.juzExplored = juzNum;
+    }
+
+    saveStats(stats);
+    checkAchievements(stats);
+    updateStatsUI(stats);
+    updateChallengeProgress(stats);
+}
+
+// Track reading time (called periodically)
+function trackReadingTime(seconds) {
+    const stats = loadStats();
+    stats.readingTime = (stats.readingTime || 0) + seconds;
+    saveStats(stats);
+    checkAchievements(stats);
+    updateStatsUI(stats);
+    updateChallengeProgress(stats);
+}
+
+// Mark a surah as completed
+function markSurahCompleted(surahNum) {
+    const stats = loadStats();
+    if (!stats.completedSurahs) stats.completedSurahs = [];
+    if (!stats.completedSurahs.includes(surahNum)) {
+        stats.completedSurahs.push(surahNum);
+        saveStats(stats);
+        showToast(`Surah ${SURAH_LIST[surahNum - 1]?.transliteration || surahNum} completed! ✓`);
+        checkAchievements(stats);
+        updateStatsUI(stats);
+    }
+}
+
+// Check and unlock achievements
+function checkAchievements(stats) {
+    if (!stats.unlockedAchievements) stats.unlockedAchievements = [];
+    let newUnlocks = [];
+
+    GAMIFICATION.achievements.forEach(ach => {
+        if (!stats.unlockedAchievements.includes(ach.id) && ach.check(stats)) {
+            stats.unlockedAchievements.push(ach.id);
+            stats.xp = (stats.xp || 0) + 20;
+            newUnlocks.push(ach);
+        }
+    });
+
+    if (newUnlocks.length) {
+        saveStats(stats);
+        newUnlocks.forEach(ach => {
+            showToast(`Achievement Unlocked: ${ach.name}! 🏆`);
+        });
+        renderAchievements(stats);
+    }
+}
+
+// Get today's challenge (based on day of year)
+function getTodayChallenge() {
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    return GAMIFICATION.challenges[dayOfYear % GAMIFICATION.challenges.length];
+}
+
+// Update challenge progress
+function updateChallengeProgress(stats) {
+    const challenge = getTodayChallenge();
+    const challengeKey = `challenge_${getTodayStr()}`;
+    let progress = JSON.parse(localStorage.getItem(challengeKey) || '{"count":0,"done":false}');
+
+    if (challenge.unit === "pages") {
+        progress.count = stats.todayPages || 0;
+    } else if (challenge.unit === "minutes") {
+        progress.count = Math.floor((stats.readingTime || 0) / 60);
+    } else if (challenge.unit === "verses") {
+        progress.count = stats.versesRead || 0;
+    } else if (challenge.unit === "surah") {
+        progress.count = (stats.completedSurahs || []).length;
+    }
+
+    if (progress.count >= challenge.target && !progress.done) {
+        progress.done = true;
+        stats.challengesCompleted = (stats.challengesCompleted || 0) + 1;
+        stats.xp = (stats.xp || 0) + challenge.xp;
+        saveStats(stats);
+        showToast(`Daily Challenge Complete! +${challenge.xp} XP 🎉`);
+    }
+
+    localStorage.setItem(challengeKey, JSON.stringify(progress));
+
+    // Update UI
+    const fill = document.getElementById("challenge-progress-fill");
+    const status = document.getElementById("challenge-status");
+    const card = document.getElementById("challenge-card");
+    if (fill) fill.style.width = Math.min(100, (progress.count / challenge.target) * 100) + "%";
+    if (status) status.textContent = `${progress.count} / ${challenge.target} ${challenge.unit}`;
+    if (card && progress.done) card.classList.add("completed");
+}
+
+// Update stats UI
+function updateStatsUI(stats) {
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+    setText("streak-count", stats.streak || 0);
+    setText("reading-time", formatReadingTime(stats.readingTime || 0));
+    setText("completed-surahs", (stats.completedSurahs || []).length);
+    setText("daily-goal-text", `${stats.todayPages || 0} / ${GAMIFICATION.dailyGoal}`);
+
+    const goalFill = document.getElementById("daily-goal-fill");
+    if (goalFill) goalFill.style.width = Math.min(100, ((stats.todayPages || 0) / GAMIFICATION.dailyGoal) * 100) + "%";
+
+    setText("stat-verses", stats.versesRead || 0);
+    setText("stat-pages", stats.pagesRead || 0);
+    setText("stat-juz", stats.juzExplored || 0);
+    setText("stat-days", stats.totalDays || 0);
+}
+
+function formatReadingTime(seconds) {
+    if (seconds < 60) return `${seconds}s`;
+    const m = Math.floor(seconds / 60);
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    return `${h}h ${m % 60}m`;
+}
+
+// Render achievements grid
+function renderAchievements(stats) {
+    const grid = document.getElementById("achievements-grid");
+    if (!grid) return;
+
+    grid.innerHTML = GAMIFICATION.achievements.map(ach => {
+        const unlocked = (stats.unlockedAchievements || []).includes(ach.id);
+        return `
+        <div class="achievement-badge ${unlocked ? "unlocked" : "locked"}">
+            <div class="achievement-icon">
+                <i data-lucide="${ach.icon}"></i>
+            </div>
+            <div class="achievement-name">${ach.name}</div>
+            <div class="achievement-desc">${ach.desc}</div>
+        </div>`;
+    }).join("");
+
+    if (window.lucide) lucide.createIcons();
+}
+
+// Render today's challenge
+function renderChallenge() {
+    const challenge = getTodayChallenge();
+    const titleEl = document.getElementById("challenge-title");
+    const descEl = document.getElementById("challenge-desc");
+    const xpEl = document.querySelector(".challenge-xp");
+    if (titleEl) titleEl.textContent = challenge.title;
+    if (descEl) descEl.textContent = challenge.desc;
+    if (xpEl) xpEl.textContent = `+${challenge.xp} XP`;
+}
+
+// Initialize gamification
+function initGamification() {
+    const stats = loadStats();
+
+    // Reset daily counter if new day
+    const today = getTodayStr();
+    if (stats.todayDate !== today) {
+        stats.todayDate = today;
+        stats.todayPages = 0;
+        saveStats(stats);
+    }
+
+    updateStatsUI(stats);
+    renderAchievements(stats);
+    renderChallenge();
+    updateChallengeProgress(stats);
+
+    // Set footer year
+    const yearEl = document.getElementById("footer-year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Footer theme toggle
+    document.getElementById("footer-theme-toggle")?.addEventListener("click", e => {
+        e.preventDefault();
+        document.querySelector(".theme-btn")?.click();
+    });
+
+    // Footer reset progress
+    document.getElementById("footer-reset-progress")?.addEventListener("click", e => {
+        e.preventDefault();
+        if (confirm("Reset all your reading progress, streaks, and achievements? This cannot be undone.")) {
+            localStorage.removeItem("bacaStats");
+            // Also clear today's challenge
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith("challenge_")) localStorage.removeItem(key);
+            });
+            showToast("Progress reset");
+            setTimeout(() => location.reload(), 800);
+        }
+    });
+
+    // Track reading time — increment 30 seconds every 30 seconds while page is visible
+    let timeAccumulator = 0;
+    setInterval(() => {
+        if (!document.hidden && document.hasFocus()) {
+            timeAccumulator += 30;
+            if (timeAccumulator >= 60) {
+                trackReadingTime(timeAccumulator);
+                timeAccumulator = 0;
+            }
+        }
+    }, 30000);
+
+    // Listen for page reads from the mushaf reader
+    window.addEventListener("storage", e => {
+        if (e.key === "mushafPage") {
+            const newPage = parseInt(e.newValue);
+            if (newPage) {
+                trackPageRead(newPage);
+            }
+        }
+    });
+
+    // Also track when surah is completed in the reader
+    window.addEventListener("storage", e => {
+        if (e.key === "surahCompleted") {
+            const surahNum = parseInt(e.newValue);
+            if (surahNum) markSurahCompleted(surahNum);
+        }
+    });
+}
+
+// Call init at the end (after other initializers)
+setTimeout(initGamification, 500);
+
+// ============================================================
+// TOPICS — Click a topic card to find related verses
+// ============================================================
+
+const TOPIC_VERSES = {
+    mercy: [
+        { surah: 1, ayah: 1, ref: "Al-Fatihah 1:1" },
+        { surah: 1, ayah: 3, ref: "Al-Fatihah 1:3" },
+        { surah: 7, ayah: 156, ref: "Al-A'raf 7:156" },
+        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53" },
+        { surah: 55, ayah: 1, ref: "Ar-Rahman 55:1" },
+    ],
+    prayer: [
+        { surah: 2, ayah: 3, ref: "Al-Baqarah 2:3" },
+        { surah: 2, ayah: 45, ref: "Al-Baqarah 2:45" },
+        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153" },
+        { surah: 4, ayah: 103, ref: "An-Nisa 4:103" },
+        { surah: 17, ayah: 78, ref: "Al-Isra 17:78" },
+        { surah: 20, ayah: 14, ref: "Ta-Ha 20:14" },
+        { surah: 29, ayah: 45, ref: "Al-Ankabut 29:45" },
+    ],
+    knowledge: [
+        { surah: 2, ayah: 269, ref: "Al-Baqarah 2:269" },
+        { surah: 3, ayah: 7, ref: "Ali 'Imran 3:7" },
+        { surah: 20, ayah: 114, ref: "Ta-Ha 20:114" },
+        { surah: 39, ayah: 9, ref: "Az-Zumar 39:9" },
+        { surah: 58, ayah: 11, ref: "Al-Mujadila 58:11" },
+        { surah: 96, ayah: 1, ref: "Al-Alaq 96:1" },
+    ],
+    protection: [
+        { surah: 1, ayah: 5, ref: "Al-Fatihah 1:5" },
+        { surah: 2, ayah: 201, ref: "Al-Baqarah 2:201" },
+        { surah: 3, ayah: 155, ref: "Ali 'Imran 3:155" },
+        { surah: 7, ayah: 200, ref: "Al-A'raf 7:200" },
+        { surah: 16, ayah: 98, ref: "An-Nahl 16:98" },
+        { surah: 113, ayah: 1, ref: "Al-Falaq 113:1" },
+        { surah: 114, ayah: 1, ref: "An-Nas 114:1" },
+    ],
+    charity: [
+        { surah: 2, ayah: 43, ref: "Al-Baqarah 2:43" },
+        { surah: 2, ayah: 177, ref: "Al-Baqarah 2:177" },
+        { surah: 2, ayah: 261, ref: "Al-Baqarah 2:261" },
+        { surah: 2, ayah: 274, ref: "Al-Baqarah 2:274" },
+        { surah: 9, ayah: 103, ref: "At-Tawbah 9:103" },
+        { surah: 107, ayah: 1, ref: "Al-Ma'un 107:1" },
+    ],
+    hope: [
+        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153" },
+        { surah: 3, ayah: 139, ref: "Ali 'Imran 3:139" },
+        { surah: 13, ayah: 28, ref: "Ar-Ra'd 13:28" },
+        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53" },
+        { surah: 65, ayah: 3, ref: "At-Talaq 65:3" },
+        { surah: 94, ayah: 5, ref: "Ash-Sharh 94:5" },
+        { surah: 94, ayah: 6, ref: "Ash-Sharh 94:6" },
+    ],
+};
+
+const TOPIC_NAMES = {
+    mercy: "Mercy",
+    prayer: "Prayer",
+    knowledge: "Knowledge",
+    protection: "Protection",
+    charity: "Charity",
+    hope: "Hope",
+};
+
+function initTopics() {
+    document.querySelectorAll(".topic-card").forEach(card => {
+        card.addEventListener("click", () => {
+            const topic = card.dataset.topic;
+            if (!topic) return;
+            showTopicResults(topic);
+        });
+    });
+}
+
+function showTopicResults(topic) {
+    const verses = TOPIC_VERSES[topic] || [];
+    if (!verses.length) return;
+
+    const results = document.querySelector(".search-results");
+    const searchInput = document.getElementById("searchInput");
+
+    // Set search input to topic name
+    if (searchInput) searchInput.value = TOPIC_NAMES[topic];
+
+    // Build results HTML
+    const header = `<div class="search-item" style="cursor:default;border-bottom:1px solid var(--border);margin-bottom:0.5rem;padding-bottom:0.8rem;">
+        <i data-lucide="tag" style="color:var(--primary)"></i>
+        <span style="font-weight:700;color:var(--primary)">${TOPIC_NAMES[topic]} — ${verses.length} verses</span>
+    </div>`;
+
+    const items = verses.map(v => {
+        const meta = SURAH_LIST[v.surah - 1];
+        return `<div class="search-item" data-surah="${v.surah}" data-ayah="${v.ayah}" style="cursor:pointer">
+            <i data-lucide="book-open"></i>
+            <span>${escapeHtml(meta?.transliteration || "Surah")} <small style="opacity:.6">${v.ref}</small></span>
+        </div>`;
+    }).join("");
+
+    results.innerHTML = header + items;
+    lucide.createIcons();
+
+    // Wire click handlers
+    results.querySelectorAll(".search-item[data-surah]").forEach(item => {
+        item.addEventListener("click", () => {
+            const surah = parseInt(item.dataset.surah);
+            const ayah = parseInt(item.dataset.ayah);
+            document.querySelector(".search-modal")?.classList.remove("active");
+            openReader(surah, ayah);
+        });
+    });
+
+    // Open search modal
+    document.querySelector(".search-modal")?.classList.add("active");
+}
+
+// ============================================================
+// GUIDED JOURNEYS — Click "Start Journey" to open reader at first verse
+// ============================================================
+
+function initJourneys() {
+    document.querySelectorAll(".journey-card").forEach(card => {
+        const btn = card.querySelector("button");
+        if (!btn) return;
+        btn.addEventListener("click", e => {
+            e.stopPropagation();
+            const start = card.dataset.start;
+            if (!start) return;
+            const [surah, ayah] = start.split(":").map(Number);
+            const journeyTitle = card.querySelector("h3")?.textContent?.trim() || "Journey";
+
+            // Save journey progress
+            const journeyData = {
+                title: journeyTitle,
+                verses: card.dataset.verses?.split(",") || [start],
+                currentIndex: 0,
+                startedAt: Date.now(),
+            };
+            localStorage.setItem("activeJourney", JSON.stringify(journeyData));
+
+            showToast(`Starting: ${journeyTitle} 📖`);
+            setTimeout(() => openReader(surah, ayah), 500);
+        });
+    });
+}
+
+// ============================================================
+// SEARCH MODAL — Make it actually search surahs, topics, and verses
+// ============================================================
+
+function initSearchModal() {
+    const searchInput = document.getElementById("searchInput");
+    const results = document.querySelector(".search-results");
+    if (!searchInput || !results) return;
+
+    // Build searchable data
+    const searchData = [
+        // Surahs
+        ...SURAH_LIST.map(s => ({
+            type: "surah",
+            icon: "book-open",
+            title: s.transliteration,
+            subtitle: `${s.translation} · ${s.total_verses} ayahs · ${capitalizeType(s.type)}`,
+            surah: s.id,
+            ayah: null,
+            keywords: `${s.transliteration} ${s.translation} ${s.name} ${s.id}`.toLowerCase(),
+        })),
+        // Topics
+        ...Object.entries(TOPIC_NAMES).map(([key, name]) => ({
+            type: "topic",
+            icon: "tag",
+            title: `Topic: ${name}`,
+            subtitle: `${(TOPIC_VERSES[key] || []).length} verses about ${name.toLowerCase()}`,
+            surah: null,
+            ayah: null,
+            topic: key,
+            keywords: `topic ${name} ${key}`.toLowerCase(),
+        })),
+        // Notable verses
+        { type: "verse", icon: "bookmark", title: "Ayat al-Kursi", subtitle: "Al-Baqarah 2:255 — The Throne Verse", surah: 2, ayah: 255, keywords: "ayatul kursi throne verse 2:255" },
+        { type: "verse", icon: "bookmark", title: "Verse of Light", subtitle: "An-Nur 24:35 — Nur", surah: 24, ayah: 35, keywords: "light nur 24:35" },
+        { type: "verse", icon: "bookmark", title: "Bismillah", subtitle: "Al-Fatihah 1:1", surah: 1, ayah: 1, keywords: "bismillah opening 1:1" },
+        { type: "verse", icon: "bookmark", title: "Last Verse", subtitle: "An-Nas 114:6", surah: 114, ayah: 6, keywords: "last verse 114:6 nas" },
+    ];
+
+    searchInput.addEventListener("input", () => {
+        const q = searchInput.value.trim().toLowerCase();
+        if (!q) {
+            results.innerHTML = `
+                <div class="search-item" style="cursor:default"><i data-lucide="search"></i><span>Search surahs, topics, or verses...</span></div>
+                <div class="search-item" style="cursor:default"><i data-lucide="tag"></i><span>Try: "mercy", "prayer", "charity", "Ayat al-Kursi"</span></div>`;
+            lucide.createIcons();
+            return;
+        }
+
+        const matches = searchData.filter(item =>
+            item.keywords.includes(q) ||
+            item.title.toLowerCase().includes(q) ||
+            item.subtitle.toLowerCase().includes(q)
+        ).slice(0, 12);
+
+        if (!matches.length) {
+            results.innerHTML = `<div class="search-item" style="cursor:default"><i data-lucide="search-x"></i><span>No results for "${escapeHtml(q)}"</span></div>`;
+            lucide.createIcons();
+            return;
+        }
+
+        results.innerHTML = matches.map(item => `
+            <div class="search-item ${item.type === "topic" ? "topic-result" : ""}" data-type="${item.type}" data-surah="${item.surah || ""}" data-ayah="${item.ayah || ""}" data-topic="${item.topic || ""}" style="cursor:pointer">
+                <i data-lucide="${item.icon}"></i>
+                <span>${escapeHtml(item.title)} <small style="opacity:.6;display:block;margin-top:2px">${escapeHtml(item.subtitle)}</small></span>
+            </div>
+        `).join("");
+
+        lucide.createIcons();
+
+        // Wire click handlers
+        results.querySelectorAll(".search-item[data-type]").forEach(item => {
+            item.addEventListener("click", () => {
+                const type = item.dataset.type;
+                if (type === "topic") {
+                    showTopicResults(item.dataset.topic);
+                } else {
+                    const surah = parseInt(item.dataset.surah);
+                    const ayah = item.dataset.ayah ? parseInt(item.dataset.ayah) : null;
+                    document.querySelector(".search-modal")?.classList.remove("active");
+                    openReader(surah, ayah);
+                }
+            });
+        });
+    });
+}
+
+// Initialize topics, journeys, and enhanced search
+setTimeout(() => {
+    initTopics();
+    initJourneys();
+    initSearchModal();
+}, 600);

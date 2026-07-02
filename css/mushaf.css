@@ -87,9 +87,11 @@ body.light-mode .topbar-logo-text {
 body[data-mushaf-theme="warm"] .baca-logo-icon {
     filter: drop-shadow(0 2px 4px rgba(212, 169, 78, 0.25));
 }
+
 body[data-mushaf-theme="olive"] .baca-logo-icon {
     filter: drop-shadow(0 2px 4px rgba(45, 212, 191, 0.25));
 }
+
 body[data-mushaf-theme="sapphire"] .baca-logo-icon {
     filter: drop-shadow(0 2px 4px rgba(129, 140, 248, 0.25));
 }
@@ -132,7 +134,8 @@ body[data-mushaf-theme="sapphire"] .baca-logo-icon {
     --mushaf-arabic: #ffffff;
     --mushaf-card-bg: rgba(255, 255, 255, 0.04);
     --mushaf-card-border: rgba(255, 255, 255, 0.08);
-    --mushaf-page-bg: #f8f4ea;             /* Cream paper (Mushaf Madinah look) */
+    --mushaf-page-bg: #f8f4ea;
+    /* Cream paper (Mushaf Madinah look) */
     --mushaf-page-text: #1a1a1a;
     --mushaf-page-shadow: rgba(0, 0, 0, 0.35);
     --mushaf-page-border: #d4c9a8;
@@ -143,12 +146,18 @@ body[data-mushaf-theme="sapphire"] .baca-logo-icon {
 
     /* Tajweed colors — distinct, accessible palette
        (chosen to be distinguishable from each other AND from accent green #10b981) */
-    --taj-ghunnah: #E67E22;   /* orange  — nasal sound (meem/nun shaddah) */
-    --taj-ikhfa:   #95A5A6;   /* gray    — hidden sound (nun sakinah) */
-    --taj-idgham:  #F1C40F;   /* yellow  — merged sound */
-    --taj-iqlab:   #3498DB;   /* blue    — converted to meem */
-    --taj-qalqalah:#E74C3C;   /* red     — echo/bounce (qaf/ba/jeem/dal/ta) */
-    --taj-madd:    #9B59B6;   /* purple  — prolongation */
+    --taj-ghunnah: #E67E22;
+    /* orange  — nasal sound (meem/nun shaddah) */
+    --taj-ikhfa: #95A5A6;
+    /* gray    — hidden sound (nun sakinah) */
+    --taj-idgham: #F1C40F;
+    /* yellow  — merged sound */
+    --taj-iqlab: #3498DB;
+    /* blue    — converted to meem */
+    --taj-qalqalah: #E74C3C;
+    /* red     — echo/bounce (qaf/ba/jeem/dal/ta) */
+    --taj-madd: #9B59B6;
+    /* purple  — prolongation */
 }
 
 body.light-mode {
@@ -165,11 +174,95 @@ body.light-mode {
    player, read area) inherits the same theme variables.
    The .mushaf-read-area also gets data-theme for backwards-compat with the
    rules above, but the canonical source of theme variables is now body. */
-body[data-mushaf-theme="dark"]    { --mushaf-accent:#10b981; --mushaf-accent-rgb:16,185,129; --mushaf-card-bg:rgba(255,255,255,0.04); --mushaf-card-border:rgba(255,255,255,0.08); --mushaf-text:#ffffff; --mushaf-subtext:#cbd5e1; --mushaf-arabic:#ffffff; --mushaf-page-bg:linear-gradient(180deg,#0f172a,#111827); --mushaf-page-text:#ffffff; --mushaf-page-shadow:rgba(0,0,0,0.4); --mushaf-page-border:rgba(255,255,255,0.08); --mushaf-drawer-bg:#111827; --mushaf-tool-bg:rgba(255,255,255,0.05); --mushaf-toolbar-bg:rgba(15,23,42,0.88); --mushaf-overlay:rgba(0,0,0,0.65); }
-body[data-mushaf-theme="warm"]    { --mushaf-accent:#d4a94e; --mushaf-accent-rgb:212,169,78; --mushaf-card-bg:rgba(255,220,120,0.05); --mushaf-card-border:rgba(255,200,80,0.1); --mushaf-text:#f5e6c8; --mushaf-subtext:#c4a97a; --mushaf-arabic:#f5e6c8; --mushaf-page-bg:linear-gradient(180deg,#1a1208,#231a0c); --mushaf-page-text:#f5e6c8; --mushaf-page-shadow:rgba(0,0,0,0.5); --mushaf-page-border:rgba(212,169,78,0.15); --mushaf-drawer-bg:#231a0c; --mushaf-tool-bg:rgba(255,220,120,0.08); --mushaf-toolbar-bg:rgba(26,18,8,0.88); --mushaf-overlay:rgba(0,0,0,0.65); }
-body[data-mushaf-theme="olive"]   { --mushaf-accent:#2dd4bf; --mushaf-accent-rgb:45,212,191; --mushaf-card-bg:rgba(45,212,191,0.04); --mushaf-card-border:rgba(45,212,191,0.1); --mushaf-text:#e8f5f4; --mushaf-subtext:#8fb5b2; --mushaf-arabic:#f0faf9; --mushaf-page-bg:linear-gradient(180deg,#0a1918,#0d1f1e); --mushaf-page-text:#e8f5f4; --mushaf-page-shadow:rgba(0,0,0,0.45); --mushaf-page-border:rgba(45,212,191,0.15); --mushaf-drawer-bg:#0d1f1e; --mushaf-tool-bg:rgba(45,212,191,0.07); --mushaf-toolbar-bg:rgba(10,25,24,0.88); --mushaf-overlay:rgba(0,0,0,0.65); }
-body[data-mushaf-theme="sapphire"]{ --mushaf-accent:#818cf8; --mushaf-accent-rgb:129,140,248; --mushaf-card-bg:rgba(129,140,248,0.05); --mushaf-card-border:rgba(129,140,248,0.12); --mushaf-text:#e0e7ff; --mushaf-subtext:#7c86b5; --mushaf-arabic:#f0f4ff; --mushaf-page-bg:linear-gradient(180deg,#080c1a,#0e1225); --mushaf-page-text:#e0e7ff; --mushaf-page-shadow:rgba(0,0,0,0.5); --mushaf-page-border:rgba(129,140,248,0.15); --mushaf-drawer-bg:#0e1225; --mushaf-tool-bg:rgba(129,140,248,0.08); --mushaf-toolbar-bg:rgba(8,12,26,0.88); --mushaf-overlay:rgba(0,0,0,0.65); }
-body[data-mushaf-theme="light"]   { --mushaf-accent:#059669; --mushaf-accent-rgb:5,150,105; --mushaf-card-bg:#ffffff; --mushaf-card-border:rgba(0,0,0,0.07); --mushaf-text:#0f172a; --mushaf-subtext:#475569; --mushaf-arabic:#0f172a; --mushaf-page-bg:#ffffff; --mushaf-page-text:#0f172a; --mushaf-page-shadow:rgba(0,0,0,0.15); --mushaf-page-border:rgba(0,0,0,0.08); --mushaf-drawer-bg:#ffffff; --mushaf-tool-bg:rgba(0,0,0,0.05); --mushaf-toolbar-bg:rgba(255,255,255,0.92); --mushaf-overlay:rgba(0,0,0,0.35); }
+body[data-mushaf-theme="dark"] {
+    --mushaf-accent: #10b981;
+    --mushaf-accent-rgb: 16, 185, 129;
+    --mushaf-card-bg: rgba(255, 255, 255, 0.04);
+    --mushaf-card-border: rgba(255, 255, 255, 0.08);
+    --mushaf-text: #ffffff;
+    --mushaf-subtext: #cbd5e1;
+    --mushaf-arabic: #ffffff;
+    --mushaf-page-bg: linear-gradient(180deg, #0f172a, #111827);
+    --mushaf-page-text: #ffffff;
+    --mushaf-page-shadow: rgba(0, 0, 0, 0.4);
+    --mushaf-page-border: rgba(255, 255, 255, 0.08);
+    --mushaf-drawer-bg: #111827;
+    --mushaf-tool-bg: rgba(255, 255, 255, 0.05);
+    --mushaf-toolbar-bg: rgba(15, 23, 42, 0.88);
+    --mushaf-overlay: rgba(0, 0, 0, 0.65);
+}
+
+body[data-mushaf-theme="warm"] {
+    --mushaf-accent: #d4a94e;
+    --mushaf-accent-rgb: 212, 169, 78;
+    --mushaf-card-bg: rgba(255, 220, 120, 0.05);
+    --mushaf-card-border: rgba(255, 200, 80, 0.1);
+    --mushaf-text: #f5e6c8;
+    --mushaf-subtext: #c4a97a;
+    --mushaf-arabic: #f5e6c8;
+    --mushaf-page-bg: linear-gradient(180deg, #1a1208, #231a0c);
+    --mushaf-page-text: #f5e6c8;
+    --mushaf-page-shadow: rgba(0, 0, 0, 0.5);
+    --mushaf-page-border: rgba(212, 169, 78, 0.15);
+    --mushaf-drawer-bg: #231a0c;
+    --mushaf-tool-bg: rgba(255, 220, 120, 0.08);
+    --mushaf-toolbar-bg: rgba(26, 18, 8, 0.88);
+    --mushaf-overlay: rgba(0, 0, 0, 0.65);
+}
+
+body[data-mushaf-theme="olive"] {
+    --mushaf-accent: #2dd4bf;
+    --mushaf-accent-rgb: 45, 212, 191;
+    --mushaf-card-bg: rgba(45, 212, 191, 0.04);
+    --mushaf-card-border: rgba(45, 212, 191, 0.1);
+    --mushaf-text: #e8f5f4;
+    --mushaf-subtext: #8fb5b2;
+    --mushaf-arabic: #f0faf9;
+    --mushaf-page-bg: linear-gradient(180deg, #0a1918, #0d1f1e);
+    --mushaf-page-text: #e8f5f4;
+    --mushaf-page-shadow: rgba(0, 0, 0, 0.45);
+    --mushaf-page-border: rgba(45, 212, 191, 0.15);
+    --mushaf-drawer-bg: #0d1f1e;
+    --mushaf-tool-bg: rgba(45, 212, 191, 0.07);
+    --mushaf-toolbar-bg: rgba(10, 25, 24, 0.88);
+    --mushaf-overlay: rgba(0, 0, 0, 0.65);
+}
+
+body[data-mushaf-theme="sapphire"] {
+    --mushaf-accent: #818cf8;
+    --mushaf-accent-rgb: 129, 140, 248;
+    --mushaf-card-bg: rgba(129, 140, 248, 0.05);
+    --mushaf-card-border: rgba(129, 140, 248, 0.12);
+    --mushaf-text: #e0e7ff;
+    --mushaf-subtext: #7c86b5;
+    --mushaf-arabic: #f0f4ff;
+    --mushaf-page-bg: linear-gradient(180deg, #080c1a, #0e1225);
+    --mushaf-page-text: #e0e7ff;
+    --mushaf-page-shadow: rgba(0, 0, 0, 0.5);
+    --mushaf-page-border: rgba(129, 140, 248, 0.15);
+    --mushaf-drawer-bg: #0e1225;
+    --mushaf-tool-bg: rgba(129, 140, 248, 0.08);
+    --mushaf-toolbar-bg: rgba(8, 12, 26, 0.88);
+    --mushaf-overlay: rgba(0, 0, 0, 0.65);
+}
+
+body[data-mushaf-theme="light"] {
+    --mushaf-accent: #059669;
+    --mushaf-accent-rgb: 5, 150, 105;
+    --mushaf-card-bg: #ffffff;
+    --mushaf-card-border: rgba(0, 0, 0, 0.07);
+    --mushaf-text: #0f172a;
+    --mushaf-subtext: #475569;
+    --mushaf-arabic: #0f172a;
+    --mushaf-page-bg: #ffffff;
+    --mushaf-page-text: #0f172a;
+    --mushaf-page-shadow: rgba(0, 0, 0, 0.15);
+    --mushaf-page-border: rgba(0, 0, 0, 0.08);
+    --mushaf-drawer-bg: #ffffff;
+    --mushaf-tool-bg: rgba(0, 0, 0, 0.05);
+    --mushaf-toolbar-bg: rgba(255, 255, 255, 0.92);
+    --mushaf-overlay: rgba(0, 0, 0, 0.35);
+}
 
 /* When the reader theme is dark/warm/olive/sapphire we hide the cream-paper look
    and use the themed page background. Only the "light" theme keeps the cream paper. */
@@ -534,7 +627,7 @@ body.light-mode .nav-search-input {
     border-radius: 8px;
     padding: 2rem 1.8rem 2.5rem;
     min-height: 75vh;
-    box-shadow: 0 20px 50px var(--mushaf-page-shadow);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif;
     font-size: 1.6rem;
     line-height: 2.2;
@@ -651,21 +744,24 @@ body.light-mode .nav-search-input {
 }
 
 /* Short surah pages (≤ 15 ayahs) — center-align the text for a cleaner look,
-   like quran.com does for short surahs such as Al-Fatihah, Al-Ikhlas, etc. */
+   like quranwbw.com does for short surahs. Each ayah on its own line. */
 .mushaf-page.short-surah-page .ayah-text-flow {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    line-height: 2;
 }
 
 .mushaf-page.short-surah-page .ayah-flow {
     display: block;
     text-align: center;
-    line-height: 2.4;
+    line-height: 2.2;
     margin-bottom: 0.3rem;
+    font-size: 1.15em;
+    /* Slightly larger for short surahs */
 }
 
 /* Surah separator within a page */
@@ -729,8 +825,8 @@ body.light-mode .nav-search-input {
 
 /* Inner tajweed color spans should NOT intercept pointer events —
    clicks must pass through to the parent .word span */
-.mushaf-page .ayah-text-flow .word > span,
-.verse-arabic .word > span {
+.mushaf-page .ayah-text-flow .word>span,
+.verse-arabic .word>span {
     pointer-events: none;
 }
 
@@ -738,45 +834,52 @@ body.light-mode .nav-search-input {
     background: rgba(var(--mushaf-accent-rgb), 0.22);
 }
 
-.mushaf-page .ayah-text-flow .word:hover > * {
+.mushaf-page .ayah-text-flow .word:hover>* {
     filter: brightness(1.15);
 }
 
+/* Traditional Quran ayah marker — ornamental 8-pointed star/rosette design.
+   Uses CSS to create a decorative flower-like shape with the number inside.
+   Inspired by the markers in the Madinah Mushaf print. */
 .mushaf-page .ayah-text-flow .ayah-marker {
     display: inline-grid;
     place-items: center;
-    margin: 0 0.2em;
+    margin: 0 0.25em;
     color: var(--mushaf-accent);
-    font-family: "Poppins", "Amiri", sans-serif;
+    font-family: "Amiri", "Poppins", sans-serif;
     font-weight: 700;
-    font-size: 0.62em;
+    font-size: 0.55em;
     cursor: pointer;
-    background: rgba(var(--mushaf-accent-rgb), 0.12);
-    border-radius: 50%;
-    width: 1.9em;
-    height: 1.9em;
+    /* Use an SVG background for the ornamental flower shape */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%2310b981' stroke-width='2'%3E%3Ccircle cx='50' cy='50' r='38'/%3E%3Ccircle cx='50' cy='50' r='32' stroke-width='1' opacity='0.5'/%3E%3C/g%3E%3Cg fill='%2310b981' opacity='0.15'%3E%3Cpath d='M50 8 L56 30 L78 22 L66 42 L88 50 L66 58 L78 78 L56 70 L50 92 L44 70 L22 78 L34 58 L12 50 L34 42 L22 22 L44 30 Z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    width: 2.4em;
+    height: 2.4em;
     line-height: 1;
     text-align: center;
     vertical-align: middle;
     box-sizing: border-box;
     padding: 0;
-    border: none;
     outline: none;
     user-select: none;
-    /* Arabic-Indic numerals sit low in the em-box; nudge up slightly.
-       Use a transform so it doesn't affect layout. */
-    transform: translateY(-0.05em);
+    position: relative;
+    top: -0.1em;
 }
 
 .mushaf-page .ayah-text-flow .ayah-marker:hover {
-    background: var(--mushaf-accent);
-    color: #fff;
+    filter: brightness(1.2) saturate(1.3);
+    transform: scale(1.1);
+    transition: transform 0.15s, filter 0.15s;
 }
 
 .mushaf-page .ayah-text-flow .ayah-marker.playing {
-    background: var(--mushaf-accent);
-    color: #fff;
-    box-shadow: 0 0 0 4px rgba(var(--mushaf-accent-rgb), 0.25);
+    filter: brightness(1.3) saturate(1.5);
+    transform: scale(1.15);
 }
 
 /* Bismillah decorative header on first page of a surah */
@@ -1024,12 +1127,29 @@ body.light-mode .nav-search-input {
 
 /* Tajweed color classes (applied via spans in JS) */
 
-.taj-ghunnah  { color: var(--taj-ghunnah); }
-.taj-ikhfa    { color: var(--taj-ikhfa); }
-.taj-idgham   { color: var(--taj-idgham); }
-.taj-iqlab    { color: var(--taj-iqlab); }
-.taj-qalqalah { color: var(--taj-qalqalah); }
-.taj-madd     { color: var(--taj-madd); }
+.taj-ghunnah {
+    color: var(--taj-ghunnah);
+}
+
+.taj-ikhfa {
+    color: var(--taj-ikhfa);
+}
+
+.taj-idgham {
+    color: var(--taj-idgham);
+}
+
+.taj-iqlab {
+    color: var(--taj-iqlab);
+}
+
+.taj-qalqalah {
+    color: var(--taj-qalqalah);
+}
+
+.taj-madd {
+    color: var(--taj-madd);
+}
 
 .tajweed-legend {
     display: flex;
@@ -1265,34 +1385,69 @@ body.light-mode .nav-search-input {
 /* Theme swatches */
 
 .theme-swatches {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.8rem;
+    margin-top: 0.5rem;
 }
 
 .theme-swatch {
-    width: 36px;
-    height: 36px;
+    width: 100%;
+    aspect-ratio: 1;
     border-radius: 50%;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .theme-swatch:hover {
     transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .theme-swatch.active {
     border-color: var(--mushaf-accent);
     transform: scale(1.1);
+    box-shadow: 0 0 0 2px rgba(var(--mushaf-accent-rgb), 0.3), 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.swatch-dark { background: linear-gradient(135deg, #0f172a, #111827); }
-.swatch-warm { background: linear-gradient(135deg, #1a1208, #231a0c); }
-.swatch-olive { background: linear-gradient(135deg, #0a1918, #0d1f1e); }
-.swatch-sapphire { background: linear-gradient(135deg, #080c1a, #0e1225); }
-.swatch-light { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 2px solid #cbd5e1; }
+.theme-swatch.active::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.swatch-dark {
+    background: linear-gradient(135deg, #0f172a, #111827);
+}
+
+.swatch-warm {
+    background: linear-gradient(135deg, #1a1208, #231a0c);
+    border: 3px solid #d4a94e;
+}
+
+.swatch-olive {
+    background: linear-gradient(135deg, #0a1918, #0d1f1e);
+    border: 3px solid #2dd4bf;
+}
+
+.swatch-sapphire {
+    background: linear-gradient(135deg, #080c1a, #0e1225);
+    border: 3px solid #818cf8;
+}
+
+.swatch-light {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border: 3px solid #059669;
+}
 
 /* ============================================================
    BOOKMARKS (inside drawer)
@@ -1640,8 +1795,15 @@ body.light-mode .nav-search-input {
 }
 
 @keyframes popIn {
-    from { opacity: 0; transform: scale(0.92); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .word-modal-close {
@@ -2088,9 +2250,11 @@ body.light-mode .nav-search-input {
     .mushaf-toolbar {
         gap: 0.5rem;
     }
+
     .tools-group .tool-label {
         display: none;
     }
+
     .tool-btn {
         padding: 0.55rem 0.6rem;
     }
@@ -2100,6 +2264,7 @@ body.light-mode .nav-search-input {
     .page-view {
         max-width: 100%;
     }
+
     .mushaf-page {
         min-height: auto;
         padding: 1.5rem 1.2rem 2rem;
@@ -2107,9 +2272,11 @@ body.light-mode .nav-search-input {
         line-height: 2.1;
         aspect-ratio: auto;
     }
+
     .surah-header-arabic {
         font-size: 1.3rem;
     }
+
     .page-bismillah {
         font-size: 1.2rem;
     }
@@ -2121,38 +2288,48 @@ body.light-mode .nav-search-input {
         padding: 0.5rem 0.8rem;
         gap: 0.4rem;
     }
+
     .mushaf-read-area {
         margin-top: 60px;
         padding: 6rem 0.8rem 5rem;
     }
+
     .view-toggle-btn .tool-label,
     .view-toggle-btn span:not(.tool-indicator) {
         display: none;
     }
+
     .view-toggle-btn {
         padding: 0.55rem 0.7rem;
     }
+
     .nav-selector-btn {
         min-width: 110px;
         padding: 0.5rem 0.7rem;
         font-size: 0.8rem;
     }
+
     .verse-card {
         padding: 1.4rem 1rem 1.2rem;
     }
+
     .verse-arabic {
         font-size: 1.8rem;
         line-height: 2;
     }
+
     .surah-banner-arabic {
         font-size: 2.2rem;
     }
+
     .surah-banner-title {
         font-size: 1.3rem;
     }
+
     .bismillah-header {
         font-size: 1.6rem;
     }
+
     .floating-player {
         bottom: 12px;
         width: calc(100% - 24px);
@@ -2163,13 +2340,16 @@ body.light-mode .nav-search-input {
     .tool-btn {
         padding: 0.5rem;
     }
+
     .tool-indicator {
         display: none;
     }
+
     .mushaf-page {
         font-size: 1.3rem;
         padding: 1.5rem 1rem 2rem;
     }
+
     .verse-arabic {
         font-size: 1.55rem;
     }
@@ -2211,8 +2391,13 @@ body.light-mode .nav-search-input {
    ============================================================ */
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .spin {

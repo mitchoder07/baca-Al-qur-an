@@ -36,9 +36,10 @@ body {
 .bg-glow {
   position: fixed;
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(100px);
   z-index: -1;
-  opacity: 0.15;
+  opacity: 0.08;
+  pointer-events: none;
 }
 
 .glow-1 {
@@ -51,11 +52,11 @@ body {
 }
 
 .glow-2 {
-  width: 350px;
-  height: 350px;
+  width: 400px;
+  height: 400px;
   background: #0ea5e9;
-  right: -120px;
-  top: 30%;
+  right: -200px;
+  top: 25%;
   animation: float 10s ease-in-out infinite;
 }
 
@@ -83,6 +84,15 @@ body {
 }
 
 /* Light mode: slightly warmer gradient so it reads on white */
+/* Light mode variable overrides — make the whole site light when active */
+body.light-mode {
+  --dark: #f8fafc;
+  --dark-light: #ffffff;
+  --white: #0f172a;
+  --text: #475569;
+  --border: rgba(0, 0, 0, 0.08);
+}
+
 body.light-mode .section-header h2 {
   background: linear-gradient(120deg,
       #059669 0%,
@@ -125,8 +135,7 @@ body.light-mode .section-header h2 {
   gap: 1rem;
 }
 
-
-.topbar-logo {
+.logo {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -134,34 +143,34 @@ body.light-mode .section-header h2 {
   transition: transform 0.2s;
 }
 
-.topbar-logo:hover {
+.logo:hover {
   transform: scale(1.03);
 }
 
-.baca-logo-icon {
+.logo .baca-logo-icon {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.25));
 }
 
-.topbar-logo:hover .baca-logo-icon {
+.logo:hover .baca-logo-icon {
   filter: drop-shadow(0 3px 8px rgba(16, 185, 129, 0.4));
 }
 
-.topbar-logo-text {
+.logo .logo-text {
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.8px;
-  background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: "Poppins", sans-serif;
 }
 
-body.light-mode .topbar-logo-text {
-  background: linear-gradient(135deg, #059669, #0891b2, #4f46e5);
+body.light-mode .logo .logo-text {
+  background: linear-gradient(135deg, #059669 0%, #0891b2 50%, #4f46e5 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1394,6 +1403,18 @@ body.light-mode .continue-hint-text em {
   font-size: 2rem;
   margin-bottom: 0.4rem;
 }
+
+/* .dark-theme {
+  background: linear-gradient(180deg, #0f172a, #111827);
+}
+
+.gold-theme {
+  background: linear-gradient(180deg, #1f2937, #111827);
+}
+
+.sepia-theme {
+  background: #2d2418;
+} */
 
 .reader-close {
   position: sticky;
@@ -2647,16 +2668,709 @@ body.light-mode .bookmark-actions button {
     display: none;
     /* width: 10%; */
   }
+}
+/* ============================================================
+   READING PROGRESS SECTION
+   ============================================================ */
 
-  .ayah-actions button {
-    width: 34px;
-    height: 34px;
-  }
+.reading-progress-section {
+    padding: 6rem 8%;
+}
 
-  .ayah-action {
-    width: 30px;
-    height: 30px;
+.progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.progress-card {
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    transition: transform 0.3s, border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.progress-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.progress-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.progress-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.progress-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+}
+
+body.light-mode .progress-value {
+    color: var(--dark);
+}
+
+.progress-label {
+    font-size: 0.82rem;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.2rem;
+}
+
+.streak-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(249, 115, 22, 0.08));
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.streak-card .progress-icon {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f97316;
+}
+
+.streak-flame {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 4rem;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.daily-goal-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.daily-goal-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    width: 0%;
+    transition: width 0.8s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Stats grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.5rem;
+}
+
+body.light-mode .stats-grid {
+    background: #fff;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 0.8rem;
+    border-right: 1px solid var(--border);
+}
+
+.stat-item:last-child {
+    border-right: none;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.78rem;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.3rem;
+}
+
+/* ============================================================
+   DAILY CHALLENGE
+   ============================================================ */
+
+.daily-challenge-section {
+    padding: 4rem 8% 6rem;
+}
+
+.challenge-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--dark-light), rgba(16, 185, 129, 0.05));
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.challenge-card.completed {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.05));
+}
+
+.challenge-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.challenge-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.challenge-badge svg {
+    width: 28px;
+    height: 28px;
+}
+
+.challenge-info h3 {
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+}
+
+body.light-mode .challenge-info h3 {
+    color: var(--dark);
+}
+
+.challenge-info p {
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+}
+
+.challenge-progress {
+    width: 100%;
+    max-width: 300px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 0.3rem;
+}
+
+.challenge-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    width: 0%;
+    border-radius: 100px;
+    transition: width 0.6s ease;
+}
+
+.challenge-status {
+    font-size: 0.78rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.challenge-right {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.challenge-xp {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* ============================================================
+   ACHIEVEMENTS
+   ============================================================ */
+
+.achievements-section {
+    padding: 4rem 8% 6rem;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.achievement-badge {
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s, opacity 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.achievement-badge.locked {
+    opacity: 0.4;
+    filter: grayscale(0.8);
+}
+
+.achievement-badge.unlocked {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.achievement-badge.unlocked::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 70%);
+    pointer-events: none;
+}
+
+.achievement-badge:hover {
+    transform: translateY(-4px);
+}
+
+.achievement-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.8rem;
     border-radius: 50%;
-  }
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
 
+.achievement-badge.unlocked .achievement-icon {
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.achievement-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.achievement-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+}
+
+body.light-mode .achievement-name {
+    color: var(--dark);
+}
+
+.achievement-desc {
+    font-size: 0.72rem;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.baca-footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 4rem 8% 2rem;
+    margin-top: 2rem;
+}
+
+body.light-mode .baca-footer {
+    background: #f8fafc;
+    border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+    gap: 2.5rem;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.footer-brand .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.footer-logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.baca-footer .baca-logo-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.footer-tagline {
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-desc {
+    color: var(--text);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    max-width: 320px;
+}
+
+.footer-col h4 {
+    color: var(--white);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+body.light-mode .footer-col h4 {
+    color: var(--dark);
+}
+
+.footer-col a {
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.35rem 0;
+    transition: color 0.2s, padding-left 0.2s;
+}
+
+.footer-col a:hover {
+    color: var(--primary);
+    padding-left: 5px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    padding: 0;
+}
+
+.footer-social a:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-3px);
+    padding-left: 0;
+}
+
+.footer-social svg {
+    width: 18px;
+    height: 18px;
+}
+
+.footer-quote {
+    color: var(--text);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 0.3rem;
+}
+
+.footer-quote-ref {
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+    margin: 2rem auto 0;
+    padding-top: 1.5rem;
+    color: var(--text);
+    font-size: 0.82rem;
+}
+
+.footer-credit {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .stat-item:nth-child(2) {
+        border-right: none;
+    }
+    .stat-item:nth-child(1),
+    .stat-item:nth-child(2) {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1rem;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+    .challenge-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .challenge-left {
+        flex-direction: column;
+    }
+    .progress-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   TOPIC CARDS — clickable with hover effect
+   ============================================================ */
+
+.topic-card {
+    cursor: pointer;
+}
+
+.topic-card:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+/* ============================================================
+   JOURNEY CARDS — button hover
+   ============================================================ */
+
+.journey-card button {
+    cursor: pointer;
+}
+
+/* ============================================================
+   SEARCH RESULTS — improved styling
+   ============================================================ */
+
+.search-item small {
+    font-size: 0.78rem;
+    opacity: 0.6;
+}
+
+.search-item.topic-result {
+    border-left: 3px solid var(--primary);
+}
+
+.search-item.topic-result svg {
+    color: var(--primary);
+}
+
+/* Hide bg-glow elements completely (removed from HTML but CSS safety) */
+.bg-glow {
+    display: none !important;
+}
+
+/* ============================================================
+   LIGHT MODE — Gamification sections
+   ============================================================ */
+
+body.light-mode .progress-card {
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .progress-icon {
+    background: rgba(5, 150, 105, 0.12);
+    color: #059669;
+}
+
+body.light-mode .streak-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(249, 115, 22, 0.06));
+    border-color: rgba(239, 68, 68, 0.15);
+}
+
+body.light-mode .streak-card .progress-icon {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ea580c;
+}
+
+body.light-mode .stats-grid {
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .stat-item {
+    border-right-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .stat-number {
+    background: linear-gradient(120deg, #059669, #0d9488, #0284c7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .challenge-card {
+    background: linear-gradient(135deg, #fff, rgba(5, 150, 105, 0.04));
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .challenge-card.completed {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(8, 145, 178, 0.04));
+    border-color: rgba(5, 150, 105, 0.3);
+}
+
+body.light-mode .challenge-progress {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .achievement-badge {
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .achievement-icon {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+}
+
+body.light-mode .achievement-badge.unlocked .achievement-icon {
+    background: linear-gradient(135deg, #059669, #0891b2);
+    color: #fff;
+}
+
+body.light-mode .daily-goal-bar {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .challenge-xp {
+    background: rgba(5, 150, 105, 0.12);
+    color: #059669;
+}
+
+/* Light mode for search results */
+body.light-mode .search-item small {
+    opacity: 0.7;
+}
+
+/* Light mode footer adjustments */
+body.light-mode .footer-social a {
+    background: #f1f5f9;
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #475569;
+}
+
+body.light-mode .footer-social a:hover {
+    background: #059669;
+    color: #fff;
+}
+
+body.light-mode .footer-quote {
+    color: #64748b;
+}
+
+/* Light mode for topics and journeys (already mostly dark-light, ensure white) */
+body.light-mode .topic-card {
+    background: #fff;
+}
+
+body.light-mode .journey-card {
+    background: #fff;
 }
