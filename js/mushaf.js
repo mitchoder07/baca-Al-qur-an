@@ -35,7 +35,7 @@ const API = {
 
     // Tafsir (English) — spa5k CDN
     tafsirIbnKathir: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${s}/${a}.json`,
-    tafsirMaarif:    (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
+    tafsirMaarif: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
     // Arabic Jalalayn — alquran.cloud (per-ayah endpoint)
     tafsirJalalaynAr: (s, a) => `https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.jalalayn`,
 
@@ -50,26 +50,26 @@ const API = {
 
 // Translation resource IDs on quran.com API (verified against /resources/translations)
 const TRANSLATIONS = [
-    { id: 20,  code: "en.sahih",        name: "Saheeh International",          lang: "English",   author: "Saheeh International" },
-    { id: 95,  code: "en.maududi",      name: "Maududi (Tafhim)",              lang: "English",   author: "Sayyid Abul Ala Maududi" },
-    { id: 84,  code: "en.usmani",       name: "Mufti Taqi Usmani",             lang: "English",   author: "Mufti Taqi Usmani" },
-    { id: 22,  code: "en.yusufali",     name: "Yusuf Ali",                     lang: "English",   author: "Abdullah Yusuf Ali" },
-    { id: 19,  code: "en.pickthall",    name: "Pickthall",                     lang: "English",   author: "M. Pickthall" },
-    { id: 85,  code: "en.haleem",       name: "Abdul Haleem",                  lang: "English",   author: "M.A.S. Abdel Haleem" },
-    { id: 203, code: "en.hilali",       name: "Hilali & Khan",                 lang: "English",   author: "Al-Hilali & Khan" },
-    { id: 149, code: "en.bridges",      name: "Bridges' Translation",          lang: "English",   author: "Fadel Soliman" },
-    { id: 57,  code: "en.translit",     name: "Transliteration",               lang: "Roman",     author: "quran.com" },
-    { id: 97,  code: "ur.maududi",      name: "Tafheem-ul-Quran (Maududi)",    lang: "Urdu",      author: "Syed Abu Ali Maududi" },
-    { id: 234, code: "ur.jalandhri",    name: "Fatah Muhammad Jalandhri",      lang: "Urdu",      author: "Fatah Muhammad Jalandhri" },
-    { id: 819, code: "ur.wahiduddin",   name: "Maulana Wahiduddin Khan",       lang: "Urdu",      author: "Maulana Wahiduddin Khan" },
-    { id: 33,  code: "id.indonesian",   name: "Indonesian Islamic Affairs Ministry", lang: "Indonesian", author: "Indonesian Islamic Affairs Min." },
-    { id: 134, code: "id.kfqc",         name: "King Fahad Quran Complex",      lang: "Indonesian", author: "KFQC" },
-    { id: 31,  code: "fr.hamidullah",   name: "Hamidullah (French)",           lang: "French",    author: "Muhammad Hamidullah" },
-    { id: 77,  code: "tr.diyanet",      name: "Diyanet Isleri (Turkish)",      lang: "Turkish",   author: "Diyanet Isleri" },
-    { id: 45,  code: "ru.kuliev",       name: "Kuliev (Russian)",              lang: "Russian",   author: "Elmir Kuliev" },
-    { id: 56,  code: "zh.majian",       name: "Ma Jian (Chinese)",             lang: "Chinese",   author: "Ma Jian" },
-    { id: 103, code: "pt.nasr",         name: "Helmi Nasr (Portuguese)",       lang: "Portuguese",author: "Helmi Nasr" },
-    { id: 54,  code: "hi.junagarhi",    name: "Maulana Junagarhi (Hindi)",     lang: "Hindi",     author: "Maulana Junagarhi" }
+    { id: 20, code: "en.sahih", name: "Saheeh International", lang: "English", author: "Saheeh International" },
+    { id: 95, code: "en.maududi", name: "Maududi (Tafhim)", lang: "English", author: "Sayyid Abul Ala Maududi" },
+    { id: 84, code: "en.usmani", name: "Mufti Taqi Usmani", lang: "English", author: "Mufti Taqi Usmani" },
+    { id: 22, code: "en.yusufali", name: "Yusuf Ali", lang: "English", author: "Abdullah Yusuf Ali" },
+    { id: 19, code: "en.pickthall", name: "Pickthall", lang: "English", author: "M. Pickthall" },
+    { id: 85, code: "en.haleem", name: "Abdul Haleem", lang: "English", author: "M.A.S. Abdel Haleem" },
+    { id: 203, code: "en.hilali", name: "Hilali & Khan", lang: "English", author: "Al-Hilali & Khan" },
+    { id: 149, code: "en.bridges", name: "Bridges' Translation", lang: "English", author: "Fadel Soliman" },
+    { id: 57, code: "en.translit", name: "Transliteration", lang: "Roman", author: "quran.com" },
+    { id: 97, code: "ur.maududi", name: "Tafheem-ul-Quran (Maududi)", lang: "Urdu", author: "Syed Abu Ali Maududi" },
+    { id: 234, code: "ur.jalandhri", name: "Fatah Muhammad Jalandhri", lang: "Urdu", author: "Fatah Muhammad Jalandhri" },
+    { id: 819, code: "ur.wahiduddin", name: "Maulana Wahiduddin Khan", lang: "Urdu", author: "Maulana Wahiduddin Khan" },
+    { id: 33, code: "id.indonesian", name: "Indonesian Islamic Affairs Ministry", lang: "Indonesian", author: "Indonesian Islamic Affairs Min." },
+    { id: 134, code: "id.kfqc", name: "King Fahad Quran Complex", lang: "Indonesian", author: "KFQC" },
+    { id: 31, code: "fr.hamidullah", name: "Hamidullah (French)", lang: "French", author: "Muhammad Hamidullah" },
+    { id: 77, code: "tr.diyanet", name: "Diyanet Isleri (Turkish)", lang: "Turkish", author: "Diyanet Isleri" },
+    { id: 45, code: "ru.kuliev", name: "Kuliev (Russian)", lang: "Russian", author: "Elmir Kuliev" },
+    { id: 56, code: "zh.majian", name: "Ma Jian (Chinese)", lang: "Chinese", author: "Ma Jian" },
+    { id: 103, code: "pt.nasr", name: "Helmi Nasr (Portuguese)", lang: "Portuguese", author: "Helmi Nasr" },
+    { id: 54, code: "hi.junagarhi", name: "Maulana Junagarhi (Hindi)", lang: "Hindi", author: "Maulana Junagarhi" }
 ];
 
 // Tajweed rules mapping for alquran.cloud's quran-tajweed edition.
@@ -225,6 +225,137 @@ const el = {
 };
 
 /* ============================================================
+   READING STATS — writes straight into the same "bacaStats" record
+   that the homepage (script.js) reads and displays. This is what
+   actually powers "Your Reading Journey", the daily challenge, and
+   achievement unlocks — previously this page never wrote to it at
+   all, so none of those could ever move.
+   ============================================================ */
+
+const STATS_KEY = "bacaStats";
+
+function loadReadingStats() {
+    const fallback = {
+        streak: 0, lastReadDate: null, readingTime: 0, pagesRead: 0,
+        versesRead: 0, juzExplored: 0, completedSurahs: [], totalDays: 0,
+        challengesCompleted: 0, todayPages: 0, todayDate: null, xp: 0,
+        unlockedAchievements: [], visitedPages: [], visitedSurahs: [],
+    };
+    try {
+        const stored = JSON.parse(localStorage.getItem(STATS_KEY));
+        return stored ? Object.assign({}, fallback, stored) : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+function saveReadingStats(stats) {
+    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+
+function todayStr() {
+    return new Date().toISOString().split("T")[0];
+}
+
+function resetDailyCounterIfNeeded(stats) {
+    const today = todayStr();
+    if (stats.todayDate !== today) {
+        stats.todayDate = today;
+        stats.todayPages = 0;
+    }
+}
+
+function bumpReadingStreak(stats) {
+    const today = todayStr();
+    if (stats.lastReadDate === today) return; // already counted today
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+    if (stats.lastReadDate === yesterdayStr) {
+        stats.streak = (stats.streak || 0) + 1;
+    } else {
+        stats.streak = 1; // first read ever, or streak broken
+    }
+    stats.lastReadDate = today;
+    stats.totalDays = (stats.totalDays || 0) + 1;
+}
+
+// Called every time a Mushaf page is actually rendered on screen (Page View).
+function recordPageRead(pageNum, ayahsOnPage) {
+    if (!ayahsOnPage || !ayahsOnPage.length) return;
+    const stats = loadReadingStats();
+    resetDailyCounterIfNeeded(stats);
+    if (!stats.visitedPages) stats.visitedPages = [];
+    if (!stats.completedSurahs) stats.completedSurahs = [];
+
+    // Only count a given page toward pagesRead/versesRead the first time
+    // it's visited, so flipping back and forth doesn't inflate the stats.
+    if (!stats.visitedPages.includes(pageNum)) {
+        stats.visitedPages.push(pageNum);
+        stats.pagesRead = (stats.pagesRead || 0) + 1;
+        stats.todayPages = (stats.todayPages || 0) + 1;
+        stats.versesRead = (stats.versesRead || 0) + ayahsOnPage.length;
+
+        const juzNum = Math.ceil(pageNum / 20.13); // ~20 pages per juz
+        if (juzNum > (stats.juzExplored || 0)) stats.juzExplored = juzNum;
+
+        bumpReadingStreak(stats);
+    }
+
+    // If the last ayah of a surah appears on this page, that surah is done.
+    const bySurah = {};
+    ayahsOnPage.forEach(v => { (bySurah[v.surah] = bySurah[v.surah] || []).push(v.ayah); });
+    Object.keys(bySurah).forEach(sNumStr => {
+        const sNum = Number(sNumStr);
+        const meta = SURAH_LIST[sNum - 1];
+        if (meta && bySurah[sNum].includes(meta.total_verses) && !stats.completedSurahs.includes(sNum)) {
+            stats.completedSurahs.push(sNum);
+        }
+    });
+
+    saveReadingStats(stats);
+}
+
+// Called every time a full surah is rendered on screen (Surah View).
+function recordSurahRead(surahNum, totalVerses) {
+    const stats = loadReadingStats();
+    resetDailyCounterIfNeeded(stats);
+    if (!stats.visitedSurahs) stats.visitedSurahs = [];
+    if (!stats.completedSurahs) stats.completedSurahs = [];
+
+    if (!stats.visitedSurahs.includes(surahNum)) {
+        stats.visitedSurahs.push(surahNum);
+        stats.versesRead = (stats.versesRead || 0) + totalVerses;
+        bumpReadingStreak(stats);
+    }
+    if (!stats.completedSurahs.includes(surahNum)) {
+        stats.completedSurahs.push(surahNum);
+    }
+
+    saveReadingStats(stats);
+}
+
+// Track actual time spent reading in the Mushaf itself (previously only
+// time spent on the homepage counted, which is backwards — the homepage
+// isn't where the reading happens).
+function startReadingTimeTracking() {
+    let accumulator = 0;
+    setInterval(() => {
+        if (!document.hidden && document.hasFocus()) {
+            accumulator += 30;
+            if (accumulator >= 60) {
+                const stats = loadReadingStats();
+                stats.readingTime = (stats.readingTime || 0) + accumulator;
+                saveReadingStats(stats);
+                accumulator = 0;
+            }
+        }
+    }, 30000);
+}
+
+/* ============================================================
    UTILITIES
    ============================================================ */
 
@@ -253,7 +384,7 @@ function cleanText(s) {
     let out = String(s).replace(/<[^>]*>/g, "");
     // Decode a few common entities
     out = out.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-             .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
+        .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
     return out;
 }
 
@@ -309,7 +440,7 @@ function persistState() {
     localStorage.setItem("reciterId", state.reciterId);
     localStorage.setItem("mushafTheme", state.theme);
     localStorage.setItem("mushafTajweed", state.tajweedOn);
-        localStorage.setItem("mushafArabicFont", state.arabicFont);
+    localStorage.setItem("mushafArabicFont", state.arabicFont);
     localStorage.setItem("mushafTranslationFont", state.translationFont);
     localStorage.setItem("mushafBookmarks", JSON.stringify(state.bookmarks));
 }
@@ -607,7 +738,7 @@ function init() {
     }
 
     // Apply display mode (set active button)
-    
+
 
     // Render reciter list
     renderReciterList("");
@@ -628,6 +759,10 @@ function init() {
 
     // Wire events
     wireEvents();
+
+    // Start tracking actual time spent reading (this is where reading
+    // really happens, unlike the homepage dashboard).
+    startReadingTimeTracking();
 
     // Initial render
     render();
@@ -738,6 +873,10 @@ async function getAyahsForPage(pageNum) {
 async function renderPageView() {
     const pageNum = state.page;
     const ayahs = await getAyahsForPage(pageNum);
+
+    // Record this page as read (updates the shared reading-journey stats,
+    // streak, daily challenge progress, and surah-completion tracking).
+    recordPageRead(pageNum, ayahs);
 
     // Page info: surah name, juz number
     const firstSurah = ayahs[0]?.surah || 1;
@@ -917,6 +1056,8 @@ async function renderSurahView() {
     // Fetch surah data + translations
     const data = await fetchSurahData(surahNum);
 
+    // Record this surah as read (updates the shared reading-journey stats).
+    recordSurahRead(surahNum, meta.total_verses);
 
     // Render verse cards
     const versesHtml = data.verses.map(v => {
@@ -1318,7 +1459,7 @@ function renderReciterList(query) {
                 const { surah, ayah } = state.currentAyahAudio;
                 el.ayahAudio.src = API.ayahAudio(surah, ayah, state.reciterId);
                 el.ayahAudio.load();
-                if (wasPlaying) el.ayahAudio.play().catch(() => {});
+                if (wasPlaying) el.ayahAudio.play().catch(() => { });
             }
             showToast(`Reciter: ${reciter?.name}`);
         });
@@ -1347,7 +1488,7 @@ async function loadTafsirInDrawer(surah, ayah) {
             const data = await fetchSurahData(surah);
             const v = data.verses.find(x => x.ayah === ayah);
             if (v) arabicText = v.text;
-        } catch (e) {}
+        } catch (e) { }
     }
 
     el.tafsirContent.innerHTML = `
@@ -1356,11 +1497,10 @@ async function loadTafsirInDrawer(surah, ayah) {
             <div class="tv-ref">${escapeHtml(meta?.transliteration || "")} · Ayah ${ayah}</div>
         </div>
         <div class="tafsir-loading">
-            <i data-lucide="loader-2" class="spin"></i> Loading ${
-                state.tafsirSource === "jalalayn" ? "Jalalayn (Arabic)" :
-                state.tafsirSource === "maarif" ? "Ma'arif-ul-Quran" :
+            <i data-lucide="loader-2" class="spin"></i> Loading ${state.tafsirSource === "jalalayn" ? "Jalalayn (Arabic)" :
+            state.tafsirSource === "maarif" ? "Ma'arif-ul-Quran" :
                 "Ibn Kathir"
-            } tafsir…
+        } tafsir…
         </div>`;
     if (window.lucide) lucide.createIcons();
 
@@ -1403,7 +1543,7 @@ function playAyah(surah, ayah) {
         state.currentAyahAudio.surah === surah &&
         state.currentAyahAudio.ayah === ayah) {
         if (el.ayahAudio.paused) {
-            el.ayahAudio.play().catch(() => {});
+            el.ayahAudio.play().catch(() => { });
             state.isPlaying = true;
             updatePlayButtonIcon(surah, ayah, true);
         } else {
@@ -1486,7 +1626,7 @@ el.ayahAudio.addEventListener("ended", () => {
 
 el.miniPlay?.addEventListener("click", () => {
     if (el.ayahAudio.paused) {
-        el.ayahAudio.play().catch(() => {});
+        el.ayahAudio.play().catch(() => { });
         el.miniPlay.innerHTML = `<i data-lucide="pause"></i>`;
         state.isPlaying = true;
     } else {
@@ -1526,7 +1666,7 @@ el.miniNext?.addEventListener("click", () => {
 el.miniRepeat?.addEventListener("click", () => {
     if (!el.ayahAudio.src) return;
     el.ayahAudio.currentTime = 0;
-    el.ayahAudio.play().catch(() => {});
+    el.ayahAudio.play().catch(() => { });
 });
 
 el.miniProgress?.addEventListener("input", () => {
@@ -2067,7 +2207,7 @@ document.addEventListener("keydown", e => {
     }
     // Escape closes modals/drawers
     if (e.key === "Escape") {
-        if (!el.searchModal.classList.contains("open")) {} else { closeSearchModal(); return; }
+        if (!el.searchModal.classList.contains("open")) { } else { closeSearchModal(); return; }
         if (!el.wordModalOverlay.hidden) { el.wordModalOverlay.hidden = true; state.wordModalContext = null; return; }
         if (!el.ayahPopover.hidden) { el.ayahPopover.hidden = true; return; }
         closeAllDrawers();
