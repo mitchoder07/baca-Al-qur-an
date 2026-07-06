@@ -35,7 +35,7 @@ const API = {
 
     // Tafsir (English) — spa5k CDN
     tafsirIbnKathir: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${s}/${a}.json`,
-    tafsirMaarif: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
+    tafsirMaarif:    (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
     // Arabic Jalalayn — alquran.cloud (per-ayah endpoint)
     tafsirJalalaynAr: (s, a) => `https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.jalalayn`,
 
@@ -50,26 +50,26 @@ const API = {
 
 // Translation resource IDs on quran.com API (verified against /resources/translations)
 const TRANSLATIONS = [
-    { id: 20, code: "en.sahih", name: "Saheeh International", lang: "English", author: "Saheeh International" },
-    { id: 95, code: "en.maududi", name: "Maududi (Tafhim)", lang: "English", author: "Sayyid Abul Ala Maududi" },
-    { id: 84, code: "en.usmani", name: "Mufti Taqi Usmani", lang: "English", author: "Mufti Taqi Usmani" },
-    { id: 22, code: "en.yusufali", name: "Yusuf Ali", lang: "English", author: "Abdullah Yusuf Ali" },
-    { id: 19, code: "en.pickthall", name: "Pickthall", lang: "English", author: "M. Pickthall" },
-    { id: 85, code: "en.haleem", name: "Abdul Haleem", lang: "English", author: "M.A.S. Abdel Haleem" },
-    { id: 203, code: "en.hilali", name: "Hilali & Khan", lang: "English", author: "Al-Hilali & Khan" },
-    { id: 149, code: "en.bridges", name: "Bridges' Translation", lang: "English", author: "Fadel Soliman" },
-    { id: 57, code: "en.translit", name: "Transliteration", lang: "Roman", author: "quran.com" },
-    { id: 97, code: "ur.maududi", name: "Tafheem-ul-Quran (Maududi)", lang: "Urdu", author: "Syed Abu Ali Maududi" },
-    { id: 234, code: "ur.jalandhri", name: "Fatah Muhammad Jalandhri", lang: "Urdu", author: "Fatah Muhammad Jalandhri" },
-    { id: 819, code: "ur.wahiduddin", name: "Maulana Wahiduddin Khan", lang: "Urdu", author: "Maulana Wahiduddin Khan" },
-    { id: 33, code: "id.indonesian", name: "Indonesian Islamic Affairs Ministry", lang: "Indonesian", author: "Indonesian Islamic Affairs Min." },
-    { id: 134, code: "id.kfqc", name: "King Fahad Quran Complex", lang: "Indonesian", author: "KFQC" },
-    { id: 31, code: "fr.hamidullah", name: "Hamidullah (French)", lang: "French", author: "Muhammad Hamidullah" },
-    { id: 77, code: "tr.diyanet", name: "Diyanet Isleri (Turkish)", lang: "Turkish", author: "Diyanet Isleri" },
-    { id: 45, code: "ru.kuliev", name: "Kuliev (Russian)", lang: "Russian", author: "Elmir Kuliev" },
-    { id: 56, code: "zh.majian", name: "Ma Jian (Chinese)", lang: "Chinese", author: "Ma Jian" },
-    { id: 103, code: "pt.nasr", name: "Helmi Nasr (Portuguese)", lang: "Portuguese", author: "Helmi Nasr" },
-    { id: 54, code: "hi.junagarhi", name: "Maulana Junagarhi (Hindi)", lang: "Hindi", author: "Maulana Junagarhi" }
+    { id: 20,  code: "en.sahih",        name: "Saheeh International",          lang: "English",   author: "Saheeh International" },
+    { id: 95,  code: "en.maududi",      name: "Maududi (Tafhim)",              lang: "English",   author: "Sayyid Abul Ala Maududi" },
+    { id: 84,  code: "en.usmani",       name: "Mufti Taqi Usmani",             lang: "English",   author: "Mufti Taqi Usmani" },
+    { id: 22,  code: "en.yusufali",     name: "Yusuf Ali",                     lang: "English",   author: "Abdullah Yusuf Ali" },
+    { id: 19,  code: "en.pickthall",    name: "Pickthall",                     lang: "English",   author: "M. Pickthall" },
+    { id: 85,  code: "en.haleem",       name: "Abdul Haleem",                  lang: "English",   author: "M.A.S. Abdel Haleem" },
+    { id: 203, code: "en.hilali",       name: "Hilali & Khan",                 lang: "English",   author: "Al-Hilali & Khan" },
+    { id: 149, code: "en.bridges",      name: "Bridges' Translation",          lang: "English",   author: "Fadel Soliman" },
+    { id: 57,  code: "en.translit",     name: "Transliteration",               lang: "Roman",     author: "quran.com" },
+    { id: 97,  code: "ur.maududi",      name: "Tafheem-ul-Quran (Maududi)",    lang: "Urdu",      author: "Syed Abu Ali Maududi" },
+    { id: 234, code: "ur.jalandhri",    name: "Fatah Muhammad Jalandhri",      lang: "Urdu",      author: "Fatah Muhammad Jalandhri" },
+    { id: 819, code: "ur.wahiduddin",   name: "Maulana Wahiduddin Khan",       lang: "Urdu",      author: "Maulana Wahiduddin Khan" },
+    { id: 33,  code: "id.indonesian",   name: "Indonesian Islamic Affairs Ministry", lang: "Indonesian", author: "Indonesian Islamic Affairs Min." },
+    { id: 134, code: "id.kfqc",         name: "King Fahad Quran Complex",      lang: "Indonesian", author: "KFQC" },
+    { id: 31,  code: "fr.hamidullah",   name: "Hamidullah (French)",           lang: "French",    author: "Muhammad Hamidullah" },
+    { id: 77,  code: "tr.diyanet",      name: "Diyanet Isleri (Turkish)",      lang: "Turkish",   author: "Diyanet Isleri" },
+    { id: 45,  code: "ru.kuliev",       name: "Kuliev (Russian)",              lang: "Russian",   author: "Elmir Kuliev" },
+    { id: 56,  code: "zh.majian",       name: "Ma Jian (Chinese)",             lang: "Chinese",   author: "Ma Jian" },
+    { id: 103, code: "pt.nasr",         name: "Helmi Nasr (Portuguese)",       lang: "Portuguese",author: "Helmi Nasr" },
+    { id: 54,  code: "hi.junagarhi",    name: "Maulana Junagarhi (Hindi)",     lang: "Hindi",     author: "Maulana Junagarhi" }
 ];
 
 // Tajweed rules mapping for alquran.cloud's quran-tajweed edition.
@@ -134,10 +134,8 @@ const state = {
         return siteTheme === "light" ? "light" : "dark";
     })(),
     tajweedOn: localStorage.getItem("mushafTajweed") !== "false",
-    displayMode: localStorage.getItem("mushafDisplayMode") || "both", // "both" | "arabic" | "translation"
     arabicFont: parseFloat(localStorage.getItem("mushafArabicFont")) || 2.2,
     translationFont: parseFloat(localStorage.getItem("mushafTranslationFont")) || 1.0,
-    activeTranslations: JSON.parse(localStorage.getItem("mushafTranslations") || '["20"]'), // default: Saheeh International
     bookmarks: JSON.parse(localStorage.getItem("mushafBookmarks") || "[]"),
     tafsirSource: "ibnkathir",
     // Cached fetches
@@ -176,9 +174,6 @@ const el = {
     navDropdown: document.getElementById("nav-dropdown"),
     navSearchInput: document.getElementById("nav-search-input"),
     navList: document.getElementById("nav-list"),
-    translationsDrawer: document.getElementById("translations-drawer"),
-    translationList: document.getElementById("translation-list"),
-    displayModeButtons: document.getElementById("display-mode-buttons"),
     reciterDrawer: document.getElementById("reciter-drawer"),
     reciterList: document.getElementById("reciter-list"),
     reciterSearch: document.getElementById("reciter-search"),
@@ -223,7 +218,6 @@ const el = {
     // Search is accessible via the "/" keyboard shortcut.
     hamburgerBtn: document.getElementById("hamburger-btn"),
     mobileNav: document.getElementById("mobile-nav"),
-    translationsTool: document.getElementById("translations-tool"),
     tajweedTool: document.getElementById("tajweed-tool"),
     tajweedIndicator: document.getElementById("tajweed-indicator"),
     reciterTool: document.getElementById("reciter-tool"),
@@ -259,7 +253,7 @@ function cleanText(s) {
     let out = String(s).replace(/<[^>]*>/g, "");
     // Decode a few common entities
     out = out.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
+             .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
     return out;
 }
 
@@ -315,10 +309,8 @@ function persistState() {
     localStorage.setItem("reciterId", state.reciterId);
     localStorage.setItem("mushafTheme", state.theme);
     localStorage.setItem("mushafTajweed", state.tajweedOn);
-    localStorage.setItem("mushafDisplayMode", state.displayMode);
-    localStorage.setItem("mushafArabicFont", state.arabicFont);
+        localStorage.setItem("mushafArabicFont", state.arabicFont);
     localStorage.setItem("mushafTranslationFont", state.translationFont);
-    localStorage.setItem("mushafTranslations", JSON.stringify(state.activeTranslations));
     localStorage.setItem("mushafBookmarks", JSON.stringify(state.bookmarks));
 }
 
@@ -539,43 +531,7 @@ async function fetchSurahData(surahNum) {
     return cached;
 }
 
-// Fetch translations for a full surah (quran.com API)
-// Returns { [ayahNum]: { [resourceId]: translationText } }
-async function fetchTranslationsForSurah(surahNum) {
-    if (!state.activeTranslations.length) return {};
-    const cacheKey = `tr_${surahNum}_${state.activeTranslations.join(",")}`;
-    if (state.surahCache[cacheKey]) return state.surahCache[cacheKey];
 
-    try {
-        // quran.com: use /verses/by_chapter with translations= param
-        // Note: we use verse_key filter to get translations for the entire surah
-        // Each verse's translations array has the form: [{ resource_id, name, text }, ...]
-        const resourceIds = state.activeTranslations.join(",");
-        const url = `https://api.quran.com/api/v4/verses/by_chapter/${surahNum}?translations=${resourceIds}&per_page=300`;
-        const res = await fetchJSON(url);
-        const verses = res?.verses || [];
-
-        // Group by ayah number
-        const byAyah = {};
-        for (const v of verses) {
-            const verseKey = v.verse_key || "";
-            const [, ayahStr] = verseKey.split(":");
-            const ayah = parseInt(ayahStr);
-            if (!byAyah[ayah]) byAyah[ayah] = {};
-            // translations array
-            const trList = v.translations || [];
-            for (const t of trList) {
-                const rid = t.resource_id;
-                if (rid) byAyah[ayah][rid] = t.text;
-            }
-        }
-        state.surahCache[cacheKey] = byAyah;
-        return byAyah;
-    } catch (e) {
-        console.warn("Translations fetch failed:", e);
-        return {};
-    }
-}
 
 // Fetch word-by-word analysis for a single ayah
 // Returns: [{ text_uthmani, transliteration, translation }] array of words
@@ -651,12 +607,7 @@ function init() {
     }
 
     // Apply display mode (set active button)
-    document.querySelectorAll("#display-mode-buttons .toggle-btn").forEach(b => {
-        b.classList.toggle("active", b.dataset.mode === state.displayMode);
-    });
-
-    // Render translation list
-    renderTranslationList();
+    
 
     // Render reciter list
     renderReciterList("");
@@ -787,12 +738,6 @@ async function getAyahsForPage(pageNum) {
 async function renderPageView() {
     const pageNum = state.page;
     const ayahs = await getAyahsForPage(pageNum);
-
-    // Fetch translations for the surahs on this page
-    const surahsOnPage = [...new Set(ayahs.map(a => a.surah))];
-    const trPromises = surahsOnPage.map(s => fetchTranslationsForSurah(s));
-    const trResults = await Promise.all(trPromises);
-    const translations = Object.assign({}, ...trResults);
 
     // Page info: surah name, juz number
     const firstSurah = ayahs[0]?.surah || 1;
@@ -971,7 +916,7 @@ async function renderSurahView() {
 
     // Fetch surah data + translations
     const data = await fetchSurahData(surahNum);
-    const translations = await fetchTranslationsForSurah(surahNum);
+
 
     // Render verse cards
     const versesHtml = data.verses.map(v => {
@@ -981,26 +926,8 @@ async function renderSurahView() {
             { tajweedMarkup: useTajweed }
         );
 
-        // Build translation blocks
-        let translationsHtml = "";
-        if (state.displayMode !== "arabic") {
-            const ayahTr = translations[v.ayah] || {};
-            translationsHtml = state.activeTranslations.map(rid => {
-                const t = TRANSLATIONS.find(x => x.id === parseInt(rid));
-                const text = ayahTr[rid];
-                if (!text) return "";
-                return `<div class="verse-translation-block">
-                            <span class="vt-lang">${escapeHtml(t?.lang || "")}</span>
-                            ${escapeHtml(cleanText(text))}
-                        </div>`;
-            }).join("");
-        }
-
-        const translitHtml = (state.displayMode !== "arabic" && v.translit)
+        const translitHtml = (v.translit)
             ? `<div class="verse-translit">${escapeHtml(v.translit)}</div>` : "";
-
-        const arabicDisplay = state.displayMode === "translation" ? "display:none" : "";
-        const transDisplay = state.displayMode === "arabic" ? "display:none" : "";
 
         const isBookmarked = state.bookmarks.some(b => b.surah === v.surah && b.ayah === v.ayah);
 
@@ -1019,9 +946,8 @@ async function renderSurahView() {
                     <button class="verse-action share-btn" data-surah="${v.surah}" data-ayah="${v.ayah}" title="Share"><i data-lucide="share-2"></i></button>
                 </div>
             </div>
-            <div class="verse-arabic" style="${arabicDisplay};font-size:${state.arabicFont}rem">${arabicHtml}</div>
+            <div class="verse-arabic" style="font-size:${state.arabicFont}rem">${arabicHtml}</div>
             ${translitHtml}
-            <div class="verse-translations" style="${transDisplay}">${translationsHtml}</div>
         </article>`;
     }).join("");
 
@@ -1188,9 +1114,7 @@ function showAyahPopover(surah, ayah, anchorEl) {
         <button class="popover-action share-btn" data-surah="${surah}" data-ayah="${ayah}">
             <i data-lucide="share-2"></i> Share
         </button>
-        <div class="popover-translations" id="popover-translations">
-            <div class="popover-translations-loading">Loading translations…</div>
-        </div>`;
+`;
     if (window.lucide) lucide.createIcons();
 
     // Wire action buttons
@@ -1203,39 +1127,9 @@ function showAyahPopover(surah, ayah, anchorEl) {
         });
     });
 
-    // Load translations for this ayah and show them in the popover
-    loadPopoverTranslations(surah, ayah);
 }
 
 // Load translations for the popover (used in page view since there's no surah view)
-async function loadPopoverTranslations(surah, ayah) {
-    const container = document.getElementById("popover-translations");
-    if (!container) return;
-
-    try {
-        const translations = await fetchTranslationsForSurah(surah);
-        const ayahTr = translations[ayah] || {};
-
-        if (!state.activeTranslations.length) {
-            container.innerHTML = `<div class="popover-translations-empty">No translations selected. Click "Translations" in toolbar to pick one.</div>`;
-            return;
-        }
-
-        const html = state.activeTranslations.map(rid => {
-            const t = TRANSLATIONS.find(x => x.id === parseInt(rid));
-            const text = ayahTr[rid];
-            if (!text) return "";
-            return `<div class="popover-translation-block">
-                        <span class="vt-lang">${escapeHtml(t?.lang || "")}</span>
-                        ${escapeHtml(cleanText(text))}
-                    </div>`;
-        }).join("");
-
-        container.innerHTML = html || `<div class="popover-translations-empty">No translation available for this ayah.</div>`;
-    } catch (e) {
-        container.innerHTML = `<div class="popover-translations-empty">Could not load translations.</div>`;
-    }
-}
 
 el.ayahPopoverClose?.addEventListener("click", () => el.ayahPopover.hidden = true);
 
@@ -1384,45 +1278,6 @@ el.bookmarksClearBtn?.addEventListener("click", () => {
    TRANSLATIONS DRAWER
    ============================================================ */
 
-function renderTranslationList() {
-    el.translationList.innerHTML = TRANSLATIONS.map(t => {
-        const active = state.activeTranslations.includes(String(t.id));
-        return `
-        <div class="translation-item ${active ? "active" : ""}" data-id="${t.id}">
-            <div class="translation-checkbox">
-                ${active ? '<i data-lucide="check" style="width:14px;height:14px"></i>' : ''}
-            </div>
-            <div class="translation-info">
-                <div class="translation-name">${escapeHtml(t.name)}</div>
-                <div class="translation-author">${escapeHtml(t.lang)} · ${escapeHtml(t.author)}</div>
-            </div>
-        </div>`;
-    }).join("");
-    if (window.lucide) lucide.createIcons();
-
-    el.translationList.querySelectorAll(".translation-item").forEach(item => {
-        item.addEventListener("click", () => {
-            const id = String(item.dataset.id);
-            const idx = state.activeTranslations.indexOf(id);
-            if (idx >= 0) {
-                if (state.activeTranslations.length <= 1) {
-                    showToast("Keep at least one translation");
-                    return;
-                }
-                state.activeTranslations.splice(idx, 1);
-            } else {
-                state.activeTranslations.push(id);
-            }
-            persistState();
-            renderTranslationList();
-            // Invalidate translation cache for current surah
-            Object.keys(state.surahCache).forEach(k => {
-                if (k.startsWith("tr_")) delete state.surahCache[k];
-            });
-            render();
-        });
-    });
-}
 
 /* ============================================================
    RECITER DRAWER
@@ -1463,7 +1318,7 @@ function renderReciterList(query) {
                 const { surah, ayah } = state.currentAyahAudio;
                 el.ayahAudio.src = API.ayahAudio(surah, ayah, state.reciterId);
                 el.ayahAudio.load();
-                if (wasPlaying) el.ayahAudio.play().catch(() => { });
+                if (wasPlaying) el.ayahAudio.play().catch(() => {});
             }
             showToast(`Reciter: ${reciter?.name}`);
         });
@@ -1492,7 +1347,7 @@ async function loadTafsirInDrawer(surah, ayah) {
             const data = await fetchSurahData(surah);
             const v = data.verses.find(x => x.ayah === ayah);
             if (v) arabicText = v.text;
-        } catch (e) { }
+        } catch (e) {}
     }
 
     el.tafsirContent.innerHTML = `
@@ -1501,10 +1356,11 @@ async function loadTafsirInDrawer(surah, ayah) {
             <div class="tv-ref">${escapeHtml(meta?.transliteration || "")} · Ayah ${ayah}</div>
         </div>
         <div class="tafsir-loading">
-            <i data-lucide="loader-2" class="spin"></i> Loading ${state.tafsirSource === "jalalayn" ? "Jalalayn (Arabic)" :
-            state.tafsirSource === "maarif" ? "Ma'arif-ul-Quran" :
+            <i data-lucide="loader-2" class="spin"></i> Loading ${
+                state.tafsirSource === "jalalayn" ? "Jalalayn (Arabic)" :
+                state.tafsirSource === "maarif" ? "Ma'arif-ul-Quran" :
                 "Ibn Kathir"
-        } tafsir…
+            } tafsir…
         </div>`;
     if (window.lucide) lucide.createIcons();
 
@@ -1547,7 +1403,7 @@ function playAyah(surah, ayah) {
         state.currentAyahAudio.surah === surah &&
         state.currentAyahAudio.ayah === ayah) {
         if (el.ayahAudio.paused) {
-            el.ayahAudio.play().catch(() => { });
+            el.ayahAudio.play().catch(() => {});
             state.isPlaying = true;
             updatePlayButtonIcon(surah, ayah, true);
         } else {
@@ -1630,7 +1486,7 @@ el.ayahAudio.addEventListener("ended", () => {
 
 el.miniPlay?.addEventListener("click", () => {
     if (el.ayahAudio.paused) {
-        el.ayahAudio.play().catch(() => { });
+        el.ayahAudio.play().catch(() => {});
         el.miniPlay.innerHTML = `<i data-lucide="pause"></i>`;
         state.isPlaying = true;
     } else {
@@ -1670,7 +1526,7 @@ el.miniNext?.addEventListener("click", () => {
 el.miniRepeat?.addEventListener("click", () => {
     if (!el.ayahAudio.src) return;
     el.ayahAudio.currentTime = 0;
-    el.ayahAudio.play().catch(() => { });
+    el.ayahAudio.play().catch(() => {});
 });
 
 el.miniProgress?.addEventListener("input", () => {
@@ -1915,38 +1771,37 @@ function handleSwipe() {
     if (Math.abs(deltaX) < 50 || Math.abs(deltaX) < Math.abs(deltaY)) return;
 
     if (deltaX > 0) {
-        // Swiped right → go to previous page (like flipping right in a book)
-        // In RTL: previous page = higher page number? No — in the Mushaf, you flip
-        // right-to-left, so swiping RIGHT goes to the PREVIOUS page.
-        if (state.page > 1) {
-            state.page--;
+        // Swiped RIGHT → go to NEXT page (like opening the Quran — pages flip right-to-left)
+        if (state.page < TOTAL_PAGES) {
+            state.page++;
             persistState();
             render();
         }
     } else {
-        // Swiped left → go to next page
-        if (state.page < TOTAL_PAGES) {
-            state.page++;
+        // Swiped LEFT → go to PREVIOUS page
+        if (state.page > 1) {
+            state.page--;
             persistState();
             render();
         }
     }
 }
 
-// Also add click-to-navigate on left/right halves of the page (desktop)
+// Also fix click-to-navigate: in RTL Quran, clicking the LEFT half = next page,
+// clicking the RIGHT half = previous page (like flipping backwards)
 el.pageContainer?.addEventListener("click", e => {
     // Don't intercept clicks on words or ayah markers
     if (e.target.closest(".word") || e.target.closest(".ayah-marker")) return;
     const rect = el.pageContainer.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const halfWidth = rect.width / 2;
-    // In RTL: clicking the RIGHT half → previous page; LEFT half → next page
-    if (clickX > halfWidth && state.page > 1) {
-        state.page--;
+    // In RTL: clicking the LEFT half → next page; RIGHT half → previous page
+    if (clickX <= halfWidth && state.page < TOTAL_PAGES) {
+        state.page++;
         persistState();
         render();
-    } else if (clickX <= halfWidth && state.page < TOTAL_PAGES) {
-        state.page++;
+    } else if (clickX > halfWidth && state.page > 1) {
+        state.page--;
         persistState();
         render();
     }
@@ -2004,13 +1859,6 @@ document.addEventListener("keydown", e => {
     }
 });
 
-el.translationsTool?.addEventListener("click", () => {
-    if (el.translationsDrawer.classList.contains("open")) {
-        el.translationsDrawer.classList.remove("open");
-    } else {
-        openDrawer("translations-drawer");
-    }
-});
 
 el.reciterTool?.addEventListener("click", () => {
     if (el.reciterDrawer.classList.contains("open")) {
@@ -2099,25 +1947,6 @@ document.getElementById("tajweed-off")?.addEventListener("click", () => {
     render();
 });
 
-// Display mode buttons (in translations drawer + settings drawer)
-function setDisplayMode(mode) {
-    state.displayMode = mode;
-    document.querySelectorAll("#display-mode-buttons .toggle-btn").forEach(b => {
-        b.classList.toggle("active", b.dataset.mode === mode);
-    });
-    document.querySelectorAll("#reading-both, #reading-arabic, #reading-translation").forEach(b => b.classList.remove("active"));
-    if (mode === "both") document.getElementById("reading-both")?.classList.add("active");
-    if (mode === "arabic") document.getElementById("reading-arabic")?.classList.add("active");
-    if (mode === "translation") document.getElementById("reading-translation")?.classList.add("active");
-    persistState();
-    applyReadingMode();  // Apply immediately without full re-render
-}
-document.querySelectorAll("#display-mode-buttons .toggle-btn").forEach(b => {
-    b.addEventListener("click", () => setDisplayMode(b.dataset.mode));
-});
-document.getElementById("reading-both")?.addEventListener("click", () => setDisplayMode("both"));
-document.getElementById("reading-arabic")?.addEventListener("click", () => setDisplayMode("arabic"));
-document.getElementById("reading-translation")?.addEventListener("click", () => setDisplayMode("translation"));
 
 /* ============================================================
    SEARCH MODAL
@@ -2238,7 +2067,7 @@ document.addEventListener("keydown", e => {
     }
     // Escape closes modals/drawers
     if (e.key === "Escape") {
-        if (!el.searchModal.classList.contains("open")) { } else { closeSearchModal(); return; }
+        if (!el.searchModal.classList.contains("open")) {} else { closeSearchModal(); return; }
         if (!el.wordModalOverlay.hidden) { el.wordModalOverlay.hidden = true; state.wordModalContext = null; return; }
         if (!el.ayahPopover.hidden) { el.ayahPopover.hidden = true; return; }
         closeAllDrawers();

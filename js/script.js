@@ -1163,23 +1163,34 @@ async function loadTafsir(surahNum, ayahNum) {
     const card = document.querySelector(`.verse-card[data-ayah="${ayahNum}"]`);
     if (!card) return;
 
+    // Use the user's selected tafsir source (from reader settings)
+    const source = readerTafsirSource || "ibnkathir";
+    const sourceName = source === "ibnkathir" ? "Ibn Kathir" :
+                       source === "maarif" ? "Ma'arif-ul-Quran" :
+                       source === "jalalayn" ? "Jalalayn" : "Ibn Kathir";
+    const isAr = source === "jalalayn";
+
     const panel = document.createElement("div");
     panel.id = panelId;
     panel.className = "tafsir-panel";
-    panel.innerHTML = `<div class="tafsir-loading"><i data-lucide="loader-2" class="spin"></i> Loading tafsir…</div>`;
+    if (isAr) panel.setAttribute("dir", "rtl");
+    panel.innerHTML = `<div class="tafsir-loading"><i data-lucide="loader-2" class="spin"></i> Loading ${sourceName} tafsir…</div>`;
     card.appendChild(panel);
     lucide.createIcons();
 
     try {
-        const res = await fetch(CDN.tafsir(surahNum, ayahNum));
-        const data = await res.json();
-        const text = data.text || data.tafsir || "No tafsir available for this verse.";
+        const text = await fetchReaderTafsir(surahNum, ayahNum, source);
+        if (!text) {
+            panel.innerHTML = `<p class="tafsir-error">No tafsir available for this verse.</p>`;
+            return;
+        }
+        const isArabic = source === "jalalayn";
         panel.innerHTML = `
       <div class="tafsir-header">
-        <span class="tafsir-badge">Ibn Kathir</span>
+        <span class="tafsir-badge">${sourceName}${isArabic ? " (Arabic)" : ""}</span>
         <button class="tafsir-close" data-ayah="${ayahNum}"><i data-lucide="x"></i></button>
       </div>
-      <p class="tafsir-body">${escapeHtml(text)}</p>`;
+      <p class="tafsir-body${isArabic ? " tafsir-arabic" : ""}">${escapeHtml(text).replace(/\n\n/g, "</p><p>").replace(/^/, "<p>").replace(/$/, "</p>")}</p>`;
         lucide.createIcons();
         panel.querySelector(".tafsir-close")?.addEventListener("click", () => panel.remove());
     } catch (err) {
@@ -1222,7 +1233,6 @@ async function openReader(surahNum, scrollToAyah = null) {
         <div class="verse-number">${v.id}</div>
         <div class="verse-arabic">${arabicCleaned}</div>
         <div class="verse-transliteration">${escapeHtml(v.transliteration || "")}</div>
-        <div class="verse-translation">${escapeHtml(v.translation)}</div>
         <div class="verse-actions">
           <button class="ayah-action play-btn"     data-surah="${surahNum}" data-ayah="${v.id}" title="Play verse"><i data-lucide="play"></i></button>
           <button class="ayah-action bookmark-btn" data-surah="${surahNum}" data-ayah="${v.id}" title="Bookmark"><i data-lucide="bookmark"></i></button>
@@ -2497,3 +2507,297 @@ setTimeout(() => {
     initJourneys();
     initSearchModal();
 }, 600);
+
+// ============================================================
+// READER TRANSLATION & TAFSIR SELECTION
+// ============================================================
+
+const READER_TRANSLATIONS = {
+    20:  { name: "Saheeh International", lang: "en" },
+    95:  { name: "Maududi (Tafhim)", lang: "en" },
+    84:  { name: "Mufti Taqi Usmani", lang: "en" },
+    22:  { name: "Yusuf Ali", lang: "en" },
+    19:  { name: "Pickthall", lang: "en" },
+    85:  { name: "Abdul Haleem", lang: "en" },
+    203: { name: "Hilali & Khan", lang: "en" },
+    149: { name: "Bridges' Translation", lang: "en" },
+    97:  { name: "Tafheem-ul-Quran", lang: "ur" },
+    234: { name: "Fatah Muhammad Jalandhri", lang: "ur" },
+    33:  { name: "Indonesian MoRA", lang: "id" },
+    31:  { name: "Hamidullah", lang: "fr" },
+    77:  { name: "Diyanet Isleri", lang: "tr" },
+    45:  { name: "Kuliev", lang: "ru" },
+    56:  { name: "Ma Jian", lang: "zh" },
+    103: { name: "Helmi Nasr", lang: "pt" },
+    54:  { name: "Maulana Junagarhi", lang: "hi" },
+};
+
+// Load saved preferences
+let readerTranslationId = localStorage.getItem("readerTranslation") || "20";
+let readerTafsirSource = localStorage.getItem("readerTafsir") || "none";
+
+// Cache for fetched translations per surah
+const translationCache = {};
+
+async function fetchReaderTranslation(surahNum) {
+    if (readerTranslationId === "none") return {};
+    const cacheKey = `${surahNum}_${readerTranslationId}`;
+    if (translationCache[cacheKey]) return translationCache[cacheKey];
+
+    try {
+        const url = `https://api.quran.com/api/v4/verses/by_chapter/${surahNum}?translations=${readerTranslationId}&per_page=300`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const verses = data?.verses || [];
+        const byAyah = {};
+        for (const v of verses) {
+            const [, ayahStr] = (v.verse_key || "").split(":");
+            const ayah = parseInt(ayahStr);
+            const trList = v.translations || [];
+            for (const t of trList) {
+                if (t.resource_id == readerTranslationId) {
+                    // Strip HTML tags from translation text
+                    byAyah[ayah] = (t.text || "").replace(/<[^>]*>/g, "");
+                }
+            }
+        }
+        translationCache[cacheKey] = byAyah;
+        return byAyah;
+    } catch (e) {
+        console.warn("Translation fetch failed:", e);
+        return {};
+    }
+}
+
+// Tafsir fetch
+async function fetchReaderTafsir(surahNum, ayahNum, source) {
+    if (source === "none") return null;
+    try {
+        if (source === "jalalayn") {
+            const res = await fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/ar.jalalayn`);
+            const data = await res.json();
+            return data?.data?.text || null;
+        }
+        const paths = {
+            ibnkathir: "en-tafisr-ibn-kathir",
+            maarif: "en-tafsir-maarif-ul-quran",
+        };
+        const path = paths[source];
+        if (!path) return null;
+        const res = await fetch(`https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${path}/${surahNum}/${ayahNum}.json`);
+        const data = await res.json();
+        return data?.text || data?.tafsir || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+// Initialize translation and tafsir selectors
+function initReaderSelectors() {
+    const trSelect = document.getElementById("reader-translation-select");
+    const tafsirSelect = document.getElementById("reader-tafsir-select");
+
+    if (trSelect) {
+        trSelect.value = readerTranslationId;
+        trSelect.addEventListener("change", () => {
+            readerTranslationId = trSelect.value;
+            localStorage.setItem("readerTranslation", readerTranslationId);
+            // Clear cache so new translation is fetched
+            Object.keys(translationCache).forEach(k => delete translationCache[k]);
+            // Re-render verses with new translation
+            if (currentSurahVerses.length) {
+                renderReaderVerses(currentSurahVerses, selectedSurah);
+            }
+            showToast(`Translation: ${trSelect.options[trSelect.selectedIndex].text}`);
+        });
+    }
+
+    if (tafsirSelect) {
+        tafsirSelect.value = readerTafsirSource;
+        tafsirSelect.addEventListener("change", () => {
+            readerTafsirSource = tafsirSelect.value;
+            localStorage.setItem("readerTafsir", readerTafsirSource);
+            // Re-render verses to show/hide tafsir
+            if (currentSurahVerses.length) {
+                renderReaderVerses(currentSurahVerses, selectedSurah);
+            }
+            showToast(`Tafsir: ${tafsirSelect.options[tafsirSelect.selectedIndex].text}`);
+        });
+    }
+}
+
+// Patch the existing openReader to also fetch translations
+const originalOpenReader = openReader;
+openReader = async function(surahNum, scrollToAyah = null) {
+    await originalOpenReader(surahNum, scrollToAyah);
+    // After verses are rendered, fetch and inject translations + tafsir
+    if (currentSurahVerses.length) {
+        await injectTranslationsAndTafsir();
+    }
+};
+
+// Inject translations and tafsir into the existing verse cards
+async function injectTranslationsAndTafsir() {
+    const surahNum = selectedSurah;
+    const translations = await fetchReaderTranslation(surahNum);
+
+    const verseCards = document.querySelectorAll(".verse-card");
+    for (const card of verseCards) {
+        const ayah = parseInt(card.dataset.ayah);
+        if (!ayah) continue;
+
+        // Remove old translation/tafsir if present
+        const oldTr = card.querySelector(".verse-reader-translation");
+        if (oldTr) oldTr.remove();
+        const oldTf = card.querySelector(".verse-reader-tafsir");
+        if (oldTf) oldTf.remove();
+
+        // Add translation
+        if (readerTranslationId !== "none" && translations[ayah]) {
+            const trMeta = READER_TRANSLATIONS[readerTranslationId];
+            const trDiv = document.createElement("div");
+            trDiv.className = "verse-reader-translation";
+            trDiv.innerHTML = `<span class="vrt-lang">${escapeHtml(trMeta?.name || "")}</span>${escapeHtml(translations[ayah])}`;
+            card.querySelector(".verse-actions")?.insertAdjacentElement("beforebegin", trDiv);
+        }
+
+        // Tafsir is NOT auto-injected — it loads on-demand when user clicks the tafsir icon
+    }
+}
+
+// ============================================================
+// REFLECTION OF THE DAY — functional with real Quranic reflections
+// ============================================================
+
+const DAILY_REFLECTIONS = [
+    { text: "And whoever puts their trust in Allah, He is sufficient for them. Indeed, Allah will accomplish His purpose.", ref: "Surah At-Talaq 65:3" },
+    { text: "So remember Me; I will remember you. And be grateful to Me and do not deny Me.", ref: "Surah Al-Baqarah 2:152" },
+    { text: "Indeed, with hardship comes ease. Indeed, with hardship comes ease.", ref: "Surah Ash-Sharh 94:5-6" },
+    { text: "And your Lord says: Call upon Me, I will respond to you.", ref: "Surah Ghafir 40:60" },
+    { text: "Allah does not burden a soul beyond that it can bear.", ref: "Surah Al-Baqarah 2:286" },
+    { text: "And He found you lost and guided you. And He found you in need and made you self-sufficient.", ref: "Surah Ad-Duha 93:7-8" },
+    { text: "So do not weaken and do not grieve, and you will be superior if you are believers.", ref: "Surah Ali 'Imran 3:139" },
+    { text: "Indeed, Allah is with those who are patient.", ref: "Surah Al-Anfal 8:46" },
+    { text: "And whoever fears Allah, He will make for him a way out. And will provide for him from where he does not expect.", ref: "Surah At-Talaq 65:2-3" },
+    { text: "Verily, in the remembrance of Allah do hearts find rest.", ref: "Surah Ar-Ra'd 13:28" },
+    { text: "And We have certainly made the Qur'an easy for remembrance, so is there any who will remember?", ref: "Surah Al-Qamar 54:17" },
+    { text: "Say: O My servants who have transgressed against themselves, do not despair of the mercy of Allah. Indeed, Allah forgives all sins.", ref: "Surah Az-Zumar 39:53" },
+    { text: "And whoever relies upon Allah, then He is sufficient for him.", ref: "Surah At-Talaq 65:3" },
+    { text: "Perhaps you hate a thing and it is good for you; and perhaps you love a thing and it is bad for you. And Allah knows, while you know not.", ref: "Surah Al-Baqarah 2:216" },
+    { text: "And seek help through patience and prayer; and indeed, it is difficult except for the humbly submissive.", ref: "Surah Al-Baqarah 2:45" },
+    { text: "And establish prayer at the two ends of the day and at the approach of the night. Indeed, good deeds do away with misdeeds.", ref: "Surah Hud 11:114" },
+    { text: "And when My servants ask you concerning Me, indeed I am near. I respond to the invocation of the supplicant when he calls upon Me.", ref: "Surah Al-Baqarah 2:186" },
+    { text: "And We test you with evil and with good as trial; and to Us you will be returned.", ref: "Surah Al-Anbiya 21:35" },
+    { text: "Every soul will taste death. And We test you with evil and with good as trial; and to Us you will be returned.", ref: "Surah Al-Anbiya 21:35" },
+    { text: "And let not worldly life deceive you, and let not the Deceiver deceive you concerning Allah.", ref: "Surah Luqman 31:33" },
+    { text: "Race to forgiveness from your Lord and a Garden as wide as the heavens and the earth.", ref: "Surah Al-Hadid 57:21" },
+    { text: "The believers are only those who, when Allah is mentioned, their hearts become fearful, and when His verses are recited to them, it increases them in faith.", ref: "Surah Al-Anfal 8:2" },
+    { text: "And hold firmly to the rope of Allah all together and do not become divided.", ref: "Surah Ali 'Imran 3:103" },
+    { text: "Indeed, Allah commands justice, good conduct, and giving to relatives; and forbids immorality, bad conduct, and oppression.", ref: "Surah An-Nahl 16:90" },
+    { text: "And lower to them the wing of humility out of mercy and say: My Lord, have mercy upon them as they brought me up when I was small.", ref: "Surah Al-Isra 17:24" },
+    { text: "And do not turn your cheek away from people in contempt, and do not walk through the earth exultantly. Indeed, Allah does not like everyone self-deluded and boastful.", ref: "Surah Luqman 31:18" },
+    { text: "Kind speech and forgiveness are better than charity followed by injury.", ref: "Surah Al-Baqarah 2:263" },
+    { text: "The most honorable of you in the sight of Allah is the most righteous of you.", ref: "Surah Al-Hujurat 49:13" },
+    { text: "And establish prayer and give zakah, and whatever good you put forward for yourselves, you will find it with Allah.", ref: "Surah Al-Baqarah 2:110" },
+    { text: "And whoever Allah guides, he is the guided one. And whoever He leaves astray, you will not find for them protectors besides Him.", ref: "Surah Al-Isra 17:97" },
+];
+
+function initDailyReflection() {
+    const quoteEl = document.querySelector(".reflection-card blockquote");
+    const refEl = document.querySelector(".reflection-card span");
+    if (!quoteEl || !refEl) return;
+
+    // Pick reflection based on day of year (rotates daily)
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const reflection = DAILY_REFLECTIONS[dayOfYear % DAILY_REFLECTIONS.length];
+
+    quoteEl.textContent = `"${reflection.text}"`;
+    refEl.textContent = reflection.ref;
+}
+
+// Initialize
+setTimeout(() => {
+    initReaderSelectors();
+    initDailyReflection();
+}, 800);
+
+// ============================================================
+// ISLAMIC (HIJRI) DATE — calculated using the Umm al-Qura algorithm
+// ============================================================
+
+function getIslamicDate() {
+    // Use Intl.DateTimeFormat with the islamic-umalqura calendar
+    try {
+        const now = new Date();
+        const hijriFormatter = new Intl.DateTimeFormat('en-US', {
+            calendar: 'islamic-umalqura',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        const hijriParts = hijriFormatter.formatToParts(now);
+        let day = '', month = '', year = '';
+        for (const part of hijriParts) {
+            if (part.type === 'day') day = part.value;
+            else if (part.type === 'month') month = part.value;
+            else if (part.type === 'year') year = part.value;
+        }
+        
+        // Get day of week
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
+        
+        return {
+            date: `${day} ${month} ${year} AH`,
+            day: dayOfWeek
+        };
+    } catch (e) {
+        // Fallback: approximate calculation
+        return calculateHijriFallback();
+    }
+}
+
+function calculateHijriFallback() {
+    const now = new Date();
+    // Approximate Hijri date calculation
+    const julianDay = Math.floor((now.getTime() / 86400000) + 2440587.5);
+    const l1 = julianDay - 1948440 + 10632;
+    const n = Math.floor((l1 - 1) / 10631);
+    const l2 = l1 - 10631 * n + 354;
+    const j = Math.floor((10985 - l2) / 5316) * Math.floor((50 * l2) / 17719) + Math.floor(l2 / 5670) * Math.floor((43 * l2) / 15238);
+    const l3 = l2 - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) - Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
+    const monthNum = Math.floor((24 * l3) / 709);
+    const day = l3 - Math.floor((709 * monthNum) / 24);
+    const year = 30 * n + j - 30;
+    
+    const months = ['Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani", 'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban", 'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'];
+    const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
+    
+    return {
+        date: `${day} ${months[monthNum - 1] || ''} ${year} AH`,
+        day: dayOfWeek
+    };
+}
+
+function initIslamicDate() {
+    const dateEl = document.getElementById("islamic-date");
+    const dayEl = document.getElementById("islamic-day");
+    const gregEl = document.getElementById("gregorian-date");
+    
+    if (!dateEl) return;
+    
+    const hijri = getIslamicDate();
+    dateEl.textContent = hijri.date;
+    if (dayEl) dayEl.textContent = hijri.day;
+    
+    if (gregEl) {
+        const now = new Date();
+        gregEl.textContent = now.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+}
+
+setTimeout(initIslamicDate, 300);
