@@ -2354,3 +2354,31 @@ body.light-mode .nav-search-input {
 .bg-glow {
     display: none !important;
 }
+
+/* Word modal play button */
+.wm-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.2rem;
+    margin: 0.5rem 0 1rem;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(var(--mushaf-accent-rgb), 1), rgba(var(--mushaf-accent-rgb), 0.8));
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.wm-play-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.wm-play-btn svg {
+    width: 16px;
+    height: 16px;
+}

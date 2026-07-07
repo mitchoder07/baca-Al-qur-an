@@ -27,7 +27,7 @@ const API = {
 
     // Per-ayah word-by-word (quran.com)
     wordByWord: (surah, ayah) =>
-        `https://api.quran.com/api/v4/verses/by_key/${surah}:${ayah}?words=true&word_fields=text_uthmani,transliteration,text&fields=text_uthmani`,
+        `https://api.quran.com/api/v4/verses/by_key/${surah}:${ayah}?words=true&word_fields=text_uthmani,transliteration,text,audio_url&fields=text_uthmani`,
 
     // Translations (quran.com — resource IDs)
     translations: (resourceIds, surah) =>
@@ -691,7 +691,7 @@ async function fetchWordByWord(surahNum, ayahNum) {
             } else if (w.translation && typeof w.translation === "object") {
                 translation = w.translation.text || "";
             }
-            return { text, transliteration, translation };
+            return { text, transliteration, translation, audioUrl: w.audio_url || null };
         });
     } catch (e) {
         console.warn("Word-by-word fetch failed:", e);
@@ -1167,15 +1167,24 @@ function renderWordModalWord() {
         const arabicText = word.text || "—";
         const translitText = word.transliteration || "";
         const translationText = word.translation || "—";
+        const audioUrl = word.audioUrl ? `https://audio.qurancdn.com/${word.audioUrl}` : null;
 
         el.wordModalBody.innerHTML = `
             <div class="wm-arabic">${escapeHtml(arabicText)}</div>
             ${translitText ? `<div class="wm-translit">${escapeHtml(translitText)}</div>` : ""}
             <div class="wm-translation">${escapeHtml(translationText)}</div>
+            ${audioUrl ? `<button class="wm-play-btn" id="wm-play-btn" title="Play word audio"><i data-lucide="volume-2"></i> Play</button>` : ""}
             <div class="wm-meta">
                 <span class="wm-chip">Word<strong>${ctx.wordIdx + 1}/${ctx.words.length}</strong></span>
                 <span class="wm-chip">${escapeHtml(meta?.transliteration || "")}<strong>${ctx.ayah}</strong></span>
             </div>`;
+
+        // Auto-play the word audio when the modal opens
+        if (audioUrl) {
+            playWordAudio(audioUrl);
+            // Also wire the play button for replay
+            document.getElementById("wm-play-btn")?.addEventListener("click", () => playWordAudio(audioUrl));
+        }
 
         // Update nav button states
         el.wordPrev.disabled = ctx.wordIdx === 0;
@@ -1188,6 +1197,18 @@ function renderWordModalWord() {
             <div class="wm-arabic" style="opacity:0.4">—</div>
             <p class="wm-translation" style="color:#f87171">Error rendering word.</p>`;
     }
+}
+
+// Play word audio
+let wordAudioEl = null;
+function playWordAudio(url) {
+    if (!wordAudioEl) {
+        wordAudioEl = new Audio();
+    }
+    wordAudioEl.src = url;
+    wordAudioEl.play().catch(err => {
+        console.warn("Word audio play failed:", err);
+    });
 }
 
 el.wordModalClose?.addEventListener("click", () => {
@@ -1612,15 +1633,19 @@ el.ayahAudio.addEventListener("timeupdate", () => {
 });
 
 el.ayahAudio.addEventListener("ended", () => {
-    // Play ONLY this verse — no auto-advance.
-    // Reset state and UI to "stopped" so the user can click another verse.
+    // If repeat is on, replay the current verse
+    if (mushafRepeatOn && state.currentAyahAudio) {
+        el.ayahAudio.currentTime = 0;
+        el.ayahAudio.play().catch(() => { });
+        return;
+    }
+    // Otherwise, reset state and UI to "stopped"
     state.isPlaying = false;
     if (state.currentAyahAudio) {
         const { surah, ayah } = state.currentAyahAudio;
         updatePlayButtonIcon(surah, ayah, false);
     }
     el.miniPlay.innerHTML = `<i data-lucide="play"></i>`;
-    // Keep floating player visible (so user can replay) but show play icon
     if (window.lucide) lucide.createIcons();
 });
 
@@ -1663,10 +1688,14 @@ el.miniNext?.addEventListener("click", () => {
     }
 });
 
+// Repeat toggle for mushaf floating player
+let mushafRepeatOn = false;
+
 el.miniRepeat?.addEventListener("click", () => {
-    if (!el.ayahAudio.src) return;
-    el.ayahAudio.currentTime = 0;
-    el.ayahAudio.play().catch(() => { });
+    mushafRepeatOn = !mushafRepeatOn;
+    el.miniRepeat.style.background = mushafRepeatOn ? "var(--mushaf-accent)" : "";
+    el.miniRepeat.style.color = mushafRepeatOn ? "#fff" : "";
+    showToast(mushafRepeatOn ? "Repeat: On" : "Repeat: Off");
 });
 
 el.miniProgress?.addEventListener("input", () => {

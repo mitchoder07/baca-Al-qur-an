@@ -3687,3 +3687,32 @@ body.light-mode .hcc-week-num {
         width: 140px;
     }
 }
+
+/* ============================================================
+   REVELATION ORDER BADGE on surah cards
+   ============================================================ */
+
+.surah-rev-order {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--primary);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 0.3rem;
+}
+
+body.light-mode .surah-rev-order {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+}
+
+/* Filter pills with icons — ensure icons are sized correctly */
+.fpill i,
+.fpill svg {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
