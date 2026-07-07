@@ -136,12 +136,12 @@ const SURAH_LIST = [
 
 // HIZB STARTS — first ayah of each of the 60 Hizbs
 const HIZB_STARTS = [
-    [1, 1], [2, 75], [2, 142], [2, 203], [2, 253], [3, 15], [3, 93], [3, 171], [4, 24], [4, 88],
-    [4, 148], [5, 27], [5, 82], [6, 36], [6, 111], [7, 1], [7, 88], [7, 171], [8, 41], [9, 34],
-    [9, 93], [10, 26], [11, 6], [11, 84], [12, 53], [13, 19], [15, 1], [16, 51], [17, 1], [17, 99],
-    [18, 75], [20, 1], [21, 1], [22, 1], [23, 1], [24, 21], [25, 21], [26, 111], [27, 56], [28, 51],
-    [29, 46], [31, 22], [33, 31], [34, 24], [36, 28], [37, 145], [39, 32], [40, 41], [41, 47], [43, 24],
-    [46, 1], [48, 18], [51, 31], [55, 1], [58, 1], [62, 1], [67, 1], [72, 1], [78, 1], [87, 1]
+    [1,1],[2,75],[2,142],[2,203],[2,253],[3,15],[3,93],[3,171],[4,24],[4,88],
+    [4,148],[5,27],[5,82],[6,36],[6,111],[7,1],[7,88],[7,171],[8,41],[9,34],
+    [9,93],[10,26],[11,6],[11,84],[12,53],[13,19],[15,1],[16,51],[17,1],[17,99],
+    [18,75],[20,1],[21,1],[22,1],[23,1],[24,21],[25,21],[26,111],[27,56],[28,51],
+    [29,46],[31,22],[33,31],[34,24],[36,28],[37,145],[39,32],[40,41],[41,47],[43,24],
+    [46,1],[48,18],[51,31],[55,1],[58,1],[62,1],[67,1],[72,1],[78,1],[87,1]
 ];
 
 // ============================================================
@@ -204,23 +204,23 @@ function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
 // ============================================================
 
 const FULL_SURAH_SERVERS = {
-    'mishari': 'https://server8.mp3quran.net/afs/',
-    'sudais': 'https://server11.mp3quran.net/sds/',
+    'mishari':    'https://server8.mp3quran.net/afs/',
+    'sudais':     'https://server11.mp3quran.net/sds/',
     'abdulbasit': 'https://server7.mp3quran.net/basit/',
-    'husary': 'https://server13.mp3quran.net/husr/',
-    'minshawi': 'https://server10.mp3quran.net/minsh/',
-    'shaatree': 'https://server11.mp3quran.net/shatri/',
-    'muaiqly': 'https://server12.mp3quran.net/maher/',
-    'shuraym': 'https://server7.mp3quran.net/shur/',
-    'hudhaify': 'https://server8.mp3quran.net/bna/',
-    'ajamy': 'https://server10.mp3quran.net/ajm/',
-    'jibreel': 'https://server8.mp3quran.net/jbrl/',
-    'ayyoub': 'https://server16.mp3quran.net/ayyoub2/',
-    'ghamdi': 'https://server7.mp3quran.net/s_gmd/',
-    'basfar': 'https://server6.mp3quran.net/bsfr/',
-    'matroud': 'https://server8.mp3quran.net/mtrod/',
-    'rifai': 'https://server8.mp3quran.net/hani/',
-    'tablawi': 'https://server12.mp3quran.net/tblawi/',
+    'husary':     'https://server13.mp3quran.net/husr/',
+    'minshawi':   'https://server10.mp3quran.net/minsh/',
+    'shaatree':   'https://server11.mp3quran.net/shatri/',
+    'muaiqly':    'https://server12.mp3quran.net/maher/',
+    'shuraym':    'https://server7.mp3quran.net/shur/',
+    'hudhaify':   'https://server8.mp3quran.net/bna/',
+    'ajamy':      'https://server10.mp3quran.net/ajm/',
+    'jibreel':    'https://server8.mp3quran.net/jbrl/',
+    'ayyoub':     'https://server16.mp3quran.net/ayyoub2/',
+    'ghamdi':     'https://server7.mp3quran.net/s_gmd/',
+    'basfar':     'https://server6.mp3quran.net/bsfr/',
+    'matroud':    'https://server8.mp3quran.net/mtrod/',
+    'rifai':      'https://server8.mp3quran.net/hani/',
+    'tablawi':    'https://server12.mp3quran.net/tblawi/',
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {
@@ -473,7 +473,13 @@ function applyReaderTheme(key) {
         "--reader-tool-bg": t.toolBg,
         "--reader-drawer-bg": t.drawerBg,
     };
-    Object.entries(props).forEach(([k, v]) => reader.style.setProperty(k, v));
+    // Set variables on BOTH .reader-content AND .reader-modal
+    // so the floating player (which is outside .reader-content but inside .reader-modal) inherits them
+    Object.entries(props).forEach(([k, v]) => {
+        reader.style.setProperty(k, v);
+        const modal = document.querySelector(".reader-modal");
+        if (modal) modal.style.setProperty(k, v);
+    });
 
     const themeBtn = document.getElementById("reader-theme-btn");
     if (themeBtn) {
@@ -1086,6 +1092,13 @@ function applyFontSizes() {
     document.querySelectorAll(".verse-transliteration").forEach(el =>
         el.style.fontSize = (translationFontSize * 0.92) + "rem"
     );
+    // Also affect tafsir panels
+    document.querySelectorAll(".tafsir-body, .tafsir-body p").forEach(el =>
+        el.style.fontSize = translationFontSize + "rem"
+    );
+    // Mini settings drawer font changes
+    document.querySelectorAll(".verse-arabic").forEach(el => el.style.fontSize = arabicFontSize + "rem");
+    document.querySelectorAll(".verse-reader-translation").forEach(el => el.style.fontSize = translationFontSize + "rem");
 }
 
 document.getElementById("font-increase")?.addEventListener("click", () => { arabicFontSize += 0.2; translationFontSize += 0.05; applyFontSizes(); });
@@ -1225,8 +1238,8 @@ async function loadTafsir(surahNum, ayahNum) {
     // Use the user's selected tafsir source (from reader settings)
     const source = readerTafsirSource || "ibnkathir";
     const sourceName = source === "ibnkathir" ? "Ibn Kathir" :
-        source === "maarif" ? "Ma'arif-ul-Quran" :
-            source === "jalalayn" ? "Jalalayn" : "Ibn Kathir";
+                       source === "maarif" ? "Ma'arif-ul-Quran" :
+                       source === "jalalayn" ? "Jalalayn" : "Ibn Kathir";
     const isAr = source === "jalalayn";
 
     const panel = document.createElement("div");
@@ -1394,10 +1407,11 @@ document.getElementById("reader-audio-btn")?.addEventListener("click", () => {
 
 function loadSurahAudio({ autoplay = false } = {}) {
     if (!selectedSurah || !currentSurahVerses.length) return;
-    // Use FULL SURAH audio (one continuous track, not ayah-by-ayah)
-    const url = getFullSurahAudioUrl(selectedSurah, currentReciterId);
+    // Ayah-by-ayah audio (auto-advances to next ayah, scrolls to active verse)
+    const url = getAyahAudioUrl(selectedSurah, 1, currentReciterId);
     audioPlayer.src = url;
     audioPlayer.load();
+    surahAyahCursor = 1;
     if (autoplay) audioPlayer.play().catch(() => { });
 }
 
@@ -1406,8 +1420,8 @@ let surahAyahCursor = 1;
 
 function playSurahFromAyah(ayahNum) {
     surahAyahCursor = ayahNum;
-    // Use full surah audio — play from start (user can seek if needed)
-    const url = getFullSurahAudioUrl(selectedSurah, currentReciterId);
+    // Ayah-by-ayah audio — plays one ayah, auto-advances to next, scrolls to active verse
+    const url = getAyahAudioUrl(selectedSurah, ayahNum, currentReciterId);
     audioPlayer.src = url;
     audioPlayer.load();
     audioPlayer.play().catch(() => { });
@@ -1415,13 +1429,24 @@ function playSurahFromAyah(ayahNum) {
     syncMiniPlayIcon(true);
     showFloatingPlayer(
         SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah",
-        `Playing Full Surah`
+        `Ayah ${ayahNum}`
     );
     scrollToActiveVerse(ayahNum);
 }
 
 playButton?.addEventListener("click", () => {
-    if (!audioPlayer.src) return;
+    if (!audioPlayer.src) {
+        // If no audio loaded, load the surah audio starting from ayah 1
+        loadSurahAudio({ autoplay: true });
+        if (playButton) playButton.innerHTML = `<i data-lucide="pause"></i>`;
+        activeAudioMode = "surah";
+        surahAyahCursor = 1;
+        syncMiniPlayIcon(true);
+        showFloatingPlayer(SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah", `Ayah 1`);
+        scrollToActiveVerse(1);
+        lucide.createIcons();
+        return;
+    }
     // Pause per-ayah player if running — the two modes must not play simultaneously
     if (!ayahPlayer.paused) {
         ayahPlayer.pause();
@@ -1432,7 +1457,8 @@ playButton?.addEventListener("click", () => {
         audioPlayer.play().catch(() => { });
         if (playButton) playButton.innerHTML = `<i data-lucide="pause"></i>`;
         syncMiniPlayIcon(true);
-        showFloatingPlayer(SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah", `Full Surah`);
+        showFloatingPlayer(SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah", `Ayah ${surahAyahCursor}`);
+        scrollToActiveVerse(surahAyahCursor);
     } else {
         audioPlayer.pause();
         if (playButton) playButton.innerHTML = `<i data-lucide="play"></i>`;
@@ -1452,29 +1478,30 @@ audioPlayer.addEventListener("timeupdate", () => {
 progressBar2?.addEventListener("input", () => { audioPlayer.currentTime = progressBar2.value; });
 
 audioPlayer.addEventListener("ended", () => {
-    // Full surah audio finished playing
     if (repeatMode === "surah") {
-        audioPlayer.currentTime = 0;
+        audioPlayer.currentTime = 0; audioPlayer.play().catch(() => { });
+        showToast("Repeating…"); return;
+    }
+    // Auto-advance to next ayah (ayah-by-ayah playback)
+    const nextAyah = surahAyahCursor + 1;
+    if (nextAyah <= totalAyahsInSurah) {
+        surahAyahCursor = nextAyah;
+        audioPlayer.src = getAyahAudioUrl(selectedSurah, nextAyah, currentReciterId);
+        audioPlayer.load();
         audioPlayer.play().catch(() => { });
-        showToast("Repeating surah…");
-        return;
-    }
-    if (repeatMode === "quran") {
-        if (selectedSurah < 114) {
-            selectedSurah++;
-            openReader(selectedSurah).then(() => {
-                setTimeout(() => {
-                    const url = getFullSurahAudioUrl(selectedSurah, currentReciterId);
-                    audioPlayer.src = url;
-                    audioPlayer.play().catch(() => { });
-                }, 500);
-            });
+        showFloatingPlayer(SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah", `Ayah ${nextAyah}`);
+        scrollToActiveVerse(nextAyah);
+    } else {
+        // Surah done
+        if (repeatMode === "quran") {
+            selectedSurah = selectedSurah < 114 ? selectedSurah + 1 : 1;
+            openReader(selectedSurah).then(() => { playSurahFromAyah(1); });
+        } else {
+            if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
+            syncMiniPlayIcon(false);
+            surahAyahCursor = 1;
         }
-        return;
     }
-    // Just stop — full surah is done
-    if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
-    syncMiniPlayIcon(false);
 });
 
 // Speed button
@@ -1521,12 +1548,43 @@ document.addEventListener("change", e => {
 // FAVOURITE RECITER
 // ============================================================
 
+// FAVOURITE RECITER — toggle heart icon, save to localStorage
+function isFavoriteReciter(reciterId) {
+    return localStorage.getItem("favoriteReciter") === reciterId;
+}
+
+function updateFavoriteReciterButton() {
+    const btn = document.getElementById("favorite-reciter");
+    if (!btn) return;
+    const isFav = isFavoriteReciter(currentReciterId);
+    // Use Font Awesome for filled vs outline heart
+    btn.innerHTML = isFav
+        ? '<i class="fa-solid fa-heart" style="color: var(--reader-accent); font-size: 1.1rem;"></i>'
+        : '<i class="fa-regular fa-heart" style="color: var(--reader-subtext); font-size: 1.1rem;"></i>';
+    btn.style.background = isFav ? "rgba(var(--reader-accent-rgb), 0.18)" : "var(--reader-tool-bg)";
+    btn.title = isFav ? "Remove from favourites" : "Add to favourites";
+}
+
 document.getElementById("favorite-reciter")?.addEventListener("click", function () {
-    localStorage.setItem("reciterId", currentReciterId);
-    this.innerHTML = `<i data-lucide="heart"></i>`;
-    this.style.color = "var(--reader-accent)";
-    lucide.createIcons();
-    showToast("Reciter saved as favourite ✓");
+    const isFav = isFavoriteReciter(currentReciterId);
+    if (isFav) {
+        // Unfavorite
+        localStorage.removeItem("favoriteReciter");
+        showToast("Removed from favourites");
+    } else {
+        // Favorite
+        localStorage.setItem("favoriteReciter", currentReciterId);
+        localStorage.setItem("reciterId", currentReciterId);
+        showToast("Reciter saved as favourite ✓");
+    }
+    updateFavoriteReciterButton();
+});
+
+// Update favorite button when reciter changes
+document.addEventListener("change", e => {
+    if (e.target.id === "reciter-select2") {
+        setTimeout(updateFavoriteReciterButton, 100);
+    }
 });
 
 // ============================================================
@@ -1576,11 +1634,11 @@ document.addEventListener("click", async e => {
         ayahPlayer.onended = () => {
             playBtn.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons();
             activePlayButton = null;
-            currentAyahPlaying = null;
+            // Keep currentAyahPlaying set so mini player next/prev still works
             syncMiniPlayIcon(false);
             // NO auto-advance — only the clicked verse plays, then stops.
-            // Users can click the next verse manually, or use the audio drawer
-            // to play the whole surah.
+            // Users can click the next verse manually, or use the mini player
+            // next/prev buttons, or use the audio drawer to play the whole surah.
         };
     } catch (err) {
         console.error("Ayah play failed:", err);
@@ -1614,22 +1672,73 @@ miniPlay?.addEventListener("click", () => {
 });
 
 miniNext?.addEventListener("click", () => {
-    if (activeAudioMode === "ayah") {
-        document.querySelector(`.verse-card[data-ayah="${currentAyahPlaying + 1}"] .play-btn`)?.click();
-    } else if (selectedSurah < 114) {
+    if (activeAudioMode === "ayah" && currentAyahPlaying) {
+        // Play the next ayah directly
+        const nextAyah = currentAyahPlaying + 1;
+        const nextBtn = document.querySelector(`.verse-card[data-ayah="${nextAyah}"] .play-btn`);
+        if (nextBtn) {
+            nextBtn.click();
+        } else if (nextAyah <= totalAyahsInSurah) {
+            // Button not found but ayah exists — play it directly
+            playSingleAyah(selectedSurah, nextAyah);
+        }
+    } else if (activeAudioMode === "surah" && selectedSurah < 114) {
+        // Surah mode — go to next surah
         selectedSurah++;
         openReader(selectedSurah).then(() => playSurahFromAyah(1));
     }
 });
 
 miniPrev?.addEventListener("click", () => {
-    if (activeAudioMode === "ayah") {
-        document.querySelector(`.verse-card[data-ayah="${currentAyahPlaying - 1}"] .play-btn`)?.click();
-    } else if (selectedSurah > 1) {
+    if (activeAudioMode === "ayah" && currentAyahPlaying) {
+        // Play the previous ayah directly
+        const prevAyah = currentAyahPlaying - 1;
+        if (prevAyah >= 1) {
+            const prevBtn = document.querySelector(`.verse-card[data-ayah="${prevAyah}"] .play-btn`);
+            if (prevBtn) {
+                prevBtn.click();
+            } else {
+                playSingleAyah(selectedSurah, prevAyah);
+            }
+        }
+    } else if (activeAudioMode === "surah" && selectedSurah > 1) {
+        // Surah mode — go to previous surah
         selectedSurah--;
         openReader(selectedSurah).then(() => playSurahFromAyah(1));
     }
 });
+
+// Play a single ayah without needing a verse card button (for mini player next/prev)
+async function playSingleAyah(surah, ayah) {
+    try {
+        // Stop any current audio
+        if (!audioPlayer.paused) audioPlayer.pause();
+        if (!ayahPlayer.paused) ayahPlayer.pause();
+        if (activePlayButton) {
+            activePlayButton.innerHTML = `<i data-lucide="play"></i>`;
+            lucide.createIcons();
+        }
+
+        ayahPlayer.src = getAyahAudioUrl(surah, ayah, currentReciterId);
+        await ayahPlayer.play();
+        activeAudioMode = "ayah";
+        currentAyahPlaying = ayah;
+        syncMiniPlayIcon(true);
+        scrollToActiveVerse(ayah);
+        showFloatingPlayer(
+            document.getElementById("reader-title")?.textContent || "Surah",
+            `Ayah ${ayah}`
+        );
+
+        ayahPlayer.onended = () => {
+            syncMiniPlayIcon(false);
+            // Keep currentAyahPlaying so next/prev still works
+        };
+    } catch (err) {
+        console.error("Single ayah play failed:", err);
+        showToast("Could not play audio. Try another reciter.");
+    }
+}
 
 // ============================================================
 // BOOKMARK VERSE (reader)
@@ -2009,27 +2118,27 @@ const GAMIFICATION = {
 
     // Achievement definitions
     achievements: [
-        { id: "first-page", icon: "book-open", name: "First Steps", desc: "Read your first page", check: s => s.pagesRead >= 1 },
-        { id: "first-surah", icon: "book-check", name: "Surah Complete", desc: "Complete your first surah", check: s => s.completedSurahs >= 1 },
-        { id: "streak-3", icon: "flame", name: "On Fire", desc: "3-day reading streak", check: s => s.streak >= 3 },
-        { id: "streak-7", icon: "zap", name: "Week Warrior", desc: "7-day reading streak", check: s => s.streak >= 7 },
-        { id: "streak-30", icon: "award", name: "Monthly Master", desc: "30-day reading streak", check: s => s.streak >= 30 },
-        { id: "pages-50", icon: "layers", name: "Half Century", desc: "Read 50 pages", check: s => s.pagesRead >= 50 },
-        { id: "pages-100", icon: "library", name: "Century Club", desc: "Read 100 pages", check: s => s.pagesRead >= 100 },
-        { id: "juz-1", icon: "bookmark", name: "Juz Explorer", desc: "Explore your first juz", check: s => s.juzExplored >= 1 },
-        { id: "surahs-10", icon: "trophy", name: "Dedicated Reader", desc: "Complete 10 surahs", check: s => s.completedSurahs >= 10 },
-        { id: "time-1h", icon: "clock", name: "Hour Power", desc: "Read for 1 hour total", check: s => s.readingTime >= 3600 },
-        { id: "challenges-5", icon: "target", name: "Challenge Chaser", desc: "Complete 5 daily challenges", check: s => s.challengesCompleted >= 5 },
-        { id: "verses-100", icon: "scroll", name: "Verse Voyager", desc: "Read 100 verses", check: s => s.versesRead >= 100 },
+        { id: "first-page",    icon: "book-open",       name: "First Steps",       desc: "Read your first page",          check: s => s.pagesRead >= 1 },
+        { id: "first-surah",   icon: "book-check",      name: "Surah Complete",     desc: "Complete your first surah",     check: s => s.completedSurahs >= 1 },
+        { id: "streak-3",      icon: "flame",            name: "On Fire",            desc: "3-day reading streak",          check: s => s.streak >= 3 },
+        { id: "streak-7",      icon: "zap",              name: "Week Warrior",       desc: "7-day reading streak",          check: s => s.streak >= 7 },
+        { id: "streak-30",     icon: "award",            name: "Monthly Master",     desc: "30-day reading streak",         check: s => s.streak >= 30 },
+        { id: "pages-50",      icon: "layers",           name: "Half Century",       desc: "Read 50 pages",                 check: s => s.pagesRead >= 50 },
+        { id: "pages-100",     icon: "library",          name: "Century Club",       desc: "Read 100 pages",                check: s => s.pagesRead >= 100 },
+        { id: "juz-1",         icon: "bookmark",         name: "Juz Explorer",       desc: "Explore your first juz",        check: s => s.juzExplored >= 1 },
+        { id: "surahs-10",     icon: "trophy",           name: "Dedicated Reader",   desc: "Complete 10 surahs",            check: s => s.completedSurahs >= 10 },
+        { id: "time-1h",       icon: "clock",            name: "Hour Power",         desc: "Read for 1 hour total",         check: s => s.readingTime >= 3600 },
+        { id: "challenges-5",  icon: "target",           name: "Challenge Chaser",   desc: "Complete 5 daily challenges",   check: s => s.challengesCompleted >= 5 },
+        { id: "verses-100",    icon: "scroll",           name: "Verse Voyager",      desc: "Read 100 verses",               check: s => s.versesRead >= 100 },
     ],
 
     // Daily challenges (cycled by day)
     challenges: [
-        { title: "Read 3 pages of the Qur'an", desc: "Complete this challenge to earn 50 XP", target: 3, unit: "pages", xp: 50 },
-        { title: "Read 5 pages of the Qur'an", desc: "Complete this challenge to earn 80 XP", target: 5, unit: "pages", xp: 80 },
-        { title: "Complete a full surah", desc: "Complete this challenge to earn 100 XP", target: 1, unit: "surah", xp: 100 },
-        { title: "Read for 10 minutes", desc: "Complete this challenge to earn 60 XP", target: 10, unit: "minutes", xp: 60 },
-        { title: "Read 10 verses", desc: "Complete this challenge to earn 40 XP", target: 10, unit: "verses", xp: 40 },
+        { title: "Read 3 pages of the Qur'an",           desc: "Complete this challenge to earn 50 XP",  target: 3,  unit: "pages",  xp: 50 },
+        { title: "Read 5 pages of the Qur'an",           desc: "Complete this challenge to earn 80 XP",  target: 5,  unit: "pages",  xp: 80 },
+        { title: "Complete a full surah",                desc: "Complete this challenge to earn 100 XP", target: 1,  unit: "surah",  xp: 100 },
+        { title: "Read for 10 minutes",                  desc: "Complete this challenge to earn 60 XP",  target: 10, unit: "minutes",xp: 60 },
+        { title: "Read 10 verses",                       desc: "Complete this challenge to earn 40 XP",  target: 10, unit: "verses", xp: 40 },
     ],
 };
 
@@ -2589,23 +2698,23 @@ setTimeout(() => {
 // ============================================================
 
 const READER_TRANSLATIONS = {
-    20: { name: "Saheeh International", lang: "en" },
-    95: { name: "Maududi (Tafhim)", lang: "en" },
-    84: { name: "Mufti Taqi Usmani", lang: "en" },
-    22: { name: "Yusuf Ali", lang: "en" },
-    19: { name: "Pickthall", lang: "en" },
-    85: { name: "Abdul Haleem", lang: "en" },
+    20:  { name: "Saheeh International", lang: "en" },
+    95:  { name: "Maududi (Tafhim)", lang: "en" },
+    84:  { name: "Mufti Taqi Usmani", lang: "en" },
+    22:  { name: "Yusuf Ali", lang: "en" },
+    19:  { name: "Pickthall", lang: "en" },
+    85:  { name: "Abdul Haleem", lang: "en" },
     203: { name: "Hilali & Khan", lang: "en" },
     149: { name: "Bridges' Translation", lang: "en" },
-    97: { name: "Tafheem-ul-Quran", lang: "ur" },
+    97:  { name: "Tafheem-ul-Quran", lang: "ur" },
     234: { name: "Fatah Muhammad Jalandhri", lang: "ur" },
-    33: { name: "Indonesian MoRA", lang: "id" },
-    31: { name: "Hamidullah", lang: "fr" },
-    77: { name: "Diyanet Isleri", lang: "tr" },
-    45: { name: "Kuliev", lang: "ru" },
-    56: { name: "Ma Jian", lang: "zh" },
+    33:  { name: "Indonesian MoRA", lang: "id" },
+    31:  { name: "Hamidullah", lang: "fr" },
+    77:  { name: "Diyanet Isleri", lang: "tr" },
+    45:  { name: "Kuliev", lang: "ru" },
+    56:  { name: "Ma Jian", lang: "zh" },
     103: { name: "Helmi Nasr", lang: "pt" },
-    54: { name: "Maulana Junagarhi", lang: "hi" },
+    54:  { name: "Maulana Junagarhi", lang: "hi" },
 };
 
 // Load saved preferences
@@ -2675,15 +2784,14 @@ function initReaderSelectors() {
 
     if (trSelect) {
         trSelect.value = readerTranslationId;
-        trSelect.addEventListener("change", () => {
+        trSelect.addEventListener("change", async () => {
             readerTranslationId = trSelect.value;
             localStorage.setItem("readerTranslation", readerTranslationId);
             // Clear cache so new translation is fetched
             Object.keys(translationCache).forEach(k => delete translationCache[k]);
-            // Re-render verses with new translation
-            if (currentSurahVerses.length) {
-                renderReaderVerses(currentSurahVerses, selectedSurah);
-            }
+            // Inject the new translation into existing verse cards immediately
+            // (no re-render needed — just update the .verse-translation divs)
+            await injectTranslationsAndTafsir();
             showToast(`Translation: ${trSelect.options[trSelect.selectedIndex].text}`);
         });
     }
@@ -2693,10 +2801,8 @@ function initReaderSelectors() {
         tafsirSelect.addEventListener("change", () => {
             readerTafsirSource = tafsirSelect.value;
             localStorage.setItem("readerTafsir", readerTafsirSource);
-            // Re-render verses to show/hide tafsir
-            if (currentSurahVerses.length) {
-                renderReaderVerses(currentSurahVerses, selectedSurah);
-            }
+            // Remove any existing tafsir panels (they'll reload with new source when clicked)
+            document.querySelectorAll(".tafsir-panel").forEach(p => p.remove());
             showToast(`Tafsir: ${tafsirSelect.options[tafsirSelect.selectedIndex].text}`);
         });
     }
@@ -2704,7 +2810,7 @@ function initReaderSelectors() {
 
 // Patch the existing openReader to also fetch translations
 const originalOpenReader = openReader;
-openReader = async function (surahNum, scrollToAyah = null) {
+openReader = async function(surahNum, scrollToAyah = null) {
     await originalOpenReader(surahNum, scrollToAyah);
     // After verses are rendered, fetch and inject translations + tafsir
     if (currentSurahVerses.length) {
@@ -2715,7 +2821,7 @@ openReader = async function (surahNum, scrollToAyah = null) {
 // Inject translations and tafsir into the existing verse cards
 async function injectTranslationsAndTafsir() {
     const surahNum = selectedSurah;
-
+    
     // If using the default quran-json translation (id "20" = Saheeh International, which
     // is close to the built-in), keep the built-in v.translation text — no API call needed.
     // Only fetch from API if a different translation is selected.
@@ -2832,10 +2938,10 @@ function getIslamicDate() {
             else if (part.type === 'month') monthNum = parseInt(part.value);
             else if (part.type === 'year') year = part.value;
         }
-
+        
         // Use our own month name array to ensure correct Hijri month name
         const monthName = HIJRI_MONTHS[monthNum - 1] || 'Muharram';
-
+        
         return {
             date: `${monthName} ${day} ${year}`,
             day: '',
@@ -2861,10 +2967,10 @@ function calculateHijriFallback() {
     const monthNum = Math.floor((24 * l3) / 709);
     const day = l3 - Math.floor((709 * monthNum) / 24);
     const year = 30 * n + j - 30;
-
+    
     const months = ['Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani", 'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban", 'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'];
     const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
-
+    
     return {
         date: `${months[monthNum - 1] || 'Muharram'} ${day} ${year}`,
         day: dayOfWeek,
@@ -2894,7 +3000,7 @@ function getHijriWeekNumber() {
 function getGregorianDate() {
     const now = new Date();
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
+                    'July', 'August', 'September', 'October', 'November', 'December'];
     return {
         date: `${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`,
         day: '',
@@ -2911,7 +3017,7 @@ function updateCalendarCard() {
     const weekEl = document.getElementById("week-number");
     const weekLabelEl = document.querySelector(".hcc-week-label");
     if (!dateEl) return;
-
+    
     if (calendarMode === 'hijri') {
         const hijri = getIslamicDate();
         dateEl.textContent = hijri.date;

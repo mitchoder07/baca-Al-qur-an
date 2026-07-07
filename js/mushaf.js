@@ -35,7 +35,7 @@ const API = {
 
     // Tafsir (English) — spa5k CDN
     tafsirIbnKathir: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${s}/${a}.json`,
-    tafsirMaarif: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
+    tafsirMaarif:    (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
     // Arabic Jalalayn — alquran.cloud (per-ayah endpoint)
     tafsirJalalaynAr: (s, a) => `https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.jalalayn`,
 
@@ -50,26 +50,26 @@ const API = {
 
 // Translation resource IDs on quran.com API (verified against /resources/translations)
 const TRANSLATIONS = [
-    { id: 20, code: "en.sahih", name: "Saheeh International", lang: "English", author: "Saheeh International" },
-    { id: 95, code: "en.maududi", name: "Maududi (Tafhim)", lang: "English", author: "Sayyid Abul Ala Maududi" },
-    { id: 84, code: "en.usmani", name: "Mufti Taqi Usmani", lang: "English", author: "Mufti Taqi Usmani" },
-    { id: 22, code: "en.yusufali", name: "Yusuf Ali", lang: "English", author: "Abdullah Yusuf Ali" },
-    { id: 19, code: "en.pickthall", name: "Pickthall", lang: "English", author: "M. Pickthall" },
-    { id: 85, code: "en.haleem", name: "Abdul Haleem", lang: "English", author: "M.A.S. Abdel Haleem" },
-    { id: 203, code: "en.hilali", name: "Hilali & Khan", lang: "English", author: "Al-Hilali & Khan" },
-    { id: 149, code: "en.bridges", name: "Bridges' Translation", lang: "English", author: "Fadel Soliman" },
-    { id: 57, code: "en.translit", name: "Transliteration", lang: "Roman", author: "quran.com" },
-    { id: 97, code: "ur.maududi", name: "Tafheem-ul-Quran (Maududi)", lang: "Urdu", author: "Syed Abu Ali Maududi" },
-    { id: 234, code: "ur.jalandhri", name: "Fatah Muhammad Jalandhri", lang: "Urdu", author: "Fatah Muhammad Jalandhri" },
-    { id: 819, code: "ur.wahiduddin", name: "Maulana Wahiduddin Khan", lang: "Urdu", author: "Maulana Wahiduddin Khan" },
-    { id: 33, code: "id.indonesian", name: "Indonesian Islamic Affairs Ministry", lang: "Indonesian", author: "Indonesian Islamic Affairs Min." },
-    { id: 134, code: "id.kfqc", name: "King Fahad Quran Complex", lang: "Indonesian", author: "KFQC" },
-    { id: 31, code: "fr.hamidullah", name: "Hamidullah (French)", lang: "French", author: "Muhammad Hamidullah" },
-    { id: 77, code: "tr.diyanet", name: "Diyanet Isleri (Turkish)", lang: "Turkish", author: "Diyanet Isleri" },
-    { id: 45, code: "ru.kuliev", name: "Kuliev (Russian)", lang: "Russian", author: "Elmir Kuliev" },
-    { id: 56, code: "zh.majian", name: "Ma Jian (Chinese)", lang: "Chinese", author: "Ma Jian" },
-    { id: 103, code: "pt.nasr", name: "Helmi Nasr (Portuguese)", lang: "Portuguese", author: "Helmi Nasr" },
-    { id: 54, code: "hi.junagarhi", name: "Maulana Junagarhi (Hindi)", lang: "Hindi", author: "Maulana Junagarhi" }
+    { id: 20,  code: "en.sahih",        name: "Saheeh International",          lang: "English",   author: "Saheeh International" },
+    { id: 95,  code: "en.maududi",      name: "Maududi (Tafhim)",              lang: "English",   author: "Sayyid Abul Ala Maududi" },
+    { id: 84,  code: "en.usmani",       name: "Mufti Taqi Usmani",             lang: "English",   author: "Mufti Taqi Usmani" },
+    { id: 22,  code: "en.yusufali",     name: "Yusuf Ali",                     lang: "English",   author: "Abdullah Yusuf Ali" },
+    { id: 19,  code: "en.pickthall",    name: "Pickthall",                     lang: "English",   author: "M. Pickthall" },
+    { id: 85,  code: "en.haleem",       name: "Abdul Haleem",                  lang: "English",   author: "M.A.S. Abdel Haleem" },
+    { id: 203, code: "en.hilali",       name: "Hilali & Khan",                 lang: "English",   author: "Al-Hilali & Khan" },
+    { id: 149, code: "en.bridges",      name: "Bridges' Translation",          lang: "English",   author: "Fadel Soliman" },
+    { id: 57,  code: "en.translit",     name: "Transliteration",               lang: "Roman",     author: "quran.com" },
+    { id: 97,  code: "ur.maududi",      name: "Tafheem-ul-Quran (Maududi)",    lang: "Urdu",      author: "Syed Abu Ali Maududi" },
+    { id: 234, code: "ur.jalandhri",    name: "Fatah Muhammad Jalandhri",      lang: "Urdu",      author: "Fatah Muhammad Jalandhri" },
+    { id: 819, code: "ur.wahiduddin",   name: "Maulana Wahiduddin Khan",       lang: "Urdu",      author: "Maulana Wahiduddin Khan" },
+    { id: 33,  code: "id.indonesian",   name: "Indonesian Islamic Affairs Ministry", lang: "Indonesian", author: "Indonesian Islamic Affairs Min." },
+    { id: 134, code: "id.kfqc",         name: "King Fahad Quran Complex",      lang: "Indonesian", author: "KFQC" },
+    { id: 31,  code: "fr.hamidullah",   name: "Hamidullah (French)",           lang: "French",    author: "Muhammad Hamidullah" },
+    { id: 77,  code: "tr.diyanet",      name: "Diyanet Isleri (Turkish)",      lang: "Turkish",   author: "Diyanet Isleri" },
+    { id: 45,  code: "ru.kuliev",       name: "Kuliev (Russian)",              lang: "Russian",   author: "Elmir Kuliev" },
+    { id: 56,  code: "zh.majian",       name: "Ma Jian (Chinese)",             lang: "Chinese",   author: "Ma Jian" },
+    { id: 103, code: "pt.nasr",         name: "Helmi Nasr (Portuguese)",       lang: "Portuguese",author: "Helmi Nasr" },
+    { id: 54,  code: "hi.junagarhi",    name: "Maulana Junagarhi (Hindi)",     lang: "Hindi",     author: "Maulana Junagarhi" }
 ];
 
 // Tajweed rules mapping for alquran.cloud's quran-tajweed edition.
@@ -384,7 +384,7 @@ function cleanText(s) {
     let out = String(s).replace(/<[^>]*>/g, "");
     // Decode a few common entities
     out = out.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
+             .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
     return out;
 }
 
@@ -440,7 +440,7 @@ function persistState() {
     localStorage.setItem("reciterId", state.reciterId);
     localStorage.setItem("mushafTheme", state.theme);
     localStorage.setItem("mushafTajweed", state.tajweedOn);
-    localStorage.setItem("mushafArabicFont", state.arabicFont);
+        localStorage.setItem("mushafArabicFont", state.arabicFont);
     localStorage.setItem("mushafTranslationFont", state.translationFont);
     localStorage.setItem("mushafBookmarks", JSON.stringify(state.bookmarks));
 }
@@ -738,7 +738,7 @@ function init() {
     }
 
     // Apply display mode (set active button)
-
+    
 
     // Render reciter list
     renderReciterList("");
@@ -1480,7 +1480,7 @@ function renderReciterList(query) {
                 const { surah, ayah } = state.currentAyahAudio;
                 el.ayahAudio.src = API.ayahAudio(surah, ayah, state.reciterId);
                 el.ayahAudio.load();
-                if (wasPlaying) el.ayahAudio.play().catch(() => { });
+                if (wasPlaying) el.ayahAudio.play().catch(() => {});
             }
             showToast(`Reciter: ${reciter?.name}`);
         });
@@ -1509,7 +1509,7 @@ async function loadTafsirInDrawer(surah, ayah) {
             const data = await fetchSurahData(surah);
             const v = data.verses.find(x => x.ayah === ayah);
             if (v) arabicText = v.text;
-        } catch (e) { }
+        } catch (e) {}
     }
 
     el.tafsirContent.innerHTML = `
@@ -1518,10 +1518,11 @@ async function loadTafsirInDrawer(surah, ayah) {
             <div class="tv-ref">${escapeHtml(meta?.transliteration || "")} · Ayah ${ayah}</div>
         </div>
         <div class="tafsir-loading">
-            <i data-lucide="loader-2" class="spin"></i> Loading ${state.tafsirSource === "jalalayn" ? "Jalalayn (Arabic)" :
-            state.tafsirSource === "maarif" ? "Ma'arif-ul-Quran" :
+            <i data-lucide="loader-2" class="spin"></i> Loading ${
+                state.tafsirSource === "jalalayn" ? "Jalalayn (Arabic)" :
+                state.tafsirSource === "maarif" ? "Ma'arif-ul-Quran" :
                 "Ibn Kathir"
-        } tafsir…
+            } tafsir…
         </div>`;
     if (window.lucide) lucide.createIcons();
 
@@ -1564,7 +1565,7 @@ function playAyah(surah, ayah) {
         state.currentAyahAudio.surah === surah &&
         state.currentAyahAudio.ayah === ayah) {
         if (el.ayahAudio.paused) {
-            el.ayahAudio.play().catch(() => { });
+            el.ayahAudio.play().catch(() => {});
             state.isPlaying = true;
             updatePlayButtonIcon(surah, ayah, true);
         } else {
@@ -1636,7 +1637,7 @@ el.ayahAudio.addEventListener("ended", () => {
     // If repeat is on, replay the current verse
     if (mushafRepeatOn && state.currentAyahAudio) {
         el.ayahAudio.currentTime = 0;
-        el.ayahAudio.play().catch(() => { });
+        el.ayahAudio.play().catch(() => {});
         return;
     }
     // Otherwise, reset state and UI to "stopped"
@@ -1651,7 +1652,7 @@ el.ayahAudio.addEventListener("ended", () => {
 
 el.miniPlay?.addEventListener("click", () => {
     if (el.ayahAudio.paused) {
-        el.ayahAudio.play().catch(() => { });
+        el.ayahAudio.play().catch(() => {});
         el.miniPlay.innerHTML = `<i data-lucide="pause"></i>`;
         state.isPlaying = true;
     } else {
@@ -2236,7 +2237,7 @@ document.addEventListener("keydown", e => {
     }
     // Escape closes modals/drawers
     if (e.key === "Escape") {
-        if (!el.searchModal.classList.contains("open")) { } else { closeSearchModal(); return; }
+        if (!el.searchModal.classList.contains("open")) {} else { closeSearchModal(); return; }
         if (!el.wordModalOverlay.hidden) { el.wordModalOverlay.hidden = true; state.wordModalContext = null; return; }
         if (!el.ayahPopover.hidden) { el.ayahPopover.hidden = true; return; }
         closeAllDrawers();

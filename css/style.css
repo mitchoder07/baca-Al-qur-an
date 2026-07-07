@@ -1,20 +1,60 @@
-/* Google Font */
+/* ============================================================
+   BACA — MAIN STYLESHEET
+   ============================================================
+   TABLE OF CONTENTS
+   ------------------------------------------------------------
+   1.  Fonts & Root Variables
+   2.  Reset & Base
+   3.  Background Glow (disabled)
+   4.  Navbar & Mobile Nav
+   5.  Hero Section
+   6.  Daily Ayah Section
+   7.  Hijri Calendar Widget
+   8.  Audio Player (Home)
+   9.  Ayah / Surah Explorer
+   10. Topics Section
+   11. Journeys Section
+   12. Continue Reading Section
+   13. Continue Reading Hint (toast)
+   14. Featured Reciters Section
+   15. Daily Reflection Section
+   16. Surah Modal
+   17. Reader Modal (Mushaf)
+   18. Reader Modal — Settings Drawer
+   19. Reader Modal — Audio Drawer
+   20. Reader Modal — Floating Mini Player
+   21. Reader Modal — Translation & Tafsir Blocks
+   22. Search Modal
+   23. Reciter Picker Modal
+   24. Bookmarks Section
+   25. Reading Progress / Gamification
+   26. Daily Challenge
+   27. Achievements
+   28. Footer
+   29. Toast Notifications
+   30. Light Mode Overrides
+   31. Responsive Media Queries
+   ============================================================ */
+
+/* ============================================================
+   1. FONTS & ROOT VARIABLES
+   ============================================================ */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
-
 @import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
 
-
 :root {
-  /* --primary: #f5d06f; */
   --primary: #10b981;
-  /* --primary: #22c55e; */
   --dark: #0f172a;
   --dark-light: #1e293b;
   --white: #ffffff;
   --text: #cbd5e1;
   --border: rgba(255, 255, 255, 0.08);
 }
+
+/* ============================================================
+      2. RESET & BASE
+      ============================================================ */
 
 * {
   margin: 0;
@@ -33,7 +73,84 @@ body {
   overflow: auto;
 }
 
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  background: linear-gradient(
+    120deg,
+    #34d399 0%,
+    #10b981 35%,
+    #06b6d4 70%,
+    #38bdf8 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-header p {
+  color: var(--text);
+  max-width: 600px;
+  margin: auto;
+}
+
+/* Arabic font — applied site-wide to any Arabic text elements */
+.ayah-arabic,
+.surah-english,
+.modal-arabic,
+.bookmark-arabic {
+  font-family: "Noto Naskh Arabic", "Amiri", serif;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDrawer {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+      3. BACKGROUND GLOW (currently disabled — kept for reference)
+      ============================================================ */
+
 .bg-glow {
+  display: none !important; /* Disabled site-wide */
   position: fixed;
   border-radius: 50%;
   filter: blur(100px);
@@ -69,56 +186,9 @@ body {
   animation: float 12s ease-in-out infinite;
 }
 
-.section-header h2 {
-  background: linear-gradient(120deg,
-      #34d399 0%,
-      #10b981 35%,
-      #06b6d4 70%,
-      #38bdf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  /* Keep existing size/weight intact */
-  font-size: 2.5rem;
-  font-weight: 700;
-}
-
-/* Light mode: slightly warmer gradient so it reads on white */
-/* Light mode variable overrides — make the whole site light when active */
-body.light-mode {
-  --dark: #f8fafc;
-  --dark-light: #ffffff;
-  --white: #0f172a;
-  --text: #475569;
-  --border: rgba(0, 0, 0, 0.08);
-}
-
-body.light-mode .section-header h2 {
-  background: linear-gradient(120deg,
-      #059669 0%,
-      #0d9488 45%,
-      #0284c7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Override the plain color rule from the existing light-mode block
-   (that block sets color: #0f172a which would fight the gradient) */
-body.light-mode .section-header h2 {
-  color: unset;
-}
-
-/* =====================================================
-   ARABIC FONT — upgrade Amiri references site-wide
-   ===================================================== */
-
-.ayah-arabic,
-.surah-english,
-.modal-arabic,
-.bookmark-arabic {
-  font-family: "Noto Naskh Arabic", "Amiri", serif;
-}
+/* ============================================================
+      4. NAVBAR & MOBILE NAV
+      ============================================================ */
 
 .navbar {
   position: fixed;
@@ -162,15 +232,8 @@ body.light-mode .section-header h2 {
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.8px;
-  background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
   font-family: "Poppins", sans-serif;
-}
-
-body.light-mode .logo .logo-text {
-  background: linear-gradient(135deg, #059669 0%, #0891b2 50%, #4f46e5 100%);
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -229,7 +292,7 @@ body.light-mode .logo .logo-text {
   border-bottom: 1px solid var(--border);
   padding: 1rem 8%;
   flex-direction: column;
-  gap: .8rem;
+  gap: 0.8rem;
   z-index: 999;
 }
 
@@ -242,9 +305,9 @@ body.light-mode .logo .logo-text {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   border-bottom: 1px solid var(--border);
-  transition: color .2s;
+  transition: color 0.2s;
 }
 
 .mobile-nav a:last-child {
@@ -255,7 +318,9 @@ body.light-mode .logo .logo-text {
   color: var(--primary);
 }
 
-/* Hero Section */
+/* ============================================================
+      5. HERO SECTION
+      ============================================================ */
 
 .hero {
   min-height: 100vh;
@@ -331,127 +396,26 @@ body.light-mode .logo .logo-text {
   color: white;
 }
 
+/* ============================================================
+      6. DAILY AYAH SECTION
+      ============================================================ */
+
 .daily-ayah {
   padding: 6rem 8%;
 }
 
-.section-header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.section-header h2 {
-  font-size: 2.5rem;
-  margin-bottom: 0.8rem;
-  font-weight: 700;
-}
-
-.section-header p {
-  color: var(--text);
-  max-width: 600px;
-  margin: auto;
-}
-
-/* Daily Tafsir Panel */
-
-.daily-tafsir-panel {
-  display: none;
-  max-width: 900px;
-  margin: 1.5rem auto 0;
-  background: var(--dark-light);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--primary);
-  border-radius: 20px;
-  padding: 1.5rem 1.8rem;
-  animation: fadeDrawer .22s ease;
-}
-
-.daily-tafsir-panel.active {
-  display: block;
-}
-
-.daily-tafsir-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.daily-tafsir-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: .3rem .85rem;
-  border-radius: 999px;
-  background: rgba(16, 185, 129, 0.12);
-  color: var(--primary);
-  font-size: .75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .6px;
-}
-
-.daily-tafsir-close {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text);
-  cursor: pointer;
+.daily-ayah-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background .2s;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  text-align: center;
 }
 
-.daily-tafsir-close:hover {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--primary);
+.daily-ayah-title-wrap {
+  text-align: center;
 }
-
-.daily-tafsir-close svg {
-  width: 14px;
-  height: 14px;
-}
-
-.daily-tafsir-body {
-  color: var(--text);
-  font-size: .93rem;
-  line-height: 1.85;
-  margin: 0;
-}
-
-.daily-tafsir-loading {
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-  color: var(--text);
-  font-size: .9rem;
-}
-
-.daily-tafsir-error {
-  color: #f87171;
-  font-size: .88rem;
-  margin: 0;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg)
-  }
-
-  to {
-    transform: rotate(360deg)
-  }
-}
-
-.spin {
-  animation: spin 1s linear infinite;
-  display: inline-block;
-}
-
-
-/* Ayah Section */
 
 .ayah-card {
   max-width: 900px;
@@ -501,7 +465,295 @@ body.light-mode .logo .logo-text {
   cursor: pointer;
 }
 
-/* Audio Player */
+/* Daily Tafsir Panel (shown under the daily ayah) */
+.daily-tafsir-panel {
+  display: none;
+  max-width: 900px;
+  margin: 1.5rem auto 0;
+  background: var(--dark-light);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: 20px;
+  padding: 1.5rem 1.8rem;
+  animation: fadeDrawer 0.22s ease;
+}
+
+.daily-tafsir-panel.active {
+  display: block;
+}
+
+.daily-tafsir-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.daily-tafsir-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.daily-tafsir-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.daily-tafsir-close:hover {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary);
+}
+
+.daily-tafsir-close svg {
+  width: 14px;
+  height: 14px;
+}
+
+.daily-tafsir-body {
+  color: var(--text);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  margin: 0;
+}
+
+.daily-tafsir-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.daily-tafsir-error {
+  color: #f87171;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.daily-bookmark-btn.bookmarked {
+  background: rgba(16, 185, 129, 0.18);
+  color: var(--primary);
+}
+
+/* ============================================================
+      7. HIJRI CALENDAR WIDGET (footer strip on Daily Ayah header)
+      ============================================================ */
+
+.hijri-calendar-card {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: hccFloat 4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.hijri-calendar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+}
+
+.hcc-top {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hcc-top::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: hccShimmer 4s ease-in-out infinite;
+}
+
+.hcc-date {
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.hcc-bottom {
+  background: var(--dark-light, #1e293b);
+  padding: 0.5rem 0.8rem 0.7rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.hcc-week-label {
+  color: var(--text, #cbd5e1);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.hcc-week-num {
+  color: var(--white, #fff);
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, #34d399, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes hccFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes hccShimmer {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 150%;
+  }
+}
+
+/* Continue-reading floating hint toast (separate from continue-reading section, but related) */
+#continue-hint {
+  position: fixed;
+  bottom: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  transition: bottom 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: min(480px, 94vw);
+}
+
+#continue-hint.visible {
+  bottom: 24px;
+}
+
+.continue-hint-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: #1e293b;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 18px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+}
+
+.continue-hint-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.continue-hint-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.continue-hint-text strong {
+  font-size: 0.82rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.continue-hint-text span {
+  font-size: 0.78rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.continue-hint-text em {
+  font-style: normal;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.continue-hint-btn {
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: 0.55rem 1.1rem;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: 0.2s;
+}
+
+.continue-hint-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.continue-hint-dismiss {
+  background: none;
+  border: none;
+  color: var(--subtext);
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  padding: 0.2rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.continue-hint-dismiss:hover {
+  color: var(--wrong);
+}
+
+/* ============================================================
+      8. AUDIO PLAYER (HOME PAGE)
+      ============================================================ */
 
 .audio-player-section {
   padding: 6rem 8%;
@@ -642,6 +894,10 @@ body.light-mode .logo .logo-text {
   font-weight: 600;
 }
 
+/* ============================================================
+      9. AYAH / SURAH EXPLORER
+      ============================================================ */
+
 .ayah-explorer {
   padding: 6rem 8%;
 }
@@ -654,7 +910,7 @@ body.light-mode .logo .logo-text {
   align-items: center;
 }
 
-.explorer-search>svg {
+.explorer-search > svg {
   position: absolute;
   left: 18px;
   top: 50%;
@@ -676,6 +932,25 @@ body.light-mode .logo .logo-text {
   color: white;
   outline: none;
   font-size: 1rem;
+}
+
+.surah-rev-order {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--primary);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 0.3rem;
+}
+
+.fpill i,
+.fpill svg {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 4px;
 }
 
 .surah-grid {
@@ -727,7 +1002,7 @@ body.light-mode .logo .logo-text {
   text-align: right;
   direction: rtl;
   line-height: 1.8;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
   font-family: "Amiri", "Noto Naskh Arabic", serif;
 }
 
@@ -735,20 +1010,8 @@ body.light-mode .logo .logo-text {
   font-size: 1rem;
   color: var(--primary);
   font-weight: 500;
-  margin-bottom: .8rem;
-  opacity: .85;
-}
-
-body.light-mode .surah-card h3 {
-  color: #0f172a;
-}
-
-body.light-mode .surah-arabic-name {
-  color: #0f172a;
-}
-
-body.light-mode .surah-meaning {
-  color: var(--primary);
+  margin-bottom: 0.8rem;
+  opacity: 0.85;
 }
 
 .surah-meta {
@@ -772,7 +1035,9 @@ body.light-mode .surah-meaning {
   color: gold;
 }
 
-/* Topic Section */
+/* ============================================================
+      10. TOPICS SECTION
+      ============================================================ */
 
 .topics {
   padding: 6rem 8%;
@@ -790,6 +1055,7 @@ body.light-mode .surah-meaning {
   border-radius: 24px;
   padding: 2rem;
   text-align: center;
+  cursor: pointer;
   transition: 0.35s;
 }
 
@@ -797,6 +1063,10 @@ body.light-mode .surah-meaning {
   transform: translateY(-10px) scale(1.03);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
   border-color: var(--primary);
+}
+
+.topic-card:active {
+  transform: translateY(-2px) scale(0.98);
 }
 
 .topic-card svg {
@@ -810,7 +1080,9 @@ body.light-mode .surah-meaning {
   font-size: 1.1rem;
 }
 
-/* Journey Section */
+/* ============================================================
+      11. JOURNEYS SECTION
+      ============================================================ */
 
 .journeys {
   padding: 6rem 8%;
@@ -863,7 +1135,9 @@ body.light-mode .surah-meaning {
   cursor: pointer;
 }
 
-/* Continue Reading Section */
+/* ============================================================
+      12. CONTINUE READING SECTION
+      ============================================================ */
 
 .continue-reading {
   padding: 6rem 8%;
@@ -872,9 +1146,11 @@ body.light-mode .surah-meaning {
 .continue-card {
   max-width: 760px;
   margin: auto;
-  background: linear-gradient(145deg,
-      var(--dark-light),
-      rgba(255, 255, 255, 0.02));
+  background: linear-gradient(
+    145deg,
+    var(--dark-light),
+    rgba(255, 255, 255, 0.02)
+  );
   border: 0.1rem solid var(--border);
   border-radius: 1.9rem;
   padding: 3rem;
@@ -962,123 +1238,17 @@ body.light-mode .surah-meaning {
   0% {
     box-shadow: 0 0 0 0 var(--primary);
   }
-
   70% {
     box-shadow: 0 0 0 0.6rem rgba(34, 197, 94, 0);
   }
-
   100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
   }
 }
 
-/* Continue Reading Hint */
-
-#continue-hint {
-  position: fixed;
-  bottom: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9000;
-  transition: bottom 0.45s cubic-bezier(.34, 1.56, .64, 1);
-  width: min(480px, 94vw);
-}
-
-#continue-hint.visible {
-  bottom: 24px;
-}
-
-.continue-hint-inner {
-  display: flex;
-  align-items: center;
-  gap: .9rem;
-  background: #1e293b;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 18px;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(12px);
-}
-
-body.light-mode .continue-hint-inner {
-  background: #ffffff;
-  border-color: rgba(16, 185, 129, 0.25);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-}
-
-.continue-hint-icon {
-  font-size: 1.6rem;
-  flex-shrink: 0;
-}
-
-.continue-hint-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: .1rem;
-  min-width: 0;
-}
-
-.continue-hint-text strong {
-  font-size: .82rem;
-  color: var(--primary);
-  font-weight: 700;
-}
-
-.continue-hint-text span {
-  font-size: .78rem;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.continue-hint-text em {
-  font-style: normal;
-  color: var(--white);
-  font-weight: 600;
-}
-
-body.light-mode .continue-hint-text em {
-  color: #0f172a;
-}
-
-.continue-hint-btn {
-  border: none;
-  background: var(--primary);
-  color: white;
-  padding: .55rem 1.1rem;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: .78rem;
-  font-weight: 700;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: .2s;
-}
-
-.continue-hint-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, .3);
-}
-
-.continue-hint-dismiss {
-  background: none;
-  border: none;
-  color: var(--subtext);
-  cursor: pointer;
-  font-size: .9rem;
-  flex-shrink: 0;
-  padding: .2rem;
-  line-height: 1;
-  transition: color .2s;
-}
-
-.continue-hint-dismiss:hover {
-  color: var(--wrong);
-}
-
-/* Reciters Section */
+/* ============================================================
+      13. FEATURED RECITERS SECTION
+      ============================================================ */
 
 .featured-reciters {
   padding: 6rem 8%;
@@ -1110,9 +1280,9 @@ body.light-mode .continue-hint-text em {
   background: rgba(255, 255, 255, 0.04);
   color: var(--white);
   font-family: inherit;
-  font-size: .95rem;
+  font-size: 0.95rem;
   outline: none;
-  transition: border-color .2s;
+  transition: border-color 0.2s;
 }
 
 .reciters-search-wrap input:focus {
@@ -1136,7 +1306,7 @@ body.light-mode .continue-hint-text em {
   padding: 1.8rem 1.2rem 1.4rem;
   text-align: center;
   cursor: pointer;
-  transition: transform .25s, border-color .25s, box-shadow .25s;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
   text-decoration: none;
   display: block;
   color: inherit;
@@ -1171,28 +1341,28 @@ body.light-mode .continue-hint-text em {
 }
 
 .reciter-card h3 {
-  font-size: .95rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  margin-bottom: .3rem;
+  margin-bottom: 0.3rem;
   line-height: 1.3;
 }
 
 .reciter-card .rc-country {
-  font-size: .78rem;
+  font-size: 0.78rem;
   color: #94a3b8;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .reciter-card .rc-style {
   display: inline-block;
-  padding: .22rem .7rem;
+  padding: 0.22rem 0.7rem;
   border-radius: 999px;
   background: rgba(16, 185, 129, 0.12);
   color: var(--primary);
-  font-size: .7rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .4px;
+  letter-spacing: 0.4px;
 }
 
 .reciters-empty {
@@ -1202,8 +1372,9 @@ body.light-mode .continue-hint-text em {
   color: #64748b;
 }
 
-
-/* Daily Reflection Section */
+/* ============================================================
+      14. DAILY REFLECTION SECTION
+      ============================================================ */
 
 .daily-reflection {
   padding: 6rem 8%;
@@ -1230,22 +1401,9 @@ body.light-mode .continue-hint-text em {
   color: var(--primary);
 }
 
-/* Floating Keyframe */
-@keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-/* Surah Modal */
+/* ============================================================
+      15. SURAH MODAL (preview before opening full reader)
+      ============================================================ */
 
 .surah-modal {
   position: fixed;
@@ -1337,7 +1495,9 @@ body.light-mode .continue-hint-text em {
   background: var(--primary);
 }
 
-/* Surah Reader */
+/* ============================================================
+      16. READER MODAL (MUSHAF) — core layout
+      ============================================================ */
 
 .reader-modal {
   position: fixed;
@@ -1363,7 +1523,6 @@ body.light-mode .continue-hint-text em {
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
@@ -1391,6 +1550,7 @@ body.light-mode .continue-hint-text em {
   transform-origin: center bottom;
   opacity: 0;
   transition: all 0.35s ease;
+  /* Theme variables — overridden by reader-themes.css per selected theme */
   --reader-accent: #10b981;
   --reader-accent-rgb: 16, 185, 129;
   --reader-text: #ffffff;
@@ -1402,23 +1562,6 @@ body.light-mode .continue-hint-text em {
   --reader-tool-bg: rgba(255, 255, 255, 0.05);
   --reader-drawer-bg: #111827;
 }
-
-#reader-title {
-  font-size: 2rem;
-  margin-bottom: 0.4rem;
-}
-
-/* .dark-theme {
-  background: linear-gradient(180deg, #0f172a, #111827);
-}
-
-.gold-theme {
-  background: linear-gradient(180deg, #1f2937, #111827);
-}
-
-.sepia-theme {
-  background: #2d2418;
-} */
 
 .reader-close {
   position: sticky;
@@ -1497,28 +1640,27 @@ body.light-mode .continue-hint-text em {
   top: 50%;
   width: 28%;
   height: 1px;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(var(--reader-accent-rgb), 1),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--reader-accent-rgb), 1),
+    transparent
+  );
 }
 
 .bismillah-header::before {
   left: 0;
 }
-
 .bismillah-header::after {
   right: 0;
 }
 
 @keyframes glowBismillah {
-
   0%,
   100% {
     transform: scale(1);
     opacity: 0.9;
   }
-
   50% {
     transform: scale(1.05);
     opacity: 1;
@@ -1547,9 +1689,11 @@ body.light-mode .continue-hint-text em {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top,
-      rgba(var(--reader-accent-rgb), 0.15),
-      transparent);
+  background: radial-gradient(
+    circle at top,
+    rgba(var(--reader-accent-rgb), 0.15),
+    transparent
+  );
   opacity: 0;
   transition: 0.4s;
   z-index: 0;
@@ -1623,10 +1767,9 @@ body.light-mode .continue-hint-text em {
   cursor: pointer;
   background: var(--reader-tool-bg);
   color: var(--reader-subtext);
-  transition: all 0.25s ease;
   position: relative;
   z-index: 10;
-  transition: transform 0.15s ease, background 0.2s ease;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .ayah-action:hover {
@@ -1674,15 +1817,29 @@ body.light-mode .continue-hint-text em {
   background: rgba(var(--reader-accent-rgb), 0.15);
 }
 
+.saved {
+  background: rgba(var(--reader-accent-rgb), 0.18) !important;
+  color: var(--reader-accent) !important;
+}
+
+.active-reading {
+  border-color: var(--reader-accent);
+  box-shadow: 0 0 0 1px var(--reader-accent), 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================================
+      17. READER MODAL — SETTINGS DRAWER
+      ============================================================ */
+
 .settings-drawer {
   display: none;
   margin-top: 1.2rem;
+  margin-bottom: 2.2rem;
   background: var(--reader-drawer-bg);
   border: 1px solid var(--reader-card-border);
   border-radius: 24px;
   padding: 1.5rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  margin-bottom: 2.2rem;
 }
 
 .settings-drawer.active {
@@ -1757,32 +1914,103 @@ body.light-mode .continue-hint-text em {
   transform: translateY(-2px);
 }
 
+.reader-content .toggle-btn.active,
+.reader-content .drawer-buttons button.active {
+  background: var(--reader-accent);
+  color: #fff;
+}
+
+/* Font size controls (used inside settings drawer) */
+.font-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.font-controls button {
+  border: none;
+  cursor: pointer;
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.font-controls button:hover {
+  background: var(--reader-accent);
+}
+
+#font-increase {
+  font-size: 1.1rem;
+}
+#font-reset {
+  font-size: 1rem;
+}
+#font-decrease {
+  font-size: 0.9rem;
+}
+
+/* Translation / Tafsir <select> dropdowns inside the settings drawer.
+      NOTE: background-color (not the `background` shorthand) is used here
+      and everywhere this element is re-themed, so the custom arrow
+      background-image below is never wiped out. This was the bug that
+      made the dropdown arrow disappear — a later rule used
+      `background: ... !important`, which resets background-image to
+      `none` because the shorthand overwrites every sub-property it
+      doesn't mention. */
+.reader-select {
+  width: 100%;
+  border: 1px solid var(--reader-card-border);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  padding-right: 2.5rem;
+  margin-top: 0.5rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+  background-color: var(--reader-drawer-bg);
+  color: var(--reader-text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2310b981' stroke-width='2'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+
+.reader-select:focus {
+  border-color: var(--reader-accent);
+}
+
+.reader-select option {
+  background: var(--reader-drawer-bg);
+  color: var(--reader-text);
+  padding: 0.5rem;
+}
+
+/* ============================================================
+      18. READER MODAL — AUDIO DRAWER
+      ============================================================ */
+
 .reader-audio-card {
   display: none;
   margin-top: 1.2rem;
+  margin-bottom: 2.2rem;
   background: var(--reader-drawer-bg);
+  border: 1px solid var(--reader-card-border);
   border-radius: 24px;
   padding: 1.5rem;
-  border: 1px solid var(--reader-card-border);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  margin-bottom: 2.2rem;
 }
 
 .reader-audio-card.active {
   display: block;
   animation: fadeDrawer 0.25s ease;
-}
-
-@keyframes fadeDrawer {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .audio-top2 {
@@ -1833,8 +2061,8 @@ body.light-mode .continue-hint-text em {
   height: 48px;
   border: none;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: var(--reader-tool-bg);
+  color: var(--reader-text);
   cursor: pointer;
   transition: 0.25s;
 }
@@ -1844,43 +2072,20 @@ body.light-mode .continue-hint-text em {
   color: var(--reader-accent);
 }
 
-.audio-actions {
-  display: flex;
-  gap: 0.8rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 1.3rem;
-}
-
-.audio-actions button {
-  border: none;
-  padding: 1rem 1.2rem;
-  border-radius: 16px;
-  background: #1e293b;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.audio-actions button:hover {
-  transform: translateY(-2px);
-  background: rgba(16, 185, 129, 0.15);
-}
-
 #reciter-select2 {
   width: 100%;
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--reader-drawer-bg);
+  color: var(--reader-text);
+  border: 1px solid var(--reader-card-border);
   border-radius: 14px;
   padding: 1rem;
-  color: white;
   font-weight: 600;
   margin-bottom: 1.2rem;
 }
 
 #reciter-select2 option {
-  color: var(--white);
+  background: var(--reader-drawer-bg);
+  color: var(--reader-text);
 }
 
 #surah-audio {
@@ -1892,7 +2097,7 @@ body.light-mode .continue-hint-text em {
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
-  color: #94a3b8;
+  color: var(--reader-subtext);
   font-size: 0.9rem;
 }
 
@@ -1902,6 +2107,7 @@ body.light-mode .continue-hint-text em {
   gap: 1rem;
   margin-top: 1.5rem;
   padding: 0 3rem 0;
+  background: transparent;
 }
 
 #audio-play-bton {
@@ -1909,40 +2115,16 @@ body.light-mode .continue-hint-text em {
   height: 60px;
   border: none;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.reader-content #audio-play-bton {
-  background: linear-gradient(135deg,
-      rgba(var(--reader-accent-rgb), 1),
-      rgba(var(--reader-accent-rgb), 0.72));
-}
-
-.reader-content #audio-progress2 {
-  accent-color: var(--reader-accent);
-}
-
-.reader-content .player-time {
-  color: var(--reader-subtext);
-}
-
-.reader-content .audio-status {
-  color: var(--reader-subtext);
-}
-
-.reader-content .audio-actions button:hover {
-  background: rgba(var(--reader-accent-rgb), 0.15);
-}
-
-.reader-content .toggle-btn.active,
-.reader-content .drawer-buttons button.active {
-  background: var(--reader-accent);
-  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--reader-accent-rgb), 1),
+    rgba(var(--reader-accent-rgb), 0.72)
+  );
 }
 
 #audio-play-bton svg {
@@ -1959,14 +2141,42 @@ body.light-mode .continue-hint-text em {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.6rem;
-  color: #cbd5e1;
+  color: var(--reader-subtext);
 }
 
 #audio-progress2 {
   margin-bottom: 2rem;
   width: 100%;
-  accent-color: #10b981;
+  accent-color: var(--reader-accent);
 }
+
+.audio-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.3rem;
+}
+
+.audio-actions button {
+  border: none;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  background: var(--reader-tool-bg);
+  color: var(--reader-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.audio-actions button:hover {
+  transform: translateY(-2px);
+  background: rgba(var(--reader-accent-rgb), 0.15);
+}
+
+/* ============================================================
+      19. READER MODAL — FLOATING MINI PLAYER
+      ============================================================ */
 
 .floating-player {
   position: fixed;
@@ -1974,9 +2184,7 @@ body.light-mode .continue-hint-text em {
   left: 50%;
   transform: translateX(-50%);
   width: min(95%, 500px);
-  background: rgba(15, 23, 42, 0.92);
   backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 14px 18px;
   display: none;
@@ -1984,6 +2192,9 @@ body.light-mode .continue-hint-text em {
   align-items: center;
   z-index: 9999;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  background: var(--reader-drawer-bg);
+  border: 1px solid var(--reader-card-border);
+  color: var(--reader-text);
 }
 
 .floating-player.active {
@@ -1995,13 +2206,13 @@ body.light-mode .continue-hint-text em {
 }
 
 #floating-surah {
-  color: white;
+  color: var(--reader-text);
   font-weight: 700;
   font-size: 0.95rem;
 }
 
 #floating-ayah {
-  color: #94a3b8;
+  color: var(--reader-subtext);
   font-size: 0.82rem;
 }
 
@@ -2014,16 +2225,18 @@ body.light-mode .continue-hint-text em {
 .floating-controls button {
   width: 42px;
   height: 42px;
-  border: none;
   border-radius: 50%;
   cursor: pointer;
-  background: #1e293b;
-  color: white;
-  transition: 0.25s;
+  background: var(--reader-tool-bg);
+  color: var(--reader-text);
+  border: 1px solid var(--reader-card-border);
+  transition: background 0.2s, color 0.2s, transform 0.15s;
 }
 
 .floating-controls button:hover {
-  background: #10b981;
+  background: var(--reader-accent);
+  color: #fff;
+  border-color: var(--reader-accent);
   transform: translateY(-2px);
 }
 
@@ -2031,10 +2244,183 @@ body.light-mode .continue-hint-text em {
   width: 52px;
   height: 52px;
   font-size: 1.15rem;
-  background: #10b981;
+  background: var(--reader-accent);
+  color: #fff;
+  border-color: var(--reader-accent);
 }
 
-/* Search Modal */
+#mini-play:hover {
+  filter: brightness(1.1);
+}
+
+#mini-settings-drawer {
+  background: var(--reader-drawer-bg);
+  border-color: var(--reader-card-border);
+}
+
+#mini-settings-drawer .mini-drawer-label {
+  color: var(--reader-subtext);
+}
+
+#mini-settings-drawer .mini-drawer-row button {
+  background: var(--reader-tool-bg);
+  color: var(--reader-text);
+}
+
+/* ============================================================
+      20. READER MODAL — TRANSLATION & TAFSIR BLOCKS
+      ============================================================ */
+
+.verse-reader-translation {
+  background: var(--reader-tool-bg);
+  border-left: 3px solid var(--reader-accent);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--reader-subtext);
+}
+
+.verse-reader-translation .vrt-lang,
+.verse-reader-tafsir .vrt-lang {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--reader-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+}
+
+.verse-reader-tafsir {
+  background: var(--reader-tool-bg);
+  border: 1px solid var(--reader-card-border);
+  border-left: 3px solid var(--reader-accent);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--reader-text);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.verse-reader-tafsir p {
+  margin-bottom: 0.7rem;
+}
+
+.verse-reader-tafsir[dir="rtl"] {
+  font-family: "Amiri", "Noto Naskh Arabic", serif;
+  font-size: 1.1rem;
+  line-height: 2;
+}
+
+/* Standalone tafsir panel (expandable card under a verse) */
+.tafsir-panel {
+  margin-top: 1rem;
+  padding: 1.2rem;
+  background: var(--reader-tool-bg);
+  border: 1px solid var(--reader-card-border);
+  border-left: 3px solid var(--reader-accent);
+  border-radius: 16px;
+  animation: fadeDrawer 0.25s ease;
+  position: relative;
+  z-index: 5;
+}
+
+.tafsir-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--reader-card-border);
+}
+
+.tafsir-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(var(--reader-accent-rgb), 0.15);
+  color: var(--reader-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tafsir-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: var(--reader-tool-bg);
+  color: var(--reader-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tafsir-close:hover {
+  background: rgba(var(--reader-accent-rgb), 0.2);
+  color: var(--reader-accent);
+}
+
+.tafsir-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tafsir-body {
+  color: var(--reader-subtext);
+  font-size: 0.95rem;
+  line-height: 1.85;
+  margin: 0;
+}
+
+.tafsir-body p {
+  margin-bottom: 0.8rem;
+}
+
+.tafsir-body.tafsir-arabic {
+  font-family: "Amiri", "Noto Naskh Arabic", serif;
+  font-size: 1.15rem;
+  line-height: 2;
+  direction: rtl;
+  text-align: right;
+}
+
+.tafsir-loading {
+  color: var(--reader-subtext);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.tafsir-error {
+  color: #f87171;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+/* ============================================================
+      21. READER THEME TOGGLE BUTTON & PANEL
+      ============================================================ */
+
+.reader-theme-wrap {
+  position: sticky;
+  top: 0;
+}
+
+/* ============================================================
+      22. SEARCH MODAL
+      ============================================================ */
 
 .search-modal {
   position: fixed;
@@ -2121,76 +2507,22 @@ body.light-mode .continue-hint-text em {
   color: var(--primary);
 }
 
-/* ================= FONT CONTROLS ================= */
-
-.font-controls {
-  display: flex;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-top: 1rem;
+.search-item small {
+  font-size: 0.78rem;
+  opacity: 0.6;
 }
 
-.font-controls button {
-  border: none;
-  cursor: pointer;
-  padding: 0.8rem 1.1rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  color: white;
-  font-weight: 600;
-  transition: 0.3s;
+.search-item.topic-result {
+  border-left: 3px solid var(--primary);
 }
 
-.font-controls button:hover {
-  background: var(--reader-accent);
+.search-item.topic-result svg {
+  color: var(--primary);
 }
 
-#font-increase {
-  font-size: 1.1rem;
-}
-
-#font-reset {
-  font-size: 1rem;
-}
-
-#font-decrease {
-  font-size: 0.9rem;
-}
-
-.saved {
-  background: rgba(var(--reader-accent-rgb), 0.18) !important;
-  color: var(--reader-accent) !important;
-}
-
-.active-reading {
-  border-color: var(--reader-accent);
-  box-shadow: 0 0 0 1px var(--reader-accent), 0 15px 40px rgba(0, 0, 0, 0.25);
-}
-
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: rgba(15, 23, 42, 0.95);
-  color: #10b981;
-  padding: 12px 18px;
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s ease;
-  z-index: 99999;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Reciter Picker Modal */
+/* ============================================================
+      23. RECITER PICKER MODAL
+      ============================================================ */
 
 .reciter-picker-modal {
   position: fixed;
@@ -2234,12 +2566,12 @@ body.light-mode .continue-hint-text em {
 .picker-title {
   font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 }
 
 .picker-subtitle {
   color: #94a3b8;
-  font-size: .85rem;
+  font-size: 0.85rem;
 }
 
 .picker-close {
@@ -2259,7 +2591,7 @@ body.light-mode .continue-hint-text em {
 }
 
 .picker-search {
-  margin: .8rem 1rem;
+  margin: 0.8rem 1rem;
   height: 42px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2267,7 +2599,7 @@ body.light-mode .continue-hint-text em {
   color: white;
   padding: 0 1rem;
   font-family: inherit;
-  font-size: .9rem;
+  font-size: 0.9rem;
   outline: none;
   flex-shrink: 0;
 }
@@ -2278,18 +2610,18 @@ body.light-mode .continue-hint-text em {
 
 .picker-list {
   overflow-y: auto;
-  padding: .5rem .6rem 1rem;
+  padding: 0.5rem 0.6rem 1rem;
   flex: 1;
 }
 
 .picker-reciter-row {
   display: flex;
   align-items: center;
-  gap: .9rem;
-  padding: .75rem .9rem;
+  gap: 0.9rem;
+  padding: 0.75rem 0.9rem;
   border-radius: 14px;
   cursor: pointer;
-  transition: background .18s;
+  transition: background 0.18s;
 }
 
 .picker-reciter-row:hover {
@@ -2321,80 +2653,25 @@ body.light-mode .continue-hint-text em {
 
 .picker-reciter-name {
   font-weight: 600;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .picker-reciter-country {
-  font-size: .75rem;
+  font-size: 0.75rem;
   color: #94a3b8;
-  margin-top: .1rem;
+  margin-top: 0.1rem;
 }
 
 .picker-reciter-arrow {
   margin-left: auto;
   color: #334155;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
-body.light-mode .reciter-picker-content {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.08);
-}
+/* ============================================================
+      24. BOOKMARKS SECTION
+      ============================================================ */
 
-body.light-mode .picker-header {
-  border-bottom-color: rgba(0, 0, 0, 0.07);
-}
-
-body.light-mode .picker-title {
-  color: #0f172a;
-}
-
-body.light-mode .picker-subtitle {
-  color: #64748b;
-}
-
-body.light-mode .picker-close {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-body.light-mode .picker-close:hover {
-  background: #e2e8f0;
-  color: #0f172a;
-}
-
-body.light-mode .picker-search {
-  background: #f8fafc;
-  border-color: rgba(0, 0, 0, 0.1);
-  color: #0f172a;
-}
-
-body.light-mode .picker-search::placeholder {
-  color: #94a3b8;
-}
-
-body.light-mode .picker-reciter-row:hover {
-  background: rgba(16, 185, 129, 0.08);
-}
-
-body.light-mode .picker-reciter-name {
-  color: #0f172a;
-}
-
-body.light-mode .picker-reciter-country {
-  color: #64748b;
-}
-
-body.light-mode .picker-reciter-avatar {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.25);
-}
-
-body.light-mode .reciter-picker-overlay {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-/* Bookmarks section */
 .bookmarks-section {
   padding: 5rem 8%;
 }
@@ -2561,9 +2838,714 @@ body.light-mode .reciter-picker-overlay {
   height: 16px;
 }
 
-.daily-bookmark-btn.bookmarked {
-  background: rgba(16, 185, 129, 0.18);
+/* ============================================================
+      25. READING PROGRESS / GAMIFICATION
+      ============================================================ */
+
+.reading-progress-section {
+  padding: 6rem 8%;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.progress-card {
+  background: var(--dark-light);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  transition: transform 0.3s, border-color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+}
+
+.progress-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(16, 185, 129, 0.15);
   color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.progress-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.progress-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.progress-label {
+  font-size: 0.82rem;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.2rem;
+}
+
+.streak-card {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1),
+    rgba(249, 115, 22, 0.08)
+  );
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.streak-card .progress-icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f97316;
+}
+
+.streak-flame {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  font-size: 4rem;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.daily-goal-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.daily-goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  width: 0%;
+  transition: width 0.8s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  background: var(--dark-light);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 0.8rem;
+  border-right: 1px solid var(--border);
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.3rem;
+}
+
+/* ============================================================
+      26. DAILY CHALLENGE
+      ============================================================ */
+
+.daily-challenge-section {
+  padding: 4rem 8% 6rem;
+}
+
+.challenge-card {
+  max-width: 800px;
+  margin: 0 auto;
+  background: linear-gradient(
+    135deg,
+    var(--dark-light),
+    rgba(16, 185, 129, 0.05)
+  );
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  transition: border-color 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.challenge-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+
+.challenge-card.completed {
+  border-color: var(--primary);
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.12),
+    rgba(6, 182, 212, 0.05)
+  );
+}
+
+.challenge-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.challenge-badge {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.challenge-badge svg {
+  width: 28px;
+  height: 28px;
+}
+
+.challenge-info h3 {
+  font-size: 1.15rem;
+  color: var(--white);
+  margin-bottom: 0.3rem;
+}
+
+.challenge-info p {
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+}
+
+.challenge-progress {
+  width: 100%;
+  max-width: 300px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 0.3rem;
+}
+
+.challenge-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  width: 0%;
+  border-radius: 100px;
+  transition: width 0.6s ease;
+}
+
+.challenge-status {
+  font-size: 0.78rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.challenge-right {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.challenge-xp {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ============================================================
+      27. ACHIEVEMENTS
+      ============================================================ */
+
+.achievements-section {
+  padding: 4rem 8% 6rem;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.achievement-badge {
+  background: var(--dark-light);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: transform 0.3s, border-color 0.3s, opacity 0.3s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-badge.locked {
+  opacity: 0.4;
+  filter: grayscale(0.8);
+}
+
+.achievement-badge.unlocked {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.achievement-badge.unlocked::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top,
+    rgba(16, 185, 129, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.achievement-badge:hover {
+  transform: translateY(-4px);
+}
+
+.achievement-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 0.8rem;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.achievement-badge.unlocked .achievement-icon {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.achievement-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.achievement-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.2rem;
+}
+
+.achievement-desc {
+  font-size: 0.72rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* ============================================================
+      28. FOOTER
+      ============================================================ */
+
+.baca-footer {
+  background: var(--dark);
+  border-top: 1px solid var(--border);
+  padding: 4rem 8% 2rem;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  gap: 2.5rem;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.footer-brand .footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.footer-logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.baca-footer .baca-logo-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.footer-tagline {
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-desc {
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+.footer-col h4 {
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-col a {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.35rem 0;
+  transition: color 0.2s, padding-left 0.2s;
+}
+
+.footer-col a:hover {
+  color: var(--primary);
+  padding-left: 5px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--dark-light);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  padding: 0;
+}
+
+.footer-social a:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-3px);
+  padding-left: 0;
+}
+
+.footer-social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer-quote {
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+
+.footer-quote-ref {
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1300px;
+  margin: 2rem auto 0;
+  padding-top: 1.5rem;
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.footer-credit {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Footer Islamic-date shimmer strip */
+.footer-islamic-date:hover {
+  transform: translateY(-2px);
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+.footer-islamic-date::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(16, 185, 129, 0.16),
+    rgba(6, 182, 212, 0.16),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: fid-shimmer 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes fid-shimmer {
+  0% {
+    left: -60%;
+  }
+  45% {
+    left: 130%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
+.fid-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.fid-icon::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(16, 185, 129, 0.45);
+  animation: fid-pulse 2.4s ease-out infinite;
+}
+
+@keyframes fid-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+      29. TOAST NOTIFICATIONS
+      ============================================================ */
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(15, 23, 42, 0.95);
+  color: #10b981;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  z-index: 99999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================================
+      30. LIGHT MODE OVERRIDES
+      ============================================================ */
+
+body.light-mode {
+  --dark: #f8fafc;
+  --dark-light: #ffffff;
+  --white: #0f172a;
+  --text: #475569;
+  --border: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .section-header h2 {
+  background: linear-gradient(120deg, #059669 0%, #0d9488 45%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: unset; /* overrides the plain --white color so the gradient shows */
+}
+
+body.light-mode .logo .logo-text {
+  background: linear-gradient(135deg, #059669 0%, #0891b2 50%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .surah-rev-order {
+  background: rgba(5, 150, 105, 0.1);
+  color: #059669;
+}
+
+body.light-mode .surah-card h3,
+body.light-mode .surah-arabic-name {
+  color: #0f172a;
+}
+
+body.light-mode .surah-meaning {
+  color: var(--primary);
+}
+
+body.light-mode .topic-card,
+body.light-mode .journey-card {
+  background: #fff;
+}
+
+body.light-mode .continue-hint-inner {
+  background: #ffffff;
+  border-color: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+body.light-mode .continue-hint-text em {
+  color: #0f172a;
+}
+
+body.light-mode .reciter-picker-content {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .picker-header {
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .picker-title {
+  color: #0f172a;
+}
+
+body.light-mode .picker-subtitle {
+  color: #64748b;
+}
+
+body.light-mode .picker-close {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+body.light-mode .picker-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+body.light-mode .picker-search {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #0f172a;
+}
+
+body.light-mode .picker-search::placeholder {
+  color: #94a3b8;
+}
+
+body.light-mode .picker-reciter-row:hover {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+body.light-mode .picker-reciter-name {
+  color: #0f172a;
+}
+
+body.light-mode .picker-reciter-country {
+  color: #64748b;
+}
+
+body.light-mode .picker-reciter-avatar {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+body.light-mode .reciter-picker-overlay {
+  background: rgba(0, 0, 0, 0.35);
 }
 
 body.light-mode .bookmarks-empty,
@@ -2580,7 +3562,162 @@ body.light-mode .bookmark-actions button {
   color: #0f172a;
 }
 
-/* Media Responsiveness */
+body.light-mode .progress-card {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .progress-value {
+  color: var(--white);
+}
+
+body.light-mode .progress-icon {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+}
+
+body.light-mode .streak-card {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.08),
+    rgba(249, 115, 22, 0.06)
+  );
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+body.light-mode .streak-card .progress-icon {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ea580c;
+}
+
+body.light-mode .stats-grid {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .stat-item {
+  border-right-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .stat-number {
+  background: linear-gradient(120deg, #059669, #0d9488, #0284c7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .challenge-card {
+  background: linear-gradient(135deg, #fff, rgba(5, 150, 105, 0.04));
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .challenge-card.completed {
+  background: linear-gradient(
+    135deg,
+    rgba(5, 150, 105, 0.1),
+    rgba(8, 145, 178, 0.04)
+  );
+  border-color: rgba(5, 150, 105, 0.3);
+}
+
+body.light-mode .challenge-info h3 {
+  color: var(--white);
+}
+
+body.light-mode .challenge-progress {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .challenge-xp {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+}
+
+body.light-mode .achievement-badge {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .achievement-icon {
+  background: rgba(5, 150, 105, 0.1);
+  color: #059669;
+}
+
+body.light-mode .achievement-badge.unlocked .achievement-icon {
+  background: linear-gradient(135deg, #059669, #0891b2);
+  color: #fff;
+}
+
+body.light-mode .achievement-name {
+  color: var(--white);
+}
+
+body.light-mode .daily-goal-bar {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .search-item small {
+  opacity: 0.7;
+}
+
+body.light-mode .baca-footer {
+  background: #f8fafc;
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .footer-col h4 {
+  color: var(--white);
+}
+
+body.light-mode .footer-social a {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #475569;
+}
+
+body.light-mode .footer-social a:hover {
+  background: #059669;
+  color: #fff;
+}
+
+body.light-mode .footer-quote {
+  color: #64748b;
+}
+
+body.light-mode .reader-select {
+  background-color: #f1f5f9;
+  color: var(--white);
+}
+
+body.light-mode .reader-select option {
+  background: #fff;
+  color: var(--white);
+}
+
+body.light-mode .hcc-top {
+  background: linear-gradient(135deg, #059669, #0891b2);
+}
+
+body.light-mode .hcc-bottom {
+  background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .hcc-week-label {
+  color: #64748b;
+}
+
+body.light-mode .hcc-week-num {
+  background: linear-gradient(135deg, #059669, #0891b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+      31. RESPONSIVE MEDIA QUERIES
+      ============================================================ */
+
 @media (max-width: 1158px) {
   .nav-links {
     display: none;
@@ -2591,7 +3728,37 @@ body.light-mode .bookmark-actions button {
     align-items: center;
     justify-content: center;
   }
+}
 
+@media (max-width: 900px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .stat-item:nth-child(1),
+  .stat-item:nth-child(2) {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2614,7 +3781,6 @@ body.light-mode .bookmark-actions button {
   .continue-card {
     grid-template-columns: 1fr;
     text-align: center;
-    /* gap: 2rem; */
   }
 
   .progress-bar {
@@ -2623,7 +3789,6 @@ body.light-mode .bookmark-actions button {
 
   .resume-btn {
     width: 100%;
-    /* margin-top: 1rem; */
   }
 
   .audio-top {
@@ -2660,1059 +3825,45 @@ body.light-mode .bookmark-actions button {
 @media (max-width: 640px) {
   .reciters-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: .6rem;
+    gap: 0.6rem;
   }
 }
 
+@media (max-width: 600px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .challenge-left {
+    flex-direction: column;
+  }
+
+  .progress-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .daily-ayah-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .daily-ayah-title-wrap {
+    text-align: center;
+  }
+
+  .hijri-calendar-card {
+    width: 140px;
+  }
+}
 
 @media (max-width: 540px) {
-
   .bismillah-header::before,
   .bismillah-header::after {
     display: none;
-    /* width: 10%; */
   }
-}
-/* ============================================================
-   READING PROGRESS SECTION
-   ============================================================ */
-
-.reading-progress-section {
-    padding: 6rem 8%;
-}
-
-.progress-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-}
-
-.progress-card {
-    background: var(--dark-light);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 1.8rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    transition: transform 0.3s, border-color 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-.progress-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary);
-}
-
-.progress-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.progress-icon svg {
-    width: 24px;
-    height: 24px;
-}
-
-.progress-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.progress-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1.2;
-}
-
-body.light-mode .progress-value {
-    color: var(--white);
-}
-
-.progress-label {
-    font-size: 0.82rem;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 0.2rem;
-}
-
-.streak-card {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(249, 115, 22, 0.08));
-    border-color: rgba(239, 68, 68, 0.2);
-}
-
-.streak-card .progress-icon {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f97316;
-}
-
-.streak-flame {
-    position: absolute;
-    right: -10px;
-    bottom: -10px;
-    font-size: 4rem;
-    opacity: 0.08;
-    pointer-events: none;
-}
-
-.daily-goal-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    overflow: hidden;
-}
-
-.daily-goal-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #10b981, #34d399);
-    width: 0%;
-    transition: width 0.8s ease;
-    border-radius: 0 4px 4px 0;
-}
-
-/* Stats grid */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    background: var(--dark-light);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 1.5rem;
-}
-
-body.light-mode .stats-grid {
-    background: #fff;
-}
-
-.stat-item {
-    text-align: center;
-    padding: 0.8rem;
-    border-right: 1px solid var(--border);
-}
-
-.stat-item:last-child {
-    border-right: none;
-}
-
-.stat-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-}
-
-.stat-label {
-    font-size: 0.78rem;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 0.3rem;
-}
-
-/* ============================================================
-   DAILY CHALLENGE
-   ============================================================ */
-
-.daily-challenge-section {
-    padding: 4rem 8% 6rem;
-}
-
-.challenge-card {
-    max-width: 800px;
-    margin: 0 auto;
-    background: linear-gradient(135deg, var(--dark-light), rgba(16, 185, 129, 0.05));
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    transition: border-color 0.3s, transform 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-.challenge-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-3px);
-}
-
-.challenge-card.completed {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.05));
-}
-
-.challenge-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    flex: 1;
-}
-
-.challenge-badge {
-    width: 60px;
-    height: 60px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #10b981, #06b6d4);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-}
-
-.challenge-badge svg {
-    width: 28px;
-    height: 28px;
-}
-
-.challenge-info h3 {
-    font-size: 1.15rem;
-    color: var(--white);
-    margin-bottom: 0.3rem;
-}
-
-body.light-mode .challenge-info h3 {
-    color: var(--white);
-}
-
-.challenge-info p {
-    font-size: 0.85rem;
-    color: var(--text);
-    margin-bottom: 0.6rem;
-}
-
-.challenge-progress {
-    width: 100%;
-    max-width: 300px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 100px;
-    overflow: hidden;
-    margin-bottom: 0.3rem;
-}
-
-.challenge-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #10b981, #34d399);
-    width: 0%;
-    border-radius: 100px;
-    transition: width 0.6s ease;
-}
-
-.challenge-status {
-    font-size: 0.78rem;
-    color: var(--text);
-    font-weight: 600;
-}
-
-.challenge-right {
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.challenge-xp {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--primary);
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-/* ============================================================
-   ACHIEVEMENTS
-   ============================================================ */
-
-.achievements-section {
-    padding: 4rem 8% 6rem;
-}
-
-.achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.2rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.achievement-badge {
-    background: var(--dark-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    transition: transform 0.3s, border-color 0.3s, opacity 0.3s;
-    cursor: default;
-    position: relative;
-    overflow: hidden;
-}
-
-.achievement-badge.locked {
-    opacity: 0.4;
-    filter: grayscale(0.8);
-}
-
-.achievement-badge.unlocked {
-    border-color: rgba(16, 185, 129, 0.3);
-}
-
-.achievement-badge.unlocked::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 70%);
-    pointer-events: none;
-}
-
-.achievement-badge:hover {
-    transform: translateY(-4px);
-}
-
-.achievement-icon {
-    width: 56px;
-    height: 56px;
-    margin: 0 auto 0.8rem;
-    border-radius: 50%;
-    background: rgba(16, 185, 129, 0.12);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-}
-
-.achievement-badge.unlocked .achievement-icon {
-    background: linear-gradient(135deg, #10b981, #06b6d4);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-
-.achievement-icon svg {
-    width: 26px;
-    height: 26px;
-}
-
-.achievement-name {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.2rem;
-}
-
-body.light-mode .achievement-name {
-    color: var(--white);
-}
-
-.achievement-desc {
-    font-size: 0.72rem;
-    color: var(--text);
-    line-height: 1.4;
-}
-
-/* ============================================================
-   FOOTER
-   ============================================================ */
-
-.baca-footer {
-    background: var(--dark);
-    border-top: 1px solid var(--border);
-    padding: 4rem 8% 2rem;
-    margin-top: 2rem;
-}
-
-body.light-mode .baca-footer {
-    background: #f8fafc;
-    border-top-color: rgba(0, 0, 0, 0.06);
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
-    gap: 2.5rem;
-    max-width: 1300px;
-    margin: 0 auto;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.footer-brand .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.8rem;
-}
-
-.footer-logo-text {
-    font-size: 1.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.baca-footer .baca-logo-icon {
-    width: 28px;
-    height: 28px;
-}
-
-.footer-tagline {
-    color: var(--primary);
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.footer-desc {
-    color: var(--text);
-    font-size: 0.85rem;
-    line-height: 1.7;
-    max-width: 320px;
-}
-
-.footer-col h4 {
-    color: var(--white);
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-body.light-mode .footer-col h4 {
-    color: var(--white);
-}
-
-.footer-col a {
-    display: block;
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.85rem;
-    padding: 0.35rem 0;
-    transition: color 0.2s, padding-left 0.2s;
-}
-
-.footer-col a:hover {
-    color: var(--primary);
-    padding-left: 5px;
-}
-
-.footer-social {
-    display: flex;
-    gap: 0.8rem;
-    margin-bottom: 1rem;
-}
-
-.footer-social a {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: var(--dark-light);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text);
-    transition: background 0.2s, color 0.2s, transform 0.2s;
-    padding: 0;
-}
-
-.footer-social a:hover {
-    background: var(--primary);
-    color: #fff;
-    transform: translateY(-3px);
-    padding-left: 0;
-}
-
-.footer-social svg {
-    width: 18px;
-    height: 18px;
-}
-
-.footer-quote {
-    color: var(--text);
-    font-size: 0.8rem;
-    line-height: 1.7;
-    font-style: italic;
-    margin-bottom: 0.3rem;
-}
-
-.footer-quote-ref {
-    color: var(--primary);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1300px;
-    margin: 2rem auto 0;
-    padding-top: 1.5rem;
-    color: var(--text);
-    font-size: 0.82rem;
-}
-
-.footer-credit {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .footer-content {
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-    }
-    .footer-brand {
-        grid-column: 1 / -1;
-    }
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .stat-item:nth-child(2) {
-        border-right: none;
-    }
-    .stat-item:nth-child(1),
-    .stat-item:nth-child(2) {
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 1rem;
-    }
-    .footer-bottom {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-    }
-}
-
-@media (max-width: 600px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-    }
-    .challenge-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    .challenge-left {
-        flex-direction: column;
-    }
-    .progress-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ============================================================
-   TOPIC CARDS — clickable with hover effect
-   ============================================================ */
-
-.topic-card {
-    cursor: pointer;
-}
-
-.topic-card:active {
-    transform: translateY(-2px) scale(0.98);
-}
-
-/* ============================================================
-   JOURNEY CARDS — button hover
-   ============================================================ */
-
-.journey-card button {
-    cursor: pointer;
-}
-
-/* ============================================================
-   SEARCH RESULTS — improved styling
-   ============================================================ */
-
-.search-item small {
-    font-size: 0.78rem;
-    opacity: 0.6;
-}
-
-.search-item.topic-result {
-    border-left: 3px solid var(--primary);
-}
-
-.search-item.topic-result svg {
-    color: var(--primary);
-}
-
-/* Hide bg-glow elements completely (removed from HTML but CSS safety) */
-.bg-glow {
-    display: none !important;
-}
-
-/* ============================================================
-   LIGHT MODE — Gamification sections
-   ============================================================ */
-
-body.light-mode .progress-card {
-    background: #fff;
-    border-color: rgba(0, 0, 0, 0.07);
-}
-
-body.light-mode .progress-icon {
-    background: rgba(5, 150, 105, 0.12);
-    color: #059669;
-}
-
-body.light-mode .streak-card {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(249, 115, 22, 0.06));
-    border-color: rgba(239, 68, 68, 0.15);
-}
-
-body.light-mode .streak-card .progress-icon {
-    background: rgba(239, 68, 68, 0.12);
-    color: #ea580c;
-}
-
-body.light-mode .stats-grid {
-    background: #fff;
-    border-color: rgba(0, 0, 0, 0.07);
-}
-
-body.light-mode .stat-item {
-    border-right-color: rgba(0, 0, 0, 0.07);
-}
-
-body.light-mode .stat-number {
-    background: linear-gradient(120deg, #059669, #0d9488, #0284c7);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-body.light-mode .challenge-card {
-    background: linear-gradient(135deg, #fff, rgba(5, 150, 105, 0.04));
-    border-color: rgba(0, 0, 0, 0.07);
-}
-
-body.light-mode .challenge-card.completed {
-    background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(8, 145, 178, 0.04));
-    border-color: rgba(5, 150, 105, 0.3);
-}
-
-body.light-mode .challenge-progress {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode .achievement-badge {
-    background: #fff;
-    border-color: rgba(0, 0, 0, 0.07);
-}
-
-body.light-mode .achievement-icon {
-    background: rgba(5, 150, 105, 0.1);
-    color: #059669;
-}
-
-body.light-mode .achievement-badge.unlocked .achievement-icon {
-    background: linear-gradient(135deg, #059669, #0891b2);
-    color: #fff;
-}
-
-body.light-mode .daily-goal-bar {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode .challenge-xp {
-    background: rgba(5, 150, 105, 0.12);
-    color: #059669;
-}
-
-/* Light mode for search results */
-body.light-mode .search-item small {
-    opacity: 0.7;
-}
-
-/* Light mode footer adjustments */
-body.light-mode .footer-social a {
-    background: #f1f5f9;
-    border-color: rgba(0, 0, 0, 0.08);
-    color: #475569;
-}
-
-body.light-mode .footer-social a:hover {
-    background: #059669;
-    color: #fff;
-}
-
-body.light-mode .footer-quote {
-    color: #64748b;
-}
-
-/* Light mode for topics and journeys (already mostly dark-light, ensure white) */
-body.light-mode .topic-card {
-    background: #fff;
-}
-
-body.light-mode .journey-card {
-    background: #fff;
-}
-
-/* ============================================================
-   READER — Translation & Tafsir display in verse cards
-   ============================================================ */
-
-.reader-select {
-    width: 100%;
-    background: #1e293b;
-    color: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0.8rem 1rem;
-    font-family: inherit;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s;
-    margin-top: 0.5rem;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2310b981' stroke-width='2'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 2.5rem;
-}
-
-.reader-select:focus {
-    border-color: var(--primary);
-}
-
-.reader-select option {
-    background: var(--dark-light);
-    color: var(--white);
-    padding: 0.5rem;
-}
-
-/* Translation block inside verse cards */
-.verse-reader-translation {
-    background: var(--reader-tool-bg);
-    border-left: 3px solid var(--reader-accent);
-    border-radius: 8px;
-    padding: 0.8rem 1rem;
-    margin: 0.5rem 0;
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: var(--reader-subtext);
-}
-
-.verse-reader-translation .vrt-lang,
-.verse-reader-tafsir .vrt-lang {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--reader-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.4rem;
-}
-
-/* Tafsir block inside verse cards */
-.verse-reader-tafsir {
-    background: var(--reader-tool-bg);
-    border: 1px solid var(--reader-card-border);
-    border-left: 3px solid var(--reader-accent);
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    font-size: 0.92rem;
-    line-height: 1.85;
-    color: var(--reader-text);
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.verse-reader-tafsir p {
-    margin-bottom: 0.7rem;
-}
-
-.verse-reader-tafsir[dir="rtl"] {
-    font-family: "Amiri", "Noto Naskh Arabic", serif;
-    font-size: 1.1rem;
-    line-height: 2;
-}
-
-body.light-mode .reader-select {
-    background-color: #f1f5f9;
-    color: var(--white);
-}
-body.light-mode .reader-select option {
-    background: #fff;
-    color: var(--white);
-}
-
-/* ============================================================
-   FOOTER ISLAMIC DATE STRIP
-   Deliberately theme-independent: every color below is a fixed
-   value, never a --dark/--white/--text variable, so this stays
-   identical in dark mode and light mode.
-   ============================================================ */
-
-
-
-.footer-islamic-date:hover {
-    transform: translateY(-2px);
-    border-color: rgba(16, 185, 129, 0.45);
-}
-
-/* Diagonal shimmer sweep */
-.footer-islamic-date::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -60%;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(16, 185, 129, 0.16), rgba(6, 182, 212, 0.16), transparent);
-    transform: skewX(-20deg);
-    animation: fid-shimmer 6s ease-in-out infinite;
-    pointer-events: none;
-}
-
-@keyframes fid-shimmer {
-    0%   { left: -60%; }
-    45%  { left: 130%; }
-    100% { left: 130%; }
-}
-
-
-
-.fid-icon svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* Breathing pulse ring around the moon icon */
-.fid-icon::after {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(16, 185, 129, 0.45);
-    animation: fid-pulse 2.4s ease-out infinite;
-}
-
-@keyframes fid-pulse {
-    0%   { transform: scale(0.85); opacity: 0.8; }
-    70%  { transform: scale(1.35); opacity: 0; }
-    100% { transform: scale(1.35); opacity: 0; }
-}
-
-
-
-
-
-
-
-
-
-@media (max-width: 600px) {
-    
-    
-    
-}
-
-
-
-
-/* ============================================================
-   HIJRI CALENDAR CARD — two-part design beside Daily Ayah title
-   Top: teal section with Islamic date
-   Bottom: dark section with week number
-   ============================================================ */
-
-.daily-ayah-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    text-align: center;
-}
-
-.daily-ayah-title-wrap {
-    text-align: center;
-}
-
-.hijri-calendar-card {
-    display: flex;
-    flex-direction: column;
-    width: 160px;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s, box-shadow 0.3s;
-    animation: hccFloat 4s ease-in-out infinite;
-    flex-shrink: 0;
-}
-
-.hijri-calendar-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
-}
-
-/* Top section — teal with Islamic date */
-.hcc-top {
-    background: linear-gradient(135deg, #10b981, #06b6d4);
-    padding: 0.6rem 0.8rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Unique decorative shimmer on the teal section */
-.hcc-top::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    animation: hccShimmer 4s ease-in-out infinite;
-}
-
-.hcc-date {
-    color: #fff;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
-}
-
-/* Bottom section — dark with week number */
-.hcc-bottom {
-    background: var(--dark-light, #1e293b);
-    padding: 0.5rem 0.8rem 0.7rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.1rem;
-}
-
-.hcc-week-label {
-    color: var(--text, #cbd5e1);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
-.hcc-week-num {
-    color: var(--white, #fff);
-    font-size: 1.8rem;
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(135deg, #34d399, #06b6d4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Animations */
-@keyframes hccFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-}
-
-@keyframes hccShimmer {
-    0% { left: -100%; }
-    50%, 100% { left: 150%; }
-}
-
-/* Light mode */
-body.light-mode .hcc-top {
-    background: linear-gradient(135deg, #059669, #0891b2);
-}
-
-body.light-mode .hcc-bottom {
-    background: #fff;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-body.light-mode .hcc-week-label {
-    color: #64748b;
-}
-
-body.light-mode .hcc-week-num {
-    background: linear-gradient(135deg, #059669, #0891b2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-@media (max-width: 600px) {
-    .daily-ayah-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    .daily-ayah-title-wrap {
-        text-align: center;
-    }
-    .hijri-calendar-card {
-        width: 140px;
-    }
-}
-
-/* ============================================================
-   REVELATION ORDER BADGE on surah cards
-   ============================================================ */
-
-.surah-rev-order {
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
-    background: rgba(16, 185, 129, 0.12);
-    color: var(--primary);
-    border-radius: 6px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    margin-left: 0.3rem;
-}
-
-body.light-mode .surah-rev-order {
-    background: rgba(5, 150, 105, 0.1);
-    color: #059669;
-}
-
-/* Filter pills with icons — ensure icons are sized correctly */
-.fpill i,
-.fpill svg {
-    width: 14px;
-    height: 14px;
-    vertical-align: middle;
-    margin-right: 4px;
 }
