@@ -2748,30 +2748,40 @@ setTimeout(() => {
 // ISLAMIC (HIJRI) DATE — calculated using the Umm al-Qura algorithm
 // ============================================================
 
+const HIJRI_MONTHS = [
+    'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
+    'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban",
+    'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'
+];
+
 function getIslamicDate() {
     // Use Intl.DateTimeFormat with the islamic-umalqura calendar
+    // IMPORTANT: We get the month NUMBER (not name) because some browsers return
+    // the Gregorian month name instead of the Hijri month name.
     try {
         const now = new Date();
-        const hijriFormatter = new Intl.DateTimeFormat('en-US', {
-            calendar: 'islamic-umalqura',
+        const hijriFormatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
             day: 'numeric',
-            month: 'long',
+            month: 'numeric',
             year: 'numeric'
         });
         const hijriParts = hijriFormatter.formatToParts(now);
-        let day = '', month = '', year = '';
+        let day = '', monthNum = 0, year = '';
         for (const part of hijriParts) {
             if (part.type === 'day') day = part.value;
-            else if (part.type === 'month') month = part.value;
+            else if (part.type === 'month') monthNum = parseInt(part.value);
             else if (part.type === 'year') year = part.value;
         }
 
-        // Get day of week
-        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
+        // Use our own month name array to ensure correct Hijri month name
+        const monthName = HIJRI_MONTHS[monthNum - 1] || 'Muharram';
 
         return {
-            date: `${month} ${day} ${year}`,
-            day: dayOfWeek
+            date: `${monthName} ${day} ${year}`,
+            day: '',
+            monthNum: monthNum,
+            dayNum: parseInt(day),
+            year: parseInt(year)
         };
     } catch (e) {
         // Fallback: approximate calculation
@@ -2796,8 +2806,11 @@ function calculateHijriFallback() {
     const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
 
     return {
-        date: `${months[monthNum - 1] || ''} ${day} ${year}`,
-        day: dayOfWeek
+        date: `${months[monthNum - 1] || 'Muharram'} ${day} ${year}`,
+        day: dayOfWeek,
+        monthNum: monthNum,
+        dayNum: day,
+        year: year
     };
 }
 
@@ -2811,17 +2824,54 @@ function getWeekNumber() {
     return weekNum;
 }
 
-function initIslamicDate() {
+function getHijriWeekNumber() {
+    // Approximate Hijri week number based on day of Hijri year
+    const hijri = getIslamicDate();
+    const dayOfYear = (hijri.monthNum - 1) * 29.5 + hijri.dayNum;
+    return Math.ceil(dayOfYear / 7);
+}
+
+function getGregorianDate() {
+    const now = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+    return {
+        date: `${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`,
+        day: '',
+        monthNum: now.getMonth() + 1,
+        dayNum: now.getDate(),
+        year: now.getFullYear()
+    };
+}
+
+let calendarMode = 'hijri'; // 'hijri' or 'gregorian'
+
+function updateCalendarCard() {
     const dateEl = document.getElementById("islamic-date-text");
     const weekEl = document.getElementById("week-number");
+    const weekLabelEl = document.querySelector(".hcc-week-label");
     if (!dateEl) return;
 
-    const hijri = getIslamicDate();
-    dateEl.textContent = hijri.date;
-
-    if (weekEl) {
-        weekEl.textContent = getWeekNumber();
+    if (calendarMode === 'hijri') {
+        const hijri = getIslamicDate();
+        dateEl.textContent = hijri.date;
+        if (weekEl) weekEl.textContent = getHijriWeekNumber();
+        if (weekLabelEl) weekLabelEl.textContent = "Hijri Week";
+    } else {
+        const greg = getGregorianDate();
+        dateEl.textContent = greg.date;
+        if (weekEl) weekEl.textContent = getWeekNumber();
+        if (weekLabelEl) weekLabelEl.textContent = "Week";
     }
+}
+
+function initIslamicDate() {
+    updateCalendarCard();
+    // Switch between Hijri and Gregorian every 7 seconds
+    setInterval(() => {
+        calendarMode = calendarMode === 'hijri' ? 'gregorian' : 'hijri';
+        updateCalendarCard();
+    }, 7000);
 }
 
 setTimeout(initIslamicDate, 300);
