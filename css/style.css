@@ -3461,6 +3461,25 @@ body.light-mode .logo .logo-text {
   -webkit-text-fill-color: transparent;
 }
 
+body.light-mode .mobile-nav {
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .mobile-nav a {
+  color: #0f172a;
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .mobile-nav a:hover {
+  color: var(--primary);
+}
+
+body.light-mode .hamburger-btn {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
 body.light-mode .surah-rev-order {
   background: rgba(5, 150, 105, 0.1);
   color: #059669;

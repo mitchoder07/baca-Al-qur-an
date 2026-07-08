@@ -548,53 +548,130 @@ function stripTajweedMarkup(text) {
 function renderArabicWithWords(text, { tajweedMarkup = false } = {}) {
     if (!text) return "";
 
+    // Pause marks should not be clickable words
+    const isPauseMark = (w) => /^[\u06D6-\u06ED\u0610-\u061A\u061C\u061E-\u061F\u200c\u200d\u0640]+$/.test(w.trim()) || (w.trim().length <= 1 && /[\u06D6-\u06ED]/.test(w));
+
     // If no tajweed markup, just split by whitespace and wrap each word
     if (!tajweedMarkup) {
-        const words = text.split(/\s+/).filter(w => w.length);
+        const allTokens = text.split(/\s+/).filter(w => w.length);
         let html = "";
-        words.forEach((w, i) => {
-            html += `<span class="word" data-w="${i}">${escapeHtml(w)}</span> `;
+        let wordIdx = 0;
+        allTokens.forEach((w) => {
+            if (isPauseMark(w)) {
+                html += `<span class="pause-mark">${escapeHtml(w)}</span> `;
+            } else {
+                html += `<span class="word" data-w="${wordIdx}">${escapeHtml(w)}</span> `;
+                wordIdx++;
+            }
         });
         return html;
     }
 
-    // Split by spaces that are OUTSIDE brackets.
-    // Track bracket depth: [ increases depth, ] decreases.
-    // Only split on spaces when depth == 0.
-    const words = [];
-    let current = "";
-    let depth = 0;
-    for (let i = 0; i < text.length; i++) {
-        const c = text[i];
-        if (c === "[") depth++;
-        else if (c === "]") depth = Math.max(0, depth - 1);
+    // TAJWEED TEXT: The markup format is [letter[text] or [letter:number[text] or :number[text]
+    // These have unbalanced brackets and spaces inside markup can cross word boundaries.
+    // 
+    // APPROACH: Use regex to tokenize the text into markup segments and plain text.
+    // Then split plain text portions by spaces to find word boundaries.
+    // Each word = consecutive plain-text tokens + any markup tokens between them.
+    
+    // Step 1: Tokenize into markup and plain-text segments
+    const markupRe = /(?:\[([a-z])(?::(\d+))?\[|:(\d+)\[)([^\]]*)\]/g;
+    const tokens = []; // {type: 'markup'|'text', content, rule, raw}
+    let lastIdx = 0;
+    let m;
+    while ((m = markupRe.exec(text)) !== null) {
+        // Plain text before this markup
+        if (m.index > lastIdx) {
+            tokens.push({ type: 'text', content: text.substring(lastIdx, m.index) });
+        }
+        const letter = m[1] || '';
+        const number = m[2] || m[3] || '';
+        const content = m[4] || '';
+        tokens.push({ type: 'markup', content: content, rule: letter || number, raw: m[0] });
+        lastIdx = m.index + m[0].length;
+    }
+    // Remaining plain text
+    if (lastIdx < text.length) {
+        tokens.push({ type: 'text', content: text.substring(lastIdx) });
+    }
 
-        if (c === " " && depth === 0) {
-            if (current.length) {
-                words.push(current);
-                current = "";
+    // Step 2: Group tokens into words.
+    // Spaces in BOTH text tokens AND markup content are word boundaries.
+    const words = [];
+    let currentWord = [];
+    
+    for (const token of tokens) {
+        if (token.type === 'markup') {
+            // Markup content may contain spaces (crossing word boundaries)
+            const parts = token.content.split(/(\s+)/);
+            let isFirst = true;
+            for (const part of parts) {
+                if (/^\s+$/.test(part)) {
+                    // Space inside markup — word boundary
+                    if (currentWord.length > 0) {
+                        words.push(currentWord);
+                        currentWord = [];
+                    }
+                } else if (part.length > 0) {
+                    // Create a sub-markup token for this part
+                    currentWord.push({ type: 'markup', content: part, rule: token.rule });
+                }
             }
         } else {
-            current += c;
+            // Text token — split by spaces
+            const parts = token.content.split(/(\s+)/);
+            for (const part of parts) {
+                if (/^\s+$/.test(part)) {
+                    if (currentWord.length > 0) {
+                        words.push(currentWord);
+                        currentWord = [];
+                    }
+                } else if (part.length > 0) {
+                    currentWord.push({ type: 'text', content: part });
+                }
+            }
         }
     }
-    if (current.length) words.push(current);
+    if (currentWord.length > 0) {
+        words.push(currentWord);
+    }
 
-    // For each word, parse tajweed segments and render them inside a single .word span
+    // Step 3: Render each word
     let html = "";
-    words.forEach((word, wordIdx) => {
-        const segments = parseTajweedSegments(word);
+    let wordIdx = 0;
+    for (const wordTokens of words) {
+        // Get plain text to check for pause marks
+        let plainText = "";
+        for (const t of wordTokens) {
+            plainText += t.type === 'markup' ? t.content : t.content;
+        }
+        plainText = plainText.trim();
+        
+        if (!plainText) continue;
+        
+        // Skip pause marks
+        if (isPauseMark(plainText)) {
+            html += `<span class="pause-mark">${escapeHtml(plainText)}</span> `;
+            continue;
+        }
+
+        // Render with tajweed colors
         let innerHtml = "";
-        for (const seg of segments) {
-            if (!seg.text) continue;
-            if (seg.rule) {
-                innerHtml += `<span class="${seg.rule}">${escapeHtml(seg.text)}</span>`;
+        for (const t of wordTokens) {
+            if (t.type === 'markup') {
+                const ruleClass = TAJWEED_RULES[t.rule] || null;
+                if (ruleClass) {
+                    innerHtml += `<span class="${ruleClass}">${escapeHtml(t.content)}</span>`;
+                } else {
+                    innerHtml += escapeHtml(t.content);
+                }
             } else {
-                innerHtml += escapeHtml(seg.text);
+                innerHtml += escapeHtml(t.content);
             }
         }
         html += `<span class="word" data-w="${wordIdx}">${innerHtml}</span> `;
-    });
+        wordIdx++;
+    }
     return html;
 }
 
@@ -674,17 +751,31 @@ async function fetchWordByWord(surahNum, ayahNum) {
         const res = await fetchJSON(API.wordByWord(surahNum, ayahNum));
         const verse = res?.verse;
         if (!verse?.words) return [];
-        return verse.words.map(w => {
-            // text_uthmani and text are plain strings
+        
+        // Filter out non-word elements:
+        // - char_type_name === "end" = ayah number markers (e.g. "١")
+        // - char_type_name === "pause" = pause marks
+        let words = verse.words.filter(w => w.char_type_name === "word" || !w.char_type_name);
+        
+        // For ayah 1 of surahs (except Surah 1 and Surah 9), the API includes
+        // Bismillah as the first 4 words. Since we strip Bismillah from the rendered
+        // text, we must also strip it here so word indices match.
+        if (ayahNum === 1 && surahNum !== 1 && surahNum !== 9 && words.length > 4) {
+            // Check if first word is "بِسْمِ" (Bismillah start)
+            const firstText = words[0].text_uthmani || words[0].text || "";
+            if (firstText.startsWith("بِسْمِ") || firstText.startsWith("بسم")) {
+                words = words.slice(4); // Remove the 4 Bismillah words
+            }
+        }
+        
+        return words.map(w => {
             const text = w.text_uthmani || w.text || "";
-            // transliteration can be: string, {text: "..."}, or null/undefined
             let transliteration = "";
             if (typeof w.transliteration === "string") {
                 transliteration = w.transliteration;
             } else if (w.transliteration && typeof w.transliteration === "object") {
                 transliteration = w.transliteration.text || "";
             }
-            // translation can be: string, {text: "..."}, or null/undefined
             let translation = "";
             if (typeof w.translation === "string") {
                 translation = w.translation;
@@ -1109,12 +1200,14 @@ function wireWordClicks(rootEl) {
     rootEl.querySelectorAll(".word").forEach(w => {
         w.addEventListener("click", async (e) => {
             e.stopPropagation();
-            // Find the parent ayah-flow or verse-card
             const card = w.closest("[data-surah][data-ayah]");
             if (!card) return;
             const surah = parseInt(card.dataset.surah);
             const ayah = parseInt(card.dataset.ayah);
-            const wordIdx = parseInt(w.dataset.w);
+            // Use the sequential word index (data-w attribute) which is assigned
+            // during rendering, skipping pause marks. This matches the API word
+            // array which also skips pause marks and end markers.
+            const wordIdx = parseInt(w.dataset.w) || 0;
             await openWordModal(surah, ayah, wordIdx);
         });
     });
@@ -1141,6 +1234,8 @@ async function openWordModal(surah, ayah, wordIdx) {
             return;
         }
 
+        // Use the word index directly — both the rendered text and the API
+        // word array skip pause marks and end markers, so indices match.
         state.wordModalContext = { surah, ayah, words, wordIdx: Math.min(wordIdx, words.length - 1) };
         renderWordModalWord();
         el.wordModalNav.hidden = words.length <= 1;
@@ -1167,7 +1262,11 @@ function renderWordModalWord() {
         const arabicText = word.text || "—";
         const translitText = word.transliteration || "";
         const translationText = word.translation || "—";
-        const audioUrl = word.audioUrl ? `https://audio.qurancdn.com/${word.audioUrl}` : null;
+        // Construct audio URL using sequential word index (1-based).
+        // The API's audio_url field uses internal position numbers that don't always
+        // exist on the CDN (e.g., position 8 for word 6 of 2:2 returns 404).
+        // The CDN has files numbered 001, 002, 003, ... for each word in the ayah.
+        const audioUrl = `https://audio.qurancdn.com/wbw/${String(ctx.surah).padStart(3, '0')}_${String(ctx.ayah).padStart(3, '0')}_${String(ctx.wordIdx + 1).padStart(3, '0')}.mp3`;
 
         el.wordModalBody.innerHTML = `
             <div class="wm-arabic">${escapeHtml(arabicText)}</div>
