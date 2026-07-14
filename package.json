@@ -1,0 +1,14 @@
+{
+  "name": "baca-quran",
+  "version": "1.0.0",
+  "description": "Baca — Quran reading platform with AI assistant",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "z-ai-web-dev-sdk": "^1.0.0"
+  }
+}

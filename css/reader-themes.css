@@ -17,20 +17,9 @@
     font-family: "Noto Naskh Arabic", "Amiri", serif !important;
 }
 
-/* =====================================================
-   OLIVE THEME — redesigned to match screenshot:
-   Very dark teal-slate bg, cool muted text,
-   cyan/teal accent. Inspired by Quran app dark UI.
-   ===================================================== */
-
-/* Override the olive swatch to reflect the new palette */
 .swatch-olive {
     background: linear-gradient(135deg, #0d1c1b, #0f2928) !important;
 }
-
-/* Olive theme token updates applied via JS applyReaderTheme().
-   We patch the readerThemes object values by overriding
-   the CSS custom properties directly when data-theme="olive" */
 
 .reader-content[data-theme="olive"] {
     background: linear-gradient(180deg, #0a1918, #0d1f1e) !important;
@@ -49,8 +38,7 @@
 }
 
 /* =====================================================
-   SAPPHIRE THEME — new: deep navy/indigo with
-   electric violet-blue accent. Calm, focused, premium.
+   SAPPHIRE THEME
    ===================================================== */
 
 .swatch-sapphire {
@@ -74,8 +62,6 @@
     --reader-drawer-bg: #0e1225;
 }
 
-/* Sapphire-specific accent overrides for elements
-   that still reference the old green accent directly */
 .reader-content[data-theme="sapphire"] .bismillah-header {
     color: var(--reader-accent);
 }

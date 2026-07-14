@@ -906,6 +906,19 @@ function initDailyAyahActions() {
         }
     });
 
+    // ── SHARE AS IMAGE (daily ayah) ──
+    document.getElementById("daily-image-btn")?.addEventListener("click", async () => {
+        if (!dailyAyahData || !window.BacaShare) return;
+        const siteTheme = document.body.classList.contains("light-mode") ? "light" : "dark";
+        await window.BacaShare.previewVerseImage({
+            arabic: dailyAyahData.arabic,
+            translation: dailyAyahData.translation,
+            reference: `${dailyAyahData.surahName} ${dailyAyahData.ayah}`,
+            surahName: dailyAyahData.surahName,
+            theme: siteTheme
+        });
+    });
+
     // ── TAFSIR ──
     const tafsirBtn = document.getElementById("daily-tafsir-btn");
     const tafsirPanel = createDailyTafsirPanel();
@@ -1783,11 +1796,29 @@ document.addEventListener("click", async e => {
     const card = btn.closest(".verse-card");
     const arabic = card.querySelector(".verse-arabic")?.innerText || "";
     const trans = card.querySelector(".verse-translation")?.innerText || "";
-    const text = `${arabic}\n\n${trans}`;
-    try {
-        if (navigator.share) { await navigator.share({ title: "Qur'an Verse", text }); showToast("Shared ✓"); }
-        else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
-    } catch { showToast("Share cancelled"); }
+    const surahName = document.getElementById("reader-title")?.textContent || "Surah";
+    const ayah = card.dataset?.ayah || "";
+    const translit = card.querySelector(".verse-transliteration")?.innerText || "";
+
+    if (window.BacaShare) {
+        const readerTheme = document.querySelector(".reader-content")?.dataset?.theme || "dark";
+        await window.BacaShare.previewVerseImage({
+            arabic: arabic,
+            transliteration: translit,
+            translation: trans,
+            reference: `${surahName} ${ayah}`,
+            surahName: surahName,
+            theme: readerTheme === "light" ? "light" : "dark"
+        });
+    } else {
+        const text = `${arabic}
+
+${trans}`;
+        try {
+            if (navigator.share) { await navigator.share({ title: "Qur'an Verse", text }); showToast("Shared ✓"); }
+            else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
+        } catch { showToast("Share cancelled"); }
+    }
 });
 
 // ============================================================

@@ -1448,16 +1448,29 @@ async function handleVerseAction(btn, surah, ayah) {
     else if (btn.classList.contains("share-btn")) {
         const arabic = card?.querySelector(".verse-arabic")?.innerText || "";
         const trans = card?.querySelector(".verse-translation-block")?.innerText || "";
-        const text = `${arabic}\n\n${trans}\n\n— ${meta?.transliteration} ${ayah}`;
-        try {
-            if (navigator.share) {
-                await navigator.share({ title: "Qur'an Verse", text });
-                showToast("Shared ✓");
-            } else {
-                await navigator.clipboard.writeText(text);
-                showToast("Copied to clipboard");
-            }
-        } catch { showToast("Share cancelled"); }
+        const surahName = meta?.transliteration || "Surah";
+        
+        if (window.BacaShare) {
+            const theme = document.body.dataset.mushafTheme === "light" ? "light" : "dark";
+            await window.BacaShare.previewVerseImage({
+                arabic: arabic,
+                translation: trans,
+                reference: `${surahName} ${ayah}`,
+                surahName: surahName,
+                theme: theme
+            });
+        } else {
+            const text = `${arabic}\n\n${trans}\n\n— ${surahName} ${ayah}`;
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: "Qur'an Verse", text });
+                    showToast("Shared ✓");
+                } else {
+                    await navigator.clipboard.writeText(text);
+                    showToast("Copied to clipboard");
+                }
+            } catch { showToast("Share cancelled"); }
+        }
     }
 }
 
