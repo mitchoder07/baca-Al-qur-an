@@ -3969,3 +3969,46 @@ body.light-mode .hamburger-btn {
     background: #f1f5f9;
     color: #0f172a;
 }
+
+/* ============================================================
+   SCROLLABLE NAVBAR — horizontal scroll for many nav links
+   ============================================================ */
+
+.nav-links {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    max-width: 100%;
+    padding-bottom: 2px;
+}
+
+.nav-links::-webkit-scrollbar {
+    display: none;
+}
+
+/* Add a subtle gradient hint on the right edge to show more links */
+.nav-links-wrapper {
+    position: relative;
+}
+
+.nav-links-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, rgba(15, 23, 42, 0.8));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+body.light-mode .nav-links-wrapper::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8));
+}
+
+.nav-links-wrapper.has-scroll::after {
+    opacity: 1;
+}

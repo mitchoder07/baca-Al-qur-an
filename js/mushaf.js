@@ -855,6 +855,16 @@ function init() {
     // really happens, unlike the homepage dashboard).
     startReadingTimeTracking();
 
+    // Check URL hash for surah navigation (e.g., mushaf.html#surah=2)
+    const hash = window.location.hash;
+    if (hash && hash.includes('surah=')) {
+        const surahNum = parseInt(hash.split('surah=')[1]);
+        if (surahNum && surahNum >= 1 && surahNum <= 114) {
+            state.page = findPageNumber(surahNum, 1);
+            persistState();
+        }
+    }
+
     // Initial render
     render();
 

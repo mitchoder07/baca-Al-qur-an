@@ -836,18 +836,31 @@ async function loadDailyAyah() {
     try {
         const now = new Date();
         const seed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
-        // Pick a surah (1-114) and then an ayah within it
         const surahNum = (seed % 114) + 1;
         const surahMeta = SURAH_LIST[surahNum - 1];
         const ayahNum = (seed % surahMeta.total_verses) + 1;
 
+        // Fetch Uthmani text from alquran.cloud (same as mushaf page)
+        let uthmaniText = "";
+        try {
+            const uthRes = await fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/quran-uthmani`);
+            const uthData = await uthRes.json();
+            uthmaniText = uthData?.data?.text || "";
+        } catch (e) {
+            console.warn("Uthmani fetch failed, falling back to quran-json");
+        }
+
+        // Fetch translation from quran-json
         const res = await fetch(CDN.surah(surahNum));
         const data = await res.json();
         const verse = data.verses[ayahNum - 1];
 
+        // Use Uthmani text if available, otherwise fall back to quran-json text
+        const arabicText = uthmaniText || verse.text;
+
         const arabicEl = document.querySelector(".ayah-arabic");
         const transEl = document.querySelector(".ayah-translation");
-        if (arabicEl) arabicEl.textContent = verse.text;
+        if (arabicEl) arabicEl.textContent = arabicText;
         if (transEl) transEl.textContent = verse.translation;
 
         const infoH3 = document.querySelector(".audio-info h3");
@@ -859,7 +872,7 @@ async function loadDailyAyah() {
             surah: surahNum, ayah: ayahNum,
             totalAyahs: surahMeta.total_verses,
             surahName: surahMeta.transliteration,
-            arabic: verse.text, translation: verse.translation,
+            arabic: arabicText, translation: verse.translation,
         };
         refreshBookmarkButtonStates();
 
@@ -892,7 +905,7 @@ function initDailyAyahActions() {
     // ── SHARE ──
     document.getElementById("daily-share-btn")?.addEventListener("click", async () => {
         if (!dailyAyahData) return;
-        if (window.BacaShare) {
+        if (window.BacaShare && typeof window.BacaShare.previewVerseImage === 'function') {
             const siteTheme = document.body.classList.contains("light-mode") ? "light" : "dark";
             await window.BacaShare.previewVerseImage({
                 arabic: dailyAyahData.arabic,
@@ -1303,7 +1316,9 @@ async function openReader(surahNum, scrollToAyah = null) {
         }
 
         const versesHtml = verses.map((v, i) => {
-            const arabicCleaned = cleanAyah(v.text, surahNum, v.id);
+            // Use Uthmani text from alquran.cloud if available (v.uthmaniText is set by fetchUthmaniForReader)
+            const arabicText = v.uthmaniText || v.text;
+            const arabicCleaned = cleanAyah(arabicText, surahNum, v.id);
             return `
       <div class="verse-card" data-surah="${surahNum}" data-ayah="${v.id}">
         <div class="verse-number">${v.id}</div>
@@ -1791,7 +1806,7 @@ document.addEventListener("click", async e => {
     const ayah = card.dataset?.ayah || "";
     const translit = card.querySelector(".verse-transliteration")?.innerText || "";
 
-    if (window.BacaShare) {
+    if (window.BacaShare && typeof window.BacaShare.previewVerseImage === 'function') {
         const readerTheme = document.querySelector(".reader-content")?.dataset?.theme || "dark";
         await window.BacaShare.previewVerseImage({
             arabic: arabic,
