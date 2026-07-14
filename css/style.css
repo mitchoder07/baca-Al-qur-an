@@ -178,7 +178,22 @@ body.light-mode .logo .logo-text {
 
 .nav-links {
   display: flex;
-  gap: 1.8rem;
+  gap: 1.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  padding-bottom: 4px;
+  max-width: 100%;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-links a {
+  flex-shrink: 0;
 }
 
 .nav-links a {

@@ -188,9 +188,33 @@
         }
 
         @media (max-width: 600px) {
-            .chat-container { padding: 1rem; }
+            .chat-container { 
+                padding: 1rem; 
+                padding-top: 80px;
+                margin-top: 60px;
+            }
             .msg-bubble { max-width: 85%; font-size: 0.85rem; }
-            .chat-welcome h1 { font-size: 1.4rem; }
+            .chat-welcome h1 { font-size: 1.3rem; }
+            .chat-welcome p { font-size: 0.85rem; }
+            .suggestion-chip { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+            .ask-navbar { padding: 0.7rem 1rem; }
+            .ask-navbar .logo-text { font-size: 1.1rem; }
+            .ask-navbar .baca-logo-icon { width: 24px; height: 24px; }
+            .ask-navbar .nav-actions a, .ask-navbar .nav-actions button {
+                padding: 0.4rem 0.7rem; font-size: 0.78rem;
+            }
+            .chat-input-area { padding: 0.7rem 1rem; }
+            .chat-input { font-size: 0.85rem; padding: 0.7rem 1rem; }
+            .chat-send-btn { width: 42px; height: 42px; font-size: 1rem; }
+            .chat-disclaimer { font-size: 0.65rem; }
+            .ai-avatar { width: 56px; height: 56px; font-size: 1.6rem; }
+        }
+
+        @media (max-width: 400px) {
+            .ask-navbar .nav-actions a span { display: none; }
+            .ask-navbar .nav-actions a i { margin: 0; }
+            .suggestion-chips { gap: 0.3rem; }
+            .suggestion-chip { font-size: 0.7rem; padding: 0.35rem 0.6rem; }
         }
     </style>
 </head>

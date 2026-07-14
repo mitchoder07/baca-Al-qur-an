@@ -504,6 +504,15 @@
         }
 
         /* Illustration side */
+        .step-photo {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 16px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
         .step-illustration {
             background:
                 radial-gradient(circle at 50% 60%, rgba(16, 185, 129, 0.10), transparent 70%),
@@ -1380,226 +1389,47 @@
 
         // Standing figure — facing Qibla (to the right), hands folded on chest
         const FIG_STANDING = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <!-- Qibla direction indicator -->
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head -->
-                <circle class="head-circle" cx="100" cy="42" r="13"/>
-                <!-- Body -->
-                <line class="body-stroke" x1="100" y1="55" x2="100" y2="125"/>
-                <!-- Arms folded on chest -->
-                <path class="body-stroke" d="M100 70 L75 95 L100 105 L125 95 Z"/>
-                <!-- Right hand over left wrist -->
-                <circle class="accent-stroke" cx="100" cy="100" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Legs -->
-                <line class="body-stroke" x1="100" y1="125" x2="86" y2="180"/>
-                <line class="body-stroke" x1="100" y1="125" x2="114" y2="180"/>
-            </svg>
+            <img class="step-photo" src="images/salah/01-standing.png" alt="Step 1 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Takbir — hands raised beside ears
         const FIG_TAKBIR = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head -->
-                <circle class="head-circle" cx="100" cy="50" r="13"/>
-                <!-- Body -->
-                <line class="body-stroke" x1="100" y1="63" x2="100" y2="130"/>
-                <!-- Arms raised up beside ears -->
-                <path class="body-stroke" d="M100 75 L75 38 L82 25"/>
-                <path class="body-stroke" d="M100 75 L125 38 L118 25"/>
-                <!-- Hands (small circles at top) -->
-                <circle class="accent-stroke" cx="80" cy="22" r="4" fill="rgba(16,185,129,0.35)"/>
-                <circle class="accent-stroke" cx="120" cy="22" r="4" fill="rgba(16,185,129,0.35)"/>
-                <!-- Motion arrows showing upward movement -->
-                <path class="motion-arrow" d="M65 60 L72 45"/>
-                <path class="motion-arrow" d="M135 60 L128 45"/>
-                <!-- Legs -->
-                <line class="body-stroke" x1="100" y1="130" x2="86" y2="180"/>
-                <line class="body-stroke" x1="100" y1="130" x2="114" y2="180"/>
-            </svg>
+            <img class="step-photo" src="images/salah/02-takbir.png" alt="Step 2 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Ruku — bowing, back horizontal, hands on knees
         const FIG_RUKU = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head (facing right toward Qibla, at end of horizontal back) -->
-                <circle class="head-circle" cx="145" cy="95" r="12"/>
-                <!-- Horizontal back -->
-                <line class="body-stroke" x1="80" y1="95" x2="145" y2="95"/>
-                <!-- Hips -->
-                <circle class="accent-stroke" cx="80" cy="95" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Legs (vertical down from hips) -->
-                <line class="body-stroke" x1="80" y1="95" x2="80" y2="155"/>
-                <line class="body-stroke" x1="80" y1="155" x2="68" y2="180"/>
-                <line class="body-stroke" x1="80" y1="155" x2="92" y2="180"/>
-                <!-- Arms down to knees (hands on knees) -->
-                <path class="body-stroke" d="M120 95 L100 135"/>
-                <path class="body-stroke" d="M115 95 L95 135"/>
-                <!-- Hands on knees -->
-                <circle class="accent-stroke" cx="100" cy="135" r="3" fill="rgba(16,185,129,0.4)"/>
-                <circle class="accent-stroke" cx="95" cy="135" r="3" fill="rgba(16,185,129,0.4)"/>
-            </svg>
+            <img class="step-photo" src="images/salah/08-qiyam.png" alt="Step 3 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Qawmah — standing again from ruku (same as standing but with upward motion arrow)
         const FIG_QAWMAH = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head -->
-                <circle class="head-circle" cx="100" cy="42" r="13"/>
-                <!-- Body -->
-                <line class="body-stroke" x1="100" y1="55" x2="100" y2="125"/>
-                <!-- Arms at sides (returning to standing) -->
-                <path class="body-stroke" d="M100 70 L80 105"/>
-                <path class="body-stroke" d="M100 70 L120 105"/>
-                <!-- Legs -->
-                <line class="body-stroke" x1="100" y1="125" x2="86" y2="180"/>
-                <line class="body-stroke" x1="100" y1="125" x2="114" y2="180"/>
-                <!-- Motion arrows showing straightening up -->
-                <path class="motion-arrow" d="M140 110 L140 80"/>
-                <path class="motion-arrow" d="M60 110 L60 80"/>
-            </svg>
+            <img class="step-photo" src="images/salah/03-ruku.png" alt="Step 4 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Sujud — prostration: forehead on ground, palms flat
         const FIG_SUJUD = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head near ground (right side) -->
-                <circle class="head-circle" cx="140" cy="160" r="11"/>
-                <!-- Body angled from head up to hips -->
-                <line class="body-stroke" x1="140" y1="160" x2="80" y2="110"/>
-                <!-- Hips raised -->
-                <circle class="accent-stroke" cx="80" cy="110" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Legs bent under from hips down to feet -->
-                <line class="body-stroke" x1="80" y1="110" x2="65" y2="150"/>
-                <line class="body-stroke" x1="65" y1="150" x2="80" y2="180"/>
-                <!-- Arms extended forward to head (palms flat on ground) -->
-                <path class="body-stroke" d="M115 145 L140 160"/>
-                <path class="body-stroke" d="M118 138 L143 153"/>
-                <!-- Palms -->
-                <ellipse class="accent-stroke" cx="145" cy="158" rx="6" ry="3" fill="rgba(16,185,129,0.25)"/>
-            </svg>
+            <img class="step-photo" src="images/salah/01-standing.png" alt="Step 5 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Jalsa / Tashahhud — sitting on left foot, right foot upright, hands on thighs
         const FIG_SITTING = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head -->
-                <circle class="head-circle" cx="100" cy="60" r="13"/>
-                <!-- Body (slightly reclined) -->
-                <line class="body-stroke" x1="100" y1="73" x2="105" y2="135"/>
-                <!-- Hips sitting -->
-                <circle class="accent-stroke" cx="105" cy="135" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Left leg folded under (sitting on it) -->
-                <path class="body-stroke" d="M105 135 L70 165 L105 180"/>
-                <!-- Right foot upright (toes on ground) -->
-                <line class="body-stroke" x1="105" y1="135" x2="125" y2="165"/>
-                <line class="body-stroke" x1="125" y1="165" x2="135" y2="180"/>
-                <!-- Arms down to thighs (hands on thighs) -->
-                <path class="body-stroke" d="M100 90 L115 130"/>
-                <path class="body-stroke" d="M108 90 L125 130"/>
-                <!-- Hands -->
-                <circle class="accent-stroke" cx="115" cy="130" r="3" fill="rgba(16,185,129,0.4)"/>
-                <circle class="accent-stroke" cx="125" cy="130" r="3" fill="rgba(16,185,129,0.4)"/>
-            </svg>
+            <img class="step-photo" src="images/salah/04-sujud.png" alt="Step 6 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Tashahhud sitting — right index finger raised
         const FIG_TASHAHHUD = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head -->
-                <circle class="head-circle" cx="100" cy="60" r="13"/>
-                <!-- Body -->
-                <line class="body-stroke" x1="100" y1="73" x2="105" y2="135"/>
-                <circle class="accent-stroke" cx="105" cy="135" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Legs -->
-                <path class="body-stroke" d="M105 135 L70 165 L105 180"/>
-                <line class="body-stroke" x1="105" y1="135" x2="125" y2="165"/>
-                <line class="body-stroke" x1="125" y1="165" x2="135" y2="180"/>
-                <!-- Left hand on thigh -->
-                <path class="body-stroke" d="M108 90 L125 130"/>
-                <circle class="accent-stroke" cx="125" cy="130" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Right arm — index finger pointing up (tawhid) -->
-                <path class="body-stroke" d="M100 90 L115 110"/>
-                <line class="accent-stroke" x1="115" y1="110" x2="118" y2="78" stroke-width="3"/>
-                <!-- Finger tip glow -->
-                <circle class="accent-stroke" cx="118" cy="76" r="3" fill="#10b981"/>
-            </svg>
+            <img class="step-photo" src="images/salah/05-jalsa.png" alt="Step 7 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Tasleem — sitting, head turned to the right
         const FIG_TASLEEM = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head turned to the right -->
-                <circle class="head-circle" cx="100" cy="60" r="13"/>
-                <!-- Face direction arrow (turning right) -->
-                <path class="motion-arrow" d="M115 58 L130 58 M124 52 L130 58 L124 64"/>
-                <!-- Body -->
-                <line class="body-stroke" x1="100" y1="73" x2="105" y2="135"/>
-                <circle class="accent-stroke" cx="105" cy="135" r="3" fill="rgba(16,185,129,0.4)"/>
-                <!-- Legs -->
-                <path class="body-stroke" d="M105 135 L70 165 L105 180"/>
-                <line class="body-stroke" x1="105" y1="135" x2="125" y2="165"/>
-                <line class="body-stroke" x1="125" y1="165" x2="135" y2="180"/>
-                <!-- Arms -->
-                <path class="body-stroke" d="M100 90 L115 130"/>
-                <path class="body-stroke" d="M108 90 L125 130"/>
-                <circle class="accent-stroke" cx="115" cy="130" r="3" fill="rgba(16,185,129,0.4)"/>
-                <circle class="accent-stroke" cx="125" cy="130" r="3" fill="rgba(16,185,129,0.4)"/>
-            </svg>
+            <img class="step-photo" src="images/salah/04-sujud.png" alt="Step 8 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         // Standing for next rakat — same as standing, with motion arrow
         const FIG_STAND_NEXT = `
-            <svg class="figure" viewBox="0 0 200 200" aria-hidden="true">
-                ${FIGURE_DEFS}
-                <line class="ground" x1="20" y1="185" x2="180" y2="185"/>
-                <path class="qibla-arrow" d="M170 30 L186 30 M180 24 L186 30 L180 36"/>
-                <text class="qibla-label" x="150" y="22">QIBLA</text>
-                <!-- Head -->
-                <circle class="head-circle" cx="100" cy="42" r="13"/>
-                <!-- Body -->
-                <line class="body-stroke" x1="100" y1="55" x2="100" y2="125"/>
-                <!-- Arms rising to fold (motion) -->
-                <path class="body-stroke" d="M100 75 L78 100"/>
-                <path class="body-stroke" d="M100 75 L122 100"/>
-                <!-- Legs -->
-                <line class="body-stroke" x1="100" y1="125" x2="86" y2="180"/>
-                <line class="body-stroke" x1="100" y1="125" x2="114" y2="180"/>
-                <!-- Upward motion arrow -->
-                <path class="motion-arrow" d="M140 140 L140 100"/>
-                <path class="motion-arrow" d="M60 140 L60 100"/>
-            </svg>
+            <img class="step-photo" src="images/salah/01-standing.png" alt="Step 9 prayer position" loading="lazy" onerror="this.style.display='none'">
         `;
 
         /* ============================================================
