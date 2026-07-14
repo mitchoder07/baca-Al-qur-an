@@ -1,42 +1,23 @@
 /* ============================================================
    BACA — server.js
-   Serves static files + provides AI chat API using z-ai SDK
+   Serves static files + provides AI chat API using Z.AI
    Run: node server.js  (then open http://localhost:3000)
    ============================================================ */
 
 const express = require('express');
 const path = require('path');
-const ZAI = require('z-ai-web-dev-sdk');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
 
 // ============================================================
-// SYSTEM PROMPT — everything the AI knows about Baca
+// SYSTEM PROMPT
 // ============================================================
 
-const SURAH_DATA = require('./js/data.js'); // Won't work directly, let me inline it
-
-// Compact surah list for the AI
-const SURAH_LIST_COMPACT = [
-    {id:1,name:"الفاتحة",en:"Al-Fatihah",meaning:"The Opener",type:"meccan",ayahs:7},
-    {id:2,name:"البقرة",en:"Al-Baqarah",meaning:"The Cow",type:"medinan",ayahs:286},
-    {id:3,name:"آل عمران",en:"Ali 'Imran",meaning:"Family of Imran",type:"medinan",ayahs:200},
-    {id:4,name:"النساء",en:"An-Nisa",meaning:"The Women",type:"medinan",ayahs:176},
-    {id:5,name:"المائدة",en:"Al-Ma'idah",meaning:"The Table Spread",type:"medinan",ayahs:120},
-    {id:36,name:"يس",en:"Ya-Sin",meaning:"Ya Sin",type:"meccan",ayahs:83},
-    {id:55,name:"الرحمن",en:"Ar-Rahman",meaning:"The Beneficent",type:"medinan",ayahs:78},
-    {id:67,name:"الملك",en:"Al-Mulk",meaning:"The Sovereignty",type:"meccan",ayahs:30},
-    {id:112,name:"الإخلاص",en:"Al-Ikhlas",meaning:"The Sincerity",type:"meccan",ayahs:4},
-    {id:113,name:"الفلق",en:"Al-Falaq",meaning:"The Daybreak",type:"meccan",ayahs:5},
-    {id:114,name:"الناس",en:"An-Nas",meaning:"The Mankind",type:"meccan",ayahs:6},
-    // Full list would be all 114 — including the most commonly asked ones
-];
-
-const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website (baca.app).
+const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website.
 
 ABOUT BACA:
 Baca is a beautiful Quran reading platform built with HTML, CSS, and JavaScript. Features include:
@@ -52,6 +33,7 @@ Baca is a beautiful Quran reading platform built with HTML, CSS, and JavaScript.
 - Themes: 5 reader themes (Dark, Warm, Teal, Sapphire, Light)
 - Translations: 17+ languages in the reading modal
 - Tafsir: Ibn Kathir, Ma'arif-ul-Quran, and Jalalayn
+- Share as Image: Generate beautiful verse images with Baca branding
 
 ABOUT THE DEVELOPER:
 Baca was built by Abdullah Yusuf, a cybersecurity graduate with hands-on IT support experience. He writes clean code in Python, builds responsive websites, and designs user interfaces in Figma. He's from Nigeria and is passionate about strengthening Nigeria's digital infrastructure. He built Baca with love for the Ummah.
@@ -61,19 +43,21 @@ The Quran has 114 surahs, 6,236 verses, 30 juz, and 60 hizbs.
 Surahs are categorized as Meccan (revealed in Mecca) or Medinan (revealed in Medina).
 The first surah is Al-Fatihah (7 verses). The longest is Al-Baqarah (286 verses). The shortest is Al-Kawthar (3 verses).
 The last 3 surahs are Al-Ikhlas (112), Al-Falaq (113), An-Nas (114) — often called the "3 Quls".
+Ayat al-Kursi is in Surah Al-Baqarah, verse 255 (2:255).
+Surah Ya-Sin is surah 36, known as "the heart of the Quran".
+Surah Al-Mulk (67) is recommended to read before sleeping.
+Surah Al-Kahf (18) is recommended to read on Fridays.
 
 When a user asks about a specific surah, respond with:
 - Surah name (Arabic + English)
 - Number of verses
 - Meccan or Medinan
-- Brief description of its theme
-- A link to read it: [Read Surah X](mushaf.html) or [Read on page Y](mushaf.html)
+- Brief description
+- A link: [Read Surah X](mushaf.html)
 
-When a user types an Arabic word, tell them which surah/ayah it likely appears in based on your knowledge, and suggest they search for it on the site.
+When a user types an Arabic word, tell them which surah/ayah it likely appears in.
 
-When a user asks about Baca features, explain how to use them.
-
-Keep responses concise, warm, and helpful. Use emojis sparingly. Always be respectful of Islamic etiquette.`;
+Keep responses concise, warm, helpful. Use emojis sparingly. Respect Islamic etiquette. Max 3-4 paragraphs.`;
 
 // ============================================================
 // AI CHAT ENDPOINT
@@ -82,77 +66,57 @@ Keep responses concise, warm, and helpful. Use emojis sparingly. Always be respe
 app.post('/api/chat', async (req, res) => {
     try {
         const { message, history } = req.body;
-        
+
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        const zai = await ZAI.create();
-        
-        // Build conversation history
+        // Build conversation messages
         const messages = [
             { role: 'system', content: SYSTEM_PROMPT }
         ];
-        
-        // Add conversation history (last 10 messages)
+
         if (history && Array.isArray(history)) {
             for (const msg of history.slice(-10)) {
                 messages.push({ role: msg.role, content: msg.content });
             }
         }
-        
-        // Add current message
+
         messages.push({ role: 'user', content: message });
 
-        const response = await zai.chat.completions.create({
-            model: 'glm-4-flash',
-            messages: messages,
-            temperature: 0.7,
-            max_tokens: 1000,
-            stream: false
+        // Call Z.AI API
+        const response = await fetch('https://internal-api.z.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer Z.ai',
+                'X-Z-AI-From': 'Z',
+                'X-Token': process.env.ZAI_TOKEN || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGQyZDM2YzQtMjY1Zi00M2FlLWEwMGUtNWVhN2M3NDllN2E4IiwiY2hhdF9pZCI6ImNoYXQtOTM4M2E3ODYtZGNhZS00MmQ3LWE1ZjMtYWM5NjI3N2E0MmIzIiwicGxhdGZvcm0iOiJ6YWkifQ.hzux1G1FIxgqNcxQfdjilCNZ5JqghloGhRnVdTLimPg',
+                'X-Chat-Id': 'chat-9383a786-dcae-42d7-a5f3-ac96277a42b3',
+                'X-User-Id': '0d2d36c4-265f-43ae-a00e-5ea7c749e7a8'
+            },
+            body: JSON.stringify({
+                model: 'glm-4-flash',
+                messages: messages,
+                temperature: 0.7,
+                max_tokens: 1000,
+                thinking: { type: 'disabled' }
+            })
         });
 
-        const reply = response.choices[0]?.message?.content || 'I apologize, I could not generate a response.';
-        
-        res.json({ reply: reply });
-    } catch (error) {
-        console.error('Chat API error:', error);
-        res.status(500).json({ error: 'Failed to get AI response. Please try again.' });
-    }
-});
-
-// ============================================================
-// QURAN WORD SEARCH ENDPOINT
-// ============================================================
-
-app.post('/api/search', async (req, res) => {
-    try {
-        const { query } = req.body;
-        
-        if (!query) {
-            return res.status(400).json({ error: 'Query is required' });
+        if (!response.ok) {
+            const errText = await response.text();
+            console.error('Z.AI API error:', response.status, errText);
+            return res.status(500).json({ error: 'AI service unavailable' });
         }
 
-        // Use quran.com search API
-        const searchUrl = `https://api.quran.com/api/v4/search?q=${encodeURIComponent(query)}&size=10&page=1&language=ar`;
-        
-        const response = await fetch(searchUrl, {
-            headers: { 'User-Agent': 'Baca/1.0' }
-        });
-        
         const data = await response.json();
-        const results = (data.data?.results || []).map(r => ({
-            surah: r.surah_id,
-            ayah: r.ayah_id,
-            text: r.text,
-            surahName: r.surah?.name || '',
-            translation: r.translations?.[0]?.text || ''
-        }));
-        
-        res.json({ results: results });
+        const reply = data.choices?.[0]?.message?.content || 'I could not generate a response.';
+
+        return res.status(200).json({ reply: reply });
     } catch (error) {
-        console.error('Search API error:', error);
-        res.status(500).json({ error: 'Search failed. Please try again.' });
+        console.error('Chat API error:', error);
+        return res.status(500).json({ error: 'Failed to get AI response' });
     }
 });
 
@@ -161,9 +125,7 @@ app.post('/api/search', async (req, res) => {
 // ============================================================
 
 app.listen(PORT, () => {
-    console.log(`\n  ╔══════════════════════════════════════╗`);
-    console.log(`  ║  Baca server running on port ${PORT}     ║`);
-    console.log(`  ║  Open: http://localhost:${PORT}          ║`);
-    console.log(`  ║  AI Chat: http://localhost:${PORT}/ask  ║`);
-    console.log(`  ╚══════════════════════════════════════╝\n`);
+    console.log(`\n  Baca server running on port ${PORT}`);
+    console.log(`  Open: http://localhost:${PORT}`);
+    console.log(`  AI Chat: http://localhost:${PORT}/ask\n`);
 });
