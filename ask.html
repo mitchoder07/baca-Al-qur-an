@@ -231,9 +231,16 @@
             <button class="theme-btn" id="askThemeBtn" title="Toggle theme">
                 <i class="fa-solid fa-moon"></i>
             </button>
-            <button class="hamburger-btn" id="askHamburger" style="display:none;width:42px;height:42px;border:none;border-radius:50%;background:var(--dark-light);color:white;cursor:pointer;font-size:1.1rem;">☰</button>
+            <button class="hamburger-btn" id="askHamburger">☰</button>
         </div>
     </header>
+
+    <div class="mobile-nav" id="askMobileNav">
+        <a href="index.html">Home</a>
+        <a href="mushaf.html">Read Quran</a>
+        <a href="adhkar.html">Adhkar</a>
+        <a href="salah.html">How to Pray</a>
+    </div>
 
     <main class="chat-container" id="chatContainer">
         <div class="chat-welcome" id="chatWelcome">
@@ -296,6 +303,25 @@
                 localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
             });
         })();
+
+        // Hamburger menu toggle
+        document.getElementById('askHamburger')?.addEventListener('click', () => {
+            document.getElementById('askMobileNav')?.classList.toggle('open');
+        });
+
+        // Close mobile nav when clicking a link
+        document.querySelectorAll('#askMobileNav a').forEach(a => {
+            a.addEventListener('click', () => {
+                document.getElementById('askMobileNav')?.classList.remove('open');
+            });
+        });
+
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar') && !e.target.closest('#askMobileNav')) {
+                document.getElementById('askMobileNav')?.classList.remove('open');
+            }
+        });
 
         // Enter key to send
         chatInput.addEventListener('keydown', (e) => {
