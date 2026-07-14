@@ -1,6 +1,7 @@
 /* ============================================================
    BACA — server.js
-   Serves static files + provides AI chat API using Z.AI
+   Serves static files + provides AI chat API
+   Uses Google Gemini (free tier — 15 requests/minute, no payment)
    Run: node server.js  (then open http://localhost:3000)
    ============================================================ */
 
@@ -60,7 +61,8 @@ When a user types an Arabic word, tell them which surah/ayah it likely appears i
 Keep responses concise, warm, helpful. Use emojis sparingly. Respect Islamic etiquette. Max 3-4 paragraphs.`;
 
 // ============================================================
-// AI CHAT ENDPOINT
+// AI CHAT ENDPOINT — uses Google Gemini (free)
+// Get your free API key at: https://aistudio.google.com/app/apikey
 // ============================================================
 
 app.post('/api/chat', async (req, res) => {
@@ -71,49 +73,52 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        // Build conversation messages
-        const messages = [
-            { role: 'system', content: SYSTEM_PROMPT }
-        ];
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            return res.status(500).json({ error: 'AI not configured. Set GEMINI_API_KEY environment variable.' });
+        }
 
+        // Build conversation for Gemini
+        let conversationHistory = '';
         if (history && Array.isArray(history)) {
             for (const msg of history.slice(-10)) {
-                messages.push({ role: msg.role, content: msg.content });
+                if (msg.role === 'user') {
+                    conversationHistory += `User: ${msg.content}\n`;
+                } else {
+                    conversationHistory += `Assistant: ${msg.content}\n`;
+                }
             }
         }
 
-        messages.push({ role: 'user', content: message });
+        const prompt = `${SYSTEM_PROMPT}\n\n${conversationHistory}User: ${message}\nAssistant:`;
 
-        // Call Z.AI API
-        const response = await fetch('https://internal-api.z.ai/v1/chat/completions', {
+        // Call Google Gemini API (free tier)
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        const response = await fetch(geminiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer Z.ai',
-                'X-Z-AI-From': 'Z',
-                'X-Token': process.env.ZAI_TOKEN || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGQyZDM2YzQtMjY1Zi00M2FlLWEwMGUtNWVhN2M3NDllN2E4IiwiY2hhdF9pZCI6ImNoYXQtOTM4M2E3ODYtZGNhZS00MmQ3LWE1ZjMtYWM5NjI3N2E0MmIzIiwicGxhdGZvcm0iOiJ6YWkifQ.hzux1G1FIxgqNcxQfdjilCNZ5JqghloGhRnVdTLimPg',
-                'X-Chat-Id': 'chat-9383a786-dcae-42d7-a5f3-ac96277a42b3',
-                'X-User-Id': '0d2d36c4-265f-43ae-a00e-5ea7c749e7a8'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: 'glm-4-flash',
-                messages: messages,
-                temperature: 0.7,
-                max_tokens: 1000,
-                thinking: { type: 'disabled' }
+                contents: [{
+                    parts: [{ text: prompt }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 1000
+                }
             })
         });
 
         if (!response.ok) {
             const errText = await response.text();
-            console.error('Z.AI API error:', response.status, errText);
+            console.error('Gemini API error:', response.status, errText);
             return res.status(500).json({ error: 'AI service unavailable' });
         }
 
         const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content || 'I could not generate a response.';
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'I could not generate a response.';
 
-        return res.status(200).json({ reply: reply });
+        return res.status(200).json({ reply: reply.trim() });
     } catch (error) {
         console.error('Chat API error:', error);
         return res.status(500).json({ error: 'Failed to get AI response' });
