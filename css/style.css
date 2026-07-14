@@ -6,7 +6,9 @@
 
 
 :root {
+  /* --primary: #f5d06f; */
   --primary: #10b981;
+  /* --primary: #22c55e; */
   --dark: #0f172a;
   --dark-light: #1e293b;
   --white: #ffffff;

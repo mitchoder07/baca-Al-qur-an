@@ -892,31 +892,22 @@ function initDailyAyahActions() {
     // ── SHARE ──
     document.getElementById("daily-share-btn")?.addEventListener("click", async () => {
         if (!dailyAyahData) return;
-        const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, Ayah ${dailyAyahData.ayah}`;
-        try {
-            if (navigator.share) {
-                await navigator.share({ title: "Daily Ayah — Al Furqan", text });
-                showToast("Shared ✓");
-            } else {
-                await navigator.clipboard.writeText(text);
-                showToast("Copied to clipboard");
-            }
-        } catch {
-            showToast("Share cancelled");
+        if (window.BacaShare) {
+            const siteTheme = document.body.classList.contains("light-mode") ? "light" : "dark";
+            await window.BacaShare.previewVerseImage({
+                arabic: dailyAyahData.arabic,
+                translation: dailyAyahData.translation,
+                reference: `${dailyAyahData.surahName} verse ${dailyAyahData.ayah}`,
+                surahName: dailyAyahData.surahName,
+                theme: siteTheme
+            });
+        } else {
+            const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, verse ${dailyAyahData.ayah}`;
+            try {
+                if (navigator.share) { await navigator.share({ title: "Daily Ayah — Baca", text }); showToast("Shared ✓"); }
+                else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
+            } catch { showToast("Share cancelled"); }
         }
-    });
-
-    // ── SHARE AS IMAGE (daily ayah) ──
-    document.getElementById("daily-image-btn")?.addEventListener("click", async () => {
-        if (!dailyAyahData || !window.BacaShare) return;
-        const siteTheme = document.body.classList.contains("light-mode") ? "light" : "dark";
-        await window.BacaShare.previewVerseImage({
-            arabic: dailyAyahData.arabic,
-            translation: dailyAyahData.translation,
-            reference: `${dailyAyahData.surahName} ${dailyAyahData.ayah}`,
-            surahName: dailyAyahData.surahName,
-            theme: siteTheme
-        });
     });
 
     // ── TAFSIR ──
@@ -1806,7 +1797,7 @@ document.addEventListener("click", async e => {
             arabic: arabic,
             transliteration: translit,
             translation: trans,
-            reference: `${surahName} ${ayah}`,
+            reference: `${surahName} verse ${ayah}`,
             surahName: surahName,
             theme: readerTheme === "light" ? "light" : "dark"
         });

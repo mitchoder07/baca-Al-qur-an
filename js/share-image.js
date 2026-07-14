@@ -108,19 +108,30 @@ function generateVerseImage(data) {
             ctx.fillText(surahName, W / 2, 135);
         }
 
-        // === Arabic text ===
-        const arabicY = surahName ? 210 : 180;
-        ctx.fillStyle = c.arabic;
-        ctx.textAlign = "center";
-        ctx.direction = "rtl";
-
-        // Auto-size Arabic font based on text length
+        // === Calculate total content height for vertical centering ===
         const arabicLines = wrapArabicText(arabic, 42);
         let arabicFontSize = 52;
         if (arabicLines.length > 3) arabicFontSize = 44;
         if (arabicLines.length > 5) arabicFontSize = 38;
         if (arabicLines.length > 7) arabicFontSize = 32;
 
+        const translitLines = transliteration ? wrapText(transliteration, 55) : [];
+        const transLines = wrapText(translation, 52);
+
+        // Estimate total content height
+        const arabicHeight = arabicLines.length * arabicFontSize * 1.6;
+        const translitHeight = translitLines.length > 0 ? (translitLines.length * 38 + 30) : 0;
+        const transHeight = transLines.length * 36 + 80; // +80 for divider
+        const headerHeight = surahName ? 80 : 50;
+        const totalContentHeight = headerHeight + arabicHeight + translitHeight + transHeight;
+        const availableHeight = H - 200; // space between top ornament and bottom section
+        const verticalOffset = Math.max(0, (availableHeight - totalContentHeight) / 2);
+        const arabicY = 100 + verticalOffset + headerHeight;
+
+        // === Arabic text ===
+        ctx.fillStyle = c.arabic;
+        ctx.textAlign = "center";
+        ctx.direction = "rtl";
         ctx.font = `400 ${arabicFontSize}px "Amiri", "Noto Naskh Arabic", serif`;
         let y = arabicY;
         for (const line of arabicLines) {
@@ -192,8 +203,7 @@ function generateVerseImage(data) {
         ctx.fillStyle = logoGrad;
         ctx.fillText("Baca", W - 70, bottomY);
 
-        // Small book icon before "Baca"
-        drawBookIcon(ctx, W - 145, bottomY - 10, 18, c.logoText);
+        // (Book icon removed — just the text logo)
 
         // === Bottom decorative bar ===
         ctx.fillStyle = barGrad;

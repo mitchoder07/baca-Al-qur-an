@@ -1455,7 +1455,7 @@ async function handleVerseAction(btn, surah, ayah) {
             await window.BacaShare.previewVerseImage({
                 arabic: arabic,
                 translation: trans,
-                reference: `${surahName} ${ayah}`,
+                reference: `${surahName} verse ${ayah}`,
                 surahName: surahName,
                 theme: theme
             });

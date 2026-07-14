@@ -1,23 +1,10 @@
 /* ============================================================
-   BACA — server.js
-   Serves static files + provides AI chat API
-   Uses Groq (free, fast, OpenAI-compatible, no quota issues)
-   Get your free API key at: https://console.groq.com/keys
-   Run: node server.js  (then open http://localhost:3000)
+   BACA — Vercel Serverless Function for AI Chat
+   This file goes in /api/chat.js and runs on Vercel automatically.
+   No Express needed — Vercel handles routing.
    ============================================================ */
 
-const express = require('express');
-const path = require('path');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static(__dirname));
-
-// ============================================================
-// SYSTEM PROMPT
-// ============================================================
+const ZAI = require('z-ai-web-dev-sdk');
 
 const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website.
 
@@ -47,26 +34,28 @@ The first surah is Al-Fatihah (7 verses). The longest is Al-Baqarah (286 verses)
 The last 3 surahs are Al-Ikhlas (112), Al-Falaq (113), An-Nas (114) — often called the "3 Quls".
 Ayat al-Kursi is in Surah Al-Baqarah, verse 255 (2:255).
 Surah Ya-Sin is surah 36, known as "the heart of the Quran".
-Surah Al-Mulk (67) is recommended to read before sleeping.
+Surah Al-Mulk (67) is recommended to read before sleeping for protection in the grave.
 Surah Al-Kahf (18) is recommended to read on Fridays.
 
 When a user asks about a specific surah, respond with:
 - Surah name (Arabic + English)
 - Number of verses
 - Meccan or Medinan
-- Brief description
-- A link: [Read Surah X](mushaf.html)
+- Brief description of its theme
+- A link to read it: [Read Surah X](mushaf.html)
 
-When a user types an Arabic word, tell them which surah/ayah it likely appears in.
+When a user types an Arabic word, tell them which surah/ayah it likely appears in based on your knowledge, and suggest they visit the Mushaf reader to find it.
 
-Keep responses concise, warm, helpful. Use emojis sparingly. Respect Islamic etiquette. Max 3-4 paragraphs.`;
+When a user asks about Baca features, explain how to use them.
 
-// ============================================================
-// AI CHAT ENDPOINT — uses Groq (free, OpenAI-compatible)
-// Get your free API key at: https://console.groq.com/keys
-// ============================================================
+Keep responses concise, warm, and helpful. Use emojis sparingly. Always be respectful of Islamic etiquette. Limit responses to 3-4 short paragraphs maximum.`;
 
-app.post('/api/chat', async (req, res) => {
+module.exports = async (req, res) => {
+    // Only allow POST
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     try {
         const { message, history } = req.body;
 
@@ -74,61 +63,38 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        const apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) {
-            return res.status(500).json({ error: 'AI not configured. Set GROQ_API_KEY environment variable.' });
-        }
+        // Initialize Z.AI SDK
+        const zai = await ZAI.create();
 
         // Build conversation messages
         const messages = [
             { role: 'system', content: SYSTEM_PROMPT }
         ];
 
+        // Add history (last 10 messages)
         if (history && Array.isArray(history)) {
             for (const msg of history.slice(-10)) {
                 messages.push({ role: msg.role, content: msg.content });
             }
         }
 
+        // Add current message
         messages.push({ role: 'user', content: message });
 
-        // Call Groq API (OpenAI-compatible, free tier)
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
-                messages: messages,
-                temperature: 0.7,
-                max_tokens: 1000
-            })
+        // Call the AI model
+        const response = await zai.chat.completions.create({
+            model: 'glm-4-flash',
+            messages: messages,
+            temperature: 0.7,
+            max_tokens: 1000,
+            stream: false
         });
 
-        if (!response.ok) {
-            const errText = await response.text();
-            console.error('Groq API error:', response.status, errText);
-            return res.status(500).json({ error: 'AI service unavailable' });
-        }
-
-        const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content || 'I could not generate a response.';
+        const reply = response.choices[0]?.message?.content || 'I apologize, I could not generate a response.';
 
         return res.status(200).json({ reply: reply });
     } catch (error) {
         console.error('Chat API error:', error);
-        return res.status(500).json({ error: 'Failed to get AI response' });
+        return res.status(500).json({ error: 'Failed to get AI response. Please try again.' });
     }
-});
-
-// ============================================================
-// START SERVER
-// ============================================================
-
-app.listen(PORT, () => {
-    console.log(`\n  Baca server running on port ${PORT}`);
-    console.log(`  Open: http://localhost:${PORT}`);
-    console.log(`  AI Chat: http://localhost:${PORT}/ask\n`);
-});
+};
