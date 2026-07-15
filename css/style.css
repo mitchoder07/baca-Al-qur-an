@@ -1217,6 +1217,125 @@ body.light-mode .continue-hint-text em {
   color: #64748b;
 }
 
+/* ── COMPACT RECITERS PREVIEW (on index.html) ──
+   Shows a horizontal strip of a few reciter avatars + a "browse all"
+   button. The full grid now lives on reciters/index.html so the main
+   page stays short. */
+.reciters-preview {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.reciters-preview-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.reciters-preview-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  overflow: hidden;
+  display: block;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.reciters-preview-avatar:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.25);
+  z-index: 2;
+}
+
+.reciters-preview-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.reciters-preview-avatar::after {
+  content: attr(data-name);
+  position: absolute;
+  bottom: -1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: .68rem;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.reciters-preview-avatar:hover::after {
+  opacity: 1;
+}
+
+.reciters-see-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .8rem 1.6rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: .92rem;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.reciters-see-all-btn:hover {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.3);
+}
+
+.reciters-see-all-btn i {
+  font-size: .85rem;
+  transition: transform 0.2s;
+}
+
+.reciters-see-all-btn:hover i {
+  transform: translateX(3px);
+}
+
+body.light-mode .reciters-preview-avatar {
+  border-color: var(--primary);
+}
+
+body.light-mode .reciters-see-all-btn {
+  background: rgba(16, 185, 129, 0.08);
+  color: #059669;
+}
+
+body.light-mode .reciters-see-all-btn:hover {
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .reciters-preview-avatar {
+    width: 64px;
+    height: 64px;
+  }
+  .reciters-preview-avatars {
+    gap: .7rem;
+  }
+}
+
 
 /* Daily Reflection Section */
 

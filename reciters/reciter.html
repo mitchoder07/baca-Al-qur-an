@@ -920,8 +920,48 @@
                 display: none
             }
 
+            /* BUG FIX: previously this hid .sp-progress-wrap on mobile,
+               which is why the progress bar vanished on phones. We now
+               keep it visible so users can scrub through the full surah. */
             .sp-progress-wrap {
-                display: none
+                display: flex;
+                order: 3;
+                flex: 1 1 100%;
+                width: 100%;
+                margin-top: .2rem;
+            }
+
+            /* On very small screens, stack the sticky player vertically
+               so info / controls / progress each get their own row.
+               Order: 1) info  2) controls  3) progress bar */
+            .sticky-player {
+                flex-wrap: wrap;
+                gap: .5rem 1.2rem;
+                padding: .7rem 6%;
+                top: 60px;
+            }
+
+            .sp-info {
+                order: 1;
+                flex: 1 1 100%;
+                min-width: 0;
+                text-align: center;
+            }
+
+            .sp-controls {
+                order: 2;
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+
+            /* Make the progress bar taller on mobile for easier touch */
+            .sp-progress {
+                height: 8px;
+                min-width: 0;
+            }
+
+            .sp-time {
+                font-size: .72rem;
             }
         }
     </style>
@@ -964,9 +1004,9 @@
             </svg>
             <span class="logo-text">Baca</span>
         </a>
-        <a class="nav-back" href="/index.html#featured-reciters">
-            <i class="fa-solid fa-arrow-left"></i> All Reciters
-        </a>
+        <div class="nav-actions" style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
+            <!-- The shared hamburger button is injected here by js/shared-nav.js -->
+        </div>
     </header>
 
     <!-- STICKY PLAYER -->
@@ -1092,6 +1132,7 @@
             qasim: { name: "Abdul Muhsin Al-Qasim", arabic: "عبدالمحسن القاسم", country: "Saudi Arabia", style: "Murattal", folder: "Muhsin_Al_Qasim_192kbps", image: "/images/reciters/muhsin.png", bio: "Sheikh Abdul Muhsin Al-Qasim is the Imam and Khateeb of the Prophet's Mosque in Madinah. A jurist and scholar of fiqh as well as a reciter, his recordings are appreciated for their scholarly depth and clear pronunciation. He is highly respected for his dual role as Imam and Islamic judge." },
             neana: { name: "Ahmed Neana", arabic: "أحمد نعينع", country: "Egypt", style: "Murattal", folder: "Ahmed_Neana_128kbps", image: "/images/reciters/neana.png", bio: "Sheikh Ahmed Neana follows the great Egyptian tradition of Quranic recitation. His voice carries the characteristic warmth and melodic richness of Egyptian reciters, and his recordings are appreciated for their emotional expressiveness and clear application of tajweed." },
             ayman_swed: { name: "Ayman Swed", arabic: "أيمن سويد", country: "Syria", style: "Murattal", folder: "Ayman_Sowaid_64kbps", image: "/images/reciters/ayman.png", bio: "Sheikh Ayman Rushdi Swed is a Syrian scholar of tajweed born in Damascus. A professor of Quranic sciences, he has dedicated his career to preserving and teaching correct Quranic recitation. His recordings are praised for exemplary tajweed and he has trained hundreds of Quran teachers worldwide." },
+            okasha: { name: "Okasha Kameny", arabic: "عكاشة كاميني", country: "Ghana", style: "Murattal", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true, image: "/images/reciters/okasha.png", bio: "Sheikh Okasha Kameny is a Ghanaian Quran reciter known for his clear, deeply emotional recitation style. He has studied tajweed and Quranic sciences and his recitations have gained wide popularity, especially across West Africa and online. His recordings are appreciated for their sincerity and the natural, flowing pace of his delivery." },
         };
 
         // ═══════════════════════════════════════════════
@@ -1310,9 +1351,52 @@
         }
 
         // ── PLAY LOGIC ──
-        // BUG FIX 2: was playing only ayah 1 because the surah player wasn't
-        // auto-advancing. Now it plays ayah-by-ayah through the entire surah.
-        let surahAyahCursor = 1;
+        // BUG FIX (full-surah audio): previously this played the surah
+        // ayah-by-ayah via everyayah.com (each ayah = separate mp3), which
+        // meant the progress bar reset every few seconds and users couldn't
+        // seek/scrub to a later part of the surah.
+        //
+        // NOW we use mp3quran.net full-surah MP3s (one file per surah) so
+        // the progress bar shows the entire surah duration and the user can
+        // drag to any position. When a surah finishes, we auto-advance to
+        // the next surah — same behaviour as before, just smoother.
+        //
+        // Fallback: if a reciter doesn't have a full-surah server entry in
+        // data.js FULL_SURAH_SERVERS, we fall back to the old ayah-by-ayah
+        // behaviour so audio still plays.
+
+        // Full-surah server map (mirrors js/data.js FULL_SURAH_SERVERS so
+        // this page is self-contained even though data.js is not loaded).
+        const FULL_SURAH_SERVERS = {
+            'mishari':    'https://server8.mp3quran.net/afs/',
+            'sudais':     'https://server11.mp3quran.net/sds/',
+            'abdulbasit': 'https://server7.mp3quran.net/basit/',
+            'husary':     'https://server13.mp3quran.net/husr/',
+            'minshawi':   'https://server10.mp3quran.net/minsh/',
+            'shaatree':   'https://server11.mp3quran.net/shatri/',
+            'muaiqly':    'https://server12.mp3quran.net/maher/',
+            'shuraym':    'https://server7.mp3quran.net/shur/',
+            'hudhaify':   'https://server8.mp3quran.net/bna/',
+            'ajamy':      'https://server10.mp3quran.net/ajm/',
+            'jibreel':    'https://server8.mp3quran.net/jbrl/',
+            'ayyoub':     'https://server16.mp3quran.net/ayyoub2/',
+            'ghamdi':     'https://server7.mp3quran.net/s_gmd/',
+            'basfar':     'https://server6.mp3quran.net/bsfr/',
+            'matroud':    'https://server8.mp3quran.net/mtrod/',
+            'rifai':      'https://server8.mp3quran.net/hani/',
+            'tablawi':    'https://server12.mp3quran.net/tblawi/',
+            'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/'
+        };
+
+        function getFullSurahAudioUrl(surahNum, reciterId) {
+            const server = FULL_SURAH_SERVERS[reciterId] || FULL_SURAH_SERVERS['mishari'];
+            const padded = String(surahNum).padStart(3, '0');
+            return server + padded + '.mp3';
+        }
+
+        function hasFullSurahAudio(reciterId) {
+            return Object.prototype.hasOwnProperty.call(FULL_SURAH_SERVERS, reciterId);
+        }
 
         function toggleSurah(id) {
             if (currentSurahId === id) {
@@ -1327,26 +1411,41 @@
             if (!s) return;
             if (currentSurahId) document.getElementById(`row-${currentSurahId}`)?.classList.remove("playing");
             currentSurahId = id;
-            surahAyahCursor = 1;
-            loadAndPlayAyah(id, 1, s.verses);
+
+            if (hasFullSurahAudio(reciterId)) {
+                // Full-surah MP3 — progress bar will span the whole surah
+                audio.src = getFullSurahAudioUrl(id, reciterId);
+                audio.load();
+                audio.play().then(() => { setPlaying(true); }).catch(() => { setPlaying(false); });
+                audio.onended = () => {
+                    // Auto-advance to next surah
+                    const nextId = id < 114 ? id + 1 : null;
+                    if (nextId) playSurahFromStart(nextId);
+                    else setPlaying(false);
+                };
+            } else {
+                // Fallback: ayah-by-ayah (only used for reciters not in FULL_SURAH_SERVERS)
+                surahAyahCursor = 1;
+                loadAndPlayAyah(id, 1, s.verses);
+            }
+
             document.getElementById("sp-surah-name").textContent = `${s.tr} · ${s.name}`;
             document.getElementById("sticky-player").classList.add("visible");
             document.getElementById(`row-${id}`)?.classList.add("playing");
             document.getElementById(`row-${id}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
 
+        // Ayah-by-ayah fallback (kept for reciters with no full-surah server)
+        let surahAyahCursor = 1;
         function loadAndPlayAyah(surahId, ayahNum, totalAyahs) {
-            // BUG FIX 2 (continued): load each ayah then auto-advance
             audio.src = `https://everyayah.com/data/${reciterData.folder}/${pad3(surahId)}${pad3(ayahNum)}.mp3`;
             audio.load();
             audio.play().then(() => { setPlaying(true); }).catch(() => { setPlaying(false); });
-
             audio.onended = () => {
                 if (ayahNum < totalAyahs) {
                     surahAyahCursor = ayahNum + 1;
                     loadAndPlayAyah(surahId, surahAyahCursor, totalAyahs);
                 } else {
-                    // Surah finished — auto-advance to next surah
                     const nextId = surahId < 114 ? surahId + 1 : null;
                     if (nextId) playSurahFromStart(nextId);
                     else setPlaying(false);
@@ -1387,10 +1486,57 @@
         document.getElementById("sp-next").addEventListener("click", () => {
             if (currentSurahId < 114) playSurahFromStart(currentSurahId + 1);
         });
-        document.getElementById("sp-progress-bar").addEventListener("click", e => {
-            const r = e.currentTarget.getBoundingClientRect();
-            audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
-        });
+        // ── SEEKABLE PROGRESS BAR ──
+        // Upgraded from a simple click handler to a full drag/seek handler
+        // so users on both mobile and desktop can scrub through the surah.
+        // Supports: click-to-jump, touch-drag, mouse-drag.
+        (function wireSeekableProgress() {
+            const bar = document.getElementById("sp-progress-bar");
+            const fill = document.getElementById("sp-fill");
+            if (!bar || !fill) return;
+
+            let isDragging = false;
+
+            function setProgressFromX(clientX) {
+                if (!audio.duration || isNaN(audio.duration)) return;
+                const r = bar.getBoundingClientRect();
+                let pct = (clientX - r.left) / r.width;
+                pct = Math.max(0, Math.min(1, pct));
+                // Update visual immediately for responsiveness
+                fill.style.width = (pct * 100) + "%";
+                // Set audio position
+                audio.currentTime = pct * audio.duration;
+                // Update current time label live while dragging
+                const cur = document.getElementById("sp-current");
+                if (cur) cur.textContent = fmt(audio.currentTime);
+            }
+
+            // Mouse: click + drag
+            bar.addEventListener("mousedown", e => {
+                isDragging = true;
+                setProgressFromX(e.clientX);
+            });
+            document.addEventListener("mousemove", e => {
+                if (isDragging) setProgressFromX(e.clientX);
+            });
+            document.addEventListener("mouseup", () => { isDragging = false; });
+
+            // Touch: tap + drag (this is what makes it work on mobile)
+            bar.addEventListener("touchstart", e => {
+                isDragging = true;
+                if (e.touches[0]) setProgressFromX(e.touches[0].clientX);
+            }, { passive: true });
+            bar.addEventListener("touchmove", e => {
+                if (isDragging && e.touches[0]) {
+                    setProgressFromX(e.touches[0].clientX);
+                    e.preventDefault(); // stop page from scrolling while dragging
+                }
+            }, { passive: false });
+            bar.addEventListener("touchend", () => { isDragging = false; });
+
+            // Keep the old click handler too for simple click-to-jump
+            bar.addEventListener("click", e => setProgressFromX(e.clientX));
+        })();
 
         // ── SEARCH ──
         document.getElementById("surah-search").addEventListener("input", e => {
@@ -1418,6 +1564,10 @@
             setTimeout(() => playSurahFromStart(autoSurah), 800);
         }
     </script>
+
+    <!-- Shared hamburger menu (floating button + slide-in drawer) -->
+    <script src="../js/shared-nav.js"></script>
+
 </body>
 
 </html>

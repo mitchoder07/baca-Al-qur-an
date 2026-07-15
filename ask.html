@@ -156,11 +156,9 @@
             margin-top: 0.5rem; max-width: 800px; margin-left: auto; margin-right: auto;
         }
 
-        /* Hide nav-links on mobile, show hamburger */
-        @media (max-width: 1119px) {
-            .nav-links { display: none; }
-            #askHamburger { display: flex !important; align-items: center; justify-content: center; }
-        }
+        /* NOTE: nav-links and #askHamburger have been removed.
+           Navigation is now handled by js/shared-nav.js (unified
+           hamburger button injected into the navbar). */
 
         @media (max-width: 600px) {
             .chat-container { 
@@ -221,26 +219,13 @@
             </svg>
             <span class="logo-text">Baca</span>
         </a>
-        <nav class="nav-links" style="justify-self:center;">
-            <a href="index.html">Home</a>
-            <a href="mushaf.html">Read Quran</a>
-            <a href="adhkar.html">Adhkar</a>
-            <a href="salah.html">How to Pray</a>
-        </nav>
         <div class="nav-actions">
             <button class="theme-btn" id="askThemeBtn" title="Toggle theme">
                 <i class="fa-solid fa-moon"></i>
             </button>
-            <button class="hamburger-btn" id="askHamburger">☰</button>
+            <!-- The shared hamburger button is injected here by js/shared-nav.js -->
         </div>
     </header>
-
-    <div class="mobile-nav" id="askMobileNav">
-        <a href="index.html">Home</a>
-        <a href="mushaf.html">Read Quran</a>
-        <a href="adhkar.html">Adhkar</a>
-        <a href="salah.html">How to Pray</a>
-    </div>
 
     <main class="chat-container" id="chatContainer">
         <div class="chat-welcome" id="chatWelcome">
@@ -304,24 +289,9 @@
             });
         })();
 
-        // Hamburger menu toggle
-        document.getElementById('askHamburger')?.addEventListener('click', () => {
-            document.getElementById('askMobileNav')?.classList.toggle('open');
-        });
-
-        // Close mobile nav when clicking a link
-        document.querySelectorAll('#askMobileNav a').forEach(a => {
-            a.addEventListener('click', () => {
-                document.getElementById('askMobileNav')?.classList.remove('open');
-            });
-        });
-
-        // Close mobile nav when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.navbar') && !e.target.closest('#askMobileNav')) {
-                document.getElementById('askMobileNav')?.classList.remove('open');
-            }
-        });
+        // NOTE: The old #askHamburger / #askMobileNav elements have been
+        // removed. Navigation is now handled by js/shared-nav.js, which
+        // injects the unified hamburger button into this navbar.
 
         // Enter key to send
         chatInput.addEventListener('keydown', (e) => {
@@ -410,5 +380,9 @@
             return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
     </script>
+
+    <!-- Shared hamburger menu (floating button + slide-in drawer) -->
+    <script src="js/shared-nav.js"></script>
+
 </body>
 </html>

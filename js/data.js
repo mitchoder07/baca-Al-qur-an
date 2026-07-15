@@ -154,7 +154,8 @@ const RECITERS = [
     { id: "rifai", name: "Hani Ar-Rifai", country: "Saudi Arabia", folder: "Hani_Rifai_192kbps" },
     { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", folder: "Muhsin_Al_Qasim_192kbps" },
     { id: "neana", name: "Ahmed Neana", country: "Egypt", folder: "Ahmed_Neana_128kbps" },
-    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", folder: "Ayman_Sowaid_64kbps" }
+    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", folder: "Ayman_Sowaid_64kbps" },
+    { id: "okasha", name: "Okasha Kameny", country: "Ghana", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true }
 ];
 
 // ============================================================
@@ -218,6 +219,7 @@ const FULL_SURAH_SERVERS = {
     'matroud':    'https://server8.mp3quran.net/mtrod/',
     'rifai':      'https://server8.mp3quran.net/hani/',
     'tablawi':    'https://server12.mp3quran.net/tblawi/',
+    'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/'
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {

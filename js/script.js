@@ -187,10 +187,15 @@ const RECITERS = [
     { id: "qasim", name: "Abdul Muhsin Al-Qasim", folder: "Muhsin_Al_Qasim_192kbps" },
     { id: "neana", name: "Ahmed Neana", folder: "Ahmed_Neana_128kbps" },
     { id: "ayman_swed", name: "Ayman Swed", folder: "Ayman_Sowaid_64kbps" },
+    { id: "okasha", name: "Okasha Kameny", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true },
 ];
 
 function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
     const reciter = RECITERS.find(r => r.id === reciterId) || RECITERS[0];
+    // Reciters not on everyayah.com (e.g. Okasha Kameny) use full-surah MP3s
+    if (reciter.fullSurahOnly) {
+        return getFullSurahAudioUrl(surahNum, reciterId);
+    }
     const s = String(surahNum).padStart(3, "0");
     const a = String(ayahNum).padStart(3, "0");
     return `https://everyayah.com/data/${reciter.folder}/${s}${a}.mp3`;
@@ -1925,46 +1930,23 @@ const RECITER_PROFILES = [
     { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/muhsin.png" },
     { id: "neana", name: "Ahmed Neana", country: "Egypt", style: "Murattal", image: "images/reciters/neana.png" },
     { id: "ayman_swed", name: "Ayman Swed", country: "Syria", style: "Murattal", image: "images/reciters/ayman.png" },
+    { id: "okasha", name: "Okasha Kameny", country: "Ghana", style: "Murattal", image: "images/reciters/okasha.png" },
 ];
 
 function initRecitersGrid() {
-    const gridEl = document.getElementById("reciters-grid");
-    const searchEl = document.getElementById("reciters-search");
-    if (!gridEl) return;
+    // The full reciter grid now lives on reciters/index.html.
+    // On the main page we just show a compact preview: a row of
+    // avatar thumbnails (first 8 reciters) + a "Browse all" button.
+    const previewEl = document.getElementById("reciters-preview-avatars");
+    if (!previewEl) return;
 
-    function renderGrid(list) {
-        if (!list.length) {
-            gridEl.innerHTML = `<div class="reciters-empty">No reciters match your search.</div>`;
-            return;
-        }
-        gridEl.innerHTML = list.map(r => `
-      <a class="reciter-card" href="reciters/reciter.html?r=${r.id}" title="Open ${r.name}'s profile">
-        <div class="reciter-avatar">
-          <img src="${r.image}" alt="${r.name}"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center">
-            <i data-lucide="mic"></i>
-          </span>
-        </div>
-        <h3>${r.name}</h3>
-        <div class="rc-country">${r.country}</div>
-        <span class="rc-style">${r.style}</span>
+    const previewList = RECITER_PROFILES.slice(0, 8);
+    previewEl.innerHTML = previewList.map(r => `
+      <a class="reciters-preview-avatar" href="reciters/reciter.html?r=${r.id}"
+         title="${r.name} — ${r.country}" data-name="${r.name}">
+        <img src="${r.image}" alt="${r.name}"
+          onerror="this.style.display='none';this.parentElement.style.background='rgba(16,185,129,0.15)'">
       </a>`).join("");
-        lucide.createIcons();
-    }
-
-    renderGrid(RECITER_PROFILES);
-
-    searchEl?.addEventListener("input", e => {
-        const q = e.target.value.trim().toLowerCase();
-        renderGrid(q
-            ? RECITER_PROFILES.filter(r =>
-                r.name.toLowerCase().includes(q) ||
-                r.country.toLowerCase().includes(q) ||
-                r.style.toLowerCase().includes(q))
-            : RECITER_PROFILES
-        );
-    });
 }
 
 // ==================== Reciter Picker for "Listen" Button ====================
@@ -1995,6 +1977,7 @@ const RECITER_PROFILES_FOR_PICKER = [
     { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", image: "images/reciters/qasim.jpg" },
     { id: "neana", name: "Ahmed Neana", country: "Egypt", image: "images/reciters/neana.jpg" },
     { id: "ayman_swed", name: "Ayman Swed", country: "Syria", image: "images/reciters/ayman_swed.jpg" },
+    { id: "okasha", name: "Okasha Kameny", country: "Ghana", image: "images/reciters/okasha.png" },
 ];
 
 function initReciterPicker() {
@@ -2062,24 +2045,9 @@ function initReciterPicker() {
     document.addEventListener("keydown", e => { if (e.key === "Escape") closePicker(); });
 }
 
-// Mobile nav toggle
-document.getElementById("hamburger-btn")?.addEventListener("click", () => {
-    document.getElementById("mobile-nav")?.classList.toggle("open");
-});
-
-// Close menu when any link inside it is clicked
-document.querySelectorAll(".mobile-nav a").forEach(link => {
-    link.addEventListener("click", () => {
-        document.getElementById("mobile-nav")?.classList.remove("open");
-    });
-});
-
-// Close menu when clicking outside it
-document.addEventListener("click", e => {
-    if (!e.target.closest(".navbar") && !e.target.closest(".mobile-nav")) {
-        document.getElementById("mobile-nav")?.classList.remove("open");
-    }
-});
+// NOTE: The old #hamburger-btn / #mobile-nav elements have been removed.
+// Navigation is now handled by js/shared-nav.js (unified hamburger button
+// injected into the navbar). No toggle code needed here.
 
 // =========================== Continue Reading Hint =================================
 

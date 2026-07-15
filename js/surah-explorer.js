@@ -141,6 +141,34 @@ function getActiveAudio() { return activeAudioMode === "surah" ? audioPlayer : a
 // RECITER HELPERS (quran.com numeric IDs)
 // ============================================================
 
+// ── CUSTOM RECITERS (not on quran.com API) ──────────────
+// These reciters are only available on mp3quran.net (full-surah
+// MP3s). We assign them custom numeric IDs (starting at 159) and
+// route their audio through mp3quran.net instead of the quran.com
+// API or cdn.islamic.network.
+//
+// For ayah-by-ayah playback (daily ayah, reader ayah mode), we
+// fall back to the full-surah MP3 since mp3quran.net doesn't offer
+// per-ayah files. The user will hear the entire surah rather than
+// a single ayah — not ideal, but far better than silence or an error.
+const CUSTOM_MP3QURAN_RECITERS = {
+    159: {
+        name: "Okasha Kameny",
+        server: "https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/"
+    }
+};
+
+function isCustomReciter(reciterId) {
+    return Object.prototype.hasOwnProperty.call(CUSTOM_MP3QURAN_RECITERS, Number(reciterId));
+}
+
+function getCustomReciterFullSurahUrl(surahNumber, reciterId) {
+    const r = CUSTOM_MP3QURAN_RECITERS[Number(reciterId)];
+    if (!r) return null;
+    const padded = String(surahNumber).padStart(3, '0');
+    return r.server + padded + '.mp3';
+}
+
 function syncReciterSelection(reciterId, { updateSelects = true, updateBadge = true, sourceSelect = null } = {}) {
     const nextId = Number(reciterId ?? currentReciter ?? 7);
     currentReciter = nextId;
@@ -163,6 +191,10 @@ function syncReciterSelection(reciterId, { updateSelects = true, updateBadge = t
 }
 
 async function getReciterChapterAudioUrl(surahNumber, reciterId = currentReciter) {
+    // Custom mp3quran.net reciters (e.g. Okasha Kameny) — bypass quran.com API
+    if (isCustomReciter(reciterId)) {
+        return getCustomReciterFullSurahUrl(surahNumber, reciterId);
+    }
     try {
         const res  = await fetch(`https://api.quran.com/api/v4/chapter_recitations/${reciterId}`);
         const data = await res.json();
@@ -176,6 +208,13 @@ async function getReciterChapterAudioUrl(surahNumber, reciterId = currentReciter
 
 // For individual ayah playback via quran.com
 async function getAyahAudioUrl(surahNumber, ayahInSurah, reciterId = currentReciter) {
+    // Custom mp3quran.net reciters — mp3quran.net only has full-surah files,
+    // so we return the full-surah URL. The player will play the whole surah
+    // rather than a single ayah. This is a known limitation for reciters not
+    // on the quran.com / alquran.cloud APIs.
+    if (isCustomReciter(reciterId)) {
+        return getCustomReciterFullSurahUrl(surahNumber, reciterId);
+    }
     try {
         const res  = await fetch(`https://api.quran.com/api/v4/recitations/${reciterId}/by_ayah?chapter_number=${surahNumber}&verse_number=${ayahInSurah}`);
         const data = await res.json();
@@ -212,6 +251,7 @@ function getLegacyReciterCode(reciterId) {
         "17":  "ar.muhammadayyoub",
         "18":  "ar.abdulsamad",
         "158": "ar.alafasy",   // Ali Jabir fallback
+        "159": "ar.alafasy",   // Okasha Kameny fallback (not on alquran.cloud; handled by CUSTOM_MP3QURAN_RECITERS)
     };
     return map[id] || "ar.alafasy";
 }
@@ -249,6 +289,7 @@ const FALLBACK_RECITERS = [
     { id: 17,  reciter_name: "Muhammad Ayyoub",                     translated_name: { name: "Muhammad Ayyoub" } },
     { id: 18,  reciter_name: "Abdullah Basfar",                     translated_name: { name: "Abdullah Basfar" } },
     { id: 158, reciter_name: "Abdullah Ali Jabir",                  translated_name: { name: "Abdullah Ali Jabir" } },
+    { id: 159, reciter_name: "Okasha Kameny",                       translated_name: { name: "Okasha Kameny" } },
 ];
 
 async function populateReciterSelects() {
@@ -262,10 +303,13 @@ async function populateReciterSelects() {
         const res  = await fetch("https://api.quran.com/api/v4/resources/recitations");
         const data = await res.json();
         const apiList = Array.isArray(data.recitations) ? data.recitations : [];
-        // Merge: keep API list and ensure Ali Jabir (158) is present
+        // Merge: keep API list and ensure Ali Jabir (158) and Okasha (159) are present
         reciterOptions = apiList.length ? apiList : FALLBACK_RECITERS;
         if (!reciterOptions.some(r => Number(r.id) === 158)) {
             reciterOptions.push(FALLBACK_RECITERS.find(r => r.id === 158));
+        }
+        if (!reciterOptions.some(r => Number(r.id) === 159)) {
+            reciterOptions.push(FALLBACK_RECITERS.find(r => r.id === 159));
         }
     } catch (err) {
         console.warn("Using fallback reciter list:", err);

@@ -636,7 +636,9 @@
             </svg>
             <span class="topbar-logo-text">Baca</span>
         </a>
-        <a class="nav-back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <div class="nav-actions" style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
+            <!-- The shared hamburger button is injected here by js/shared-nav.js -->
+        </div>
     </header>
 
     <div class="game-wrap">
@@ -984,6 +986,10 @@
 
         startRound();
     </script>
+
+    <!-- Shared hamburger menu (floating button + slide-in drawer) -->
+    <script src="js/shared-nav.js"></script>
+
 </body>
 
 </html>

@@ -1,0 +1,296 @@
+/* ============================================================
+   BACA — shared-nav.css  (v2 — proper navbar integration)
+   ------------------------------------------------------------
+   The hamburger button is NOT a floating FAB. It lives INSIDE
+   each page's existing <header class="navbar"> (or .mushaf-topbar),
+   styled to match that navbar's colors. It behaves like a
+   chameleon: dark on dark navbars, light on light navbars,
+   inherits the page's primary accent color.
+
+   The drawer slides in from the right and contains all the
+   main site navigation links.
+   ============================================================ */
+
+/* ── THE HAMBURGER BUTTON (in-navbar, chameleon) ──
+   It inherits text color from its parent navbar, so on a dark
+   navbar it's white, on a light navbar it's dark. Uses the
+   site's primary green as the hover/active accent. */
+.baca-nav-toggle {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    transition: background 0.18s ease, border-color 0.18s ease,
+                transform 0.18s ease, color 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+    /* Inherit font so the ☰ glyph renders consistently */
+    font-family: inherit;
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.baca-nav-toggle:hover {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.45);
+    color: #10b981;
+    transform: scale(1.04);
+}
+
+.baca-nav-toggle:active {
+    transform: scale(0.94);
+}
+
+.baca-nav-toggle svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+/* When the drawer is open, rotate the icon into an X */
+.baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-open {
+    display: none;
+}
+.baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-close {
+    display: block;
+}
+.baca-nav-toggle .baca-nav-toggle-icon-close {
+    display: none;
+}
+
+/* ── LIGHT MODE ADAPTATION ──
+   On pages that add body.light-mode (adhkar, salah, ask, reciters),
+   the navbar text becomes dark, so the button should match. */
+body.light-mode .baca-nav-toggle {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: inherit;
+}
+body.light-mode .baca-nav-toggle:hover {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #059669;
+}
+
+/* ── MUSHAF PAGE ADAPTATION ──
+   The mushaf topbar has its own theme attribute. Make sure the
+   button is visible on both dark and light mushaf themes. */
+[data-mushaf-theme="light"] .baca-nav-toggle {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+}
+[data-mushaf-theme="light"] .baca-nav-toggle:hover {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+/* ── SLIDE-IN DRAWER ── */
+.baca-nav-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 85vw);
+    background: #0f172a;
+    color: #fff;
+    z-index: 10020;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    visibility: hidden;
+}
+
+.baca-nav-drawer.open {
+    transform: translateX(0);
+    visibility: visible;
+}
+
+/* Drawer header */
+.baca-nav-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(16, 185, 129, 0.04);
+    flex-shrink: 0;
+}
+
+.baca-nav-drawer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    text-decoration: none;
+    color: #fff;
+}
+
+.baca-nav-drawer-logo svg {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+}
+
+.baca-nav-drawer-logo-text {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.baca-nav-drawer-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    flex-shrink: 0;
+}
+
+.baca-nav-drawer-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.baca-nav-drawer-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Drawer body */
+.baca-nav-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.8rem 0.6rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.baca-nav-drawer-section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    padding: 0.9rem 1rem 0.4rem;
+}
+
+.baca-nav-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.18s, color 0.18s, transform 0.18s;
+    margin-bottom: 2px;
+}
+
+.baca-nav-drawer-link:hover {
+    background: rgba(16, 185, 129, 0.08);
+    color: #10b981;
+    transform: translateX(2px);
+}
+
+.baca-nav-drawer-link:active {
+    transform: translateX(2px) scale(0.99);
+}
+
+.baca-nav-drawer-link.active {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    font-weight: 600;
+}
+
+.baca-nav-drawer-link svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.baca-nav-drawer-link.active svg {
+    opacity: 1;
+}
+
+/* Drawer footer */
+.baca-nav-drawer-footer {
+    padding: 1rem 1.4rem 1.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    flex-shrink: 0;
+}
+
+.baca-nav-drawer-footer-text {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ── BACKDROP ── */
+.baca-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 10015;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.baca-nav-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ── LIGHT MODE DRAWER ──
+   Even on light-mode pages, the drawer stays dark to keep the
+   branding consistent and the gradient logo visible. This is a
+   deliberate design choice — the drawer is a "destination", not
+   part of the page canvas. */
+
+/* ── SMALL SCREENS ── */
+@media (max-width: 640px) {
+    .baca-nav-toggle {
+        width: 40px;
+        height: 40px;
+    }
+    .baca-nav-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+    .baca-nav-drawer {
+        width: 88vw;
+    }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+    .baca-nav-drawer,
+    .baca-nav-backdrop,
+    .baca-nav-toggle {
+        transition: none !important;
+    }
+}
