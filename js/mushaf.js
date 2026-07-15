@@ -39,9 +39,15 @@ const API = {
     // Arabic Jalalayn — alquran.cloud (per-ayah endpoint)
     tafsirJalalaynAr: (s, a) => `https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.jalalayn`,
 
-    // Audio (EveryAyah)
+    // Audio (EveryAyah per-ayah, with mp3quran.net full-surah fallback)
     ayahAudio: (surah, ayah, reciterId) => {
         const reciter = RECITERS.find(r => r.id === reciterId) || RECITERS[0];
+        // Some reciters (e.g. Okasha Kameny) are not on everyayah.com.
+        // For them, fall back to the full-surah MP3 from mp3quran.net.
+        // The user will hear the entire surah rather than a single ayah.
+        if (reciter.fullSurahOnly && typeof getFullSurahAudioUrl === 'function') {
+            return getFullSurahAudioUrl(surah, reciterId);
+        }
         const s = String(surah).padStart(3, "0");
         const a = String(ayah).padStart(3, "0");
         return `https://everyayah.com/data/${reciter.folder}/${s}${a}.mp3`;
@@ -2173,6 +2179,53 @@ el.bookmarksToolBtn?.addEventListener("click", () => {
         el.bookmarksDrawer.classList.remove("open");
     } else {
         openDrawer("bookmarks-drawer");
+    }
+});
+
+/* ============================================================
+   SHARE TOOL BUTTON (toolbar)
+   Shares the first ayah on the current page as a beautiful image,
+   using the same BacaShare.previewVerseImage() used by the daily
+   ayah and the reading modal on index.html. Falls back to a plain
+   text share if BacaShare is not loaded.
+   ============================================================ */
+document.getElementById("share-tool")?.addEventListener("click", async () => {
+    try {
+        // Find the first ayah on the current page
+        const pageAyahs = await getAyahsForPage(state.page);
+        if (!pageAyahs || !pageAyahs.length) {
+            showToast("No verse to share on this page");
+            return;
+        }
+        const v = pageAyahs[0];
+        const meta = SURAH_LIST[v.surah - 1];
+        const surahName = meta?.transliteration || "Surah";
+
+        // If BacaShare is available, generate the image and show the preview modal
+        if (window.BacaShare && typeof window.BacaShare.previewVerseImage === 'function') {
+            const theme = document.body.dataset.mushafTheme === "light" ? "light" : "dark";
+            await window.BacaShare.previewVerseImage({
+                arabic: v.text || "",
+                translation: v.translation || "",
+                reference: `${surahName} verse ${v.ayah}`,
+                surahName: surahName,
+                theme: theme
+            });
+        } else {
+            // Fallback: plain text share
+            const text = `${v.text || ""}\n\n${v.translation || ""}\n\n— ${surahName} ${v.ayah}`;
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: "Qur'an Verse", text });
+                } else {
+                    await navigator.clipboard.writeText(text);
+                    showToast("Verse copied to clipboard");
+                }
+            } catch { showToast("Share cancelled"); }
+        }
+    } catch (err) {
+        console.error("Share failed:", err);
+        showToast("Could not share this page");
     }
 });
 

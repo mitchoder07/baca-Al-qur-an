@@ -80,10 +80,7 @@
             <span class="topbar-logo-text">Baca</span>
         </a>
         <div class="topbar-spacer"></div>
-        <a href="index.html" class="back-btn" title="Back to Home">
-            <i data-lucide="arrow-left"></i>
-            <span>Back</span>
-        </a>
+        <!-- The shared hamburger button is injected here by js/shared-nav.js -->
     </header>
 
     <!-- ================= MUSHAF TOOLBAR (sticky, below navbar) ================= -->
@@ -139,6 +136,11 @@
                 <i data-lucide="bookmark"></i>
                 <span class="tool-label">Bookmarks</span>
                 <span class="tool-indicator" id="bookmark-count">0</span>
+            </button>
+
+            <button class="tool-btn" id="share-tool" title="Share this page">
+                <i data-lucide="share-2"></i>
+                <span class="tool-label">Share</span>
             </button>
 
         </div>
@@ -366,6 +368,9 @@
 
     <!-- Share as Image -->
     <script src="js/share-image.js"></script>
+
+    <!-- Shared hamburger menu (floating button + slide-in drawer) -->
+    <script src="js/shared-nav.js"></script>
 
 </body>
 

@@ -58,19 +58,6 @@
             <span class="logo-text">Baca</span>
         </a>
 
-        <nav class="nav-links">
-            <a href="#">Home</a>
-            <a href="mushaf.html">Read Quran</a>
-            <a href="adhkar.html">Adhkar</a>
-            <a href="salah.html">How to Pray</a>
-            <a href="#daily-ayah">Daily Ayah</a>
-            <a href="#topics">Topics</a>
-            <a href="#journeys">Journey</a>
-            <a href="#featured-reciters">Reciters</a>
-            <a href="game.html">Word Game</a>
-            <a href="#bookmarks">Bookmarks</a>
-        </nav>
-
         <div class="nav-actions">
 
             <button class="search-btn">
@@ -81,25 +68,10 @@
                 <i class="fa-solid fa-moon"></i>
             </button>
 
-            <button class="hamburger-btn" id="hamburger-btn">
-                ☰
-            </button>
+            <!-- The shared hamburger button is injected here by js/shared-nav.js -->
         </div>
 
     </header>
-
-    <div class="mobile-nav" id="mobile-nav">
-        <a href="#">Home</a>
-        <a href="mushaf.html">Read Quran</a>
-        <a href="salah.html">How to Pray</a>
-        <a href="#daily-ayah">Daily Ayah</a>
-        <a href="#topics">Topics</a>
-        <a href="#journeys">Journey</a>
-        <a href="#featured-reciters">Reciters</a>
-        <a href="adhkar.html">Adhkar</a>
-        <a href="game.html">Word Game</a>
-        <a href="#bookmarks">Bookmarks</a>
-    </div>
 
     <!-- ================= HERO SECTION ================= -->
 
@@ -684,81 +656,18 @@
             <p>Choose a reciter and listen to the entire Qur'an in their voice.</p>
         </div>
 
-        <div class="reciters-search-wrap">
-            <i data-lucide="search"></i>
-            <input type="text" id="reciters-search" placeholder="Search reciters…">
+        <!-- Compact preview: shows a few reciter avatars + a button to the full list.
+             The full reciter grid now lives on reciters/index.html so this page
+             stays short. The grid below is just a teaser — populated by JS. -->
+        <div class="reciters-preview" id="reciters-preview">
+            <div class="reciters-preview-avatars" id="reciters-preview-avatars"></div>
+            <a href="reciters/index.html" class="reciters-see-all-btn">
+                <span>Browse all 26 reciters</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
-
-        <div class="reciters-grid" id="reciters-grid"></div>
 
     </section>
-
-    <!-- <section class="featured-reciters" id="featured-reciters">
-
-        <div class="section-header">
-
-            <h2>Featured Reciters</h2>
-
-            <p>
-                Listen to beautiful recitations from renowned reciters.
-            </p>
-
-        </div>
-
-        <div class="reciters-grid">
-
-            <div class="reciter-card">
-
-                <h3>Ali Jabir</h3>
-
-                <span>Saudi</span>
-
-            </div>
-
-            <div class="reciter-card">
-
-                <h3>Mishary Alafasy</h3>
-
-                <span>Kuwait</span>
-
-            </div>
-
-            <div class="reciter-card">
-
-                <h3>Al-Sudais</h3>
-
-                <span>Saudi</span>
-
-            </div>
-
-            <div class="reciter-card">
-
-                <h3>Al-Minshawi</h3>
-
-                <span>Egypt</span>
-
-            </div>
-
-            <div class="reciter-card">
-
-                <h3>Al-Husary</h3>
-
-                <span>Egypt</span>
-
-            </div>
-
-            <div class="reciter-card">
-
-                <h3>Saad Al-Ghamdi</h3>
-
-                <span>Saudi Arabia</span>
-
-            </div>
-
-
-        </div>
-
-    </section> -->
 
     <!-- ================= DAILY REFLECTION SECTION ================= -->
 
@@ -945,7 +854,7 @@
                 <a href="#reading-progress">Reading Stats</a>
                 <a href="#daily-challenge">Daily Challenge</a>
                 <a href="#achievements">Achievements</a>
-                <a href="#featured-reciters">Reciters</a>
+                <a href="reciters/index.html">Reciters</a>
                 <a href="game.html">Word Game</a>
             </div>
 
@@ -1502,6 +1411,9 @@
 
     <!-- Share as Image -->
     <script src="js/share-image.js"></script>
+
+    <!-- Shared hamburger menu (injects the nav button into this navbar) -->
+    <script src="js/shared-nav.js"></script>
 
 </body>
 
