@@ -1940,7 +1940,7 @@ function initRecitersGrid() {
     const previewEl = document.getElementById("reciters-preview-avatars");
     if (!previewEl) return;
 
-    const previewList = RECITER_PROFILES.slice(0, 8);
+    const previewList = RECITER_PROFILES.slice(0, 4);
     previewEl.innerHTML = previewList.map(r => `
       <a class="reciters-preview-avatar" href="reciters/reciter.html?r=${r.id}"
          title="${r.name} — ${r.country}" data-name="${r.name}">
@@ -2414,6 +2414,12 @@ function initGamification() {
             showToast("Progress reset");
             setTimeout(() => location.reload(), 800);
         }
+    });
+
+    // Footer meet developer — opens portfolio in new tab
+    document.getElementById("footer-meet-developer")?.addEventListener("click", e => {
+        e.preventDefault();
+        window.open("https://up1n-portfolio.vercel.app/", "_blank", "noopener");
     });
 
     // Track reading time — increment 30 seconds every 30 seconds while page is visible

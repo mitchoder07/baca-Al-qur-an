@@ -1462,10 +1462,17 @@ async function handleVerseAction(btn, surah, ayah) {
         } catch { showToast("Copy failed"); }
     }
     else if (btn.classList.contains("share-btn")) {
-        const arabic = card?.querySelector(".verse-arabic")?.innerText || "";
-        const trans = card?.querySelector(".verse-translation-block")?.innerText || "";
+        // Get Arabic text from the verse card (surah view) or from the
+        // ayah-flow element (page view), since the DOM structure differs.
+        const arabic = card?.querySelector(".verse-arabic")?.innerText ||
+                       document.querySelector(`.ayah-flow[data-surah="${surah}"][data-ayah="${ayah}"]`)?.innerText ||
+                       "";
         const surahName = meta?.transliteration || "Surah";
-        
+
+        // Fetch English translation (the page view doesn't have it in the DOM)
+        showToast("Preparing share image…");
+        const trans = await fetchAyahTranslation(surah, ayah);
+
         if (window.BacaShare) {
             const theme = document.body.dataset.mushafTheme === "light" ? "light" : "dark";
             await window.BacaShare.previewVerseImage({
@@ -2188,7 +2195,26 @@ el.bookmarksToolBtn?.addEventListener("click", () => {
    using the same BacaShare.previewVerseImage() used by the daily
    ayah and the reading modal on index.html. Falls back to a plain
    text share if BacaShare is not loaded.
+
+   NOTE: fetchSurahData() only fetches Arabic text + tajweed +
+   transliteration — it does NOT fetch translations. So we fetch
+   an English translation separately here before generating the
+   image. Without this, the translation field would be undefined
+   and the generated image would be blank.
    ============================================================ */
+
+// Helper: fetch a single ayah's English translation from alquran.cloud
+async function fetchAyahTranslation(surah, ayah) {
+    try {
+        const res = await fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.sahih`);
+        const data = await res.json();
+        return data?.data?.text || "";
+    } catch (e) {
+        console.warn("Translation fetch failed:", e);
+        return "";
+    }
+}
+
 document.getElementById("share-tool")?.addEventListener("click", async () => {
     try {
         // Find the first ayah on the current page
@@ -2201,19 +2227,23 @@ document.getElementById("share-tool")?.addEventListener("click", async () => {
         const meta = SURAH_LIST[v.surah - 1];
         const surahName = meta?.transliteration || "Surah";
 
+        // Fetch English translation (fetchSurahData doesn't include it)
+        showToast("Preparing share image…");
+        const translation = await fetchAyahTranslation(v.surah, v.ayah);
+
         // If BacaShare is available, generate the image and show the preview modal
         if (window.BacaShare && typeof window.BacaShare.previewVerseImage === 'function') {
             const theme = document.body.dataset.mushafTheme === "light" ? "light" : "dark";
             await window.BacaShare.previewVerseImage({
                 arabic: v.text || "",
-                translation: v.translation || "",
+                translation: translation,
                 reference: `${surahName} verse ${v.ayah}`,
                 surahName: surahName,
                 theme: theme
             });
         } else {
             // Fallback: plain text share
-            const text = `${v.text || ""}\n\n${v.translation || ""}\n\n— ${surahName} ${v.ayah}`;
+            const text = `${v.text || ""}\n\n${translation}\n\n— ${surahName} ${v.ayah}`;
             try {
                 if (navigator.share) {
                     await navigator.share({ title: "Qur'an Verse", text });

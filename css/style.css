@@ -3932,6 +3932,84 @@ body.light-mode .surah-rev-order {
     text-align: right;
 }
 
+/* ── READING MODAL / TAFSIR READABILITY FIXES ──
+   On mobile, the verse-card's 3rem padding + reader-content's 1.5rem
+   padding made the tafsir text squeezed into a narrow column. These
+   rules reduce padding on small screens and give the tafsir body
+   more breathing room so it's actually readable. */
+
+@media (max-width: 768px) {
+    .reader-content {
+        padding: 1rem 0.8rem;
+    }
+
+    .verse-card {
+        padding: 1.5rem 1rem;
+        border-radius: 20px;
+    }
+
+    .verse-arabic {
+        font-size: 1.8rem;
+        line-height: 2;
+    }
+
+    .verse-translation {
+        font-size: 0.98rem;
+        line-height: 1.9;
+    }
+
+    .tafsir-panel {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 14px;
+    }
+
+    .tafsir-body {
+        font-size: 0.95rem;
+        line-height: 1.9;
+    }
+
+    .tafsir-body.tafsir-arabic {
+        font-size: 1.1rem;
+        line-height: 2.1;
+    }
+
+    .verse-reader-tafsir {
+        padding: 0.9rem;
+        font-size: 0.92rem;
+        line-height: 1.9;
+        max-height: 350px;
+    }
+
+    .verse-actions {
+        gap: 0.6rem;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .reader-content {
+        padding: 0.8rem 0.6rem;
+    }
+
+    .verse-card {
+        padding: 1.2rem 0.8rem;
+    }
+
+    .verse-arabic {
+        font-size: 1.5rem;
+    }
+
+    .tafsir-panel {
+        padding: 0.9rem 0.8rem;
+    }
+
+    .tafsir-body {
+        font-size: 0.92rem;
+        line-height: 1.85;
+    }
+}
+
 .tafsir-loading {
     color: var(--reader-subtext);
     display: flex;
