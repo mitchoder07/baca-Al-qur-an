@@ -52,15 +52,42 @@
     ];
 
     // ── Detect current page ──────────────────────────────────
-    var currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    var currentDir = window.location.pathname.split('/').filter(Boolean);
-    currentDir.pop();
-    var inRecitersDir = currentDir.indexOf('reciters') !== -1;
+    // Use the FULL path (not just the filename) so that
+    // reciters/index.html doesn't match the Home link (index.html).
+    var fullPath = window.location.pathname;
+    // Normalize: strip trailing slash, ensure leading slash
+    if (fullPath.length > 1 && fullPath.endsWith('/')) fullPath = fullPath.slice(0, -1);
+    if (!fullPath.startsWith('/')) fullPath = '/' + fullPath;
 
+    // The path of the page we're on, relative to the site root
+    // e.g. '/' or '/index.html' → home
+    //      '/mushaf.html' → mushaf
+    //      '/reciters/index.html' → reciters page
+    //      '/reciters/reciter.html' → reciters page (subdir match)
     function isActive(link) {
-        if (link.subdir && inRecitersDir) return true;
-        return currentPath === link.page ||
-            (link.page === 'index.html' && (currentPath === '' || currentPath === '/'));
+        // Build the expected full path for this link
+        var expectedPath = link.href;
+        // Remove any root prefix (../) since we're comparing against window.location.pathname
+        // which is always root-relative
+        while (expectedPath.startsWith('../')) expectedPath = expectedPath.slice(3);
+        if (!expectedPath.startsWith('/')) expectedPath = '/' + expectedPath;
+
+        // Special case: Home link matches '/' or '/index.html' at the ROOT only
+        if (link.page === 'index.html' && !link.subdir) {
+            return fullPath === '/' || fullPath === '/index.html' ||
+                   fullPath === '' || fullPath === '/index.htm';
+        }
+
+        // For links with a subdir (e.g. Reciters), match if we're anywhere
+        // inside that subdirectory
+        if (link.subdir) {
+            var subdirPath = '/' + link.subdir;
+            return fullPath.indexOf(subdirPath) !== -1 ||
+                   fullPath === expectedPath;
+        }
+
+        // For all other links, exact path match
+        return fullPath === expectedPath;
     }
 
     // ── SVG icons (inline so no icon-font dependency) ────────
@@ -138,14 +165,22 @@
 
     // ── Find or create a nav-actions container ───────────────
     function findOrCreateNavActions(navbar) {
-        // Look for an existing .nav-actions or .nav-back container
+        // Look for an existing .nav-actions container
         var existing = navbar.querySelector('.nav-actions');
         if (existing) return existing;
 
-        // For mushaf topbar, look for .topbar-spacer or append after logo
+        // For mushaf topbar: the topbar has [logo, topbar-spacer(flex:1)].
+        // We must NOT inject into the spacer (that puts the button right
+        // next to the logo). Instead, create a new .nav-actions div and
+        // append it AFTER the spacer. The topbar's `justify-content:
+        // space-between` + the spacer's `flex:1` will push the nav-actions
+        // to the far right.
         if (navbar.classList.contains('mushaf-topbar')) {
-            var spacer = navbar.querySelector('.topbar-spacer');
-            if (spacer) return spacer;
+            var div = document.createElement('div');
+            div.className = 'nav-actions';
+            div.style.cssText = 'display:flex;align-items:center;gap:0.6rem;flex-shrink:0;';
+            navbar.appendChild(div);
+            return div;
         }
 
         // Look for a back button container we can repurpose
@@ -153,11 +188,11 @@
         if (navBack) return navBack;
 
         // Create a new nav-actions div
-        var div = document.createElement('div');
-        div.className = 'nav-actions';
-        div.style.cssText = 'display:flex;align-items:center;gap:0.6rem;margin-left:auto;';
-        navbar.appendChild(div);
-        return div;
+        var div2 = document.createElement('div');
+        div2.className = 'nav-actions';
+        div2.style.cssText = 'display:flex;align-items:center;gap:0.6rem;margin-left:auto;';
+        navbar.appendChild(div2);
+        return div2;
     }
 
     // ── Build the hamburger button ───────────────────────────
