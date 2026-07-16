@@ -1462,11 +1462,13 @@ async function handleVerseAction(btn, surah, ayah) {
         } catch { showToast("Copy failed"); }
     }
     else if (btn.classList.contains("share-btn")) {
-        // Get Arabic text from the verse card (surah view) or from the
-        // ayah-flow element (page view), since the DOM structure differs.
-        const arabic = card?.querySelector(".verse-arabic")?.innerText ||
-                       document.querySelector(`.ayah-flow[data-surah="${surah}"][data-ayah="${ayah}"]`)?.innerText ||
-                       "";
+        // Get Arabic text from the cached verse data (clean — no ayah marker).
+        // We do NOT read from the DOM (.ayah-flow) because that element
+        // includes the ayah marker (Arabic numeral) which would appear
+        // in the shared image.
+        const pageAyahs = await getAyahsForPage(state.page);
+        const v = pageAyahs.find(a => a.surah === surah && a.ayah === ayah);
+        const arabic = v?.text || "";
         const surahName = meta?.transliteration || "Surah";
 
         // Fetch English translation (the page view doesn't have it in the DOM)
