@@ -16,9 +16,12 @@
     <!-- Fonts: Poppins (UI) + Amiri Quran + Amiri + Noto Naskh Arabic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Mushaf-specific styles (self-contained — no style.css dependency) -->
@@ -26,11 +29,11 @@
 
 </head>
 
-<body data-mushaf-theme="dark" class="mushaf-page">
+<body data-mushaf-theme="dark">
 
     <!-- Pre-load: apply saved theme ASAP to avoid flash of wrong theme -->
     <script>
-        (function() {
+        (function () {
             try {
                 // Determine the starting theme:
                 // 1. If user has a saved mushaf theme, use it
@@ -42,7 +45,7 @@
                 }
                 document.body.setAttribute("data-mushaf-theme", t);
                 if (t === "light") document.body.classList.add("light-mode");
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
 
@@ -50,30 +53,38 @@
 
     <header class="mushaf-topbar">
         <a href="index.html" class="topbar-logo" aria-label="Baca — Home">
-            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
                 <!-- Open book (Quran) silhouette -->
                 <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                    fill="url(#bacaLogoGrad)" opacity="0.18"/>
+                    fill="url(#bacaLogoGrad)" opacity="0.18" />
                 <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
                 <!-- Center spine -->
-                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
+                    stroke-linecap="round" />
                 <!-- Decorative star/crescent above book -->
                 <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
-                    fill="url(#bacaLogoGrad)" opacity="0.9"/>
+                    fill="url(#bacaLogoGrad)" opacity="0.9" />
                 <!-- Page lines (left) -->
-                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
                 <!-- Page lines (right) -->
-                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
                 <defs>
                     <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stop-color="#10b981"/>
-                        <stop offset="0.5" stop-color="#06b6d4"/>
-                        <stop offset="1" stop-color="#6366f1"/>
+                        <stop offset="0" stop-color="#10b981" />
+                        <stop offset="0.5" stop-color="#06b6d4" />
+                        <stop offset="1" stop-color="#6366f1" />
                     </linearGradient>
                 </defs>
             </svg>
@@ -307,7 +318,8 @@
         <div class="search-modal-content">
             <div class="search-modal-head">
                 <i data-lucide="search"></i>
-                <input type="text" id="mushaf-search-input" placeholder="Search surah name, number, or jump to page (e.g. 'Baqarah', '36', 'page 100')">
+                <input type="text" id="mushaf-search-input"
+                    placeholder="Search surah name, number, or jump to page (e.g. 'Baqarah', '36', 'page 100')">
                 <button id="search-modal-close"><i data-lucide="x"></i></button>
             </div>
             <div class="search-modal-results" id="search-modal-results">
