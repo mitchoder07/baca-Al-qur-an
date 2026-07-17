@@ -1,20 +1,3 @@
-/* ============================================================
-   BACA — share-image.js
-   Generates beautiful shareable verse images with the Baca logo.
-   Uses HTML5 Canvas to render the image, then downloads or shares it.
-
-   FIXED IN THIS VERSION:
-   - Removed duplicate `const transLines` declaration (was causing a
-     SyntaxError that silently broke the whole file / window.BacaShare)
-   - Canvas height is now DYNAMIC: short verses render on a standard
-     1080x1080 square (centered, lots of breathing room); long verses
-     grow the canvas taller instead of cramming/overlapping text.
-   - Arabic line-height increased so diacritics (tashkeel) don't
-     collide between lines.
-   - Arabic font size now scales by actual line count instead of
-     fixed brackets that didn't leave enough room.
-   ============================================================ */
-
 (function () {
 
     // ============================================================
