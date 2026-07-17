@@ -510,39 +510,6 @@
             color: var(--primary)
         }
 
-        /* 
-        .row-num-text {}
-
-        .row-play-icon {
-            display: none;
-            position: absolute;
-            inset: 0;
-            align-items: center;
-            justify-content: center
-        } */
-
-        /* .surah-row:hover .row-num-text,
-        .surah-row.playing .row-num-text {
-            display: none
-        }
-
-        .surah-row:hover .row-play-icon,
-        .surah-row.playing .row-play-icon {
-            display: flex
-        }
-
-        .row-play-icon.pause-icon {
-            display: none
-        }
-
-        .surah-row.playing .row-play-icon.play-icon {
-            display: none
-        }
-
-        .surah-row.playing .row-play-icon.pause-icon {
-            display: flex
-        } */
-
         .row-num-text {
             display: flex;
         }
@@ -1041,10 +1008,19 @@
                mishari.jpg, sudais.jpg, ali_jaber.jpg, etc.
           3. The src below is set automatically by JS — you don't edit this.
              If the image file is missing it falls back to the mic icon.
+
+          FIX (avatar not showing until refresh): this <img> used to start
+          with src="" and rely solely on inline onerror. An empty src makes
+          some browsers fire a spurious error before the JS below ever runs,
+          which permanently set display:none on the <img> — even though the
+          real photo went on to load successfully in the background, nothing
+          ever reversed that display:none. Now the placeholder is shown by
+          default and the <img> has NO src until JS assigns the real one;
+          onload/onerror are wired in JS (see populateHero()) so the swap
+          only happens once the real image is confirmed loaded.
         -->
-                    <img class="avatar-img" id="reciter-avatar" src="" alt=""
-                        onerror="this.style.display='none';document.getElementById('avatar-placeholder').style.display='flex'">
-                    <div class="avatar-placeholder" id="avatar-placeholder">
+                    <img class="avatar-img" id="reciter-avatar" alt="" style="display:none">
+                    <div class="avatar-placeholder" id="avatar-placeholder" style="display:flex">
                         <i class="fa-solid fa-microphone"></i>
                     </div>
                 </div>
@@ -1290,10 +1266,25 @@
             document.getElementById("stat-style").textContent = reciterData.style;
             document.getElementById("sp-reciter-name").textContent = reciterData.name;
 
-            // Avatar — JS sets the src; onerror in HTML shows the placeholder
+            // Avatar — placeholder is visible by default (see HTML). We only
+            // swap in the real photo once it is CONFIRMED loaded (onload),
+            // and keep the placeholder up on failure (onerror). This avoids
+            // the old race where an empty initial src="" could trip the
+            // onerror handler before this script ever ran, permanently
+            // hiding the <img> even after the real photo loaded fine.
             const img = document.getElementById("reciter-avatar");
-            img.src = reciterData.image;
+            const placeholder = document.getElementById("avatar-placeholder");
+
+            img.onload = () => {
+                img.style.display = "block";
+                placeholder.style.display = "none";
+            };
+            img.onerror = () => {
+                img.style.display = "none";
+                placeholder.style.display = "flex";
+            };
             img.alt = reciterData.name;
+            img.src = reciterData.image;
 
             document.getElementById("reciter-meta").innerHTML = `
     <span class="meta-pill"><i class="fa-solid fa-earth-africa"></i>${reciterData.country}</span>
@@ -1368,24 +1359,24 @@
         // Full-surah server map (mirrors js/data.js FULL_SURAH_SERVERS so
         // this page is self-contained even though data.js is not loaded).
         const FULL_SURAH_SERVERS = {
-            'mishari':    'https://server8.mp3quran.net/afs/',
-            'sudais':     'https://server11.mp3quran.net/sds/',
+            'mishari': 'https://server8.mp3quran.net/afs/',
+            'sudais': 'https://server11.mp3quran.net/sds/',
             'abdulbasit': 'https://server7.mp3quran.net/basit/',
-            'husary':     'https://server13.mp3quran.net/husr/',
-            'minshawi':   'https://server10.mp3quran.net/minsh/',
-            'shaatree':   'https://server11.mp3quran.net/shatri/',
-            'muaiqly':    'https://server12.mp3quran.net/maher/',
-            'shuraym':    'https://server7.mp3quran.net/shur/',
-            'hudhaify':   'https://server8.mp3quran.net/bna/',
-            'ajamy':      'https://server10.mp3quran.net/ajm/',
-            'jibreel':    'https://server8.mp3quran.net/jbrl/',
-            'ayyoub':     'https://server16.mp3quran.net/ayyoub2/',
-            'ghamdi':     'https://server7.mp3quran.net/s_gmd/',
-            'basfar':     'https://server6.mp3quran.net/bsfr/',
-            'matroud':    'https://server8.mp3quran.net/mtrod/',
-            'rifai':      'https://server8.mp3quran.net/hani/',
-            'tablawi':    'https://server12.mp3quran.net/tblawi/',
-            'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/'
+            'husary': 'https://server13.mp3quran.net/husr/',
+            'minshawi': 'https://server10.mp3quran.net/minsh/',
+            'shaatree': 'https://server11.mp3quran.net/shatri/',
+            'muaiqly': 'https://server12.mp3quran.net/maher/',
+            'shuraym': 'https://server7.mp3quran.net/shur/',
+            'hudhaify': 'https://server8.mp3quran.net/bna/',
+            'ajamy': 'https://server10.mp3quran.net/ajm/',
+            'jibreel': 'https://server8.mp3quran.net/jbrl/',
+            'ayyoub': 'https://server16.mp3quran.net/ayyoub2/',
+            'ghamdi': 'https://server7.mp3quran.net/s_gmd/',
+            'basfar': 'https://server6.mp3quran.net/bsfr/',
+            'matroud': 'https://server8.mp3quran.net/mtrod/',
+            'rifai': 'https://server8.mp3quran.net/hani/',
+            'tablawi': 'https://server12.mp3quran.net/tblawi/',
+            'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/'
         };
 
         function getFullSurahAudioUrl(surahNum, reciterId) {

@@ -4163,11 +4163,7 @@ body.reader-open .baca-chat-panel {
     display: none !important;
 }
 
-/* ── MUSHAF PAGE: chat widget mobile-only ──
-   On the mushaf page, the chat widget FAB is hidden on desktop
-   (where there's plenty of room for the mushaf text) and only
-   shown on mobile screens (≤ 768px) where the floating button
-   is useful for quick access without scrolling to the navbar. */
+/* ── MUSHAF PAGE: chat widget mobile-only ── */
 @media (min-width: 769px) {
     body.mushaf-page .baca-chat-fab,
     body.mushaf-page .baca-chat-panel {
