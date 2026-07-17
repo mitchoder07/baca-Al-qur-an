@@ -4153,6 +4153,201 @@ body.light-mode .surah-rev-order {
     color: var(--reader-accent) !important;
 }
 
+/* ── HIDE CHAT WIDGET WHEN READING MODAL IS OPEN ──
+   The reading modal (z-index: 4000) covers the page, but the chat
+   widget FAB (z-index: 9000) would appear on top of it. Adding a
+   body.reader-open class when the modal opens lets us hide the FAB
+   and its panel so they don't overlap the reading experience. */
+body.reader-open .baca-chat-fab,
+body.reader-open .baca-chat-panel {
+    display: none !important;
+}
+
+/* ── MUSHAF PAGE: chat widget mobile-only ──
+   On the mushaf page, the chat widget FAB is hidden on desktop
+   (where there's plenty of room for the mushaf text) and only
+   shown on mobile screens (≤ 768px) where the floating button
+   is useful for quick access without scrolling to the navbar. */
+@media (min-width: 769px) {
+    body.mushaf-page .baca-chat-fab,
+    body.mushaf-page .baca-chat-panel {
+        display: none !important;
+    }
+}
+
+/* ── FOOTER FEEDBACK FORM ── */
+.footer-feedback {
+    max-width: 600px;
+    margin: 2.5rem auto 0;
+    padding: 0 1rem;
+}
+
+.feedback-card {
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.8rem;
+    text-align: center;
+}
+
+.feedback-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--white);
+}
+
+.feedback-card h4 i {
+    color: var(--primary);
+}
+
+.feedback-card > p {
+    color: var(--text);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 1.4rem;
+}
+
+.feedback-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    text-align: left;
+}
+
+.feedback-card input,
+.feedback-card select,
+.feedback-card textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.feedback-card input:focus,
+.feedback-card select:focus,
+.feedback-card textarea:focus {
+    border-color: var(--primary);
+}
+
+.feedback-card textarea {
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.5;
+}
+
+.feedback-card select {
+    cursor: pointer;
+    appearance: none;
+    color-scheme: dark; /* makes the native dropdown list dark in dark mode */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.2rem;
+}
+
+/* Style the dropdown options for dark mode (works in most modern browsers) */
+.feedback-card select option {
+    background: #1e293b;
+    color: #cbd5e1;
+    padding: 0.5rem 0.7rem;
+}
+
+.feedback-card select option:checked,
+.feedback-card select option:hover {
+    background: #10b981;
+    color: #fff;
+}
+
+.feedback-card input::placeholder,
+.feedback-card textarea::placeholder {
+    color: #64748b;
+}
+
+.feedback-submit-btn {
+    padding: 0.8rem 1.4rem;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feedback-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.feedback-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Light mode adjustments */
+body.light-mode .feedback-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.07);
+}
+body.light-mode .feedback-card h4 {
+    color: #0f172a;
+}
+body.light-mode .feedback-card > p {
+    color: #475569;
+}
+body.light-mode .feedback-card input,
+body.light-mode .feedback-card select,
+body.light-mode .feedback-card textarea {
+    background: #f8fafc;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+}
+
+/* Light mode: dropdown options use light background */
+body.light-mode .feedback-card select {
+    color-scheme: light;
+}
+body.light-mode .feedback-card select option {
+    background: #ffffff;
+    color: #0f172a;
+}
+body.light-mode .feedback-card select option:checked,
+body.light-mode .feedback-card select option:hover {
+    background: #10b981;
+    color: #fff;
+}
+body.light-mode .feedback-card input::placeholder,
+body.light-mode .feedback-card textarea::placeholder {
+    color: #94a3b8;
+}
+
+@media (max-width: 640px) {
+    .footer-feedback {
+        margin-top: 2rem;
+        padding: 0 0.5rem;
+    }
+    .feedback-card {
+        padding: 1.4rem 1.1rem;
+        border-radius: 18px;
+    }
+}
+
 /* Favorite reciter button */
 #favorite-reciter {
     background: var(--reader-tool-bg) !important;

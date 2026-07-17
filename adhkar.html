@@ -12,8 +12,10 @@
 
     <!-- Arabic + UI Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Shared styles (same as index.html) -->
     <link rel="stylesheet" href="css/style.css">
@@ -72,8 +74,13 @@
         }
 
         @keyframes patternDrift {
-            from { background-position: 0 0; }
-            to { background-position: 800px 800px; }
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 800px 800px;
+            }
         }
 
         .hero-corner-ornament {
@@ -83,10 +90,29 @@
             opacity: 0.35;
             pointer-events: none;
         }
-        .hero-corner-ornament.tl { top: 14px; left: 14px; }
-        .hero-corner-ornament.tr { top: 14px; right: 14px; transform: scaleX(-1); }
-        .hero-corner-ornament.bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
-        .hero-corner-ornament.br { bottom: 14px; right: 14px; transform: scale(-1, -1); }
+
+        .hero-corner-ornament.tl {
+            top: 14px;
+            left: 14px;
+        }
+
+        .hero-corner-ornament.tr {
+            top: 14px;
+            right: 14px;
+            transform: scaleX(-1);
+        }
+
+        .hero-corner-ornament.bl {
+            bottom: 14px;
+            left: 14px;
+            transform: scaleY(-1);
+        }
+
+        .hero-corner-ornament.br {
+            bottom: 14px;
+            right: 14px;
+            transform: scale(-1, -1);
+        }
 
         .adhkar-hijri-badge {
             display: inline-flex;
@@ -105,13 +131,17 @@
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.12);
         }
 
-        .adhkar-hijri-badge i { font-size: .85rem; }
+        .adhkar-hijri-badge i {
+            font-size: .85rem;
+        }
+
         .adhkar-hijri-badge .hijri-divider {
             width: 1px;
             height: 14px;
             background: rgba(16, 185, 129, 0.3);
             margin: 0 .2rem;
         }
+
         .adhkar-hijri-badge .hijri-ar {
             font-family: "Amiri", serif;
             font-size: .95rem;
@@ -196,7 +226,11 @@
             flex-shrink: 0;
         }
 
-        .stat-info { display: flex; flex-direction: column; min-width: 0; }
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
 
         .stat-num {
             font-size: 1.55rem;
@@ -205,7 +239,10 @@
             line-height: 1;
             font-variant-numeric: tabular-nums;
         }
-        body.light-mode .stat-num { color: #0f172a; }
+
+        body.light-mode .stat-num {
+            color: #0f172a;
+        }
 
         .stat-label {
             font-size: .78rem;
@@ -233,7 +270,9 @@
         .adhkar-progress-wrap::before {
             content: "";
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--primary), #06b6d4, transparent);
             opacity: 0.6;
@@ -256,6 +295,7 @@
             stroke: rgba(255, 255, 255, 0.08);
             stroke-width: 8;
         }
+
         body.light-mode .adhkar-progress-circle .ring-bg {
             stroke: rgba(0, 0, 0, 0.06);
         }
@@ -282,9 +322,15 @@
             color: var(--white);
             font-variant-numeric: tabular-nums;
         }
-        body.light-mode .progress-pct { color: #0f172a; }
 
-        .adhkar-progress-text { flex: 1; min-width: 220px; }
+        body.light-mode .progress-pct {
+            color: #0f172a;
+        }
+
+        .adhkar-progress-text {
+            flex: 1;
+            min-width: 220px;
+        }
 
         .adhkar-progress-text h3 {
             font-size: 1.1rem;
@@ -292,7 +338,10 @@
             margin-bottom: .35rem;
             color: var(--white);
         }
-        body.light-mode .adhkar-progress-text h3 { color: #0f172a; }
+
+        body.light-mode .adhkar-progress-text h3 {
+            color: #0f172a;
+        }
 
         .adhkar-progress-text p {
             color: var(--text);
@@ -335,7 +384,10 @@
             white-space: nowrap;
             text-decoration: none;
         }
-        body.light-mode .adhkar-btn { color: #0f172a; }
+
+        body.light-mode .adhkar-btn {
+            color: #0f172a;
+        }
 
         .adhkar-btn:hover {
             border-color: var(--primary);
@@ -356,9 +408,15 @@
             border-color: transparent;
             box-shadow: 0 8px 22px rgba(16, 185, 129, 0.25);
         }
-        .adhkar-btn.primary:hover { color: #fff; filter: brightness(1.06); }
 
-        .adhkar-btn i { font-size: .9rem; }
+        .adhkar-btn.primary:hover {
+            color: #fff;
+            filter: brightness(1.06);
+        }
+
+        .adhkar-btn i {
+            font-size: .9rem;
+        }
 
         /* ====================================================
            TOOLBAR
@@ -399,9 +457,15 @@
             outline: none;
             transition: border-color .2s, box-shadow .2s;
         }
-        body.light-mode .adhkar-search input { color: #0f172a; }
 
-        .adhkar-search input::placeholder { color: var(--text); opacity: .7; }
+        body.light-mode .adhkar-search input {
+            color: #0f172a;
+        }
+
+        .adhkar-search input::placeholder {
+            color: var(--text);
+            opacity: .7;
+        }
 
         .adhkar-search input:focus {
             border-color: var(--primary);
@@ -422,9 +486,18 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        .adhkar-categories::-webkit-scrollbar { height: 5px; }
-        .adhkar-categories::-webkit-scrollbar-thumb { background: var(--border); border-radius: 50px; }
-        .adhkar-categories::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        .adhkar-categories::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .adhkar-categories::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 50px;
+        }
+
+        .adhkar-categories::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
 
         .adhkar-pill {
             display: inline-flex;
@@ -444,7 +517,9 @@
             flex-shrink: 0;
         }
 
-        .adhkar-pill i { font-size: .85rem; }
+        .adhkar-pill i {
+            font-size: .85rem;
+        }
 
         .adhkar-pill:hover {
             color: var(--primary);
@@ -467,7 +542,10 @@
             margin-left: .15rem;
             font-weight: 600;
         }
-        .adhkar-pill.active .pill-count { background: rgba(255, 255, 255, 0.25); }
+
+        .adhkar-pill.active .pill-count {
+            background: rgba(255, 255, 255, 0.25);
+        }
 
         /* ====================================================
            ADHKAR GRID + CARDS
@@ -497,7 +575,10 @@
         }
 
         @keyframes cardIn {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Gradient border on hover */
@@ -510,7 +591,7 @@
             background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
             -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
             -webkit-mask-composite: xor;
-                    mask-composite: exclude;
+            mask-composite: exclude;
             opacity: 0;
             transition: opacity .3s;
             pointer-events: none;
@@ -521,13 +602,17 @@
             transform: translateY(-4px);
             box-shadow: 0 18px 42px rgba(2, 6, 23, 0.42);
         }
-        .adhkar-card:hover::before { opacity: 1; }
+
+        .adhkar-card:hover::before {
+            opacity: 1;
+        }
 
         /* Completed state */
         .adhkar-card.completed {
             border-color: rgba(16, 185, 129, 0.45);
             box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.18), 0 14px 32px rgba(16, 185, 129, 0.14);
         }
+
         .adhkar-card.completed::before {
             background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
             opacity: 1;
@@ -559,7 +644,10 @@
             transition: all .35s cubic-bezier(.34, 1.56, .64, 1);
             z-index: 2;
         }
-        .completed-stamp i { font-size: .65rem; }
+
+        .completed-stamp i {
+            font-size: .65rem;
+        }
 
         .adhkar-card-top {
             display: flex;
@@ -594,7 +682,9 @@
         }
 
         /* Arabic block with decorative top divider */
-        .adhkar-arabic-wrap { margin-bottom: 1rem; }
+        .adhkar-arabic-wrap {
+            margin-bottom: 1rem;
+        }
 
         .arabic-divider {
             display: flex;
@@ -628,7 +718,10 @@
             margin: 0.5rem 0;
             padding: 0 0.5rem;
         }
-        body.light-mode .adhkar-arabic { color: #0f172a; }
+
+        body.light-mode .adhkar-arabic {
+            color: #0f172a;
+        }
 
         .adhkar-translit {
             font-style: italic;
@@ -648,7 +741,11 @@
             line-height: 1.6;
             margin-bottom: 1.1rem;
         }
-        body.light-mode .adhkar-translation { color: #1e293b; opacity: 1; }
+
+        body.light-mode .adhkar-translation {
+            color: #1e293b;
+            opacity: 1;
+        }
 
         .adhkar-reference {
             display: inline-flex;
@@ -663,8 +760,15 @@
             border: 1px solid var(--border);
             align-self: flex-start;
         }
-        body.light-mode .adhkar-reference { background: rgba(0, 0, 0, 0.03); }
-        .adhkar-reference i { color: var(--primary); font-size: .72rem; }
+
+        body.light-mode .adhkar-reference {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .adhkar-reference i {
+            color: var(--primary);
+            font-size: .72rem;
+        }
 
         .adhkar-card-actions {
             display: flex;
@@ -694,7 +798,10 @@
             place-items: center;
             font-size: .9rem;
         }
-        body.light-mode .adhkar-icon-btn { background: rgba(0, 0, 0, 0.02); }
+
+        body.light-mode .adhkar-icon-btn {
+            background: rgba(0, 0, 0, 0.02);
+        }
 
         .adhkar-icon-btn:hover {
             color: var(--primary);
@@ -716,8 +823,15 @@
         }
 
         @keyframes pulseRing {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            50% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 7px rgba(16, 185, 129, 0);
+            }
         }
 
         /* Big circular counter */
@@ -735,8 +849,13 @@
             flex-shrink: 0;
         }
 
-        .adhkar-counter-circle:hover { transform: scale(1.06); }
-        .adhkar-counter-circle:active { transform: scale(0.94); }
+        .adhkar-counter-circle:hover {
+            transform: scale(1.06);
+        }
+
+        .adhkar-counter-circle:active {
+            transform: scale(0.94);
+        }
 
         .adhkar-counter-circle svg {
             position: absolute;
@@ -750,6 +869,7 @@
             stroke: rgba(255, 255, 255, 0.10);
             stroke-width: 4;
         }
+
         body.light-mode .adhkar-counter-circle .ring-bg {
             stroke: rgba(0, 0, 0, 0.08);
         }
@@ -775,7 +895,10 @@
             z-index: 1;
             letter-spacing: -0.5px;
         }
-        body.light-mode .adhkar-counter-circle .counter-num { color: #0f172a; }
+
+        body.light-mode .adhkar-counter-circle .counter-num {
+            color: #0f172a;
+        }
 
         .adhkar-counter-circle.done .ring-fill {
             stroke: #10b981;
@@ -801,16 +924,36 @@
         }
 
         @keyframes pulseDone {
-            0%, 100% { transform: scale(1); opacity: 0.55; }
-            50% { transform: scale(1.1); opacity: 0.85; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.55;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.85;
+            }
         }
 
         @keyframes countPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.22); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.22);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
-        .adhkar-counter-circle.pop .counter-num { animation: countPop .35s ease; }
+
+        .adhkar-counter-circle.pop .counter-num {
+            animation: countPop .35s ease;
+        }
 
         /* ====================================================
            EMPTY STATE
@@ -834,7 +977,10 @@
             font-size: 1.2rem;
             margin-bottom: .4rem;
         }
-        body.light-mode .adhkar-empty h3 { color: #0f172a; }
+
+        body.light-mode .adhkar-empty h3 {
+            color: #0f172a;
+        }
 
         .adhkar-empty p {
             font-size: .9rem;
@@ -884,11 +1030,24 @@
             border: 2px solid var(--dark-light);
             display: none;
         }
-        .adhkar-reminder-toggle.active .reminder-dot { display: block; animation: dotPulse 1.5s infinite; }
+
+        .adhkar-reminder-toggle.active .reminder-dot {
+            display: block;
+            animation: dotPulse 1.5s infinite;
+        }
 
         @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.4); opacity: .7; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.4);
+                opacity: .7;
+            }
         }
 
         .adhkar-reminder-panel {
@@ -912,8 +1071,15 @@
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: scale(.92) translateY(8px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(.92) translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .adhkar-reminder-panel h4 {
@@ -924,10 +1090,16 @@
             gap: .5rem;
             color: var(--white);
         }
-        body.light-mode .adhkar-reminder-panel h4 { color: #0f172a; }
-        .adhkar-reminder-panel h4 i { color: var(--primary); }
 
-        .adhkar-reminder-panel > p {
+        body.light-mode .adhkar-reminder-panel h4 {
+            color: #0f172a;
+        }
+
+        .adhkar-reminder-panel h4 i {
+            color: var(--primary);
+        }
+
+        .adhkar-reminder-panel>p {
             font-size: .78rem;
             color: var(--text);
             line-height: 1.55;
@@ -941,7 +1113,10 @@
             padding: .6rem 0;
             border-bottom: 1px solid var(--border);
         }
-        .adhkar-reminder-row:last-of-type { border-bottom: none; }
+
+        .adhkar-reminder-row:last-of-type {
+            border-bottom: none;
+        }
 
         .adhkar-reminder-row label {
             font-size: .83rem;
@@ -950,8 +1125,15 @@
             align-items: center;
             gap: .5rem;
         }
-        body.light-mode .adhkar-reminder-row label { color: #0f172a; }
-        .adhkar-reminder-row label i { color: var(--primary); font-size: .8rem; }
+
+        body.light-mode .adhkar-reminder-row label {
+            color: #0f172a;
+        }
+
+        .adhkar-reminder-row label i {
+            color: var(--primary);
+            font-size: .8rem;
+        }
 
         .adhkar-reminder-row input[type="time"] {
             background: rgba(255, 255, 255, 0.05);
@@ -964,6 +1146,7 @@
             outline: none;
             cursor: pointer;
         }
+
         body.light-mode .adhkar-reminder-row input[type="time"] {
             background: rgba(0, 0, 0, 0.04);
             color: #0f172a;
@@ -978,7 +1161,10 @@
             background: rgba(255, 255, 255, 0.05);
             color: var(--text);
         }
-        body.light-mode .adhkar-reminder-status { background: rgba(0, 0, 0, 0.04); }
+
+        body.light-mode .adhkar-reminder-status {
+            background: rgba(0, 0, 0, 0.04);
+        }
 
         .adhkar-reminder-status.enabled {
             background: rgba(16, 185, 129, 0.14);
@@ -1012,63 +1198,119 @@
             max-width: 90vw;
             backdrop-filter: blur(12px);
         }
-        body.light-mode .adhkar-toast { color: #0f172a; }
+
+        body.light-mode .adhkar-toast {
+            color: #0f172a;
+        }
 
         .adhkar-toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
 
-        .adhkar-toast i { color: var(--primary); }
+        .adhkar-toast i {
+            color: var(--primary);
+        }
 
         /* ====================================================
            RESPONSIVE
            ==================================================== */
         @media (max-width: 768px) {
-            .adhkar-grid { grid-template-columns: 1fr; }
-            .adhkar-arabic { font-size: 1.6rem; line-height: 1.8; }
-            .adhkar-hero { padding: 2.5rem 1.25rem 2rem; }
-            .adhkar-stats { grid-template-columns: 1fr; gap: .65rem; }
-            .adhkar-progress-wrap { padding: 1.2rem; gap: 1rem; }
-            .adhkar-progress-circle { width: 78px; height: 78px; }
-            .adhkar-reminder { bottom: 1rem; right: 1rem; }
-            .adhkar-reminder-toggle { width: 54px; height: 54px; font-size: 1.3rem; }
-            .hero-corner-ornament { width: 56px; height: 56px; }
+            .adhkar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .adhkar-arabic {
+                font-size: 1.6rem;
+                line-height: 1.8;
+            }
+
+            .adhkar-hero {
+                padding: 2.5rem 1.25rem 2rem;
+            }
+
+            .adhkar-stats {
+                grid-template-columns: 1fr;
+                gap: .65rem;
+            }
+
+            .adhkar-progress-wrap {
+                padding: 1.2rem;
+                gap: 1rem;
+            }
+
+            .adhkar-progress-circle {
+                width: 78px;
+                height: 78px;
+            }
+
+            .adhkar-reminder {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .adhkar-reminder-toggle {
+                width: 54px;
+                height: 54px;
+                font-size: 1.3rem;
+            }
+
+            .hero-corner-ornament {
+                width: 56px;
+                height: 56px;
+            }
         }
 
         @media (max-width: 480px) {
-            .adhkar-card-actions { flex-wrap: wrap; gap: .6rem; }
-            .adhkar-btn { padding: .7rem .9rem; font-size: .8rem; }
-            .hide-sm { display: none; }
+            .adhkar-card-actions {
+                flex-wrap: wrap;
+                gap: .6rem;
+            }
+
+            .adhkar-btn {
+                padding: .7rem .9rem;
+                font-size: .8rem;
+            }
+
+            .hide-sm {
+                display: none;
+            }
         }
 
         /* Hide search/reader chrome from shared style.css that we don't use */
-        .search-modal, .reciter-picker-modal, .mobile-nav { display: none !important; }
+        .search-modal,
+        .reciter-picker-modal,
+        .mobile-nav {
+            display: none !important;
+        }
 
         /* Light mode navbar */
         body.light-mode .navbar {
             background: rgba(255, 255, 255, 0.92);
             border-bottom-color: rgba(0, 0, 0, 0.08);
         }
+
         body.light-mode .navbar .nav-links a {
             color: #0f172a;
         }
+
         body.light-mode .navbar .nav-links a:hover {
             color: var(--primary);
         }
+
         body.light-mode .navbar .nav-actions button.theme-btn,
         body.light-mode .navbar .nav-actions .adhkar-btn {
             background: #f1f5f9 !important;
             color: #0f172a !important;
-            border: 1px solid rgba(0,0,0,0.08);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
+
         body.light-mode .navbar .nav-actions button.theme-btn:hover,
         body.light-mode .navbar .nav-actions .adhkar-btn:hover {
             background: var(--primary) !important;
             color: #fff !important;
             border-color: var(--primary);
         }
-
     </style>
 
 </head>
@@ -1082,23 +1324,35 @@
 
     <!-- ================= NAVBAR ================= -->
     <header class="navbar">
-        <a href="index.html" class="logo" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="url(#bacaLogoGrad)" opacity="0.18"/>
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>
-                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z" fill="url(#bacaLogoGrad)" opacity="0.9"/>
-                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+        <a href="index.html" class="logo"
+            style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.18" />
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
+                    stroke-linecap="round" />
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.9" />
+                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
                 <defs>
                     <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stop-color="#10b981"/>
-                        <stop offset="0.5" stop-color="#06b6d4"/>
-                        <stop offset="1" stop-color="#6366f1"/>
+                        <stop offset="0" stop-color="#10b981" />
+                        <stop offset="0.5" stop-color="#06b6d4" />
+                        <stop offset="1" stop-color="#6366f1" />
                     </linearGradient>
                 </defs>
             </svg>
@@ -1123,24 +1377,24 @@
 
                 <!-- Decorative corner ornaments (Arabesque flourish) -->
                 <svg class="hero-corner-ornament tl" viewBox="0 0 90 90" fill="none" aria-hidden="true">
-                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#10b981" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#10b981" stroke-width="1" fill="none" opacity="0.7"/>
-                    <circle cx="14" cy="14" r="3" fill="#10b981" opacity="0.6"/>
+                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#10b981" stroke-width="1.2" stroke-linecap="round" />
+                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#10b981" stroke-width="1" fill="none" opacity="0.7" />
+                    <circle cx="14" cy="14" r="3" fill="#10b981" opacity="0.6" />
                 </svg>
                 <svg class="hero-corner-ornament tr" viewBox="0 0 90 90" fill="none" aria-hidden="true">
-                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#06b6d4" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#06b6d4" stroke-width="1" fill="none" opacity="0.7"/>
-                    <circle cx="14" cy="14" r="3" fill="#06b6d4" opacity="0.6"/>
+                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#06b6d4" stroke-width="1.2" stroke-linecap="round" />
+                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#06b6d4" stroke-width="1" fill="none" opacity="0.7" />
+                    <circle cx="14" cy="14" r="3" fill="#06b6d4" opacity="0.6" />
                 </svg>
                 <svg class="hero-corner-ornament bl" viewBox="0 0 90 90" fill="none" aria-hidden="true">
-                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#6366f1" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#6366f1" stroke-width="1" fill="none" opacity="0.7"/>
-                    <circle cx="14" cy="14" r="3" fill="#6366f1" opacity="0.6"/>
+                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#6366f1" stroke-width="1.2" stroke-linecap="round" />
+                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#6366f1" stroke-width="1" fill="none" opacity="0.7" />
+                    <circle cx="14" cy="14" r="3" fill="#6366f1" opacity="0.6" />
                 </svg>
                 <svg class="hero-corner-ornament br" viewBox="0 0 90 90" fill="none" aria-hidden="true">
-                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#10b981" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#10b981" stroke-width="1" fill="none" opacity="0.7"/>
-                    <circle cx="14" cy="14" r="3" fill="#10b981" opacity="0.6"/>
+                    <path d="M5 5 L5 35 M5 5 L35 5" stroke="#10b981" stroke-width="1.2" stroke-linecap="round" />
+                    <path d="M5 5 Q25 5 25 25 Q25 5 45 5" stroke="#10b981" stroke-width="1" fill="none" opacity="0.7" />
+                    <circle cx="14" cy="14" r="3" fill="#10b981" opacity="0.6" />
                 </svg>
 
                 <span class="adhkar-hijri-badge">
@@ -1153,7 +1407,9 @@
                 <h1>Daily Adhkar</h1>
                 <p class="adhkar-arabic-subtitle">أَذْكَارُ الصَّبَاحِ وَالْمَسَاءِ</p>
                 <p class="adhkar-hero-subtitle">
-                    Authentic remembrances from the Prophet ﷺ — recited morning &amp; evening, after prayer, before sleep and upon waking. Tap the counter to track your repetitions, favourite the ones you love, and let gentle reminders keep your tongue moist with the remembrance of Allah.
+                    Authentic remembrances from the Prophet ﷺ — recited morning &amp; evening, after prayer, before
+                    sleep and upon waking. Tap the counter to track your repetitions, favourite the ones you love, and
+                    let gentle reminders keep your tongue moist with the remembrance of Allah.
                 </p>
             </section>
 
@@ -1188,13 +1444,13 @@
                     <svg viewBox="0 0 100 100" aria-hidden="true">
                         <defs>
                             <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#10b981"/>
-                                <stop offset="50%" stop-color="#06b6d4"/>
-                                <stop offset="100%" stop-color="#6366f1"/>
+                                <stop offset="0%" stop-color="#10b981" />
+                                <stop offset="50%" stop-color="#06b6d4" />
+                                <stop offset="100%" stop-color="#6366f1" />
                             </linearGradient>
                         </defs>
-                        <circle class="ring-bg" cx="50" cy="50" r="44"/>
-                        <circle class="ring-fill" id="progressRing" cx="50" cy="50" r="44"/>
+                        <circle class="ring-bg" cx="50" cy="50" r="44" />
+                        <circle class="ring-fill" id="progressRing" cx="50" cy="50" r="44" />
                     </svg>
                     <div class="progress-pct" id="progressPct">0%</div>
                 </div>
@@ -1218,7 +1474,8 @@
             <div class="adhkar-toolbar">
                 <div class="adhkar-search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchInput" placeholder="Search Arabic, transliteration or meaning…" aria-label="Search adhkar">
+                    <input type="text" id="searchInput" placeholder="Search Arabic, transliteration or meaning…"
+                        aria-label="Search adhkar">
                 </div>
                 <button class="adhkar-btn" id="favFilterBtn" title="Show only favourites">
                     <i class="fa-solid fa-heart"></i>
@@ -1237,13 +1494,15 @@
 
     <!-- ================= REMINDER FAB + PANEL ================= -->
     <div class="adhkar-reminder">
-        <button class="adhkar-reminder-toggle" id="reminderToggle" title="Prayer-time reminders" aria-label="Prayer-time reminders">
+        <button class="adhkar-reminder-toggle" id="reminderToggle" title="Prayer-time reminders"
+            aria-label="Prayer-time reminders">
             <i class="fa-solid fa-bell"></i>
             <span class="reminder-dot"></span>
         </button>
         <div class="adhkar-reminder-panel" id="reminderPanel" role="dialog" aria-label="Reminder settings">
             <h4><i class="fa-solid fa-bell"></i> Adhkar Reminders</h4>
-            <p>Get a gentle browser notification at Fajr and Maghrib to read your morning &amp; evening adhkar. Times are approximate — adjust them for your location.</p>
+            <p>Get a gentle browser notification at Fajr and Maghrib to read your morning &amp; evening adhkar. Times
+                are approximate — adjust them for your location.</p>
             <div class="adhkar-reminder-row">
                 <label for="fajrTime"><i class="fa-solid fa-sun"></i> Fajr (morning)</label>
                 <input type="time" id="fajrTime" value="05:00">
@@ -1253,7 +1512,8 @@
                 <input type="time" id="maghribTime" value="18:30">
             </div>
             <div class="adhkar-reminder-status" id="reminderStatus">Notifications not enabled</div>
-            <button class="adhkar-btn primary" id="enableReminderBtn" style="width:100%; justify-content:center; margin-top:.9rem;">
+            <button class="adhkar-btn primary" id="enableReminderBtn"
+                style="width:100%; justify-content:center; margin-top:.9rem;">
                 <i class="fa-solid fa-bell"></i>
                 <span>Enable Reminders</span>
             </button>
@@ -1272,28 +1532,40 @@
             <div class="footer-col footer-brand">
                 <div class="footer-logo">
                     <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="url(#footerLogoGrad)" opacity="0.18"/>
-                        <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" stroke="url(#footerLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>
-                        <line x1="24" y1="14" x2="24" y2="38" stroke="url(#footerLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z" fill="url(#footerLogoGrad)" opacity="0.9"/>
-                        <line x1="12" y1="18" x2="20" y2="17" stroke="url(#footerLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                        <line x1="12" y1="22" x2="20" y2="21" stroke="url(#footerLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                        <line x1="12" y1="26" x2="20" y2="25" stroke="url(#footerLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                        <line x1="28" y1="17" x2="36" y2="18" stroke="url(#footerLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                        <line x1="28" y1="21" x2="36" y2="22" stroke="url(#footerLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-                        <line x1="28" y1="25" x2="36" y2="26" stroke="url(#footerLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                        <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                            fill="url(#footerLogoGrad)" opacity="0.18" />
+                        <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                            stroke="url(#footerLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
+                        <line x1="24" y1="14" x2="24" y2="38" stroke="url(#footerLogoGrad)" stroke-width="1.5"
+                            stroke-linecap="round" />
+                        <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                            fill="url(#footerLogoGrad)" opacity="0.9" />
+                        <line x1="12" y1="18" x2="20" y2="17" stroke="url(#footerLogoGrad)" stroke-width="1"
+                            opacity="0.5" stroke-linecap="round" />
+                        <line x1="12" y1="22" x2="20" y2="21" stroke="url(#footerLogoGrad)" stroke-width="1"
+                            opacity="0.5" stroke-linecap="round" />
+                        <line x1="12" y1="26" x2="20" y2="25" stroke="url(#footerLogoGrad)" stroke-width="1"
+                            opacity="0.5" stroke-linecap="round" />
+                        <line x1="28" y1="17" x2="36" y2="18" stroke="url(#footerLogoGrad)" stroke-width="1"
+                            opacity="0.5" stroke-linecap="round" />
+                        <line x1="28" y1="21" x2="36" y2="22" stroke="url(#footerLogoGrad)" stroke-width="1"
+                            opacity="0.5" stroke-linecap="round" />
+                        <line x1="28" y1="25" x2="36" y2="26" stroke="url(#footerLogoGrad)" stroke-width="1"
+                            opacity="0.5" stroke-linecap="round" />
                         <defs>
-                            <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                                <stop offset="0" stop-color="#10b981"/>
-                                <stop offset="0.5" stop-color="#06b6d4"/>
-                                <stop offset="1" stop-color="#6366f1"/>
+                            <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="48" y2="48"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" stop-color="#10b981" />
+                                <stop offset="0.5" stop-color="#06b6d4" />
+                                <stop offset="1" stop-color="#6366f1" />
                             </linearGradient>
                         </defs>
                     </svg>
                     <span class="footer-logo-text">Baca</span>
                 </div>
                 <p class="footer-tagline">Read • Reflect • Remember</p>
-                <p class="footer-desc">Authentic adhkar from the Sunnah to keep your tongue moist with the remembrance of Allah. Built with love for the Ummah.</p>
+                <p class="footer-desc">Authentic adhkar from the Sunnah to keep your tongue moist with the remembrance
+                    of Allah. Built with love for the Ummah.</p>
             </div>
 
             <div class="footer-col">
@@ -1335,413 +1607,433 @@
 
         <div class="footer-bottom">
             <p>&copy; <span id="footer-year"></span> Baca. All rights reserved.</p>
-            <p class="footer-credit">Made with <i class="fa-solid fa-heart" style="color:#ef4444;font-size:14px"></i> for the Ummah</p>
+            <p class="footer-credit">Made with <i class="fa-solid fa-heart" style="color:#ef4444;font-size:14px"></i>
+                for the Ummah</p>
         </div>
     </footer>
 
     <!-- ================= SCRIPTS ================= -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-    (function () {
-        "use strict";
+        (function () {
+            "use strict";
 
-        /* ============================================================
-           HIJRI DATE
-           ============================================================ */
-        const HIJRI_MONTHS_EN = [
-            'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
-            'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban",
-            'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'
-        ];
-        const HIJRI_MONTHS_AR = [
-            'مُحَرَّم', 'صَفَر', 'رَبِيعُ الْأَوَّل', 'رَبِيعُ الثَّانِي',
-            'جُمَادَى الْأُولَى', 'جُمَادَى الثَّانِيَة', 'رَجَب', 'شَعْبَان',
-            'رَمَضَان', 'شَوَّال', 'ذُو الْقِعْدَة', 'ذُو الْحِجَّة'
-        ];
+            /* ============================================================
+               HIJRI DATE
+               ============================================================ */
+            const HIJRI_MONTHS_EN = [
+                'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
+                'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban",
+                'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'
+            ];
+            const HIJRI_MONTHS_AR = [
+                'مُحَرَّم', 'صَفَر', 'رَبِيعُ الْأَوَّل', 'رَبِيعُ الثَّانِي',
+                'جُمَادَى الْأُولَى', 'جُمَادَى الثَّانِيَة', 'رَجَب', 'شَعْبَان',
+                'رَمَضَان', 'شَوَّال', 'ذُو الْقِعْدَة', 'ذُو الْحِجَّة'
+            ];
 
-        function renderHijriDate() {
-            try {
-                const now = new Date();
-                // Use numeric month to avoid Gregorian month name bug on some browsers
-                const parts = new Intl.DateTimeFormat("en-US-u-ca-islamic-umalqura", {
-                    day: "numeric", month: "numeric", year: "numeric"
-                }).formatToParts(now);
-                let day = '', monthNum = 0, year = '';
-                for (const p of parts) {
-                    if (p.type === 'day') day = p.value;
-                    else if (p.type === 'month') monthNum = parseInt(p.value);
-                    else if (p.type === 'year') year = p.value;
-                }
-                const monthName = HIJRI_MONTHS_EN[monthNum - 1] || 'Muharram';
-                const monthNameAr = HIJRI_MONTHS_AR[monthNum - 1] || 'مُحَرَّم';
-                document.getElementById("hijriDate").textContent = `${monthName} ${day} ${year} AH`;
-                document.getElementById("hijriDateAr").textContent = `${monthNameAr} ${day} ${year} هـ`;
-            } catch (e) {
-                document.getElementById("hijriDate").textContent = "Today's Adhkar";
-                document.getElementById("hijriDateAr").textContent = "أَذْكَارُ الْيَوْمِ";
-            }
-        }
-
-        /* ============================================================
-           ADHKAR DATA — authentic, with tashkeel
-           ============================================================ */
-        const ADHKAR = [
-            // ---------- MORNING & EVENING ----------
-            {
-                id: 1, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
-                arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ، لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ، لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ، مَن ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ، يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ، وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ، وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ، وَلَا يَئُودُهُ حِفْظُهُمَا، وَهُوَ الْعَلِيُّ الْعَظِيمُ",
-                translit: "Allahu la ilaha illa huwal-hayyul-qayyum… (Ayat al-Kursi)",
-                translation: "Ayat al-Kursi — the greatest verse of the Qur'an. Allah! There is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and the earth… His Kursi extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.",
-                reference: "Surah Al-Baqarah 2:255 — Sahih Ibn Hibban"
-            },
-            {
-                id: 2, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
-                arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
-                translit: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika mas-tata'tu, a'udhu bika min sharri ma sana'tu, abu'u laka bi-ni'matika 'alayya, wa abu'u bi-dhanbi faghfir li fa-innahu la yaghfirudh-dhunuba illa anta.",
-                translation: "O Allah, You are my Lord; there is no deity except You. You created me and I am Your servant, and I abide by my covenant and promise to You as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favour upon me and I acknowledge my sin, so forgive me — for none can forgive sins except You.",
-                reference: "Sahih al-Bukhari 6306 (Sayyid al-Istighfar)"
-            },
-            {
-                id: 3, category: "morning-evening", tag: "Morning & Evening", repeat: 3,
-                arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
-                translit: "Bismillahil-ladhi la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim.",
-                translation: "In the name of Allah, with whose name nothing on earth or in the heavens can cause harm. He is the All-Hearing, the All-Knowing.",
-                reference: "Abu Dawud 5088, Tirmidhi 3388"
-            },
-            {
-                id: 4, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
-                arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ",
-                translit: "Asbahna wa asbahal-mulku lillah, wal-hamdu lillah, la ilaha illallahu wahdahu la sharika lah…",
-                translation: "We have entered the morning and the dominion belongs to Allah. Praise is for Allah. There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. My Lord, I ask You for the good of this day and the good of what comes after it, and I seek refuge in You from the evil of this day and the evil of what comes after it.",
-                reference: "Sahih Muslim 2723"
-            },
-            {
-                id: 5, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
-                arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
-                translit: "Allahumma bika asbahna, wa bika amsayna, wa bika nahya, wa bika namutu, wa ilaykan-nushur.",
-                translation: "O Allah, by You we enter the morning, by You we enter the evening, by You we live, by You we die, and to You is the resurrection.",
-                reference: "Jami' at-Tirmidhi 3391"
-            },
-            {
-                id: 6, category: "morning-evening", tag: "Morning & Evening", repeat: 3,
-                arabic: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
-                translit: "Raditu billahi Rabba, wa bil-islami dina, wa bi-Muhammadin sallallahu 'alayhi wa sallama nabiyya.",
-                translation: "I am pleased with Allah as my Lord, with Islam as my religion, and with Muhammad ﷺ as my Prophet.",
-                reference: "Jami' at-Tirmidhi 3389, Ahmad"
-            },
-            {
-                id: 7, category: "morning-evening", tag: "Morning & Evening", repeat: 7,
-                arabic: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
-                translit: "Hasbiyallahu la ilaha illa huwa, 'alayhi tawakkaltu wa huwa Rabbul-'arshil-'azim.",
-                translation: "Allah is sufficient for me. There is no god but Him. In Him I have placed my trust, and He is the Lord of the Mighty Throne.",
-                reference: "Abu Dawud 5081, Ibn As-Sunni"
-            },
-
-            // ---------- AFTER PRAYER ----------
-            {
-                id: 8, category: "after-prayer", tag: "After Prayer", repeat: 3,
-                arabic: "أَسْتَغْفِرُ اللَّهَ",
-                translit: "Astaghfirullah.",
-                translation: "I seek Allah's forgiveness. (Recited three times immediately after every obligatory prayer.)",
-                reference: "Sahih Muslim 597"
-            },
-            {
-                id: 9, category: "after-prayer", tag: "After Prayer", repeat: 1,
-                arabic: "اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
-                translit: "Allahumma antas-Salamu wa minkas-salam, tabarakta ya Dhal-jalali wal-ikram.",
-                translation: "O Allah, You are As-Salam (the Source of peace) and from You comes peace. Blessed are You, O Owner of Majesty and Honour.",
-                reference: "Sahih Muslim 591"
-            },
-            {
-                id: 10, category: "after-prayer", tag: "After Prayer", repeat: 33,
-                arabic: "سُبْحَانَ اللَّهِ",
-                translit: "Subhanallah.",
-                translation: "Glory be to Allah. (Recited 33 times after every obligatory prayer.)",
-                reference: "Sahih Muslim 597"
-            },
-            {
-                id: 11, category: "after-prayer", tag: "After Prayer", repeat: 33,
-                arabic: "الْحَمْدُ لِلَّهِ",
-                translit: "Alhamdulillah.",
-                translation: "All praise is for Allah. (Recited 33 times after every prayer.)",
-                reference: "Sahih Muslim 597"
-            },
-            {
-                id: 12, category: "after-prayer", tag: "After Prayer", repeat: 34,
-                arabic: "اللَّهُ أَكْبَرُ",
-                translit: "Allahu Akbar.",
-                translation: "Allah is the Greatest. (Recited 34 times after every prayer, completing the 100.)",
-                reference: "Sahih Muslim 597"
-            },
-            {
-                id: 13, category: "after-prayer", tag: "After Prayer", repeat: 1,
-                arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ",
-                translit: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadir…",
-                translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. O Allah, none can withhold what You give, and none can give what You withhold, and the wealth of the wealthy is of no avail to them before You.",
-                reference: "Sahih al-Bukhari 844, Muslim 593"
-            },
-
-            // ---------- BEFORE SLEEP ----------
-            {
-                id: 14, category: "sleep", tag: "Before Sleep", repeat: 1,
-                arabic: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
-                translit: "Bismika Allahumma amutu wa ahya.",
-                translation: "In Your name, O Allah, I die and I live.",
-                reference: "Sahih al-Bukhari 6324"
-            },
-            {
-                id: 15, category: "sleep", tag: "Before Sleep", repeat: 3,
-                arabic: "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
-                translit: "Allahumma qini 'adhabaka yawma tab'athu 'ibadak.",
-                translation: "O Allah, protect me from Your punishment on the day You resurrect Your servants.",
-                reference: "Abu Dawud 5045, Tirmidhi 3532"
-            },
-            {
-                id: 16, category: "sleep", tag: "Before Sleep", repeat: 33,
-                arabic: "سُبْحَانَ اللَّهِ",
-                translit: "Subhanallah (33) · Alhamdulillah (33) · Allahu Akbar (34)",
-                translation: "Glory be to Allah (33 times), all praise is for Allah (33 times), Allah is the Greatest (34 times). The Prophet ﷺ said: 'They are better than a servant.' Recite them before sleeping.",
-                reference: "Sahih al-Bukhari 3705, 6318"
-            },
-
-            // ---------- UPON WAKING ----------
-            {
-                id: 17, category: "wake-up", tag: "Upon Waking", repeat: 1,
-                arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
-                translit: "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur.",
-                translation: "Praise be to Allah Who gives us life after He has caused us to die, and to Him is the resurrection.",
-                reference: "Sahih al-Bukhari 6324"
-            },
-            {
-                id: 18, category: "wake-up", tag: "Upon Waking", repeat: 1,
-                arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
-                translit: "La ilaha illallahu wahdahu la sharika lah… Subhanallah, wal-hamdu lillah, wa la ilaha illallah, wallahu akbar, wa la hawla wa la quwwata illa billah.",
-                translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. Glory be to Allah, praise be to Allah, there is no god but Allah, Allah is the Greatest, and there is no power and no strength except with Allah.",
-                reference: "Sahih al-Bukhari 6318, 6319"
-            },
-
-            // ---------- DAILY PROTECTION ----------
-            {
-                id: 19, category: "protection", tag: "Daily Protection", repeat: 3,
-                arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
-                translit: "A'udhu bikalimatillahit-tammati min sharri ma khalaq.",
-                translation: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
-                reference: "Sahih Muslim 2708 (evening)"
-            },
-            {
-                id: 20, category: "protection", tag: "Daily Protection", repeat: 3,
-                arabic: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ",
-                translit: "Allahumma 'afini fi badani, Allahumma 'afini fi sam'i, Allahumma 'afini fi basari, la ilaha illa ant.",
-                translation: "O Allah, grant my body health. O Allah, grant my hearing health. O Allah, grant my sight health. There is no god but You.",
-                reference: "Abu Dawud 5090, Ibn As-Sunni"
-            },
-            {
-                id: 21, category: "protection", tag: "Daily Protection", repeat: 1,
-                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
-                translit: "Allahumma inni a'udhu bika minal-hammi wal-hazan, wa a'udhu bika minal-'ajzi wal-kasal…",
-                translation: "O Allah, I seek refuge in You from worry and grief, from incapacity and laziness, from cowardice and miserliness, and from being overpowered by debt and oppressed by men.",
-                reference: "Sahih al-Bukhari 2893"
-            },
-
-            // ---------- QURANIC ----------
-            {
-                id: 22, category: "quranic", tag: "Quranic", repeat: 3,
-                arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
-                translit: "Qul huwallahu ahad. Allahus-samad. Lam yalid wa lam yulad. Wa lam yakun lahu kufuwan ahad.",
-                translation: "Say: He is Allah, the One. Allah, the Eternal Refuge. He neither begets nor is born. Nor is there to Him any equivalent. (Recite Surah Al-Ikhlas, Al-Falaq and An-Nas — three times each morning and evening.)",
-                reference: "Abu Dawud 5082, Tirmidhi 2879"
-            },
-            {
-                id: 23, category: "quranic", tag: "Quranic", repeat: 1,
-                arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
-                translit: "Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina 'adhaban-nar.",
-                translation: "Our Lord, give us in this world good and in the Hereafter good, and protect us from the punishment of the Fire. (The most frequent supplication of the Prophet ﷺ.)",
-                reference: "Surah Al-Baqarah 2:201 — Sahih al-Bukhari 6389, Muslim 2690"
-            },
-            {
-                id: 24, category: "quranic", tag: "Quranic", repeat: 7,
-                arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
-                translit: "Hasbunallahu wa ni'mal-wakil.",
-                translation: "Sufficient for us is Allah, and He is the best Disposer of affairs. (Said by Ibrahim ﷺ when thrown into the fire, and by the Prophet ﷺ and his companions when people gathered against them.)",
-                reference: "Surah Al Imran 3:173 — Ibn As-Sunni"
-            },
-
-            // ---------- DAILY SUNNAH ----------
-            {
-                id: 25, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 10,
-                arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
-                translit: "Allahumma salli wa sallim 'ala nabiyyina Muhammad.",
-                translation: "O Allah, send blessings and peace upon our Prophet Muhammad. (The Prophet ﷺ said: 'Whoever sends blessings upon me ten times, Allah will send blessings upon him a hundredfold.')",
-                reference: "Sahih Muslim 408, Tirmidhi"
-            },
-            {
-                id: 26, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 100,
-                arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-                translit: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadir.",
-                translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. (The Prophet ﷺ said: 'Whoever says this a hundred times a day will have the reward of freeing ten slaves…')",
-                reference: "Sahih al-Bukhari 3293, Muslim 2691"
-            },
-            {
-                id: 27, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 100,
-                arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
-                translit: "Subhanallahi wa bihamdih.",
-                translation: "Glory be to Allah and praise Him. (The Prophet ﷺ said: 'Whoever says this a hundred times a day, his sins will be erased even if they are like the foam of the sea.')",
-                reference: "Sahih al-Bukhari 6405, Muslim 2691"
-            },
-            {
-                id: 28, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 1,
-                arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-                translit: "Bismillahir-Rahmanir-Rahim.",
-                translation: "In the name of Allah, the Most Gracious, the Most Merciful. (Recited before beginning any significant action — eating, drinking, entering the home, etc.)",
-                reference: "Abu Dawud — Sunnah before every action"
-            }
-        ];
-
-        const CATEGORIES = [
-            { id: "all",             label: "All",             icon: "fa-solid fa-book-bookmark" },
-            { id: "morning-evening", label: "Morning & Evening", icon: "fa-solid fa-sun" },
-            { id: "after-prayer",    label: "After Prayer",    icon: "fa-solid fa-hands-praying" },
-            { id: "sleep",           label: "Before Sleep",    icon: "fa-solid fa-moon" },
-            { id: "wake-up",         label: "Upon Waking",     icon: "fa-solid fa-sun-plant-wilt" },
-            { id: "protection",      label: "Daily Protection", icon: "fa-solid fa-shield-halved" },
-            { id: "quranic",         label: "Quranic",         icon: "fa-solid fa-feather-pointed" },
-            { id: "daily-sunnah",    label: "Daily Sunnah",    icon: "fa-solid fa-star-and-crescent" },
-            { id: "favorites",       label: "Favourites",      icon: "fa-solid fa-heart" }
-        ];
-
-        /* ============================================================
-           STATE
-           ============================================================ */
-        const STORE_FAV  = "adhkar.favorites";
-        const STORE_CNT  = "adhkar.counters";
-        const STORE_RMND = "adhkar.reminder";
-
-        function loadJSON(key, fallback) {
-            try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
-            catch (e) { return fallback; }
-        }
-        function saveJSON(key, val) {
-            try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
-        }
-
-        let state = {
-            category: "all",
-            search: "",
-            favOnly: false,
-            favorites: loadJSON(STORE_FAV, {}),
-            counters: loadJSON(STORE_CNT, {})
-        };
-
-        /* ============================================================
-           ELEMENTS
-           ============================================================ */
-        const grid         = document.getElementById("adhkarGrid");
-        const pillsWrap    = document.getElementById("categoryPills");
-        const searchInput  = document.getElementById("searchInput");
-        const favBtn       = document.getElementById("favFilterBtn");
-        const resetBtn     = document.getElementById("resetBtn");
-        const progressFill = document.getElementById("progressRing");
-        const progressPct  = document.getElementById("progressPct");
-        const progressLbl  = document.getElementById("progressLabel");
-        const progressMsg  = document.getElementById("progressMsg");
-        const statTotal    = document.getElementById("statTotal");
-        const statDone     = document.getElementById("statDone");
-        const statFav      = document.getElementById("statFav");
-        const toastEl      = document.getElementById("adhkarToast");
-        const toastMsg     = document.getElementById("toastMsg");
-
-        // Geometry constants for SVG rings
-        const RING_CIRC = 2 * Math.PI * 44;      // progress ring (r=44)
-        const COUNTER_CIRC = 2 * Math.PI * 28;   // card counter ring (r=28)
-
-        /* ============================================================
-           CATEGORY PILLS
-           ============================================================ */
-        function renderPills() {
-            pillsWrap.innerHTML = "";
-            CATEGORIES.forEach(cat => {
-                const isFavCat = cat.id === "favorites";
-                const active = state.category === cat.id || (isFavCat && state.favOnly);
-                const btn = document.createElement("button");
-                btn.className = "adhkar-pill" + (active ? " active" : "");
-                btn.setAttribute("role", "tab");
-                btn.setAttribute("aria-selected", active ? "true" : "false");
-
-                // Count badge per category
-                let count;
-                if (isFavCat) {
-                    count = Object.keys(state.favorites).length;
-                } else if (cat.id === "all") {
-                    count = ADHKAR.length;
-                } else {
-                    count = ADHKAR.filter(a => a.category === cat.id).length;
-                }
-
-                btn.innerHTML = `<i class="${cat.icon}"></i><span>${cat.label}</span><span class="pill-count">${count}</span>`;
-                btn.addEventListener("click", () => {
-                    if (isFavCat) {
-                        state.favOnly = !state.favOnly;
-                    } else {
-                        state.favOnly = false;
-                        state.category = cat.id;
+            function renderHijriDate() {
+                // Show Intl date immediately, then upgrade to AlAdhan API for accuracy
+                try {
+                    const now = new Date();
+                    const parts = new Intl.DateTimeFormat("en-US-u-ca-islamic-umalqura", {
+                        day: "numeric", month: "numeric", year: "numeric"
+                    }).formatToParts(now);
+                    let day = '', monthNum = 0, year = '';
+                    for (const p of parts) {
+                        if (p.type === 'day') day = p.value;
+                        else if (p.type === 'month') monthNum = parseInt(p.value);
+                        else if (p.type === 'year') year = p.value;
                     }
-                    favBtn.classList.toggle("active", state.favOnly);
-                    renderPills();
-                    render();
-                });
-                pillsWrap.appendChild(btn);
-            });
-        }
-
-        /* ============================================================
-           FILTERING
-           ============================================================ */
-        function getFiltered() {
-            const q = state.search.trim().toLowerCase();
-            return ADHKAR.filter(a => {
-                if (state.category !== "all" && a.category !== state.category) return false;
-                if (state.favOnly && !state.favorites[a.id]) return false;
-                if (q) {
-                    const hay = (a.arabic + " " + a.translit + " " + a.translation + " " + a.reference + " " + a.tag).toLowerCase();
-                    if (!hay.includes(q)) return false;
+                    const monthName = HIJRI_MONTHS_EN[monthNum - 1] || 'Muharram';
+                    const monthNameAr = HIJRI_MONTHS_AR[monthNum - 1] || 'مُحَرَّم';
+                    document.getElementById("hijriDate").textContent = `${monthName} ${day} ${year} AH`;
+                    document.getElementById("hijriDateAr").textContent = `${monthNameAr} ${day} ${year} هـ`;
+                } catch (e) {
+                    document.getElementById("hijriDate").textContent = "Today's Adhkar";
+                    document.getElementById("hijriDateAr").textContent = "أَذْكَارُ الْيَوْمِ";
                 }
-                return true;
-            });
-        }
 
-        /* ============================================================
-           RENDER — Adhkar grid
-           ============================================================ */
-        function render() {
-            const list = getFiltered();
-            grid.innerHTML = "";
+                // Upgrade to AlAdhan API (real-time Hijri) for better accuracy
+                const dd = String(new Date().getDate()).padStart(2, '0');
+                const mm = String(new Date().getMonth() + 1).padStart(2, '0');
+                const yyyy = new Date().getFullYear();
+                fetch(`https://api.aladhan.com/v1/gToH/${dd}-${mm}-${yyyy}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        const h = data?.data?.hijri;
+                        if (!h) return;
+                        const day = h.day;
+                        const monthNum = parseInt(h.month.number);
+                        const year = h.year;
+                        const monthName = HIJRI_MONTHS_EN[monthNum - 1] || h.month.en || 'Muharram';
+                        const monthNameAr = HIJRI_MONTHS_AR[monthNum - 1] || h.month.ar || 'مُحَرَّم';
+                        document.getElementById("hijriDate").textContent = `${monthName} ${day} ${year} AH`;
+                        document.getElementById("hijriDateAr").textContent = `${monthNameAr} ${day} ${year} هـ`;
+                    })
+                    .catch(() => { }); // silent fail — Intl date is already showing
+            }
 
-            if (!list.length) {
-                grid.innerHTML = `
+            /* ============================================================
+               ADHKAR DATA — authentic, with tashkeel
+               ============================================================ */
+            const ADHKAR = [
+                // ---------- MORNING & EVENING ----------
+                {
+                    id: 1, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
+                    arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ، لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ، لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ، مَن ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ، يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ، وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ، وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ، وَلَا يَئُودُهُ حِفْظُهُمَا، وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+                    translit: "Allahu la ilaha illa huwal-hayyul-qayyum… (Ayat al-Kursi)",
+                    translation: "Ayat al-Kursi — the greatest verse of the Qur'an. Allah! There is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and the earth… His Kursi extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.",
+                    reference: "Surah Al-Baqarah 2:255 — Sahih Ibn Hibban"
+                },
+                {
+                    id: 2, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
+                    arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+                    translit: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika mas-tata'tu, a'udhu bika min sharri ma sana'tu, abu'u laka bi-ni'matika 'alayya, wa abu'u bi-dhanbi faghfir li fa-innahu la yaghfirudh-dhunuba illa anta.",
+                    translation: "O Allah, You are my Lord; there is no deity except You. You created me and I am Your servant, and I abide by my covenant and promise to You as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favour upon me and I acknowledge my sin, so forgive me — for none can forgive sins except You.",
+                    reference: "Sahih al-Bukhari 6306 (Sayyid al-Istighfar)"
+                },
+                {
+                    id: 3, category: "morning-evening", tag: "Morning & Evening", repeat: 3,
+                    arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+                    translit: "Bismillahil-ladhi la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim.",
+                    translation: "In the name of Allah, with whose name nothing on earth or in the heavens can cause harm. He is the All-Hearing, the All-Knowing.",
+                    reference: "Abu Dawud 5088, Tirmidhi 3388"
+                },
+                {
+                    id: 4, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
+                    arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ",
+                    translit: "Asbahna wa asbahal-mulku lillah, wal-hamdu lillah, la ilaha illallahu wahdahu la sharika lah…",
+                    translation: "We have entered the morning and the dominion belongs to Allah. Praise is for Allah. There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. My Lord, I ask You for the good of this day and the good of what comes after it, and I seek refuge in You from the evil of this day and the evil of what comes after it.",
+                    reference: "Sahih Muslim 2723"
+                },
+                {
+                    id: 5, category: "morning-evening", tag: "Morning & Evening", repeat: 1,
+                    arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+                    translit: "Allahumma bika asbahna, wa bika amsayna, wa bika nahya, wa bika namutu, wa ilaykan-nushur.",
+                    translation: "O Allah, by You we enter the morning, by You we enter the evening, by You we live, by You we die, and to You is the resurrection.",
+                    reference: "Jami' at-Tirmidhi 3391"
+                },
+                {
+                    id: 6, category: "morning-evening", tag: "Morning & Evening", repeat: 3,
+                    arabic: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+                    translit: "Raditu billahi Rabba, wa bil-islami dina, wa bi-Muhammadin sallallahu 'alayhi wa sallama nabiyya.",
+                    translation: "I am pleased with Allah as my Lord, with Islam as my religion, and with Muhammad ﷺ as my Prophet.",
+                    reference: "Jami' at-Tirmidhi 3389, Ahmad"
+                },
+                {
+                    id: 7, category: "morning-evening", tag: "Morning & Evening", repeat: 7,
+                    arabic: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+                    translit: "Hasbiyallahu la ilaha illa huwa, 'alayhi tawakkaltu wa huwa Rabbul-'arshil-'azim.",
+                    translation: "Allah is sufficient for me. There is no god but Him. In Him I have placed my trust, and He is the Lord of the Mighty Throne.",
+                    reference: "Abu Dawud 5081, Ibn As-Sunni"
+                },
+
+                // ---------- AFTER PRAYER ----------
+                {
+                    id: 8, category: "after-prayer", tag: "After Prayer", repeat: 3,
+                    arabic: "أَسْتَغْفِرُ اللَّهَ",
+                    translit: "Astaghfirullah.",
+                    translation: "I seek Allah's forgiveness. (Recited three times immediately after every obligatory prayer.)",
+                    reference: "Sahih Muslim 597"
+                },
+                {
+                    id: 9, category: "after-prayer", tag: "After Prayer", repeat: 1,
+                    arabic: "اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
+                    translit: "Allahumma antas-Salamu wa minkas-salam, tabarakta ya Dhal-jalali wal-ikram.",
+                    translation: "O Allah, You are As-Salam (the Source of peace) and from You comes peace. Blessed are You, O Owner of Majesty and Honour.",
+                    reference: "Sahih Muslim 591"
+                },
+                {
+                    id: 10, category: "after-prayer", tag: "After Prayer", repeat: 33,
+                    arabic: "سُبْحَانَ اللَّهِ",
+                    translit: "Subhanallah.",
+                    translation: "Glory be to Allah. (Recited 33 times after every obligatory prayer.)",
+                    reference: "Sahih Muslim 597"
+                },
+                {
+                    id: 11, category: "after-prayer", tag: "After Prayer", repeat: 33,
+                    arabic: "الْحَمْدُ لِلَّهِ",
+                    translit: "Alhamdulillah.",
+                    translation: "All praise is for Allah. (Recited 33 times after every prayer.)",
+                    reference: "Sahih Muslim 597"
+                },
+                {
+                    id: 12, category: "after-prayer", tag: "After Prayer", repeat: 34,
+                    arabic: "اللَّهُ أَكْبَرُ",
+                    translit: "Allahu Akbar.",
+                    translation: "Allah is the Greatest. (Recited 34 times after every prayer, completing the 100.)",
+                    reference: "Sahih Muslim 597"
+                },
+                {
+                    id: 13, category: "after-prayer", tag: "After Prayer", repeat: 1,
+                    arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ",
+                    translit: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadir…",
+                    translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. O Allah, none can withhold what You give, and none can give what You withhold, and the wealth of the wealthy is of no avail to them before You.",
+                    reference: "Sahih al-Bukhari 844, Muslim 593"
+                },
+
+                // ---------- BEFORE SLEEP ----------
+                {
+                    id: 14, category: "sleep", tag: "Before Sleep", repeat: 1,
+                    arabic: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+                    translit: "Bismika Allahumma amutu wa ahya.",
+                    translation: "In Your name, O Allah, I die and I live.",
+                    reference: "Sahih al-Bukhari 6324"
+                },
+                {
+                    id: 15, category: "sleep", tag: "Before Sleep", repeat: 3,
+                    arabic: "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
+                    translit: "Allahumma qini 'adhabaka yawma tab'athu 'ibadak.",
+                    translation: "O Allah, protect me from Your punishment on the day You resurrect Your servants.",
+                    reference: "Abu Dawud 5045, Tirmidhi 3532"
+                },
+                {
+                    id: 16, category: "sleep", tag: "Before Sleep", repeat: 33,
+                    arabic: "سُبْحَانَ اللَّهِ",
+                    translit: "Subhanallah (33) · Alhamdulillah (33) · Allahu Akbar (34)",
+                    translation: "Glory be to Allah (33 times), all praise is for Allah (33 times), Allah is the Greatest (34 times). The Prophet ﷺ said: 'They are better than a servant.' Recite them before sleeping.",
+                    reference: "Sahih al-Bukhari 3705, 6318"
+                },
+
+                // ---------- UPON WAKING ----------
+                {
+                    id: 17, category: "wake-up", tag: "Upon Waking", repeat: 1,
+                    arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+                    translit: "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur.",
+                    translation: "Praise be to Allah Who gives us life after He has caused us to die, and to Him is the resurrection.",
+                    reference: "Sahih al-Bukhari 6324"
+                },
+                {
+                    id: 18, category: "wake-up", tag: "Upon Waking", repeat: 1,
+                    arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+                    translit: "La ilaha illallahu wahdahu la sharika lah… Subhanallah, wal-hamdu lillah, wa la ilaha illallah, wallahu akbar, wa la hawla wa la quwwata illa billah.",
+                    translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. Glory be to Allah, praise be to Allah, there is no god but Allah, Allah is the Greatest, and there is no power and no strength except with Allah.",
+                    reference: "Sahih al-Bukhari 6318, 6319"
+                },
+
+                // ---------- DAILY PROTECTION ----------
+                {
+                    id: 19, category: "protection", tag: "Daily Protection", repeat: 3,
+                    arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+                    translit: "A'udhu bikalimatillahit-tammati min sharri ma khalaq.",
+                    translation: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
+                    reference: "Sahih Muslim 2708 (evening)"
+                },
+                {
+                    id: 20, category: "protection", tag: "Daily Protection", repeat: 3,
+                    arabic: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ",
+                    translit: "Allahumma 'afini fi badani, Allahumma 'afini fi sam'i, Allahumma 'afini fi basari, la ilaha illa ant.",
+                    translation: "O Allah, grant my body health. O Allah, grant my hearing health. O Allah, grant my sight health. There is no god but You.",
+                    reference: "Abu Dawud 5090, Ibn As-Sunni"
+                },
+                {
+                    id: 21, category: "protection", tag: "Daily Protection", repeat: 1,
+                    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
+                    translit: "Allahumma inni a'udhu bika minal-hammi wal-hazan, wa a'udhu bika minal-'ajzi wal-kasal…",
+                    translation: "O Allah, I seek refuge in You from worry and grief, from incapacity and laziness, from cowardice and miserliness, and from being overpowered by debt and oppressed by men.",
+                    reference: "Sahih al-Bukhari 2893"
+                },
+
+                // ---------- QURANIC ----------
+                {
+                    id: 22, category: "quranic", tag: "Quranic", repeat: 3,
+                    arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+                    translit: "Qul huwallahu ahad. Allahus-samad. Lam yalid wa lam yulad. Wa lam yakun lahu kufuwan ahad.",
+                    translation: "Say: He is Allah, the One. Allah, the Eternal Refuge. He neither begets nor is born. Nor is there to Him any equivalent. (Recite Surah Al-Ikhlas, Al-Falaq and An-Nas — three times each morning and evening.)",
+                    reference: "Abu Dawud 5082, Tirmidhi 2879"
+                },
+                {
+                    id: 23, category: "quranic", tag: "Quranic", repeat: 1,
+                    arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+                    translit: "Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina 'adhaban-nar.",
+                    translation: "Our Lord, give us in this world good and in the Hereafter good, and protect us from the punishment of the Fire. (The most frequent supplication of the Prophet ﷺ.)",
+                    reference: "Surah Al-Baqarah 2:201 — Sahih al-Bukhari 6389, Muslim 2690"
+                },
+                {
+                    id: 24, category: "quranic", tag: "Quranic", repeat: 7,
+                    arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+                    translit: "Hasbunallahu wa ni'mal-wakil.",
+                    translation: "Sufficient for us is Allah, and He is the best Disposer of affairs. (Said by Ibrahim ﷺ when thrown into the fire, and by the Prophet ﷺ and his companions when people gathered against them.)",
+                    reference: "Surah Al Imran 3:173 — Ibn As-Sunni"
+                },
+
+                // ---------- DAILY SUNNAH ----------
+                {
+                    id: 25, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 10,
+                    arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+                    translit: "Allahumma salli wa sallim 'ala nabiyyina Muhammad.",
+                    translation: "O Allah, send blessings and peace upon our Prophet Muhammad. (The Prophet ﷺ said: 'Whoever sends blessings upon me ten times, Allah will send blessings upon him a hundredfold.')",
+                    reference: "Sahih Muslim 408, Tirmidhi"
+                },
+                {
+                    id: 26, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 100,
+                    arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+                    translit: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadir.",
+                    translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is able to do all things. (The Prophet ﷺ said: 'Whoever says this a hundred times a day will have the reward of freeing ten slaves…')",
+                    reference: "Sahih al-Bukhari 3293, Muslim 2691"
+                },
+                {
+                    id: 27, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 100,
+                    arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+                    translit: "Subhanallahi wa bihamdih.",
+                    translation: "Glory be to Allah and praise Him. (The Prophet ﷺ said: 'Whoever says this a hundred times a day, his sins will be erased even if they are like the foam of the sea.')",
+                    reference: "Sahih al-Bukhari 6405, Muslim 2691"
+                },
+                {
+                    id: 28, category: "daily-sunnah", tag: "Daily Sunnah", repeat: 1,
+                    arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    translit: "Bismillahir-Rahmanir-Rahim.",
+                    translation: "In the name of Allah, the Most Gracious, the Most Merciful. (Recited before beginning any significant action — eating, drinking, entering the home, etc.)",
+                    reference: "Abu Dawud — Sunnah before every action"
+                }
+            ];
+
+            const CATEGORIES = [
+                { id: "all", label: "All", icon: "fa-solid fa-book-bookmark" },
+                { id: "morning-evening", label: "Morning & Evening", icon: "fa-solid fa-sun" },
+                { id: "after-prayer", label: "After Prayer", icon: "fa-solid fa-hands-praying" },
+                { id: "sleep", label: "Before Sleep", icon: "fa-solid fa-moon" },
+                { id: "wake-up", label: "Upon Waking", icon: "fa-solid fa-sun-plant-wilt" },
+                { id: "protection", label: "Daily Protection", icon: "fa-solid fa-shield-halved" },
+                { id: "quranic", label: "Quranic", icon: "fa-solid fa-feather-pointed" },
+                { id: "daily-sunnah", label: "Daily Sunnah", icon: "fa-solid fa-star-and-crescent" },
+                { id: "favorites", label: "Favourites", icon: "fa-solid fa-heart" }
+            ];
+
+            /* ============================================================
+               STATE
+               ============================================================ */
+            const STORE_FAV = "adhkar.favorites";
+            const STORE_CNT = "adhkar.counters";
+            const STORE_RMND = "adhkar.reminder";
+
+            function loadJSON(key, fallback) {
+                try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+                catch (e) { return fallback; }
+            }
+            function saveJSON(key, val) {
+                try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { }
+            }
+
+            let state = {
+                category: "all",
+                search: "",
+                favOnly: false,
+                favorites: loadJSON(STORE_FAV, {}),
+                counters: loadJSON(STORE_CNT, {})
+            };
+
+            /* ============================================================
+               ELEMENTS
+               ============================================================ */
+            const grid = document.getElementById("adhkarGrid");
+            const pillsWrap = document.getElementById("categoryPills");
+            const searchInput = document.getElementById("searchInput");
+            const favBtn = document.getElementById("favFilterBtn");
+            const resetBtn = document.getElementById("resetBtn");
+            const progressFill = document.getElementById("progressRing");
+            const progressPct = document.getElementById("progressPct");
+            const progressLbl = document.getElementById("progressLabel");
+            const progressMsg = document.getElementById("progressMsg");
+            const statTotal = document.getElementById("statTotal");
+            const statDone = document.getElementById("statDone");
+            const statFav = document.getElementById("statFav");
+            const toastEl = document.getElementById("adhkarToast");
+            const toastMsg = document.getElementById("toastMsg");
+
+            // Geometry constants for SVG rings
+            const RING_CIRC = 2 * Math.PI * 44;      // progress ring (r=44)
+            const COUNTER_CIRC = 2 * Math.PI * 28;   // card counter ring (r=28)
+
+            /* ============================================================
+               CATEGORY PILLS
+               ============================================================ */
+            function renderPills() {
+                pillsWrap.innerHTML = "";
+                CATEGORIES.forEach(cat => {
+                    const isFavCat = cat.id === "favorites";
+                    const active = state.category === cat.id || (isFavCat && state.favOnly);
+                    const btn = document.createElement("button");
+                    btn.className = "adhkar-pill" + (active ? " active" : "");
+                    btn.setAttribute("role", "tab");
+                    btn.setAttribute("aria-selected", active ? "true" : "false");
+
+                    // Count badge per category
+                    let count;
+                    if (isFavCat) {
+                        count = Object.keys(state.favorites).length;
+                    } else if (cat.id === "all") {
+                        count = ADHKAR.length;
+                    } else {
+                        count = ADHKAR.filter(a => a.category === cat.id).length;
+                    }
+
+                    btn.innerHTML = `<i class="${cat.icon}"></i><span>${cat.label}</span><span class="pill-count">${count}</span>`;
+                    btn.addEventListener("click", () => {
+                        if (isFavCat) {
+                            state.favOnly = !state.favOnly;
+                        } else {
+                            state.favOnly = false;
+                            state.category = cat.id;
+                        }
+                        favBtn.classList.toggle("active", state.favOnly);
+                        renderPills();
+                        render();
+                    });
+                    pillsWrap.appendChild(btn);
+                });
+            }
+
+            /* ============================================================
+               FILTERING
+               ============================================================ */
+            function getFiltered() {
+                const q = state.search.trim().toLowerCase();
+                return ADHKAR.filter(a => {
+                    if (state.category !== "all" && a.category !== state.category) return false;
+                    if (state.favOnly && !state.favorites[a.id]) return false;
+                    if (q) {
+                        const hay = (a.arabic + " " + a.translit + " " + a.translation + " " + a.reference + " " + a.tag).toLowerCase();
+                        if (!hay.includes(q)) return false;
+                    }
+                    return true;
+                });
+            }
+
+            /* ============================================================
+               RENDER — Adhkar grid
+               ============================================================ */
+            function render() {
+                const list = getFiltered();
+                grid.innerHTML = "";
+
+                if (!list.length) {
+                    grid.innerHTML = `
                     <div class="adhkar-empty">
                         <i class="fa-solid fa-bezier-curve"></i>
                         <h3>No adhkar found</h3>
                         <p>Try a different category, clear your search, or check your favourites filter.</p>
                     </div>`;
-                updateProgress();
-                return;
-            }
+                    updateProgress();
+                    return;
+                }
 
-            list.forEach((a, idx) => {
-                const count = state.counters[a.id] || 0;
-                const done = count >= a.repeat;
-                const isFav = !!state.favorites[a.id];
-                const progress = Math.min(count / a.repeat, 1);
-                const offset = COUNTER_CIRC * (1 - progress);
+                list.forEach((a, idx) => {
+                    const count = state.counters[a.id] || 0;
+                    const done = count >= a.repeat;
+                    const isFav = !!state.favorites[a.id];
+                    const progress = Math.min(count / a.repeat, 1);
+                    const offset = COUNTER_CIRC * (1 - progress);
 
-                const card = document.createElement("article");
-                card.className = "adhkar-card" + (done ? " completed" : "");
-                card.dataset.id = a.id;
-                card.style.setProperty("--i", idx);
+                    const card = document.createElement("article");
+                    card.className = "adhkar-card" + (done ? " completed" : "");
+                    card.dataset.id = a.id;
+                    card.style.setProperty("--i", idx);
 
-                const numStr = String(idx + 1).padStart(2, "0");
+                    const numStr = String(idx + 1).padStart(2, "0");
 
-                card.innerHTML = `
+                    card.innerHTML = `
                     <span class="completed-stamp"><i class="fa-solid fa-check"></i> Done</span>
                     <div class="adhkar-card-top">
                         <span class="adhkar-card-tag"><i class="fa-solid fa-tag"></i> ${a.tag}</span>
@@ -1777,371 +2069,371 @@
                     </div>
                 `;
 
-                // Counter
-                card.querySelector('[data-action="count"]').addEventListener("click", () => {
-                    const cur = state.counters[a.id] || 0;
-                    if (cur >= a.repeat) {
-                        // Tapping a completed counter resets it
-                        state.counters[a.id] = 0;
-                        toast("Counter reset for this dhikr");
-                    } else {
-                        state.counters[a.id] = cur + 1;
-                        const newCount = state.counters[a.id];
-                        if (newCount === a.repeat) {
-                            toast(`<i class="fa-solid fa-check-circle"></i> Completed — ${a.tag}`);
-                            if (navigator.vibrate) navigator.vibrate(40);
+                    // Counter
+                    card.querySelector('[data-action="count"]').addEventListener("click", () => {
+                        const cur = state.counters[a.id] || 0;
+                        if (cur >= a.repeat) {
+                            // Tapping a completed counter resets it
+                            state.counters[a.id] = 0;
+                            toast("Counter reset for this dhikr");
+                        } else {
+                            state.counters[a.id] = cur + 1;
+                            const newCount = state.counters[a.id];
+                            if (newCount === a.repeat) {
+                                toast(`<i class="fa-solid fa-check-circle"></i> Completed — ${a.tag}`);
+                                if (navigator.vibrate) navigator.vibrate(40);
+                            }
                         }
-                    }
-                    saveJSON(STORE_CNT, state.counters);
-                    render();
+                        saveJSON(STORE_CNT, state.counters);
+                        render();
+                    });
+
+                    // Favourite
+                    card.querySelector('[data-action="fav"]').addEventListener("click", () => {
+                        state.favorites[a.id] = !state.favorites[a.id];
+                        if (!state.favorites[a.id]) delete state.favorites[a.id];
+                        saveJSON(STORE_FAV, state.favorites);
+                        toast(state.favorites[a.id] ? "Added to favourites" : "Removed from favourites");
+                        renderPills();
+                        render();
+                    });
+
+                    // Audio
+                    card.querySelector('[data-action="audio"]').addEventListener("click", (e) => {
+                        speakArabic(a, e.currentTarget);
+                    });
+
+                    grid.appendChild(card);
                 });
 
-                // Favourite
-                card.querySelector('[data-action="fav"]').addEventListener("click", () => {
-                    state.favorites[a.id] = !state.favorites[a.id];
-                    if (!state.favorites[a.id]) delete state.favorites[a.id];
-                    saveJSON(STORE_FAV, state.favorites);
-                    toast(state.favorites[a.id] ? "Added to favourites" : "Removed from favourites");
-                    renderPills();
-                    render();
-                });
+                updateProgress();
+            }
 
-                // Audio
-                card.querySelector('[data-action="audio"]').addEventListener("click", (e) => {
-                    speakArabic(a, e.currentTarget);
-                });
+            /* ============================================================
+               PROGRESS
+               ============================================================ */
+            const MOTIVATIONAL = [
+                { threshold: 0, icon: "fa-seedling", text: "Begin your remembrance — every dhikr is a seed planted." },
+                { threshold: 25, icon: "fa-leaf", text: "Beautiful start — keep your tongue moist with dhikr." },
+                { threshold: 50, icon: "fa-fire", text: "Halfway there — your heart is warming with remembrance." },
+                { threshold: 75, icon: "fa-star", text: "Almost there — the angels are surrounding you." },
+                { threshold: 100, icon: "fa-award", text: "MashaAllah — you have completed your adhkar. May Allah accept it." }
+            ];
 
-                grid.appendChild(card);
+            function updateProgress() {
+                const list = getFiltered();
+                const total = list.length;
+                const done = list.filter(a => (state.counters[a.id] || 0) >= a.repeat).length;
+                const pct = total ? Math.round((done / total) * 100) : 0;
+
+                // Ring
+                const offset = RING_CIRC * (1 - pct / 100);
+                progressFill.style.strokeDashoffset = offset;
+                progressPct.textContent = pct + "%";
+                progressLbl.textContent = `${done} of ${total} adhkar completed${pct === 100 && total ? " — mashaAllah!" : ""}`;
+
+                // Motivational message
+                let msg = MOTIVATIONAL[0];
+                for (const m of MOTIVATIONAL) if (pct >= m.threshold) msg = m;
+                progressMsg.innerHTML = `<i class="fa-solid ${msg.icon}"></i> ${msg.text}`;
+
+                // Stats
+                statTotal.textContent = ADHKAR.length;
+                statDone.textContent = ADHKAR.filter(a => (state.counters[a.id] || 0) >= a.repeat).length;
+                statFav.textContent = Object.keys(state.favorites).length;
+            }
+
+            /* ============================================================
+               RESET
+               ============================================================ */
+            resetBtn.addEventListener("click", () => {
+                state.counters = {};
+                try { localStorage.removeItem(STORE_CNT); } catch (e) { }
+                render();
+                toast("All counters reset");
             });
 
-            updateProgress();
-        }
+            /* ============================================================
+               SEARCH
+               ============================================================ */
+            let searchTimer;
+            searchInput.addEventListener("input", (e) => {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => {
+                    state.search = e.target.value;
+                    render();
+                }, 180);
+            });
 
-        /* ============================================================
-           PROGRESS
-           ============================================================ */
-        const MOTIVATIONAL = [
-            { threshold: 0,   icon: "fa-seedling",       text: "Begin your remembrance — every dhikr is a seed planted." },
-            { threshold: 25,  icon: "fa-leaf",           text: "Beautiful start — keep your tongue moist with dhikr." },
-            { threshold: 50,  icon: "fa-fire",           text: "Halfway there — your heart is warming with remembrance." },
-            { threshold: 75,  icon: "fa-star",           text: "Almost there — the angels are surrounding you." },
-            { threshold: 100, icon: "fa-award",          text: "MashaAllah — you have completed your adhkar. May Allah accept it." }
-        ];
-
-        function updateProgress() {
-            const list = getFiltered();
-            const total = list.length;
-            const done = list.filter(a => (state.counters[a.id] || 0) >= a.repeat).length;
-            const pct = total ? Math.round((done / total) * 100) : 0;
-
-            // Ring
-            const offset = RING_CIRC * (1 - pct / 100);
-            progressFill.style.strokeDashoffset = offset;
-            progressPct.textContent = pct + "%";
-            progressLbl.textContent = `${done} of ${total} adhkar completed${pct === 100 && total ? " — mashaAllah!" : ""}`;
-
-            // Motivational message
-            let msg = MOTIVATIONAL[0];
-            for (const m of MOTIVATIONAL) if (pct >= m.threshold) msg = m;
-            progressMsg.innerHTML = `<i class="fa-solid ${msg.icon}"></i> ${msg.text}`;
-
-            // Stats
-            statTotal.textContent = ADHKAR.length;
-            statDone.textContent = ADHKAR.filter(a => (state.counters[a.id] || 0) >= a.repeat).length;
-            statFav.textContent = Object.keys(state.favorites).length;
-        }
-
-        /* ============================================================
-           RESET
-           ============================================================ */
-        resetBtn.addEventListener("click", () => {
-            state.counters = {};
-            try { localStorage.removeItem(STORE_CNT); } catch (e) {}
-            render();
-            toast("All counters reset");
-        });
-
-        /* ============================================================
-           SEARCH
-           ============================================================ */
-        let searchTimer;
-        searchInput.addEventListener("input", (e) => {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => {
-                state.search = e.target.value;
+            /* ============================================================
+               FAV FILTER (toolbar)
+               ============================================================ */
+            favBtn.addEventListener("click", () => {
+                state.favOnly = !state.favOnly;
+                favBtn.classList.toggle("active", state.favOnly);
+                renderPills();
                 render();
-            }, 180);
-        });
+            });
 
-        /* ============================================================
-           FAV FILTER (toolbar)
-           ============================================================ */
-        favBtn.addEventListener("click", () => {
-            state.favOnly = !state.favOnly;
-            favBtn.classList.toggle("active", state.favOnly);
-            renderPills();
-            render();
-        });
+            /* ============================================================
+               ARABIC TEXT-TO-SPEECH
+               ============================================================ */
+            let currentUtter = null;
+            let currentAudioBtn = null;
+            function speakArabic(a, btn) {
+                if (currentUtter && window.speechSynthesis.speaking) {
+                    window.speechSynthesis.cancel();
+                    if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
+                    if (currentAudioBtn === btn) { currentAudioBtn = null; return; }
+                }
+                if (!("speechSynthesis" in window)) {
+                    toast("Audio not supported on this browser");
+                    return;
+                }
 
-        /* ============================================================
-           ARABIC TEXT-TO-SPEECH
-           ============================================================ */
-        let currentUtter = null;
-        let currentAudioBtn = null;
-        function speakArabic(a, btn) {
-            if (currentUtter && window.speechSynthesis.speaking) {
+                // Force-load voices if not already loaded
+                let voices = window.speechSynthesis.getVoices();
+                if (voices.length === 0) {
+                    // Voices not loaded yet — try to load them
+                    window.speechSynthesis.getVoices();
+                    voices = window.speechSynthesis.getVoices();
+                }
+
+                const u = new SpeechSynthesisUtterance(a.arabic);
+                u.lang = "ar-SA";
+                u.rate = 0.75;
+                u.pitch = 1;
+                u.volume = 1;
+
+                // Find best Arabic voice
+                const arVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ar"))
+                    || voices.find(v => v.lang && v.lang.toLowerCase().includes("ar"));
+                if (arVoice) {
+                    u.voice = arVoice;
+                }
+
+                u.onstart = () => {
+                    btn.classList.add("playing");
+                    currentAudioBtn = btn;
+                };
+                u.onend = () => {
+                    btn.classList.remove("playing");
+                    currentAudioBtn = null;
+                };
+                u.onerror = (e) => {
+                    btn.classList.remove("playing");
+                    currentAudioBtn = null;
+                    console.warn("Speech error:", e);
+                };
+
+                currentUtter = u;
+
+                // Cancel any pending speech first, then speak
                 window.speechSynthesis.cancel();
-                if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
-                if (currentAudioBtn === btn) { currentAudioBtn = null; return; }
-            }
-            if (!("speechSynthesis" in window)) {
-                toast("Audio not supported on this browser");
-                return;
+                setTimeout(() => {
+                    window.speechSynthesis.speak(u);
+                }, 100);
             }
 
-            // Force-load voices if not already loaded
-            let voices = window.speechSynthesis.getVoices();
-            if (voices.length === 0) {
-                // Voices not loaded yet — try to load them
-                window.speechSynthesis.getVoices();
-                voices = window.speechSynthesis.getVoices();
-            }
+            /* ============================================================
+               THEME TOGGLE
+               ============================================================ */
+            (function initTheme() {
+                const themeBtn = document.querySelector(".theme-btn");
+                const saved = localStorage.getItem("siteTheme") || "dark";
+                if (saved === "light") {
+                    document.body.classList.add("light-mode");
+                    themeBtn.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+                }
+                themeBtn.addEventListener("click", () => {
+                    const isLight = document.body.classList.toggle("light-mode");
+                    themeBtn.innerHTML = isLight
+                        ? `<i class="fa-solid fa-sun"></i>`
+                        : `<i class="fa-solid fa-moon"></i>`;
+                    // Set inline styles to ensure button is visible in light mode
+                    if (isLight) {
+                        themeBtn.style.background = "#f1f5f9";
+                        themeBtn.style.color = "#0f172a";
+                    } else {
+                        themeBtn.style.background = "";
+                        themeBtn.style.color = "";
+                    }
+                    localStorage.setItem("siteTheme", isLight ? "light" : "dark");
+                });
 
-            const u = new SpeechSynthesisUtterance(a.arabic);
-            u.lang = "ar-SA";
-            u.rate = 0.75;
-            u.pitch = 1;
-            u.volume = 1;
-
-            // Find best Arabic voice
-            const arVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ar"))
-                        || voices.find(v => v.lang && v.lang.toLowerCase().includes("ar"));
-            if (arVoice) {
-                u.voice = arVoice;
-            }
-
-            u.onstart = () => {
-                btn.classList.add("playing");
-                currentAudioBtn = btn;
-            };
-            u.onend = () => {
-                btn.classList.remove("playing");
-                currentAudioBtn = null;
-            };
-            u.onerror = (e) => {
-                btn.classList.remove("playing");
-                currentAudioBtn = null;
-                console.warn("Speech error:", e);
-            };
-
-            currentUtter = u;
-            
-            // Cancel any pending speech first, then speak
-            window.speechSynthesis.cancel();
-            setTimeout(() => {
-                window.speechSynthesis.speak(u);
-            }, 100);
-        }
-
-        /* ============================================================
-           THEME TOGGLE
-           ============================================================ */
-        (function initTheme() {
-            const themeBtn = document.querySelector(".theme-btn");
-            const saved = localStorage.getItem("siteTheme") || "dark";
-            if (saved === "light") {
-                document.body.classList.add("light-mode");
-                themeBtn.innerHTML = `<i class="fa-solid fa-sun"></i>`;
-            }
-            themeBtn.addEventListener("click", () => {
-                const isLight = document.body.classList.toggle("light-mode");
-                themeBtn.innerHTML = isLight
-                    ? `<i class="fa-solid fa-sun"></i>`
-                    : `<i class="fa-solid fa-moon"></i>`;
-                // Set inline styles to ensure button is visible in light mode
-                if (isLight) {
+                // Apply initial button styles if starting in light mode
+                if (document.body.classList.contains("light-mode")) {
                     themeBtn.style.background = "#f1f5f9";
                     themeBtn.style.color = "#0f172a";
-                } else {
-                    themeBtn.style.background = "";
-                    themeBtn.style.color = "";
                 }
-                localStorage.setItem("siteTheme", isLight ? "light" : "dark");
+
+                // Footer theme toggle
+                const footerToggle = document.getElementById("footer-theme-toggle");
+                if (footerToggle) {
+                    footerToggle.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        themeBtn.click();
+                    });
+                }
+                // Footer reset
+                const footerReset = document.getElementById("footer-reset-progress");
+                if (footerReset) {
+                    footerReset.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        resetBtn.click();
+                    });
+                }
+                // Footer year
+                const fy = document.getElementById("footer-year");
+                if (fy) fy.textContent = new Date().getFullYear();
+            })();
+
+            /* ============================================================
+               TOAST
+               ============================================================ */
+            let toastTimer;
+            function toast(msg) {
+                toastMsg.innerHTML = msg;
+                toastEl.classList.add("show");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+            }
+
+            /* ============================================================
+               REMINDER (Fajr / Maghrib)
+               ============================================================ */
+            const reminderToggle = document.getElementById("reminderToggle");
+            const reminderPanel = document.getElementById("reminderPanel");
+            const enableReminder = document.getElementById("enableReminderBtn");
+            const reminderStatus = document.getElementById("reminderStatus");
+            const fajrInput = document.getElementById("fajrTime");
+            const maghribInput = document.getElementById("maghribTime");
+
+            let reminderState = loadJSON(STORE_RMND, { enabled: false, fajr: "05:00", maghrib: "18:30" });
+            fajrInput.value = reminderState.fajr;
+            maghribInput.value = reminderState.maghrib;
+            updateReminderStatus();
+
+            reminderToggle.addEventListener("click", (e) => {
+                e.stopPropagation();
+                reminderPanel.classList.toggle("open");
+            });
+            document.addEventListener("click", (e) => {
+                if (!reminderPanel.contains(e.target) && !reminderToggle.contains(e.target)) {
+                    reminderPanel.classList.remove("open");
+                }
             });
 
-            // Apply initial button styles if starting in light mode
-            if (document.body.classList.contains("light-mode")) {
-                themeBtn.style.background = "#f1f5f9";
-                themeBtn.style.color = "#0f172a";
-            }
-
-            // Footer theme toggle
-            const footerToggle = document.getElementById("footer-theme-toggle");
-            if (footerToggle) {
-                footerToggle.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    themeBtn.click();
-                });
-            }
-            // Footer reset
-            const footerReset = document.getElementById("footer-reset-progress");
-            if (footerReset) {
-                footerReset.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    resetBtn.click();
-                });
-            }
-            // Footer year
-            const fy = document.getElementById("footer-year");
-            if (fy) fy.textContent = new Date().getFullYear();
-        })();
-
-        /* ============================================================
-           TOAST
-           ============================================================ */
-        let toastTimer;
-        function toast(msg) {
-            toastMsg.innerHTML = msg;
-            toastEl.classList.add("show");
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
-        }
-
-        /* ============================================================
-           REMINDER (Fajr / Maghrib)
-           ============================================================ */
-        const reminderToggle  = document.getElementById("reminderToggle");
-        const reminderPanel   = document.getElementById("reminderPanel");
-        const enableReminder  = document.getElementById("enableReminderBtn");
-        const reminderStatus  = document.getElementById("reminderStatus");
-        const fajrInput       = document.getElementById("fajrTime");
-        const maghribInput    = document.getElementById("maghribTime");
-
-        let reminderState = loadJSON(STORE_RMND, { enabled: false, fajr: "05:00", maghrib: "18:30" });
-        fajrInput.value = reminderState.fajr;
-        maghribInput.value = reminderState.maghrib;
-        updateReminderStatus();
-
-        reminderToggle.addEventListener("click", (e) => {
-            e.stopPropagation();
-            reminderPanel.classList.toggle("open");
-        });
-        document.addEventListener("click", (e) => {
-            if (!reminderPanel.contains(e.target) && !reminderToggle.contains(e.target)) {
-                reminderPanel.classList.remove("open");
-            }
-        });
-
-        fajrInput.addEventListener("change", () => {
-            reminderState.fajr = fajrInput.value;
-            saveJSON(STORE_RMND, reminderState);
-            updateReminderStatus();
-        });
-        maghribInput.addEventListener("change", () => {
-            reminderState.maghrib = maghribInput.value;
-            saveJSON(STORE_RMND, reminderState);
-            updateReminderStatus();
-        });
-
-        enableReminder.addEventListener("click", async () => {
-            if (!("Notification" in window)) {
-                toast("Notifications not supported on this browser");
-                return;
-            }
-            let perm = Notification.permission;
-            if (perm === "default") {
-                perm = await Notification.requestPermission();
-            }
-            if (perm !== "granted") {
-                reminderState.enabled = false;
+            fajrInput.addEventListener("change", () => {
+                reminderState.fajr = fajrInput.value;
                 saveJSON(STORE_RMND, reminderState);
                 updateReminderStatus();
-                toast("Notifications were blocked. Enable them in browser settings.");
-                return;
+            });
+            maghribInput.addEventListener("change", () => {
+                reminderState.maghrib = maghribInput.value;
+                saveJSON(STORE_RMND, reminderState);
+                updateReminderStatus();
+            });
+
+            enableReminder.addEventListener("click", async () => {
+                if (!("Notification" in window)) {
+                    toast("Notifications not supported on this browser");
+                    return;
+                }
+                let perm = Notification.permission;
+                if (perm === "default") {
+                    perm = await Notification.requestPermission();
+                }
+                if (perm !== "granted") {
+                    reminderState.enabled = false;
+                    saveJSON(STORE_RMND, reminderState);
+                    updateReminderStatus();
+                    toast("Notifications were blocked. Enable them in browser settings.");
+                    return;
+                }
+                reminderState.enabled = !reminderState.enabled;
+                saveJSON(STORE_RMND, reminderState);
+                updateReminderStatus();
+                if (reminderState.enabled) {
+                    scheduleReminders();
+                    toast('<i class="fa-solid fa-bell"></i> Reminders enabled — Fajr & Maghrib');
+                } else {
+                    toast("Reminders disabled");
+                }
+            });
+
+            function updateReminderStatus() {
+                reminderToggle.classList.toggle("active", reminderState.enabled && Notification.permission === "granted");
+                if (!("Notification" in window)) {
+                    reminderStatus.textContent = "Notifications not supported";
+                    reminderStatus.classList.remove("enabled");
+                    return;
+                }
+                if (reminderState.enabled && Notification.permission === "granted") {
+                    reminderStatus.innerHTML = `<i class="fa-solid fa-check-circle"></i> Active — Fajr ${reminderState.fajr} · Maghrib ${reminderState.maghrib}`;
+                    reminderStatus.classList.add("enabled");
+                } else if (Notification.permission === "denied") {
+                    reminderStatus.textContent = "Blocked — enable in browser settings";
+                    reminderStatus.classList.remove("enabled");
+                } else {
+                    reminderStatus.textContent = "Notifications not enabled";
+                    reminderStatus.classList.remove("enabled");
+                }
             }
-            reminderState.enabled = !reminderState.enabled;
-            saveJSON(STORE_RMND, reminderState);
-            updateReminderStatus();
-            if (reminderState.enabled) {
+
+            let reminderLastFired = { fajr: null, maghrib: null };
+            function scheduleReminders() {
+                if (window.__adhkarReminderInterval) clearInterval(window.__adhkarReminderInterval);
+                window.__adhkarReminderInterval = setInterval(checkReminder, 30000);
+                checkReminder();
+            }
+
+            function checkReminder() {
+                if (!reminderState.enabled || !("Notification" in window) || Notification.permission !== "granted") return;
+                const now = new Date();
+                const hh = String(now.getHours()).padStart(2, "0");
+                const mm = String(now.getMinutes()).padStart(2, "0");
+                const cur = `${hh}:${mm}`;
+                const todayKey = now.toDateString();
+
+                if (cur === reminderState.fajr && reminderLastFired.fajr !== todayKey) {
+                    reminderLastFired.fajr = todayKey;
+                    fireNotification("Fajr Adhkar", "🌿 The morning has come — recite your morning adhkar and start your day with remembrance.");
+                }
+                if (cur === reminderState.maghrib && reminderLastFired.maghrib !== todayKey) {
+                    reminderLastFired.maghrib = todayKey;
+                    fireNotification("Maghrib Adhkar", "🌙 Evening has arrived — recite your evening adhkar before the night begins.");
+                }
+            }
+
+            function fireNotification(title, body) {
+                try {
+                    new Notification(title, {
+                        body: body,
+                        icon: "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#10b981"/><path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="#fff" opacity="0.9"/></svg>'),
+                        tag: title
+                    });
+                } catch (e) {
+                    toast(title);
+                }
+            }
+
+            if (reminderState.enabled && "Notification" in window && Notification.permission === "granted") {
                 scheduleReminders();
-                toast('<i class="fa-solid fa-bell"></i> Reminders enabled — Fajr & Maghrib');
-            } else {
-                toast("Reminders disabled");
             }
-        });
 
-        function updateReminderStatus() {
-            reminderToggle.classList.toggle("active", reminderState.enabled && Notification.permission === "granted");
-            if (!("Notification" in window)) {
-                reminderStatus.textContent = "Notifications not supported";
-                reminderStatus.classList.remove("enabled");
-                return;
+            /* ============================================================
+               INIT
+               ============================================================ */
+            if ("speechSynthesis" in window) {
+                window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
             }
-            if (reminderState.enabled && Notification.permission === "granted") {
-                reminderStatus.innerHTML = `<i class="fa-solid fa-check-circle"></i> Active — Fajr ${reminderState.fajr} · Maghrib ${reminderState.maghrib}`;
-                reminderStatus.classList.add("enabled");
-            } else if (Notification.permission === "denied") {
-                reminderStatus.textContent = "Blocked — enable in browser settings";
-                reminderStatus.classList.remove("enabled");
-            } else {
-                reminderStatus.textContent = "Notifications not enabled";
-                reminderStatus.classList.remove("enabled");
-            }
-        }
 
-        let reminderLastFired = { fajr: null, maghrib: null };
-        function scheduleReminders() {
-            if (window.__adhkarReminderInterval) clearInterval(window.__adhkarReminderInterval);
-            window.__adhkarReminderInterval = setInterval(checkReminder, 30000);
-            checkReminder();
-        }
-
-        function checkReminder() {
-            if (!reminderState.enabled || !("Notification" in window) || Notification.permission !== "granted") return;
-            const now = new Date();
-            const hh = String(now.getHours()).padStart(2, "0");
-            const mm = String(now.getMinutes()).padStart(2, "0");
-            const cur = `${hh}:${mm}`;
-            const todayKey = now.toDateString();
-
-            if (cur === reminderState.fajr && reminderLastFired.fajr !== todayKey) {
-                reminderLastFired.fajr = todayKey;
-                fireNotification("Fajr Adhkar", "🌿 The morning has come — recite your morning adhkar and start your day with remembrance.");
-            }
-            if (cur === reminderState.maghrib && reminderLastFired.maghrib !== todayKey) {
-                reminderLastFired.maghrib = todayKey;
-                fireNotification("Maghrib Adhkar", "🌙 Evening has arrived — recite your evening adhkar before the night begins.");
-            }
-        }
-
-        function fireNotification(title, body) {
-            try {
-                new Notification(title, {
-                    body: body,
-                    icon: "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#10b981"/><path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="#fff" opacity="0.9"/></svg>'),
-                    tag: title
-                });
-            } catch (e) {
-                toast(title);
-            }
-        }
-
-        if (reminderState.enabled && "Notification" in window && Notification.permission === "granted") {
-            scheduleReminders();
-        }
-
-        /* ============================================================
-           INIT
-           ============================================================ */
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-        }
-
-        renderHijriDate();
-        renderPills();
-        render();
-        if (window.lucide) lucide.createIcons();
-    })();
+            renderHijriDate();
+            renderPills();
+            render();
+            if (window.lucide) lucide.createIcons();
+        })();
     </script>
 
     <!-- AI Chat Widget -->
