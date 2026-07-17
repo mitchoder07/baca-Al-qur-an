@@ -879,6 +879,27 @@
             </div>
         </div>
 
+        <!-- Feedback section -->
+        <div class="footer-feedback">
+            <div class="feedback-card">
+                <h4><i class="fa-solid fa-comment-dots"></i> Send Feedback</h4>
+                <p>Found a bug? Have an idea? Want something removed? Let me know — your feedback shapes Baca.</p>
+                <form id="feedback-form">
+                    <input type="text" id="feedback-name" placeholder="Your name (optional)" maxlength="50">
+                    <select id="feedback-type">
+                        <option value="improvement">💡 Suggest an improvement</option>
+                        <option value="bug">🐛 Report a bug</option>
+                        <option value="remove">🗑️ Something to remove</option>
+                        <option value="praise">💚 Just saying Jazak Allah Khayr</option>
+                    </select>
+                    <textarea id="feedback-message" placeholder="Tell me what to improve, what's broken, or what's unnecessary…" rows="3" maxlength="500" required></textarea>
+                    <button type="submit" class="feedback-submit-btn">
+                        <i class="fa-solid fa-paper-plane"></i> Send Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <div class="footer-bottom">
             <p>&copy; <span id="footer-year">2026</span> Baca. All rights reserved.</p>
             <p class="footer-credit">Made with <i data-lucide="heart" style="width:14px;height:14px;color:#ef4444;display:inline;vertical-align:middle"></i> for the Ummah</p>

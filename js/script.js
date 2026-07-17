@@ -419,7 +419,24 @@ function populateReciterSelects() {
         document.getElementById("reciter-select2"),
     ].filter(Boolean);
 
-    const html = RECITERS.map(r =>
+    // Exclude reciters that don't have per-ayah audio (fullSurahOnly).
+    // These reciters (e.g. Okasha Kameny) are only available as full-surah
+    // MP3s on mp3quran.net, not on everyayah.com. They can't play individual
+    // ayahs, so they shouldn't appear in the daily ayah or reading modal
+    // dropdowns. They ARE available in the Reciters section (reciters/index.html)
+    // where full-surah playback works.
+    const dropdownReciters = RECITERS.filter(r => !r.fullSurahOnly);
+
+    // Safeguard: if the user previously selected a fullSurahOnly reciter
+    // (e.g. Okasha), reset to the default (Mishary) so the dropdown shows
+    // a valid selection.
+    const currentIsExcluded = RECITERS.find(r => r.id === currentReciterId)?.fullSurahOnly;
+    if (currentIsExcluded) {
+        currentReciterId = "mishari";
+        localStorage.setItem("reciterId", currentReciterId);
+    }
+
+    const html = dropdownReciters.map(r =>
         `<option value="${r.id}" ${r.id === currentReciterId ? "selected" : ""}>${r.name}</option>`
     ).join("");
 
@@ -1366,6 +1383,7 @@ async function openReader(surahNum, scrollToAyah = null) {
 
         readerModal.classList.add("active");
         document.body.style.overflow = "hidden";
+        document.body.classList.add("reader-open"); // hides chat-widget FAB
         requestAnimationFrame(() => {
             document.querySelector(".reader-content").scrollTop = 0;
         });
@@ -1394,6 +1412,7 @@ readBtn?.addEventListener("click", () => {
 function closeReader() {
     readerModal.classList.remove("active");
     document.body.style.overflow = "auto";
+    document.body.classList.remove("reader-open"); // restores chat-widget FAB
     audioPlayer.pause();
     if (ayahPlayer) ayahPlayer.pause();
     if (activePlayButton) {
@@ -2422,6 +2441,30 @@ function initGamification() {
         window.open("https://up1n-portfolio.vercel.app/", "_blank", "noopener");
     });
 
+    // Footer feedback form — opens email client with pre-filled message
+    document.getElementById("feedback-form")?.addEventListener("submit", e => {
+        e.preventDefault();
+        const name = document.getElementById("feedback-name")?.value.trim() || "Anonymous";
+        const type = document.getElementById("feedback-type")?.value || "improvement";
+        const message = document.getElementById("feedback-message")?.value.trim();
+        if (!message) return;
+
+        const typeLabels = {
+            improvement: "💡 Improvement Suggestion",
+            bug: "🐛 Bug Report",
+            remove: "🗑️ Removal Request",
+            praise: "💚 Appreciation"
+        };
+
+        const subject = `[Baca Feedback] ${typeLabels[type] || "Feedback"}`;
+        const body = `Name: ${name}\nType: ${typeLabels[type] || type}\n\nMessage:\n${message}\n\n— Sent from Baca (al-qur-an.onrender.com)`;
+
+        const mailtoUrl = `mailto:olaniyiaremu2003@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+        showToast("Opening your email app… Jazak Allah Khayr for the feedback!");
+        setTimeout(() => { document.getElementById("feedback-form")?.reset(); }, 1500);
+    });
+
     // Track reading time — increment 30 seconds every 30 seconds while page is visible
     let timeAccumulator = 0;
     setInterval(() => {
@@ -2931,10 +2974,69 @@ const HIJRI_MONTHS = [
     'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'
 ];
 
+// Cache for the AlAdhan API Hijri date (fetch once per day)
+let _aladhanHijriCache = null;
+let _aladhanHijriCacheDate = null;
+
+// HIJRI DATE ADJUSTMENT
+// =====================
+// The AlAdhan API uses the Umm al-Qura calendar (official Saudi calendar).
+// Some regions follow local moon sighting which can differ by ±1 day.
+const HIJRI_ADJUSTMENT = 0;
+
+async function getIslamicDateFromAPI() {
+    // Only fetch once per day (cache by Gregorian date string)
+    const today = new Date();
+    const todayKey = today.toLocaleDateString('en-CA'); // YYYY-MM-DD
+    if (_aladhanHijriCache && _aladhanHijriCacheDate === todayKey) {
+        return _aladhanHijriCache;
+    }
+
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+
+    try {
+        const res = await fetch(`https://api.aladhan.com/v1/gToH/${dd}-${mm}-${yyyy}`);
+        const data = await res.json();
+        const h = data?.data?.hijri;
+        if (!h) throw new Error("No hijri data");
+        let day = parseInt(h.day) + HIJRI_ADJUSTMENT;
+        let monthNum = parseInt(h.month.number);
+        let year = parseInt(h.year);
+
+        // Handle day overflow/underflow from adjustment
+        if (day < 1) {
+            monthNum--;
+            if (monthNum < 1) { monthNum = 12; year--; }
+            day = 30; // approximate — previous month's last day
+        } else if (day > 30) {
+            monthNum++;
+            if (monthNum > 12) { monthNum = 1; year++; }
+            day = 1;
+        }
+
+        const monthName = HIJRI_MONTHS[monthNum - 1] || h.month.en || 'Muharram';
+        const result = {
+            date: `${monthName} ${day} ${year}`,
+            day: h.weekday?.en || '',
+            monthNum: monthNum,
+            dayNum: day,
+            year: year
+        };
+        _aladhanHijriCache = result;
+        _aladhanHijriCacheDate = todayKey;
+        return result;
+    } catch (e) {
+        console.warn("AlAdhan API failed, using Intl fallback:", e);
+        return null;
+    }
+}
+
 function getIslamicDate() {
-    // Use Intl.DateTimeFormat with the islamic-umalqura calendar
-    // IMPORTANT: We get the month NUMBER (not name) because some browsers return
-    // the Gregorian month name instead of the Hijri month name.
+    // Synchronous fallback using Intl.DateTimeFormat (umalqura calendar)
+    // The async API version (getIslamicDateFromAPI) is preferred and is
+    // used by updateIslamicDate() below.
     try {
         const now = new Date();
         const hijriFormatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
@@ -2949,10 +3051,9 @@ function getIslamicDate() {
             else if (part.type === 'month') monthNum = parseInt(part.value);
             else if (part.type === 'year') year = part.value;
         }
-        
-        // Use our own month name array to ensure correct Hijri month name
+
         const monthName = HIJRI_MONTHS[monthNum - 1] || 'Muharram';
-        
+
         return {
             date: `${monthName} ${day} ${year}`,
             day: '',
@@ -2961,7 +3062,6 @@ function getIslamicDate() {
             year: parseInt(year)
         };
     } catch (e) {
-        // Fallback: approximate calculation
         return calculateHijriFallback();
     }
 }
@@ -3028,12 +3128,19 @@ function updateCalendarCard() {
     const weekEl = document.getElementById("week-number");
     const weekLabelEl = document.querySelector(".hcc-week-label");
     if (!dateEl) return;
-    
+
     if (calendarMode === 'hijri') {
+        // Show the Intl fallback immediately, then try the API for accuracy
         const hijri = getIslamicDate();
         dateEl.textContent = hijri.date;
         if (weekEl) weekEl.textContent = getHijriWeekNumber();
         if (weekLabelEl) weekLabelEl.textContent = "Hijri Week";
+        // Upgrade to API date if available
+        getIslamicDateFromAPI().then(apiHijri => {
+            if (apiHijri && calendarMode === 'hijri') {
+                dateEl.textContent = apiHijri.date;
+            }
+        });
     } else {
         const greg = getGregorianDate();
         dateEl.textContent = greg.date;
