@@ -1,20 +1,3 @@
-/* ============================================================
-   BACA — shared-nav.css  (v2 — proper navbar integration)
-   ------------------------------------------------------------
-   The hamburger button is NOT a floating FAB. It lives INSIDE
-   each page's existing <header class="navbar"> (or .mushaf-topbar),
-   styled to match that navbar's colors. It behaves like a
-   chameleon: dark on dark navbars, light on light navbars,
-   inherits the page's primary accent color.
-
-   The drawer slides in from the right and contains all the
-   main site navigation links.
-   ============================================================ */
-
-/* ── THE HAMBURGER BUTTON (in-navbar, chameleon) ──
-   It inherits text color from its parent navbar, so on a dark
-   navbar it's white, on a light navbar it's dark. Uses the
-   site's primary green as the hover/active accent. */
 .baca-nav-toggle {
     width: 42px;
     height: 42px;

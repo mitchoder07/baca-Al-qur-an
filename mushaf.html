@@ -27,6 +27,20 @@
     <!-- Mushaf-specific styles (self-contained — no style.css dependency) -->
     <link rel="stylesheet" href="css/mushaf.css">
 
+    <!-- Hide the floating AI chat widget on mobile viewports, on THIS page only.
+         The widget (js/chat-widget.js) injects .baca-chat-fab and .baca-chat-panel
+         into <body> on every page. Scoping this rule inside mushaf.html means it
+         has no effect on any other page. -->
+    <style>
+        @media (max-width: 768px) {
+
+            .baca-chat-fab,
+            .baca-chat-panel {
+                display: none !important;
+            }
+        }
+    </style>
+
 </head>
 
 <body data-mushaf-theme="dark">
