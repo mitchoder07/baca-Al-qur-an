@@ -12,7 +12,7 @@
     flex-shrink: 0;
     padding: 0;
     transition: background 0.18s ease, border-color 0.18s ease,
-                transform 0.18s ease, color 0.18s ease;
+        transform 0.18s ease, color 0.18s ease;
     -webkit-tap-highlight-color: transparent;
     /* Inherit font so the ☰ glyph renders consistently */
     font-family: inherit;
@@ -41,9 +41,11 @@
 .baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-open {
     display: none;
 }
+
 .baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-close {
     display: block;
 }
+
 .baca-nav-toggle .baca-nav-toggle-icon-close {
     display: none;
 }
@@ -56,6 +58,7 @@ body.light-mode .baca-nav-toggle {
     border-color: rgba(0, 0, 0, 0.1);
     color: inherit;
 }
+
 body.light-mode .baca-nav-toggle:hover {
     background: rgba(16, 185, 129, 0.1);
     border-color: rgba(16, 185, 129, 0.4);
@@ -70,6 +73,7 @@ body.light-mode .baca-nav-toggle:hover {
     border-color: rgba(0, 0, 0, 0.1);
     color: #0f172a;
 }
+
 [data-mushaf-theme="light"] .baca-nav-toggle:hover {
     background: rgba(16, 185, 129, 0.12);
     color: #059669;
@@ -86,7 +90,8 @@ body.light-mode .baca-nav-toggle:hover {
     color: #fff;
     z-index: 10020;
     transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.25s ease, color 0.25s ease;
     display: flex;
     flex-direction: column;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
@@ -249,10 +254,67 @@ body.light-mode .baca-nav-toggle:hover {
 }
 
 /* ── LIGHT MODE DRAWER ──
-   Even on light-mode pages, the drawer stays dark to keep the
-   branding consistent and the gradient logo visible. This is a
-   deliberate design choice — the drawer is a "destination", not
-   part of the page canvas. */
+   The drawer now follows body.light-mode so it matches the rest of
+   the page instead of always staying dark. The gradient logo text
+   (.baca-nav-drawer-logo-text) needs no change — it's a background-
+   clip gradient that already reads fine on a white panel. */
+body.light-mode .baca-nav-drawer {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: -10px 0 40px rgba(15, 23, 42, 0.14);
+}
+
+body.light-mode .baca-nav-drawer-head {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+body.light-mode .baca-nav-drawer-logo {
+    color: #0f172a;
+}
+
+body.light-mode .baca-nav-drawer-close {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.04);
+    color: #0f172a;
+}
+
+body.light-mode .baca-nav-drawer-close:hover {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #059669;
+}
+
+body.light-mode .baca-nav-drawer-section-label {
+    color: #94a3b8;
+}
+
+body.light-mode .baca-nav-drawer-link {
+    color: #475569;
+}
+
+body.light-mode .baca-nav-drawer-link:hover {
+    background: rgba(16, 185, 129, 0.08);
+    color: #059669;
+}
+
+body.light-mode .baca-nav-drawer-link.active {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    font-weight: 600;
+}
+
+body.light-mode .baca-nav-drawer-footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .baca-nav-drawer-footer-text {
+    color: #94a3b8;
+}
+
+body.light-mode .baca-nav-backdrop.open {
+    background: rgba(15, 23, 42, 0.35);
+}
 
 /* ── SMALL SCREENS ── */
 @media (max-width: 640px) {
@@ -260,10 +322,12 @@ body.light-mode .baca-nav-toggle:hover {
         width: 40px;
         height: 40px;
     }
+
     .baca-nav-toggle svg {
         width: 18px;
         height: 18px;
     }
+
     .baca-nav-drawer {
         width: 88vw;
     }
@@ -271,6 +335,7 @@ body.light-mode .baca-nav-toggle:hover {
 
 /* ── REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
+
     .baca-nav-drawer,
     .baca-nav-backdrop,
     .baca-nav-toggle {
