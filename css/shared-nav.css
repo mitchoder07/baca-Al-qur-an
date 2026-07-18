@@ -12,7 +12,7 @@
     flex-shrink: 0;
     padding: 0;
     transition: background 0.18s ease, border-color 0.18s ease,
-        transform 0.18s ease, color 0.18s ease;
+                transform 0.18s ease, color 0.18s ease;
     -webkit-tap-highlight-color: transparent;
     /* Inherit font so the ☰ glyph renders consistently */
     font-family: inherit;
@@ -41,11 +41,9 @@
 .baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-open {
     display: none;
 }
-
 .baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-close {
     display: block;
 }
-
 .baca-nav-toggle .baca-nav-toggle-icon-close {
     display: none;
 }
@@ -58,7 +56,6 @@ body.light-mode .baca-nav-toggle {
     border-color: rgba(0, 0, 0, 0.1);
     color: inherit;
 }
-
 body.light-mode .baca-nav-toggle:hover {
     background: rgba(16, 185, 129, 0.1);
     border-color: rgba(16, 185, 129, 0.4);
@@ -73,7 +70,6 @@ body.light-mode .baca-nav-toggle:hover {
     border-color: rgba(0, 0, 0, 0.1);
     color: #0f172a;
 }
-
 [data-mushaf-theme="light"] .baca-nav-toggle:hover {
     background: rgba(16, 185, 129, 0.12);
     color: #059669;
@@ -91,7 +87,7 @@ body.light-mode .baca-nav-toggle:hover {
     z-index: 10020;
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        background 0.25s ease, color 0.25s ease;
+                background 0.25s ease, color 0.25s ease;
     display: flex;
     flex-direction: column;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
@@ -322,12 +318,10 @@ body.light-mode .baca-nav-backdrop.open {
         width: 40px;
         height: 40px;
     }
-
     .baca-nav-toggle svg {
         width: 18px;
         height: 18px;
     }
-
     .baca-nav-drawer {
         width: 88vw;
     }
@@ -335,7 +329,6 @@ body.light-mode .baca-nav-backdrop.open {
 
 /* ── REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
-
     .baca-nav-drawer,
     .baca-nav-backdrop,
     .baca-nav-toggle {

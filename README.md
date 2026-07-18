@@ -1,1 +1,0 @@
-# baca-Al-qur-an

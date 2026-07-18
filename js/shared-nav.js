@@ -273,12 +273,23 @@
             else openDrawer();
         }
 
+        // Close the drawer with NO transition — used right before we
+        // navigate away to a new page. Animating the close here is
+        // pointless (the page is about to unload) and was the cause of
+        // a visible flash: the 120ms-delayed close used to fire WHILE
+        // the next page's document was already loading, so its slide-
+        // out / fade animation got caught mid-flight and rendered on
+        // top of the incoming page's own (freshly-closed) toggle button.
+        // Closing instantly removes that overlapping half-animated frame.
         function closeDrawerInstant() {
             var prevDrawerTransition = drawer.style.transition;
             var prevBackdropTransition = backdrop.style.transition;
             drawer.style.transition = 'none';
             backdrop.style.transition = 'none';
             closeDrawer();
+            // Force the browser to apply the "no transition" style before
+            // we restore it, otherwise the browser may batch/skip it.
+            // eslint-disable-next-line no-unused-expressions
             drawer.offsetHeight;
             drawer.style.transition = prevDrawerTransition;
             backdrop.style.transition = prevBackdropTransition;
@@ -296,6 +307,10 @@
             if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
         });
 
+        // Close drawer INSTANTLY when a nav link is clicked — we're
+        // navigating to a brand-new page, so there's nothing to animate
+        // and animating it was causing a visible flash during the
+        // transition (see closeDrawerInstant comment above).
         drawer.querySelectorAll('.baca-nav-drawer-link').forEach(function (a) {
             a.addEventListener('click', function () {
                 closeDrawerInstant();
@@ -309,6 +324,12 @@
             }
         });
 
+        // If the browser restores this exact page from the back/forward
+        // cache (bfcache) — e.g. the user taps the browser's Back button
+        // after navigating away via the drawer — make sure the drawer
+        // and body scroll-lock are reset to closed. Without this, a page
+        // restored from bfcache can reappear with the drawer still "open"
+        // internally (stale state from right before it was left).
         window.addEventListener('pageshow', function () {
             closeDrawerInstant();
         });
