@@ -15,7 +15,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Shared nav styles (auto-injected by shared-nav.js, but we link it here too for safety) -->
     <link rel="stylesheet" href="../css/shared-nav.css">
@@ -33,8 +34,16 @@
             --border: rgba(255, 255, 255, 0.07);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: "Poppins", sans-serif;
             background: var(--dark);
@@ -51,9 +60,30 @@
             pointer-events: none;
             z-index: 0;
         }
-        .bg-glow.glow-1 { top: -120px; left: -120px; width: 400px; height: 400px; background: #10b981; }
-        .bg-glow.glow-2 { top: 30%; right: -150px; width: 500px; height: 500px; background: #06b6d4; }
-        .bg-glow.glow-3 { bottom: -120px; left: 30%; width: 400px; height: 400px; background: #6366f1; }
+
+        .bg-glow.glow-1 {
+            top: -120px;
+            left: -120px;
+            width: 400px;
+            height: 400px;
+            background: #10b981;
+        }
+
+        .bg-glow.glow-2 {
+            top: 30%;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: #06b6d4;
+        }
+
+        .bg-glow.glow-3 {
+            bottom: -120px;
+            left: 30%;
+            width: 400px;
+            height: 400px;
+            background: #6366f1;
+        }
 
         /* ── NAVBAR ── */
         .navbar {
@@ -77,8 +107,17 @@
             text-decoration: none;
             transition: transform 0.2s;
         }
-        .logo:hover { transform: scale(1.03); }
-        .logo .baca-logo-icon { width: 32px; height: 32px; flex-shrink: 0; }
+
+        .logo:hover {
+            transform: scale(1.03);
+        }
+
+        .logo .baca-logo-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
         .logo .logo-text {
             font-size: 1.5rem;
             font-weight: 800;
@@ -102,9 +141,14 @@
             border-radius: 10px;
             border: 1px solid var(--border);
             transition: .2s;
-            margin-right: 4.2rem; /* leave room for the floating shared-nav FAB */
+            margin-right: 4.2rem;
+            /* leave room for the floating shared-nav FAB */
         }
-        .nav-back:hover { border-color: var(--primary); color: var(--primary); }
+
+        .nav-back:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
 
         /* ── HERO ── */
         .reciters-hero {
@@ -113,6 +157,7 @@
             position: relative;
             z-index: 1;
         }
+
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -127,6 +172,7 @@
             letter-spacing: .8px;
             margin-bottom: .9rem;
         }
+
         .reciters-hero h1 {
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
@@ -136,6 +182,7 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .reciters-hero p {
             color: var(--text);
             font-size: 1rem;
@@ -152,6 +199,7 @@
             display: flex;
             align-items: center;
         }
+
         .reciters-search-wrap svg {
             position: absolute;
             left: 16px;
@@ -160,6 +208,7 @@
             color: #94a3b8;
             pointer-events: none;
         }
+
         .reciters-search-wrap input {
             width: 100%;
             height: 52px;
@@ -174,8 +223,14 @@
             outline: none;
             transition: border-color .2s;
         }
-        .reciters-search-wrap input:focus { border-color: var(--primary); }
-        .reciters-search-wrap input::placeholder { color: #64748b; }
+
+        .reciters-search-wrap input:focus {
+            border-color: var(--primary);
+        }
+
+        .reciters-search-wrap input::placeholder {
+            color: #64748b;
+        }
 
         /* ── GRID + CARDS (mirror index.html styles) ── */
         .reciters-section {
@@ -183,6 +238,7 @@
             position: relative;
             z-index: 1;
         }
+
         .reciters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -190,6 +246,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .reciter-card {
             background: var(--dark-light);
             border: 1px solid var(--border);
@@ -202,11 +259,13 @@
             display: block;
             color: inherit;
         }
+
         .reciter-card:hover {
             transform: translateY(-8px);
             border-color: var(--primary);
             box-shadow: 0 16px 40px rgba(16, 185, 129, 0.12);
         }
+
         .reciter-avatar {
             width: 90px;
             height: 90px;
@@ -221,23 +280,27 @@
             font-size: 2rem;
             color: var(--primary);
         }
+
         .reciter-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
+
         .reciter-card h3 {
             font-size: .95rem;
             font-weight: 700;
             margin-bottom: .3rem;
             line-height: 1.3;
         }
+
         .reciter-card .rc-country {
             font-size: .78rem;
             color: #94a3b8;
             margin-bottom: .5rem;
         }
+
         .reciter-card .rc-style {
             display: inline-block;
             padding: .22rem .7rem;
@@ -249,12 +312,14 @@
             text-transform: uppercase;
             letter-spacing: .4px;
         }
+
         .reciters-empty {
             grid-column: 1 / -1;
             text-align: center;
             padding: 3rem;
             color: #64748b;
         }
+
         .reciters-empty i {
             font-size: 2rem;
             color: var(--primary);
@@ -263,39 +328,104 @@
         }
 
         /* ── LIGHT MODE ── */
-        body.light-mode { background: #f1f5f9; color: #0f172a; }
-        body.light-mode .navbar { background: rgba(248, 250, 252, 0.97); border-bottom-color: rgba(0, 0, 0, 0.08); }
-        body.light-mode .nav-back { color: #475569; border-color: rgba(0, 0, 0, 0.1); }
+        body.light-mode {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        body.light-mode .navbar {
+            background: rgba(248, 250, 252, 0.97);
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .nav-back {
+            color: #475569;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
         body.light-mode .reciters-hero h1 {
             background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        body.light-mode .reciters-hero p { color: #475569; }
+
+        body.light-mode .reciters-hero p {
+            color: #475569;
+        }
+
         body.light-mode .reciters-search-wrap input {
             background: #ffffff;
             border-color: rgba(0, 0, 0, 0.1);
             color: #0f172a;
         }
-        body.light-mode .reciter-card { background: #ffffff; border-color: rgba(0, 0, 0, 0.07); }
-        body.light-mode .reciter-card:hover { border-color: var(--primary); }
-        body.light-mode .reciter-card h3 { color: #0f172a; }
-        body.light-mode .reciter-card .rc-country { color: #64748b; }
-        body.light-mode .reciters-empty { color: #94a3b8; }
+
+        body.light-mode .reciter-card {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.07);
+        }
+
+        body.light-mode .reciter-card:hover {
+            border-color: var(--primary);
+        }
+
+        body.light-mode .reciter-card h3 {
+            color: #0f172a;
+        }
+
+        body.light-mode .reciter-card .rc-country {
+            color: #64748b;
+        }
+
+        body.light-mode .reciters-empty {
+            color: #94a3b8;
+        }
 
         /* ── MOBILE ── */
         @media (max-width: 640px) {
-            .reciters-hero { padding: 7rem 6% 1.5rem; }
-            .reciters-section { padding: 0 6% 4rem; }
-            .reciters-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .9rem; }
-            .reciter-card { padding: 1.4rem 1rem 1.2rem; border-radius: 18px; }
-            .reciter-avatar { width: 72px; height: 72px; }
+            .reciters-hero {
+                padding: 7rem 6% 1.5rem;
+            }
+
+            .reciters-section {
+                padding: 0 6% 4rem;
+            }
+
+            .reciters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: .9rem;
+            }
+
+            .reciter-card {
+                padding: 1.4rem 1rem 1.2rem;
+                border-radius: 18px;
+            }
+
+            .reciter-avatar {
+                width: 72px;
+                height: 72px;
+            }
         }
     </style>
 </head>
 
 <body>
+
+    <!-- ============================================================
+         BACA — RECITERS DIRECTORY (reciters/index.html)
+         ============================================================
+         PAGE OUTLINE
+         ------------------------------------------------------------
+         1. Glow background (decorative)
+         2. Navbar (minimal — shared-nav.js injects the floating
+            hamburger into .nav-actions)
+         3. Hero
+         4. Reciters section (search input + grid, rendered from the
+            RECITER_PROFILES array below)
+         5. Script: light-mode sync, RECITER_PROFILES data (kept in
+            sync with js/script.js's RECITER_PROFILES — see note
+            there), renderGrid(), search filtering
+         ============================================================ -->
 
     <!-- Glow background -->
     <div class="bg-glow glow-1"></div>
@@ -304,17 +434,22 @@
 
     <!-- Navbar (minimal — shared-nav.js adds the floating hamburger) -->
     <header class="navbar">
-        <a href="../index.html" class="logo" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="url(#bacaLogoGrad)" opacity="0.18"/>
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>
-                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z" fill="url(#bacaLogoGrad)" opacity="0.9"/>
+        <a href="../index.html" class="logo">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.18" />
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
+                    stroke-linecap="round" />
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.9" />
                 <defs>
                     <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stop-color="#10b981"/>
-                        <stop offset="0.5" stop-color="#06b6d4"/>
-                        <stop offset="1" stop-color="#6366f1"/>
+                        <stop offset="0" stop-color="#10b981" />
+                        <stop offset="0.5" stop-color="#06b6d4" />
+                        <stop offset="1" stop-color="#6366f1" />
                     </linearGradient>
                 </defs>
             </svg>
@@ -328,7 +463,8 @@
     <!-- Hero -->
     <section class="reciters-hero">
         <h1>Choose a Reciter</h1>
-        <p>Listen to the entire Qur'an in the voice of world-renowned reciters. Tap any card to open their profile and play any surah.</p>
+        <p>Listen to the entire Qur'an in the voice of world-renowned reciters. Tap any card to open their profile and
+            play any surah.</p>
     </section>
 
     <!-- Reciters section -->

@@ -936,9 +936,27 @@
 
 <body>
 
+    <!-- ============================================================
+         BACA — RECITER PROFILE (reciters/reciter.html)
+         Opened via reciters/index.html?r=<id> (or salah.html/adhkar.html
+         reciter picker) — the ?r= id is read by this page's script to
+         load the matching profile from RECITER_PROFILES.
+         ============================================================
+         PAGE OUTLINE
+         ------------------------------------------------------------
+         1. Navbar
+         2. Sticky player (prev/play/next, surah + reciter name,
+            progress bar — visible once playback starts)
+         3. Hero (reciter avatar, name, country, style)
+         4. Surah section (searchable list of all 114 surahs, tap
+            to play with this reciter)
+         5. Audio element + back-to-top button
+         6. Script: light-mode sync, reciter profile lookup, surah
+            list rendering + search, sticky player wiring
+         ============================================================ -->
+
     <header class="navbar">
-        <a href="..\index.html" class="logo"
-            style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+        <a href="../index.html" class="logo">
             <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true">
                 <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"

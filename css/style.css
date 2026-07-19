@@ -1,3 +1,57 @@
+/* ============================================================
+   BACA — MAIN STYLESHEET
+   ============================================================
+   TABLE OF CONTENTS (in actual file order — line numbers are
+   approximate since content shifts as the file grows; search for
+   the exact heading text to jump to a section)
+   ------------------------------------------------------------
+   Root variables, reset, base body/html styles
+   Light mode variable overrides
+   Arabic font upgrade (Noto Naskh Arabic / Amiri)
+   Navbar, hamburger button, mobile nav dropdown
+   Hero Section
+   Daily Ayah Section + Daily Tafsir Panel
+   Ayah Section (verse-of-the-day card)
+   Audio Player (home page)
+   Ayah / Surah Explorer + filter pills
+   Topic Section
+   Journey Section
+   Continue Reading Section + Continue Reading Hint toast
+   Reciters Section + Compact Reciters Preview (index.html)
+   Daily Reflection Section
+   Floating keyframes
+   Surah Modal (preview before full reader)
+   Surah Reader / Reader Modal (Mushaf) — includes settings
+     drawer, audio drawer, floating mini player, translation &
+     tafsir dropdowns
+   Search Modal
+   Reciter Picker Modal
+   Bookmarks Section
+   Media Responsiveness (early breakpoints)
+   Reading Progress Section (gamification) + Stats grid
+   Daily Challenge Section
+   Achievements Section
+   Footer + Footer Feedback Form
+   Topic/Journey card interaction polish
+   Search result styling
+   Light Mode overrides (gamification, footer, search, etc.)
+   Reader — Translation & Tafsir display in verse cards
+   Footer Islamic Date strip
+   Hijri Calendar Card widget
+   Revelation Order badge (surah cards)
+   Reader Tafsir Panel
+   Reading Modal / Tafsir readability fixes
+   Theme Sync — audio drawer, settings drawer, floating player,
+     reader-select dropdowns (all keyed off --reader-* variables
+     set per active reader theme)
+   Chat widget visibility rules (hidden in reader modal, mobile-
+     only on the Mushaf page)
+   Footer Feedback Form
+   Light mode adjustments (misc, added incrementally)
+   Light mode navbar / mobile nav (hamburger dropdown)
+   Scrollable navbar (horizontal scroll for many nav links)
+   ============================================================ */
+
 /* Google Font */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
@@ -4170,9 +4224,14 @@ body.light-mode .surah-rev-order {
   color: var(--reader-text) !important;
 }
 
-/* Reader select dropdowns (translation & tafsir) */
+/* Reader select dropdowns (translation & tafsir) — theme-color sync.
+   NOTE: background-color (not the `background` shorthand) is used here
+   on purpose. The `background` shorthand resets every background
+   sub-property it doesn't mention — including the background-image
+   arrow set on the base .reader-select rule above — which is what
+   made the dropdown arrow disappear. */
 .reader-select {
-  background: var(--reader-drawer-bg) !important;
+  background-color: var(--reader-drawer-bg) !important;
   color: var(--reader-text) !important;
   border-color: var(--reader-card-border) !important;
 }

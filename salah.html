@@ -1262,6 +1262,29 @@
 
 <body>
 
+    <!-- ============================================================
+         BACA — HOW TO PRAY SALAH (salah.html)
+         ============================================================
+         PAGE OUTLINE
+         ------------------------------------------------------------
+         1. Glow background
+         2. Navbar
+         3. Salah page: Hero, Prayer Times Overview, Step Quick Nav,
+            Step-by-Step Guide, Common Mistakes, Khushu/Concentration
+            Tips, Closing CTA
+         4. Toast
+         5. Back to top
+         6. Footer
+         7. Scripts
+         NOTE: this file's <style> block still defines .mobile-nav,
+         .nav-links, .search-modal, and .reciter-picker-modal, but
+         none of those classes are used anywhere in this page's HTML
+         or JS (verified) — leftover from an earlier version, before
+         js/shared-nav.js unified navigation across pages. Safe to
+         remove if you want to trim the file; left in place here to
+         avoid touching CSS I haven't fully traced every consumer of.
+         ============================================================ -->
+
     <!-- ================= GLOW BACKGROUND ================= -->
     <div class="bg-glow glow-1"></div>
     <div class="bg-glow glow-2"></div>
@@ -1269,8 +1292,7 @@
 
     <!-- ================= NAVBAR ================= -->
     <header class="navbar">
-        <a href="index.html" class="logo"
-            style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+        <a href="index.html" class="logo">
             <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true">
                 <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"

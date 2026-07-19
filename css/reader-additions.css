@@ -1,5 +1,23 @@
+/* ============================================================
+   BACA — READER ADDITIONS
+   Loaded AFTER css/style.css and css/reader-themes.css (see the
+   <link> order in index.html / mushaf.html), so any selector here
+   that duplicates one in style.css (currently: .tafsir-panel,
+   .tafsir-header, .tafsir-badge, .tafsir-close, .tafsir-body,
+   .tafsir-error, .tafsir-loading, @keyframes spin, .spin) wins at
+   equal specificity. That's the active definition in the browser;
+   the matching block in style.css is effectively dead and kept
+   there only as a fallback if this file is ever removed.
+   ============================================================
+   TABLE OF CONTENTS
+   ------------------------------------------------------------
+   1. Verse Transliteration (sits between Arabic and translation)
+   2. Tafsir Panel (inline below verse card)
+   3. Light Theme adjustments for tafsir
+   ============================================================ */
+
 /* =====================================================
-   VERSE TRANSLITERATION
+   1. VERSE TRANSLITERATION
    Sits between Arabic and translation
    ===================================================== */
 
@@ -17,7 +35,7 @@
 }
 
 /* =====================================================
-   TAFSIR PANEL — inline below verse card
+   2. TAFSIR PANEL — inline below verse card
    ===================================================== */
 
 .tafsir-panel {
@@ -110,7 +128,7 @@
 }
 
 /* =====================================================
-   LIGHT THEME adjustments for tafsir
+   3. LIGHT THEME adjustments for tafsir
    ===================================================== */
 
 .reader-content[data-theme="light"] .tafsir-panel {

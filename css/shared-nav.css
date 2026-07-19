@@ -1,3 +1,19 @@
+/* ============================================================
+   BACA — SHARED NAVIGATION (hamburger button + slide-in drawer)
+   Injected into every page's navbar by js/shared-nav.js.
+   ============================================================
+   TABLE OF CONTENTS
+   ------------------------------------------------------------
+   1. Nav toggle button (hamburger / X)
+   2. Light mode adaptation
+   3. Mushaf page adaptation
+   4. Slide-in drawer (header, body, links, footer)
+   5. Backdrop
+   6. Light mode drawer
+   7. Small screens
+   8. Reduced motion
+   ============================================================ */
+
 .baca-nav-toggle {
     width: 42px;
     height: 42px;

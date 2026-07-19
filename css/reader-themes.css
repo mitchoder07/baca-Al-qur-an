@@ -1,5 +1,26 @@
+/* ============================================================
+   BACA — READER THEMES
+   Loaded after style.css, before reader-additions.css.
+   ============================================================
+   TABLE OF CONTENTS
+   ------------------------------------------------------------
+   1. Arabic font upgrade (Noto Naskh Arabic)
+   2. Olive (Teal) reader theme
+   3. Sapphire reader theme
+   4. Theme panel — swatch layout support
+   5. Verse highlight animation (jump-to-verse flash)
+   6. Reader theme button + panel (sticky theme picker)
+   7. Theme swatches (Dark / Warm / Olive / Sapphire / Light)
+   8. Filter dropdown (surah explorer filter panel)
+   9. Light mode — site-wide overrides (navbar, hero, cards,
+      audio player, search modal, surah modal, floating player,
+      progress bar, topic/journey cards)
+   10. Mini settings drawer (floating player)
+   11. Filter loading / error states
+   ============================================================ */
+
 /* =====================================================
-   ARABIC FONT UPGRADE
+   1. ARABIC FONT UPGRADE
    Noto Naskh Arabic — clean, professional, widely
    supported, designed specifically for Qur'anic text
    ===================================================== */
@@ -80,7 +101,7 @@
 
 .theme-swatches {
     display: flex;
-    gap: 0.6rem;
+    gap: 0.7rem;
     flex-wrap: wrap;
 }
 
@@ -185,11 +206,6 @@
     font-weight: 700;
 }
 
-.theme-swatches {
-    display: flex;
-    gap: 0.7rem;
-}
-
 .theme-swatch-wrap {
     display: flex;
     flex-direction: column;
@@ -222,10 +238,11 @@
     background: linear-gradient(135deg, #1a1208, #3d2a0a);
 }
 
-.swatch-olive {
-    background: linear-gradient(135deg, #1a2010, #2c3a18);
-}
-
+/* NOTE: .swatch-olive is NOT redefined here. It's already set above
+   (with !important) at the top of this file. A second plain
+   .swatch-olive rule used to exist here, but !important always wins
+   over a non-important rule regardless of source order, so that
+   second block had zero visual effect — pure dead code. Removed. */
 .swatch-light {
     background: linear-gradient(135deg, #f8fafc, #e2e8f0);
     border-color: rgba(0, 0, 0, 0.14) !important;
@@ -364,16 +381,8 @@
     text-align: right;
 }
 
-.filter-loading,
-.filter-error {
-    font-size: 0.82rem;
-    color: #64748b;
-    padding: 0.25rem 0;
-}
-
-.filter-error {
-    color: #f87171;
-}
+/* .filter-loading / .filter-error are defined once, further down
+   this file, in the "FILTER LOADING / ERROR" section. */
 
 #filter-clear-btn {
     border: none;
@@ -390,6 +399,47 @@
 
 #filter-clear-btn:hover {
     color: #ef4444;
+}
+
+/* ── LIGHT MODE ──
+   This whole panel (#filter-dropdown and its contents) had no
+   light-mode styling at all, so it stayed hardcoded dark even when
+   the rest of the page switched to light mode. This block fixes
+   that, following the same color pairs used everywhere else in the
+   light-mode overrides (e.g. #ffffff panels, #0f172a text,
+   rgba(0,0,0,X) borders, #059669 for the active/hover green). */
+body.light-mode #filter-dropdown {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14);
+}
+
+body.light-mode .filter-section-label {
+    color: #94a3b8;
+}
+
+body.light-mode .fpill {
+    background: rgba(0, 0, 0, 0.04);
+    color: #475569;
+}
+
+body.light-mode .fpill:hover {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+body.light-mode .fpill.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.35);
+}
+
+body.light-mode #filter-clear-btn {
+    color: #94a3b8;
+}
+
+body.light-mode #filter-clear-btn:hover {
+    color: #dc2626;
 }
 
 #filter-clear-btn svg {

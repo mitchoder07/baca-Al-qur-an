@@ -22,6 +22,35 @@
 
 <body>
 
+    <!-- ============================================================
+         BACA — HOME PAGE (index.html)
+         ============================================================
+         PAGE OUTLINE (in document order)
+         ------------------------------------------------------------
+         1.  Glow Background (decorative, currently hidden via CSS)
+         2.  Navbar
+         3.  Hero Section
+         4.  Daily Ayah Section (+ Hijri calendar widget)
+         5.  Audio Player Section
+         6.  Ayah / Surah Explorer
+         7.  Topics Section
+         8.  Journeys Section
+         9.  Continue Reading Section
+         10. Bookmarks Section
+         11. Featured Reciters Section (preview — full list on reciters/index.html)
+         12. Daily Reflection Section
+         13. Reading Progress Section (gamification)
+         14. Daily Challenge Section
+         15. Achievements Section
+         16. Footer (+ feedback form)
+         17. Surah Modal (preview before opening full reader)
+         18. Reader Modal (Mushaf) — settings drawer, audio drawer,
+             floating mini player all live inside this modal
+         19. Search Modal
+         20. Reciter Picker Modal
+         21. Toast + Scripts
+         ============================================================ -->
+
     <!-- ================= GLOW BACKGROUND ================= -->
 
     <div class="bg-glow glow-1"></div>
@@ -35,8 +64,7 @@
 
     <header class="navbar">
 
-        <a href="index.html" class="logo"
-            style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+        <a href="index.html" class="logo">
             <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true">
                 <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
@@ -126,8 +154,6 @@
     </section>
 
     <!-- ================= DAILY AYAH SECTION ================= -->
-
-    <!-- ================= DAILY AYAH ================= -->
 
     <section class="daily-ayah" id="daily-ayah">
         <div class="section-header daily-ayah-header">
@@ -1442,7 +1468,7 @@
 
     </div>
 
-    <!-- Reader Picker Modal -->
+    <!-- ================= RECITER PICKER MODAL ================= -->
 
     <div class="reciter-picker-modal" id="reciter-picker-modal">
         <div class="reciter-picker-overlay" id="reciter-picker-overlay"></div>

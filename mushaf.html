@@ -45,6 +45,29 @@
 
 <body data-mushaf-theme="dark">
 
+    <!-- ============================================================
+         BACA — MUSHAF READER PAGE (mushaf.html)
+         ============================================================
+         PAGE OUTLINE (in document order)
+         ------------------------------------------------------------
+         1.  Minimal top bar (Logo + Back button — replaces full navbar;
+             the shared hamburger from js/shared-nav.js is injected here)
+         2.  Mushaf toolbar (sticky, below navbar): page navigator,
+             tajweed/reciter/settings/bookmarks/share tool buttons
+         3.  Read area: loading skeleton, Page View (single page,
+             book-like layout), Surah View (hidden — page view is the
+             only active mode, kept so JS doesn't error on missing refs)
+         4.  Reciter drawer
+         5.  Settings drawer (theme swatches, font size, tajweed toggle)
+         6.  Bookmarks drawer
+         7.  Tafsir drawer (Ibn Kathir / Maarif-ul-Quran / Jalalayn)
+         8.  Word-by-word modal
+         9.  Search modal
+         10. Floating mini player
+         11. Ayah-action popover (mobile-friendly)
+         12. Toast + audio element + scripts
+         ============================================================ -->
+
     <!-- Pre-load: apply saved theme ASAP to avoid flash of wrong theme -->
     <script>
         (function () {

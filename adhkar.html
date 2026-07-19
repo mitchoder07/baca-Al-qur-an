@@ -1317,6 +1317,27 @@
 
 <body>
 
+    <!-- ============================================================
+         BACA — ADHKAR (adhkar.html)
+         ============================================================
+         PAGE OUTLINE
+         ------------------------------------------------------------
+         1. Glow background
+         2. Navbar
+         3. Adhkar page (morning/evening dhikr cards, counters)
+         4. Reminder FAB + panel (schedule dhikr reminders)
+         5. Toast
+         6. Footer
+         7. Scripts
+         NOTE: same as salah.html — this file's <style> block defines
+         .mobile-nav, .nav-links, .search-modal, and
+         .reciter-picker-modal, none of which are used anywhere in
+         this page (verified). Leftover from before js/shared-nav.js
+         unified navigation. Left in place to avoid touching CSS
+         without full tracing; safe to remove if you want to trim
+         the file.
+         ============================================================ -->
+
     <!-- ================= GLOW BACKGROUND ================= -->
     <div class="bg-glow glow-1"></div>
     <div class="bg-glow glow-2"></div>
@@ -1324,8 +1345,7 @@
 
     <!-- ================= NAVBAR ================= -->
     <header class="navbar">
-        <a href="index.html" class="logo"
-            style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+        <a href="index.html" class="logo">
             <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true">
                 <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
