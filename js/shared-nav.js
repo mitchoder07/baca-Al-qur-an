@@ -273,14 +273,7 @@
             else openDrawer();
         }
 
-        // Close the drawer with NO transition — used right before we
-        // navigate away to a new page. Animating the close here is
-        // pointless (the page is about to unload) and was the cause of
-        // a visible flash: the 120ms-delayed close used to fire WHILE
-        // the next page's document was already loading, so its slide-
-        // out / fade animation got caught mid-flight and rendered on
-        // top of the incoming page's own (freshly-closed) toggle button.
-        // Closing instantly removes that overlapping half-animated frame.
+        // Close the drawer with NO transition 
         function closeDrawerInstant() {
             var prevDrawerTransition = drawer.style.transition;
             var prevBackdropTransition = backdrop.style.transition;

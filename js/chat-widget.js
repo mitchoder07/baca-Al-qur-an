@@ -3,8 +3,8 @@
    Inject this into any page to add a floating chat button
    ============================================================ */
 
-(function() {
-    // Don't inject on ask.html (it has its own full chat)
+(function () {
+    // Don't inject on ask.html (it has its own full chat)!!
     if (window.location.pathname.includes('ask.html')) return;
 
     // Create styles
@@ -225,7 +225,7 @@
     fab.className = 'baca-chat-fab';
     fab.innerHTML = '<i class="fa-solid fa-comments"></i>';
     fab.title = 'Ask Baca AI';
-    fab.onclick = function() {
+    fab.onclick = function () {
         panel.classList.toggle('open');
         if (panel.classList.contains('open')) {
             setTimeout(() => input.focus(), 200);
@@ -278,7 +278,7 @@
         }
     });
 
-    window.bacaChatSend = async function(message) {
+    window.bacaChatSend = async function (message) {
         message = (message || '').trim();
         if (!message || isWaiting) return;
 
@@ -335,7 +335,7 @@
         const el = document.createElement('div');
         el.className = `baca-chat-msg ${role}`;
         const icon = role === 'ai' ? 'fa-robot' : 'fa-user';
-        const safe = isHtml ? content : String(content).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const safe = isHtml ? content : String(content).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         el.innerHTML = `<div class="baca-chat-msg-avatar"><i class="fa-solid ${icon}"></i></div><div class="baca-chat-msg-bubble">${safe}</div>`;
         messagesEl.appendChild(el);
         messagesEl.scrollTop = messagesEl.scrollHeight;
