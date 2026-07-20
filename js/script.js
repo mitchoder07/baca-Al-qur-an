@@ -136,12 +136,12 @@ const SURAH_LIST = [
 
 // HIZB STARTS — first ayah of each of the 60 Hizbs
 const HIZB_STARTS = [
-    [1,1],[2,75],[2,142],[2,203],[2,253],[3,15],[3,93],[3,171],[4,24],[4,88],
-    [4,148],[5,27],[5,82],[6,36],[6,111],[7,1],[7,88],[7,171],[8,41],[9,34],
-    [9,93],[10,26],[11,6],[11,84],[12,53],[13,19],[15,1],[16,51],[17,1],[17,99],
-    [18,75],[20,1],[21,1],[22,1],[23,1],[24,21],[25,21],[26,111],[27,56],[28,51],
-    [29,46],[31,22],[33,31],[34,24],[36,28],[37,145],[39,32],[40,41],[41,47],[43,24],
-    [46,1],[48,18],[51,31],[55,1],[58,1],[62,1],[67,1],[72,1],[78,1],[87,1]
+    [1, 1], [2, 75], [2, 142], [2, 203], [2, 253], [3, 15], [3, 93], [3, 171], [4, 24], [4, 88],
+    [4, 148], [5, 27], [5, 82], [6, 36], [6, 111], [7, 1], [7, 88], [7, 171], [8, 41], [9, 34],
+    [9, 93], [10, 26], [11, 6], [11, 84], [12, 53], [13, 19], [15, 1], [16, 51], [17, 1], [17, 99],
+    [18, 75], [20, 1], [21, 1], [22, 1], [23, 1], [24, 21], [25, 21], [26, 111], [27, 56], [28, 51],
+    [29, 46], [31, 22], [33, 31], [34, 24], [36, 28], [37, 145], [39, 32], [40, 41], [41, 47], [43, 24],
+    [46, 1], [48, 18], [51, 31], [55, 1], [58, 1], [62, 1], [67, 1], [72, 1], [78, 1], [87, 1]
 ];
 
 // ============================================================
@@ -209,23 +209,23 @@ function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
 // ============================================================
 
 const FULL_SURAH_SERVERS = {
-    'mishari':    'https://server8.mp3quran.net/afs/',
-    'sudais':     'https://server11.mp3quran.net/sds/',
+    'mishari': 'https://server8.mp3quran.net/afs/',
+    'sudais': 'https://server11.mp3quran.net/sds/',
     'abdulbasit': 'https://server7.mp3quran.net/basit/',
-    'husary':     'https://server13.mp3quran.net/husr/',
-    'minshawi':   'https://server10.mp3quran.net/minsh/',
-    'shaatree':   'https://server11.mp3quran.net/shatri/',
-    'muaiqly':    'https://server12.mp3quran.net/maher/',
-    'shuraym':    'https://server7.mp3quran.net/shur/',
-    'hudhaify':   'https://server8.mp3quran.net/bna/',
-    'ajamy':      'https://server10.mp3quran.net/ajm/',
-    'jibreel':    'https://server8.mp3quran.net/jbrl/',
-    'ayyoub':     'https://server16.mp3quran.net/ayyoub2/',
-    'ghamdi':     'https://server7.mp3quran.net/s_gmd/',
-    'basfar':     'https://server6.mp3quran.net/bsfr/',
-    'matroud':    'https://server8.mp3quran.net/mtrod/',
-    'rifai':      'https://server8.mp3quran.net/hani/',
-    'tablawi':    'https://server12.mp3quran.net/tblawi/',
+    'husary': 'https://server13.mp3quran.net/husr/',
+    'minshawi': 'https://server10.mp3quran.net/minsh/',
+    'shaatree': 'https://server11.mp3quran.net/shatri/',
+    'muaiqly': 'https://server12.mp3quran.net/maher/',
+    'shuraym': 'https://server7.mp3quran.net/shur/',
+    'hudhaify': 'https://server8.mp3quran.net/bna/',
+    'ajamy': 'https://server10.mp3quran.net/ajm/',
+    'jibreel': 'https://server8.mp3quran.net/jbrl/',
+    'ayyoub': 'https://server16.mp3quran.net/ayyoub2/',
+    'ghamdi': 'https://server7.mp3quran.net/s_gmd/',
+    'basfar': 'https://server6.mp3quran.net/bsfr/',
+    'matroud': 'https://server8.mp3quran.net/mtrod/',
+    'rifai': 'https://server8.mp3quran.net/hani/',
+    'tablawi': 'https://server12.mp3quran.net/tblawi/',
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {
@@ -1277,8 +1277,8 @@ async function loadTafsir(surahNum, ayahNum) {
     // Use the user's selected tafsir source (from reader settings)
     const source = readerTafsirSource || "ibnkathir";
     const sourceName = source === "ibnkathir" ? "Ibn Kathir" :
-                       source === "maarif" ? "Ma'arif-ul-Quran" :
-                       source === "jalalayn" ? "Jalalayn" : "Ibn Kathir";
+        source === "maarif" ? "Ma'arif-ul-Quran" :
+            source === "jalalayn" ? "Jalalayn" : "Ibn Kathir";
     const isAr = source === "jalalayn";
 
     const panel = document.createElement("div");
@@ -2142,27 +2142,27 @@ const GAMIFICATION = {
 
     // Achievement definitions
     achievements: [
-        { id: "first-page",    icon: "book-open",       name: "First Steps",       desc: "Read your first page",          check: s => s.pagesRead >= 1 },
-        { id: "first-surah",   icon: "book-check",      name: "Surah Complete",     desc: "Complete your first surah",     check: s => s.completedSurahs >= 1 },
-        { id: "streak-3",      icon: "flame",            name: "On Fire",            desc: "3-day reading streak",          check: s => s.streak >= 3 },
-        { id: "streak-7",      icon: "zap",              name: "Week Warrior",       desc: "7-day reading streak",          check: s => s.streak >= 7 },
-        { id: "streak-30",     icon: "award",            name: "Monthly Master",     desc: "30-day reading streak",         check: s => s.streak >= 30 },
-        { id: "pages-50",      icon: "layers",           name: "Half Century",       desc: "Read 50 pages",                 check: s => s.pagesRead >= 50 },
-        { id: "pages-100",     icon: "library",          name: "Century Club",       desc: "Read 100 pages",                check: s => s.pagesRead >= 100 },
-        { id: "juz-1",         icon: "bookmark",         name: "Juz Explorer",       desc: "Explore your first juz",        check: s => s.juzExplored >= 1 },
-        { id: "surahs-10",     icon: "trophy",           name: "Dedicated Reader",   desc: "Complete 10 surahs",            check: s => s.completedSurahs >= 10 },
-        { id: "time-1h",       icon: "clock",            name: "Hour Power",         desc: "Read for 1 hour total",         check: s => s.readingTime >= 3600 },
-        { id: "challenges-5",  icon: "target",           name: "Challenge Chaser",   desc: "Complete 5 daily challenges",   check: s => s.challengesCompleted >= 5 },
-        { id: "verses-100",    icon: "scroll",           name: "Verse Voyager",      desc: "Read 100 verses",               check: s => s.versesRead >= 100 },
+        { id: "first-page", icon: "book-open", name: "First Steps", desc: "Read your first page", check: s => s.pagesRead >= 1 },
+        { id: "first-surah", icon: "book-check", name: "Surah Complete", desc: "Complete your first surah", check: s => s.completedSurahs >= 1 },
+        { id: "streak-3", icon: "flame", name: "On Fire", desc: "3-day reading streak", check: s => s.streak >= 3 },
+        { id: "streak-7", icon: "zap", name: "Week Warrior", desc: "7-day reading streak", check: s => s.streak >= 7 },
+        { id: "streak-30", icon: "award", name: "Monthly Master", desc: "30-day reading streak", check: s => s.streak >= 30 },
+        { id: "pages-50", icon: "layers", name: "Half Century", desc: "Read 50 pages", check: s => s.pagesRead >= 50 },
+        { id: "pages-100", icon: "library", name: "Century Club", desc: "Read 100 pages", check: s => s.pagesRead >= 100 },
+        { id: "juz-1", icon: "bookmark", name: "Juz Explorer", desc: "Explore your first juz", check: s => s.juzExplored >= 1 },
+        { id: "surahs-10", icon: "trophy", name: "Dedicated Reader", desc: "Complete 10 surahs", check: s => s.completedSurahs >= 10 },
+        { id: "time-1h", icon: "clock", name: "Hour Power", desc: "Read for 1 hour total", check: s => s.readingTime >= 3600 },
+        { id: "challenges-5", icon: "target", name: "Challenge Chaser", desc: "Complete 5 daily challenges", check: s => s.challengesCompleted >= 5 },
+        { id: "verses-100", icon: "scroll", name: "Verse Voyager", desc: "Read 100 verses", check: s => s.versesRead >= 100 },
     ],
 
     // Daily challenges (cycled by day)
     challenges: [
-        { title: "Read 3 pages of the Qur'an",           desc: "Complete this challenge to earn 50 XP",  target: 3,  unit: "pages",  xp: 50 },
-        { title: "Read 5 pages of the Qur'an",           desc: "Complete this challenge to earn 80 XP",  target: 5,  unit: "pages",  xp: 80 },
-        { title: "Complete a full surah",                desc: "Complete this challenge to earn 100 XP", target: 1,  unit: "surah",  xp: 100 },
-        { title: "Read for 10 minutes",                  desc: "Complete this challenge to earn 60 XP",  target: 10, unit: "minutes",xp: 60 },
-        { title: "Read 10 verses",                       desc: "Complete this challenge to earn 40 XP",  target: 10, unit: "verses", xp: 40 },
+        { title: "Read 3 pages of the Qur'an", desc: "Complete this challenge to earn 50 XP", target: 3, unit: "pages", xp: 50 },
+        { title: "Read 5 pages of the Qur'an", desc: "Complete this challenge to earn 80 XP", target: 5, unit: "pages", xp: 80 },
+        { title: "Complete a full surah", desc: "Complete this challenge to earn 100 XP", target: 1, unit: "surah", xp: 100 },
+        { title: "Read for 10 minutes", desc: "Complete this challenge to earn 60 XP", target: 10, unit: "minutes", xp: 60 },
+        { title: "Read 10 verses", desc: "Complete this challenge to earn 40 XP", target: 10, unit: "verses", xp: 40 },
     ],
 };
 
@@ -2752,23 +2752,23 @@ setTimeout(() => {
 // ============================================================
 
 const READER_TRANSLATIONS = {
-    20:  { name: "Saheeh International", lang: "en" },
-    95:  { name: "Maududi (Tafhim)", lang: "en" },
-    84:  { name: "Mufti Taqi Usmani", lang: "en" },
-    22:  { name: "Yusuf Ali", lang: "en" },
-    19:  { name: "Pickthall", lang: "en" },
-    85:  { name: "Abdul Haleem", lang: "en" },
+    20: { name: "Saheeh International", lang: "en" },
+    95: { name: "Maududi (Tafhim)", lang: "en" },
+    84: { name: "Mufti Taqi Usmani", lang: "en" },
+    22: { name: "Yusuf Ali", lang: "en" },
+    19: { name: "Pickthall", lang: "en" },
+    85: { name: "Abdul Haleem", lang: "en" },
     203: { name: "Hilali & Khan", lang: "en" },
     149: { name: "Bridges' Translation", lang: "en" },
-    97:  { name: "Tafheem-ul-Quran", lang: "ur" },
+    97: { name: "Tafheem-ul-Quran", lang: "ur" },
     234: { name: "Fatah Muhammad Jalandhri", lang: "ur" },
-    33:  { name: "Indonesian MoRA", lang: "id" },
-    31:  { name: "Hamidullah", lang: "fr" },
-    77:  { name: "Diyanet Isleri", lang: "tr" },
-    45:  { name: "Kuliev", lang: "ru" },
-    56:  { name: "Ma Jian", lang: "zh" },
+    33: { name: "Indonesian MoRA", lang: "id" },
+    31: { name: "Hamidullah", lang: "fr" },
+    77: { name: "Diyanet Isleri", lang: "tr" },
+    45: { name: "Kuliev", lang: "ru" },
+    56: { name: "Ma Jian", lang: "zh" },
     103: { name: "Helmi Nasr", lang: "pt" },
-    54:  { name: "Maulana Junagarhi", lang: "hi" },
+    54: { name: "Maulana Junagarhi", lang: "hi" },
 };
 
 // Load saved preferences
@@ -2864,7 +2864,7 @@ function initReaderSelectors() {
 
 // Patch the existing openReader to also fetch translations
 const originalOpenReader = openReader;
-openReader = async function(surahNum, scrollToAyah = null) {
+openReader = async function (surahNum, scrollToAyah = null) {
     await originalOpenReader(surahNum, scrollToAyah);
     // After verses are rendered, fetch and inject translations + tafsir
     if (currentSurahVerses.length) {
@@ -2875,7 +2875,7 @@ openReader = async function(surahNum, scrollToAyah = null) {
 // Inject translations and tafsir into the existing verse cards
 async function injectTranslationsAndTafsir() {
     const surahNum = selectedSurah;
-    
+
     // If using the default quran-json translation (id "20" = Saheeh International, which
     // is close to the built-in), keep the built-in v.translation text — no API call needed.
     // Only fetch from API if a different translation is selected.
@@ -3078,10 +3078,10 @@ function calculateHijriFallback() {
     const monthNum = Math.floor((24 * l3) / 709);
     const day = l3 - Math.floor((709 * monthNum) / 24);
     const year = 30 * n + j - 30;
-    
+
     const months = ['Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani", 'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban", 'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'];
     const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
-    
+
     return {
         date: `${months[monthNum - 1] || 'Muharram'} ${day} ${year}`,
         day: dayOfWeek,
@@ -3111,7 +3111,7 @@ function getHijriWeekNumber() {
 function getGregorianDate() {
     const now = new Date();
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
+        'July', 'August', 'September', 'October', 'November', 'December'];
     return {
         date: `${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`,
         day: '',

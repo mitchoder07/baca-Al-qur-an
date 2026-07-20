@@ -11,6 +11,43 @@
    - Audio (EveryAyah per-ayah, multi-reciter)
    - Dark/light/warm/olive/sapphire themes
    - Search (surah name + page number)
+   ============================================================
+   TABLE OF CONTENTS
+   ------------------------------------------------------------
+   Config — API endpoints
+   State
+   Element refs
+   Reading stats — writes straight into the same "bacaStats" record
+     used by index.html's gamification (streaks/achievements)
+   Utilities
+   Save state
+   Theme
+   Tajweed — parse quran-tajweed markup
+   Data fetchers
+   Init
+   Main render — dispatches to renderPageView or renderSurahView
+   Page view — Mushaf Madinah two-page spread
+   Apply font sizes — makes the A-/A/A+ buttons actually work
+   Apply reading mode — Both / Arabic only / Translation only
+   Surah view — continuous ayah-by-ayah cards
+   Wire word clicks (word-by-word modal)
+   Wire ayah marker clicks (page view)
+   Ayah popover (mobile-friendly actions)
+   Wire verse actions (surah view)
+   Bookmarks
+   Translations drawer
+   Reciter drawer
+   Tafsir drawer
+   Audio
+   Navigator (surah/juz/page dropdown)
+   Swipe navigation (touch gestures for page flipping)
+   Drawers open/close
+   Share tool button (toolbar)
+   Settings drawer interactions
+   Search modal
+   Theme (now controlled via Settings drawer's theme swatches)
+   Keyboard shortcuts
+   Wire events (called from init)
    ============================================================ */
 
 'use strict';
@@ -139,7 +176,7 @@ const state = {
         const siteTheme = localStorage.getItem("siteTheme") || "dark";
         return siteTheme === "light" ? "light" : "dark";
     })(),
-    tajweedOn: localStorage.getItem("mushafTajweed") !== "false",
+    tajweedOn: localStorage.getItem("mushafTajweed") === "true",
     arabicFont: parseFloat(localStorage.getItem("mushafArabicFont")) || 2.2,
     translationFont: parseFloat(localStorage.getItem("mushafTranslationFont")) || 1.0,
     bookmarks: JSON.parse(localStorage.getItem("mushafBookmarks") || "[]"),
@@ -1539,21 +1576,40 @@ function renderBookmarks() {
         item.addEventListener("click", () => {
             const surah = parseInt(item.dataset.surah);
             const ayah = parseInt(item.dataset.ayah);
-            // Switch to surah view and scroll to that ayah
-            state.view = "surah";
-            state.surah = surah;
-            persistState();
-            render().then(() => {
-                setTimeout(() => {
-                    const card = document.querySelector(`.verse-card[data-surah="${surah}"][data-ayah="${ayah}"]`);
-                    if (card) {
-                        card.scrollIntoView({ behavior: "smooth", block: "center" });
-                        card.classList.add("active-ayah");
-                        setTimeout(() => card.classList.remove("active-ayah"), 2000);
-                    }
-                    closeAllDrawers();
-                }, 400);
-            });
+            // Jump to that ayah in whichever view the user is currently
+            // reading in — don't force a switch to Surah View. (This used
+            // to hardcode state.view = "surah" every time, which meant a
+            // bookmark click while reading in Page View would unexpectedly
+            // dump the user into a completely different layout.)
+            if (state.view === "page") {
+                state.page = findPageNumber(surah, ayah);
+                persistState();
+                render().then(() => {
+                    setTimeout(() => {
+                        const marker = document.querySelector(`.ayah-marker[data-surah="${surah}"][data-ayah="${ayah}"]`);
+                        if (marker) {
+                            marker.scrollIntoView({ behavior: "smooth", block: "center" });
+                            marker.classList.add("active-ayah");
+                            setTimeout(() => marker.classList.remove("active-ayah"), 2000);
+                        }
+                        closeAllDrawers();
+                    }, 400);
+                });
+            } else {
+                state.surah = surah;
+                persistState();
+                render().then(() => {
+                    setTimeout(() => {
+                        const card = document.querySelector(`.verse-card[data-surah="${surah}"][data-ayah="${ayah}"]`);
+                        if (card) {
+                            card.scrollIntoView({ behavior: "smooth", block: "center" });
+                            card.classList.add("active-ayah");
+                            setTimeout(() => card.classList.remove("active-ayah"), 2000);
+                        }
+                        closeAllDrawers();
+                    }, 400);
+                });
+            }
         });
     });
 }
