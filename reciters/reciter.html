@@ -367,6 +367,26 @@
             background: var(--primary) !important
         }
 
+        /* Repeat button — highlight when active */
+        .sp-btn#sp-repeat {
+            width: 34px;
+            height: 34px;
+            font-size: .8rem;
+            opacity: 0.55;
+            transition: opacity 0.2s, background 0.2s, color 0.2s;
+        }
+
+        .sp-btn#sp-repeat.active {
+            opacity: 1;
+            background: var(--primary-dim);
+            color: var(--primary);
+        }
+
+        .sp-btn#sp-repeat.active:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
         .sp-progress-wrap {
             flex: 1;
             display: flex;
@@ -1000,6 +1020,7 @@
             <button class="sp-btn" id="sp-prev"><i class="fa-solid fa-backward-step"></i></button>
             <button class="sp-btn sp-play" id="sp-play"><i class="fa-solid fa-play" id="sp-play-icon"></i></button>
             <button class="sp-btn" id="sp-next"><i class="fa-solid fa-forward-step"></i></button>
+            <button class="sp-btn" id="sp-repeat" title="Repeat off"><i class="fa-solid fa-repeat"></i></button>
         </div>
         <div class="sp-info">
             <div class="sp-surah" id="sp-surah-name">—</div>
@@ -1259,6 +1280,12 @@
         const audio = document.getElementById("reciter-audio");
         let currentSurahId = null;
         let isPlaying = false;
+        // Repeat modes: 'off' (auto-advance once), 'one' (repeat current surah), 'all' (loop all surahs)
+        let repeatMode = 'off';
+
+        // Expose state on window so floating-player-bar.js can read it
+        window.currentSurahId = null;
+        window.reciterId = reciterId;
 
         // ── helpers ──
         function pad3(n) { return String(n).padStart(3, "0"); }
@@ -1420,6 +1447,7 @@
             if (!s) return;
             if (currentSurahId) document.getElementById(`row-${currentSurahId}`)?.classList.remove("playing");
             currentSurahId = id;
+            window.currentSurahId = id; // expose for floating-player-bar.js
 
             if (hasFullSurahAudio(reciterId)) {
                 // Full-surah MP3 — progress bar will span the whole surah
@@ -1427,10 +1455,22 @@
                 audio.load();
                 audio.play().then(() => { setPlaying(true); }).catch(() => { setPlaying(false); });
                 audio.onended = () => {
-                    // Auto-advance to next surah
-                    const nextId = id < 114 ? id + 1 : null;
-                    if (nextId) playSurahFromStart(nextId);
-                    else setPlaying(false);
+                    // Repeat one: replay same surah
+                    if (repeatMode === 'one') {
+                        audio.currentTime = 0;
+                        audio.play().catch(() => {});
+                        return;
+                    }
+                    // Repeat all or off+auto-advance: play next surah
+                    if (repeatMode === 'all') {
+                        const nextId = id < 114 ? id + 1 : 1; // loop back to 1
+                        playSurahFromStart(nextId);
+                    } else {
+                        // repeat off
+                        const nextId = id < 114 ? id + 1 : null;
+                        if (nextId) playSurahFromStart(nextId);
+                        else setPlaying(false);
+                    }
                 };
             } else {
                 // Fallback: ayah-by-ayah (only used for reciters not in FULL_SURAH_SERVERS)
@@ -1495,6 +1535,30 @@
         document.getElementById("sp-next").addEventListener("click", () => {
             if (currentSurahId < 114) playSurahFromStart(currentSurahId + 1);
         });
+
+        // ── REPEAT BUTTON ──
+        // Cycles: off → one (repeat current surah) → all (loop all surahs) → off
+        document.getElementById("sp-repeat").addEventListener("click", () => {
+            if (repeatMode === 'off') repeatMode = 'one';
+            else if (repeatMode === 'one') repeatMode = 'all';
+            else repeatMode = 'off';
+            updateRepeatButton();
+        });
+
+        function updateRepeatButton() {
+            const btn = document.getElementById("sp-repeat");
+            if (!btn) return;
+            const labels = { off: 'Repeat off', one: 'Repeat one surah', all: 'Repeat all surahs' };
+            btn.title = labels[repeatMode];
+            btn.classList.toggle("active", repeatMode !== 'off');
+            // Swap icon: 'one' shows a "1" badge, 'all' shows plain repeat, 'off' shows dimmed
+            const icon = btn.querySelector("i");
+            if (icon) {
+                icon.className = repeatMode === 'one' ? "fa-solid fa-repeat" :
+                                 repeatMode === 'all' ? "fa-solid fa-repeat" :
+                                 "fa-solid fa-repeat";
+            }
+        }
         // ── SEEKABLE PROGRESS BAR ──
         // Upgraded from a simple click handler to a full drag/seek handler
         // so users on both mobile and desktop can scrub through the surah.
@@ -1576,6 +1640,9 @@
 
     <!-- Shared hamburger menu (floating button + slide-in drawer) -->
     <script src="../js/shared-nav.js"></script>
+
+    <!-- Floating player bar (saves playback state for cross-page persistence) -->
+    <script src="../js/floating-player-bar.js"></script>
 
 </body>
 

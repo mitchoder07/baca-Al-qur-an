@@ -282,7 +282,7 @@ let allSurahs = [];       // populated from SURAH_LIST
 let activeFilter = "all";
 let selectedSurah = null;
 let readerMode = "both";
-let arabicFontSize = 3;
+let arabicFontSize = 2.25;
 let translationFontSize = 1.05;
 let currentReciterId = localStorage.getItem("reciterId") || "mishari";
 let activePlayButton = null;
@@ -583,7 +583,7 @@ function initMiniSettingsDrawer() {
         applyFontSizes();
     });
     drawer.querySelector("#mini-font-reset")?.addEventListener("click", () => {
-        arabicFontSize = 3; translationFontSize = 1.05; applyFontSizes();
+        arabicFontSize = 2.25; translationFontSize = 1.05; applyFontSizes();
     });
 
     drawer.querySelectorAll(".mini-mode-btn").forEach(mbtn => {
@@ -1142,7 +1142,7 @@ function applyFontSizes() {
 
 document.getElementById("font-increase")?.addEventListener("click", () => { arabicFontSize += 0.2; translationFontSize += 0.05; applyFontSizes(); });
 document.getElementById("font-decrease")?.addEventListener("click", () => { arabicFontSize = Math.max(1.5, arabicFontSize - 0.2); translationFontSize = Math.max(0.8, translationFontSize - 0.05); applyFontSizes(); });
-document.getElementById("font-reset")?.addEventListener("click", () => { arabicFontSize = 3; translationFontSize = 1.05; applyFontSizes(); });
+document.getElementById("font-reset")?.addEventListener("click", () => { arabicFontSize = 2.25; translationFontSize = 1.05; applyFontSizes(); });
 
 // ============================================================
 // CONTINUE READING

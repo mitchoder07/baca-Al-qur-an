@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ask Baca AI — Baca</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+
     <style>
         :root {
             --primary: #10b981;
@@ -22,7 +20,6 @@
             --text: #cbd5e1;
             --border: rgba(255, 255, 255, 0.08);
         }
-
         body.light-mode {
             --dark: #f8fafc;
             --dark-light: #ffffff;
@@ -32,332 +29,131 @@
             background: var(--dark);
             color: var(--white);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: "Poppins", sans-serif;
             background: var(--dark);
             color: var(--white);
             overflow: hidden;
             height: 100vh;
-            height: 100dvh;
             display: flex;
             flex-direction: column;
         }
-
         .bg-glow {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            z-index: -1;
-            opacity: 0.08;
-            pointer-events: none;
+            position: fixed; border-radius: 50%; filter: blur(100px);
+            z-index: -1; opacity: 0.08; pointer-events: none;
         }
-
-        .glow-1 {
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            top: -150px;
-            left: -150px;
-        }
-
-        .glow-2 {
-            width: 350px;
-            height: 350px;
-            background: #0ea5e9;
-            right: -120px;
-            top: 30%;
-        }
-
-        .glow-3 {
-            width: 300px;
-            height: 300px;
-            background: #14b8a6;
-            bottom: -100px;
-            left: 40%;
-        }
+        .glow-1 { width: 400px; height: 400px; background: var(--primary); top: -150px; left: -150px; }
+        .glow-2 { width: 350px; height: 350px; background: #0ea5e9; right: -120px; top: 30%; }
+        .glow-3 { width: 300px; height: 300px; background: #14b8a6; bottom: -100px; left: 40%; }
 
         /* Chat area */
         .chat-container {
-            margin-top: 80px;
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 800px;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 80px; flex: 1; overflow-y: auto; padding: 1.5rem;
+            display: flex; flex-direction: column; gap: 1rem;
+            max-width: 800px; width: 100%; margin-left: auto; margin-right: auto;
         }
 
         .chat-welcome {
-            text-align: center;
-            padding: 2rem 1rem;
+            text-align: center; padding: 2rem 1rem;
         }
-
         .chat-welcome .ai-avatar {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 1rem;
+            width: 70px; height: 70px; margin: 0 auto 1rem;
             border-radius: 50%;
             background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
         }
-
         .chat-welcome h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem; margin-bottom: 0.5rem;
             background: linear-gradient(135deg, #10b981, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
-        .chat-welcome p {
-            color: var(--text);
-            font-size: 0.95rem;
-            max-width: 500px;
-            margin: 0 auto 1.5rem;
-        }
+        .chat-welcome p { color: var(--text); font-size: 0.95rem; max-width: 500px; margin: 0 auto 1.5rem; }
 
         .suggestion-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
         }
-
         .suggestion-chip {
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.82rem;
-            background: var(--dark-light);
-            border: 1px solid var(--border);
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.82rem;
+            background: var(--dark-light); border: 1px solid var(--border);
+            color: var(--text); cursor: pointer; transition: all 0.2s;
         }
-
         .suggestion-chip:hover {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: var(--primary);
-            color: var(--primary);
+            background: rgba(16, 185, 129, 0.15); border-color: var(--primary); color: var(--primary);
         }
 
         /* Messages */
-        .msg {
-            display: flex;
-            gap: 0.8rem;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .msg.user {
-            flex-direction: row-reverse;
-        }
-
+        .msg { display: flex; gap: 0.8rem; animation: fadeIn 0.3s ease; }
+        .msg.user { flex-direction: row-reverse; }
         .msg-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
+            width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
         }
-
-        .msg.ai .msg-avatar {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            color: #fff;
-        }
-
-        .msg.user .msg-avatar {
-            background: var(--dark-light);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
+        .msg.ai .msg-avatar { background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; }
+        .msg.user .msg-avatar { background: var(--dark-light); color: var(--text); border: 1px solid var(--border); }
         .msg-bubble {
-            max-width: 75%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 18px;
-            line-height: 1.6;
-            font-size: 0.92rem;
-            word-wrap: break-word;
+            max-width: 75%; padding: 0.8rem 1.2rem; border-radius: 18px;
+            line-height: 1.6; font-size: 0.92rem; word-wrap: break-word;
         }
-
         .msg.ai .msg-bubble {
-            background: var(--dark-light);
-            border: 1px solid var(--border);
-            border-top-left-radius: 4px;
-            color: var(--white);
+            background: var(--dark-light); border: 1px solid var(--border);
+            border-top-left-radius: 4px; color: var(--white);
         }
-
         .msg.user .msg-bubble {
-            background: var(--primary);
-            color: #fff;
+            background: var(--primary); color: #fff;
             border-top-right-radius: 4px;
         }
-
-        .msg-bubble a {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-
-        .msg-bubble a:hover {
-            text-decoration: none;
-            opacity: 0.8;
-        }
-
+        .msg-bubble a { color: var(--primary); text-decoration: underline; }
+        .msg-bubble a:hover { text-decoration: none; opacity: 0.8; }
         .msg-bubble code {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            background: rgba(0,0,0,0.2); padding: 0.2rem 0.4rem;
+            border-radius: 4px; font-size: 0.85rem;
         }
 
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 0.5rem 0;
-        }
-
+        .typing-indicator { display: flex; gap: 4px; padding: 0.5rem 0; }
         .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text);
+            width: 8px; height: 8px; border-radius: 50%; background: var(--text);
             animation: bounce 1s infinite;
         }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes bounce {
-
-            0%,
-            60%,
-            100% {
-                transform: translateY(0);
-                opacity: 0.4;
-            }
-
-            30% {
-                transform: translateY(-6px);
-                opacity: 1;
-            }
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Input area */
         .chat-input-area {
-            padding: 1rem 1.5rem;
-            /* FIX: add safe-area padding so the input box + disclaimer aren't
-               obscured by a phone's gesture nav bar / home indicator, which
-               sits in that inset area on many Android and iOS devices. */
-            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border);
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
+            padding: 1rem 1.5rem; border-top: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);
         }
-
-        body.light-mode .chat-input-area {
-            background: rgba(255, 255, 255, 0.92);
-        }
-
+        body.light-mode .chat-input-area { background: rgba(255, 255, 255, 0.92); }
         .chat-input-wrap {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
+            max-width: 800px; margin: 0 auto; display: flex; gap: 0.5rem; align-items: center;
         }
-
         .chat-input {
-            flex: 1;
-            padding: 0.8rem 1.2rem;
-            border-radius: 14px;
-            background: var(--dark-light);
-            border: 1px solid var(--border);
-            color: var(--white);
-            font-family: inherit;
-            font-size: 0.92rem;
-            outline: none;
+            flex: 1; padding: 0.8rem 1.2rem; border-radius: 14px;
+            background: var(--dark-light); border: 1px solid var(--border);
+            color: var(--white); font-family: inherit; font-size: 0.92rem; outline: none;
             transition: border-color 0.2s;
         }
-
-        .chat-input:focus {
-            border-color: var(--primary);
-        }
-
-        .chat-input::placeholder {
-            color: var(--text);
-            opacity: 0.6;
-        }
-
+        .chat-input:focus { border-color: var(--primary); }
+        .chat-input::placeholder { color: var(--text); opacity: 0.6; }
         .chat-send-btn {
-            width: 46px;
-            height: 46px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            color: #fff;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            transition: transform 0.2s, filter 0.2s;
+            width: 46px; height: 46px; border: none; border-radius: 14px;
+            background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; transition: transform 0.2s, filter 0.2s;
         }
-
-        .chat-send-btn:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
-        }
-
-        .chat-send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .chat-send-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .chat-disclaimer {
-            text-align: center;
-            font-size: 0.72rem;
-            color: var(--text);
-            opacity: 0.6;
-            margin-top: 0.5rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            text-align: center; font-size: 0.72rem; color: var(--text); opacity: 0.6;
+            margin-top: 0.5rem; max-width: 800px; margin-left: auto; margin-right: auto;
         }
 
         /* NOTE: nav-links and #askHamburger have been removed.
@@ -365,159 +161,64 @@
            hamburger button injected into the navbar). */
 
         @media (max-width: 600px) {
-            .chat-container {
-                padding: 1rem;
+            .chat-container { 
+                padding: 1rem; 
                 padding-top: 80px;
                 margin-top: 60px;
             }
-
-            .msg-bubble {
-                max-width: 85%;
-                font-size: 0.85rem;
+            .msg-bubble { max-width: 85%; font-size: 0.85rem; }
+            .chat-welcome h1 { font-size: 1.3rem; }
+            .chat-welcome p { font-size: 0.85rem; }
+            .suggestion-chip { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+            .ask-navbar { padding: 0.7rem 1rem; }
+            .ask-navbar .logo-text { font-size: 1.1rem; }
+            .ask-navbar .baca-logo-icon { width: 24px; height: 24px; }
+            .ask-navbar .nav-actions a, .ask-navbar .nav-actions button {
+                padding: 0.4rem 0.7rem; font-size: 0.78rem;
             }
-
-            .chat-welcome h1 {
-                font-size: 1.3rem;
-            }
-
-            .chat-welcome p {
-                font-size: 0.85rem;
-            }
-
-            .suggestion-chip {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.8rem;
-            }
-
-            .navbar {
-                padding: 0.7rem 1rem;
-            }
-
-            .navbar .logo-text {
-                font-size: 1.1rem;
-            }
-
-            .navbar .baca-logo-icon {
-                width: 24px;
-                height: 24px;
-            }
-
-            .navbar .nav-actions a,
-            .navbar .nav-actions button {
-                padding: 0.4rem 0.7rem;
-                font-size: 0.78rem;
-            }
-
-            .chat-input-area {
-                padding: 0.7rem 1rem;
-                padding-bottom: calc(0.7rem + env(safe-area-inset-bottom));
-            }
-
-            .chat-input {
-                font-size: 0.85rem;
-                padding: 0.7rem 1rem;
-            }
-
-            .chat-send-btn {
-                width: 42px;
-                height: 42px;
-                font-size: 1rem;
-            }
-
-            .chat-disclaimer {
-                font-size: 0.65rem;
-            }
-
-            .ai-avatar {
-                width: 56px;
-                height: 56px;
-                font-size: 1.6rem;
-            }
+            .chat-input-area { padding: 0.7rem 1rem; }
+            .chat-input { font-size: 0.85rem; padding: 0.7rem 1rem; }
+            .chat-send-btn { width: 42px; height: 42px; font-size: 1rem; }
+            .chat-disclaimer { font-size: 0.65rem; }
+            .ai-avatar { width: 56px; height: 56px; font-size: 1.6rem; }
         }
 
         @media (max-width: 400px) {
-            .navbar .nav-actions a span {
-                display: none;
-            }
-
-            .navbar .nav-actions a i {
-                margin: 0;
-            }
-
-            .suggestion-chips {
-                gap: 0.3rem;
-            }
-
-            .suggestion-chip {
-                font-size: 0.7rem;
-                padding: 0.35rem 0.6rem;
-            }
+            .ask-navbar .nav-actions a span { display: none; }
+            .ask-navbar .nav-actions a i { margin: 0; }
+            .suggestion-chips { gap: 0.3rem; }
+            .suggestion-chip { font-size: 0.7rem; padding: 0.35rem 0.6rem; }
         }
     </style>
 </head>
-
 <body>
-    <!-- ============================================================
-         BACA — ASK BACA AI (ask.html)
-         Full-page version of the floating chat widget (js/chat-widget.js
-         skips itself on this page since this page has its own chat UI).
-         ============================================================
-         PAGE OUTLINE
-         ------------------------------------------------------------
-         1. Glow background
-         2. Navbar (logo + theme toggle button; shared-nav.js injects
-            the floating hamburger into .nav-actions)
-         3. Chat container (welcome screen with suggestion chips, or
-            the message list once a conversation starts)
-         4. Chat input area (input + send button + disclaimer)
-         5. Script: theme toggle, sendMessage()/addMessage() wired to
-            POST /api/chat (see api/chat.js — the Vercel function.
-            NOTE: this file used to live at js/chat.js, which meant
-            Vercel could never find it, since vercel.json's build
-            config expects api/chat.js — moved as part of this
-            cleanup pass; if deployed on Vercel before this fix, the
-            AI chat likely never worked in production even though it
-            worked locally via `node server.js`, which uses a
-            completely separate Express route in server.js instead)
-         ============================================================ -->
     <div class="bg-glow glow-1"></div>
     <div class="bg-glow glow-2"></div>
     <div class="bg-glow glow-3"></div>
 
     <header class="navbar">
-        <a href="index.html" class="logo">
+        <a href="index.html" class="logo" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
             <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                    fill="url(#askLogoGrad)" opacity="0.18" />
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                    stroke="url(#askLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
-                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#askLogoGrad)" stroke-width="1.5"
-                    stroke-linecap="round" />
-                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
-                    fill="url(#askLogoGrad)" opacity="0.9" />
-                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="url(#askLogoGrad)" opacity="0.18"/>
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" stroke="url(#askLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#askLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z" fill="url(#askLogoGrad)" opacity="0.9"/>
+                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#askLogoGrad)" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
                 <defs>
                     <linearGradient id="askLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stop-color="#10b981" />
-                        <stop offset="0.5" stop-color="#06b6d4" />
-                        <stop offset="1" stop-color="#6366f1" />
+                        <stop offset="0" stop-color="#10b981"/>
+                        <stop offset="0.5" stop-color="#06b6d4"/>
+                        <stop offset="1" stop-color="#6366f1"/>
                     </linearGradient>
                 </defs>
             </svg>
             <span class="logo-text">Baca</span>
         </a>
-
         <div class="nav-actions">
             <button class="theme-btn" id="askThemeBtn" title="Toggle theme">
                 <i class="fa-solid fa-moon"></i>
@@ -530,34 +231,26 @@
         <div class="chat-welcome" id="chatWelcome">
             <div class="ai-avatar"><i class="fa-solid fa-message"></i></div>
             <h1>Ask Baca AI</h1>
-            <p>Your intelligent Quran companion. Ask about any surah, verse, feature, or Islamic topic. I can help you
-                navigate Baca, search for Arabic words, and learn about the Quran.</p>
+            <p>Your intelligent Quran companion. Ask about any surah, verse, feature, or Islamic topic. I can help you navigate Baca, search for Arabic words, and learn about the Quran.</p>
             <div class="suggestion-chips">
-                <div class="suggestion-chip" onclick="sendSuggestion('Which surah is Ayat al-Kursi in?')">Which surah is
-                    Ayat al-Kursi in?</div>
-                <div class="suggestion-chip" onclick="sendSuggestion('What is Surah Ya-Sin about?')">What is Surah
-                    Ya-Sin about?</div>
-                <div class="suggestion-chip" onclick="sendSuggestion('How do I use the Mushaf reader?')">How do I use
-                    the Mushaf reader?</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('Which surah is Ayat al-Kursi in?')">Which surah is Ayat al-Kursi in?</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('What is Surah Ya-Sin about?')">What is Surah Ya-Sin about?</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('How do I use the Mushaf reader?')">How do I use the Mushaf reader?</div>
                 <div class="suggestion-chip" onclick="sendSuggestion('Who developed Baca?')">Who developed Baca?</div>
-                <div class="suggestion-chip" onclick="sendSuggestion('What are the benefits of reading Adhkar?')">
-                    Benefits of Adhkar?</div>
-                <div class="suggestion-chip" onclick="sendSuggestion('Which surahs are good for anxiety?')">Surahs for
-                    anxiety?</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('What are the benefits of reading Adhkar?')">Benefits of Adhkar?</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('Which surahs are good for anxiety?')">Surahs for anxiety?</div>
             </div>
         </div>
     </main>
 
     <div class="chat-input-area">
         <div class="chat-input-wrap">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about the Quran or Baca..."
-                autocomplete="off">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about the Quran or Baca..." autocomplete="off">
             <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
         </div>
-        <p class="chat-disclaimer">Baca AI can make mistakes. Always verify important religious matters with qualified
-            scholars.</p>
+        <p class="chat-disclaimer">Baca AI can make mistakes. Always verify important religious matters with qualified scholars.</p>
     </div>
 
     <script>
@@ -569,10 +262,10 @@
         let isWaiting = false;
 
         // Load saved theme + handle toggle
-        (function () {
+        (function() {
             const themeBtn = document.getElementById('askThemeBtn');
             const saved = localStorage.getItem('siteTheme') || 'dark';
-
+            
             function applyTheme(isLight) {
                 if (isLight) {
                     document.body.classList.add('light-mode');
@@ -586,15 +279,19 @@
                     themeBtn.style.color = '';
                 }
             }
-
+            
             applyTheme(saved === 'light');
-
+            
             themeBtn.addEventListener('click', () => {
                 const isLight = !document.body.classList.contains('light-mode');
                 applyTheme(isLight);
                 localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
             });
         })();
+
+        // NOTE: The old #askHamburger / #askMobileNav elements have been
+        // removed. Navigation is now handled by js/shared-nav.js, which
+        // injects the unified hamburger button into this navbar.
 
         // Enter key to send
         chatInput.addEventListener('keydown', (e) => {
@@ -649,6 +346,7 @@
                         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                         .replace(/`(.+?)`/g, '<code>$1</code>')
                         .replace(/\n/g, '<br>');
+
                     addMessage('ai', formattedReply, true);
 
                     // Save to history
@@ -679,7 +377,7 @@
         }
 
         function escapeHtml(s) {
-            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
     </script>
 
@@ -687,5 +385,4 @@
     <script src="js/shared-nav.js"></script>
 
 </body>
-
 </html>

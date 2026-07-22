@@ -1767,7 +1767,7 @@ body.light-mode .reciters-see-all-btn:hover {
 
 .verse-arabic {
   font-family: "Noto Naskh Arabic", "Amiri", serif;
-  font-size: 3rem;
+  font-size: 2.25rem;
   line-height: 2.2;
   text-align: center;
   direction: rtl;
@@ -2837,7 +2837,7 @@ body.light-mode .bookmark-actions button {
   }
 
   .verse-arabic {
-    font-size: 2.2rem;
+    font-size: 1.85rem;
   }
 }
 
@@ -2845,6 +2845,111 @@ body.light-mode .bookmark-actions button {
   .reciters-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
+  }
+
+  /* Daily Ayah card — reduce padding so buttons aren't squashed */
+  .ayah-card {
+    padding: 1.5rem 1rem;
+    border-radius: 18px;
+  }
+
+  .ayah-arabic {
+    font-size: 1.5rem;
+    line-height: 2;
+  }
+
+  .ayah-translation {
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  /* Daily Ayah action buttons — smaller + tighter on mobile */
+  .ayah-actions {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .ayah-actions button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .ayah-actions button svg,
+  .ayah-actions button i {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* Home audio player section — tighten on mobile */
+  .audio-player-section {
+    padding: 3rem 5%;
+  }
+
+  .audio-player {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+
+  .audio-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .audio-info {
+    text-align: center;
+  }
+
+  .audio-info h3 {
+    font-size: 1.05rem;
+  }
+
+  .audio-info span {
+    font-size: 0.8rem;
+  }
+
+  #reciter-select {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .audio-controls {
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .audio-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .audio-btn svg,
+  .audio-btn i {
+    width: 16px;
+    height: 16px;
+  }
+
+  .audio-play-btn {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .audio-play-btn svg,
+  .audio-play-btn i {
+    width: 22px;
+    height: 22px;
+  }
+
+  .audio-bottom {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .volume-wrapper {
+    width: 100%;
   }
 }
 
@@ -4042,7 +4147,7 @@ body.light-mode .surah-rev-order {
   }
 
   .verse-arabic {
-    font-size: 1.8rem;
+    font-size: 1.7rem !important;
     line-height: 2;
   }
 
@@ -4090,7 +4195,7 @@ body.light-mode .surah-rev-order {
   }
 
   .verse-arabic {
-    font-size: 1.5rem;
+    font-size: 1.45rem !important;
   }
 
   .tafsir-panel {
@@ -4100,6 +4205,110 @@ body.light-mode .surah-rev-order {
   .tafsir-body {
     font-size: 0.92rem;
     line-height: 1.85;
+  }
+}
+
+/* ── READING MODAL AUDIO SECTION — mobile fixes ──
+   On mobile the audio drawer was cramped: 60px play button,
+   3rem padding, and full-width select made everything squashed.
+   These rules tighten the layout for small screens. */
+@media (max-width: 640px) {
+  .reader-audio-card {
+    padding: 1rem 0.9rem;
+    border-radius: 18px;
+  }
+
+  .audio-top2 {
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+  }
+
+  .audio-reciter-info {
+    gap: 0.7rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .audio-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .audio-title {
+    font-size: 0.85rem;
+  }
+
+  #current-reciter-badge {
+    font-size: 0.72rem;
+  }
+
+  #favorite-reciter {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+
+  #favorite-reciter svg,
+  #favorite-reciter i {
+    width: 15px;
+    height: 15px;
+  }
+
+  #reciter-select2 {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .custom-player {
+    gap: 0.7rem;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  #audio-play-bton {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+  }
+
+  #audio-play-bton svg,
+  #audio-play-bton i {
+    width: 18px;
+    height: 18px;
+  }
+
+  .player-info {
+    padding-right: 0.3rem;
+    min-width: 0;
+  }
+
+  .player-time {
+    font-size: 0.72rem;
+    margin-bottom: 0.4rem;
+  }
+
+  #audio-progress2 {
+    margin-bottom: 0.8rem;
+    height: 4px;
+  }
+
+  .audio-actions {
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+  }
+
+  .audio-actions button {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 12px;
+    gap: 0.3rem;
+  }
+
+  .audio-actions button svg,
+  .audio-actions button i {
+    width: 14px;
+    height: 14px;
   }
 }
 
