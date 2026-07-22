@@ -2288,6 +2288,16 @@ body.light-mode .reciters-see-all-btn:hover {
   padding: 1rem;
 }
 
+.search-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #64748b;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.3rem;
+}
+
 .search-item {
   display: flex;
   align-items: center;

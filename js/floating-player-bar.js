@@ -110,6 +110,35 @@
         } else {
             setupFloatingBar();
         }
+
+        // ── Handle bfcache (back/forward navigation) ──
+        // When the user presses the back button or swipes back on mobile,
+        // the browser restores the page from the back-forward cache (bfcache).
+        // Scripts don't re-run in this case, so the floating bar may not appear.
+        // We listen for 'pageshow' and re-initialize the bar if the page was
+        // restored from bfcache (event.persisted === true).
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                // Page was restored from bfcache — check if bar needs to be re-created
+                var existingBar = document.getElementById('baca-fb');
+                if (!existingBar) {
+                    // Bar was lost during bfcache restore — re-create it
+                    setupFloatingBar();
+                } else {
+                    // Bar exists — make sure it's visible if there's saved state
+                    try {
+                        var raw = localStorage.getItem(STORAGE_KEY);
+                        if (raw) {
+                            var state = JSON.parse(raw);
+                            if (state && state.surahId) {
+                                existingBar.classList.add('visible');
+                                document.body.classList.add('baca-fb-active');
+                            }
+                        }
+                    } catch (e) {}
+                }
+            }
+        });
     }
 
     // ============================================================
