@@ -247,7 +247,7 @@
         // Footer
         var footer = document.createElement('div');
         footer.className = 'baca-nav-drawer-footer';
-        footer.innerHTML = '<div class="baca-nav-drawer-footer-text">Read • Reflect • Grow<br>Baca — Qur\'an Companion</div>';
+        footer.innerHTML = '<div class="baca-nav-drawer-footer-text">Read • Reflect • Grow<br>Baca - <i>Your Qur\'an Companion</i></div>';
 
         drawer.appendChild(head);
         drawer.appendChild(body);
