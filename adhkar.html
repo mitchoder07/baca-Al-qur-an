@@ -2197,9 +2197,53 @@
 
             /* ============================================================
                ARABIC TEXT-TO-SPEECH
+               ------------------------------------------------------------
+               Browser TTS voices load ASYNCHRONOUSLY. On first call,
+               getVoices() returns an empty array. We must:
+               1. Pre-load voices on page load using onvoiceschanged
+               2. When speaking, if voices aren't ready, wait for them
+               3. Pick the best available MALE Arabic voice
                ============================================================ */
             let currentUtter = null;
             let currentAudioBtn = null;
+            let _cachedVoices = [];
+
+            // Pre-load voices as early as possible
+            if ("speechSynthesis" in window) {
+                _cachedVoices = window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = function () {
+                    _cachedVoices = window.speechSynthesis.getVoices();
+                };
+                // Some browsers need a kick to start loading voices
+                window.speechSynthesis.getVoices();
+            }
+
+            function getBestMaleArabicVoice(voices) {
+                if (!voices || !voices.length) return null;
+                var arVoices = voices.filter(function (v) {
+                    return v.lang && v.lang.toLowerCase().startsWith("ar");
+                });
+                if (!arVoices.length) {
+                    // Fallback: any voice with "ar" anywhere in lang
+                    arVoices = voices.filter(function (v) {
+                        return v.lang && v.lang.toLowerCase().includes("ar");
+                    });
+                }
+                if (!arVoices.length) return null;
+
+                // Priority: well-known male Arabic voices
+                return arVoices.find(function (v) { return /hamed/i.test(v.name); }) ||      // Microsoft Hamed (Windows/Edge)
+                    arVoices.find(function (v) { return /maged/i.test(v.name); }) ||      // Apple Maged (macOS/iOS)
+                    arVoices.find(function (v) { return /naayf/i.test(v.name); }) ||       // Microsoft Naayf
+                    arVoices.find(function (v) { return /tarik|amir|abdul/i.test(v.name); }) ||
+                    arVoices.find(function (v) {
+                        var n = v.name.toLowerCase();
+                        return n.includes("male") && !n.includes("female");
+                    }) ||
+                    arVoices.find(function (v) { return /google/i.test(v.name); }) ||      // Google Arabic (usually male)
+                    arVoices[0];  // any Arabic voice as last resort
+            }
+
             function speakArabic(a, btn) {
                 if (currentUtter && window.speechSynthesis.speaking) {
                     window.speechSynthesis.cancel();
@@ -2211,36 +2255,55 @@
                     return;
                 }
 
-                // Force-load voices if not already loaded
-                let voices = window.speechSynthesis.getVoices();
-                if (voices.length === 0) {
-                    // Voices not loaded yet — try to load them
-                    window.speechSynthesis.getVoices();
-                    voices = window.speechSynthesis.getVoices();
+                // Cancel any pending speech
+                window.speechSynthesis.cancel();
+
+                // Use cached voices, or try to get them fresh
+                var voices = _cachedVoices.length ? _cachedVoices : window.speechSynthesis.getVoices();
+
+                // If voices still empty, wait for them to load then speak
+                if (!voices.length) {
+                    btn.classList.add("playing");
+                    currentAudioBtn = btn;
+                    var waitAttempts = 0;
+                    var waitTimer = setInterval(function () {
+                        waitAttempts++;
+                        _cachedVoices = window.speechSynthesis.getVoices();
+                        if (_cachedVoices.length || waitAttempts > 10) {
+                            clearInterval(waitTimer);
+                            btn.classList.remove("playing");
+                            if (currentAudioBtn === btn) currentAudioBtn = null;
+                            if (_cachedVoices.length) {
+                                speakArabic(a, btn);  // retry now that voices are loaded
+                            } else {
+                                toast("Voice not available — try Chrome or Edge");
+                            }
+                        }
+                    }, 200);
+                    return;
                 }
 
-                const u = new SpeechSynthesisUtterance(a.arabic);
+                var u = new SpeechSynthesisUtterance(a.arabic);
                 u.lang = "ar-SA";
-                u.rate = 0.75;
+                u.rate = 0.8;
                 u.pitch = 1;
                 u.volume = 1;
 
-                // Find best Arabic voice
-                const arVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ar"))
-                    || voices.find(v => v.lang && v.lang.toLowerCase().includes("ar"));
+                var arVoice = getBestMaleArabicVoice(voices);
                 if (arVoice) {
                     u.voice = arVoice;
+                    u.lang = arVoice.lang;  // match the voice's actual lang
                 }
 
-                u.onstart = () => {
+                u.onstart = function () {
                     btn.classList.add("playing");
                     currentAudioBtn = btn;
                 };
-                u.onend = () => {
+                u.onend = function () {
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
                 };
-                u.onerror = (e) => {
+                u.onerror = function (e) {
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
                     console.warn("Speech error:", e);
@@ -2445,9 +2508,8 @@
             /* ============================================================
                INIT
                ============================================================ */
-            if ("speechSynthesis" in window) {
-                window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-            }
+            // onvoiceschanged is already set up in the TTS section above
+            // to cache voices into _cachedVoices. No duplicate here.
 
             renderHijriDate();
             renderPills();

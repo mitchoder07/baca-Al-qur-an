@@ -1,0 +1,313 @@
+/* ============================================================
+   BACA — floating-player-bar.css  (v2 — professional redesign)
+   ------------------------------------------------------------
+   A compact floating audio player that sits at the bottom-center
+   of the screen. Inspired by Spotify's mini player.
+   Features: play/pause, prev, next, skip ±10s, seekable progress,
+   surah info, close button.
+   ============================================================ */
+
+.baca-fb {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(140%);
+    z-index: 9990;
+    width: 480px;
+    max-width: calc(100vw - 24px);
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.03);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+    opacity: 0;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+
+.baca-fb.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+body.light-mode .baca-fb {
+    background: rgba(255, 255, 255, 0.97);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #0f172a;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+/* ── Top row: info + close ── */
+.baca-fb-top {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0.9rem 0.4rem;
+    min-width: 0;
+}
+
+.baca-fb-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.baca-fb-surah {
+    font-size: 0.84rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: inherit;
+    line-height: 1.3;
+}
+
+.baca-fb-reciter {
+    font-size: 0.71rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+body.light-mode .baca-fb-reciter {
+    color: #64748b;
+}
+
+/* ── Controls row ── */
+.baca-fb-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0 0.5rem 0.45rem;
+}
+
+.baca-fb-btn {
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+    padding: 0;
+    opacity: 0.75;
+}
+
+.baca-fb-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.baca-fb-btn:active {
+    transform: scale(0.92);
+}
+
+body.light-mode .baca-fb-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Small buttons (skip ±10s, prev, next) */
+.baca-fb-btn-sm {
+    width: 30px;
+    height: 30px;
+}
+
+.baca-fb-btn-sm svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Play button — larger, accent colored */
+.baca-fb-btn-play {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #fff;
+    opacity: 1;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35);
+}
+
+.baca-fb-btn-play:hover {
+    background: linear-gradient(135deg, #059669, #0891b2);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.baca-fb-btn-play svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* Close button */
+.baca-fb-btn-close {
+    width: 26px;
+    height: 26px;
+    opacity: 0.5;
+}
+
+.baca-fb-btn-close:hover {
+    opacity: 1;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.baca-fb-btn-close svg {
+    width: 13px;
+    height: 13px;
+}
+
+/* Repeat button — highlight when active */
+.baca-fb-repeat.active {
+    opacity: 1;
+    color: #10b981;
+}
+
+.baca-fb-repeat.active:hover {
+    background: rgba(16, 185, 129, 0.12);
+}
+
+/* ── Progress bar ── */
+.baca-fb-progress-section {
+    padding: 0 0.9rem 0.6rem;
+}
+
+.baca-fb-progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 99px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+body.light-mode .baca-fb-progress-bar {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.baca-fb-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #06b6d4);
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+    position: relative;
+}
+
+/* Hover thumb on progress bar */
+.baca-fb-progress-bar:hover .baca-fb-progress-fill::after {
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+}
+
+.baca-fb-time-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3px;
+}
+
+body.light-mode .baca-fb-time-row {
+    color: #64748b;
+}
+
+/* ── Loading spinner ── */
+.baca-fb-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #10b981;
+    border-radius: 50%;
+    animation: bacaFbSpin 0.6s linear infinite;
+    display: inline-block;
+}
+
+@keyframes bacaFbSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Mobile layout ── */
+@media (max-width: 640px) {
+    .baca-fb {
+        bottom: 12px;
+        width: calc(100vw - 20px);
+        max-width: calc(100vw - 20px);
+        border-radius: 14px;
+    }
+
+    .baca-fb-top {
+        padding: 0.55rem 0.75rem 0.35rem;
+        gap: 0.5rem;
+    }
+
+    .baca-fb-surah {
+        font-size: 0.8rem;
+    }
+
+    .baca-fb-reciter {
+        font-size: 0.68rem;
+    }
+
+    .baca-fb-controls {
+        gap: 0.25rem;
+        padding: 0 0.35rem 0.4rem;
+    }
+
+    .baca-fb-btn-sm {
+        width: 32px;
+        height: 32px;
+    }
+
+    .baca-fb-btn-sm svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .baca-fb-btn-play {
+        width: 40px;
+        height: 40px;
+    }
+
+    .baca-fb-btn-play svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .baca-fb-progress-section {
+        padding: 0 0.75rem 0.5rem;
+    }
+}
+
+/* ── Shift chat widget FAB up when bar is visible ── */
+body.baca-fb-active .baca-chat-fab {
+    bottom: 100px;
+}
+
+@media (max-width: 640px) {
+    body.baca-fb-active .baca-chat-fab {
+        bottom: 120px;
+    }
+}
