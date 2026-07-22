@@ -266,10 +266,57 @@ body.light-mode .baca-nav-toggle:hover {
 }
 
 /* ── LIGHT MODE DRAWER ──
-   Even on light-mode pages, the drawer stays dark to keep the
-   branding consistent and the gradient logo visible. This is a
-   deliberate design choice — the drawer is a "destination", not
-   part of the page canvas. */
+   The drawer adapts to light mode for consistency with the page. */
+body.light-mode .baca-nav-drawer {
+    background: #f8fafc;
+    color: #0f172a;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .baca-nav-drawer-head {
+    border-bottom-color: rgba(0, 0, 0, 0.07);
+    background: rgba(16, 185, 129, 0.04);
+}
+
+body.light-mode .baca-nav-drawer-close {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+}
+
+body.light-mode .baca-nav-drawer-close:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .baca-nav-drawer-link {
+    color: #475569;
+}
+
+body.light-mode .baca-nav-drawer-link:hover {
+    background: rgba(16, 185, 129, 0.06);
+    color: #059669;
+}
+
+body.light-mode .baca-nav-drawer-link.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+body.light-mode .baca-nav-drawer-section-label {
+    color: #94a3b8;
+}
+
+body.light-mode .baca-nav-drawer-footer {
+    border-top-color: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .baca-nav-drawer-footer-text {
+    color: #64748b;
+}
+
+body.light-mode .baca-nav-drawer-logo {
+    color: #0f172a;
+}
 
 /* ── SMALL SCREENS ── */
 @media (max-width: 640px) {
