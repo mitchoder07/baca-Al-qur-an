@@ -155,7 +155,9 @@ const RECITERS = [
     { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", folder: "Muhsin_Al_Qasim_192kbps" },
     { id: "neana", name: "Ahmed Neana", country: "Egypt", folder: "Ahmed_Neana_128kbps" },
     { id: "ayman_swed", name: "Ayman Swed", country: "Syria", folder: "Ayman_Sowaid_64kbps" },
-    { id: "okasha", name: "Okasha Kameny", country: "Ghana", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true }
+    { id: "okasha", name: "Okasha Kameny", country: "Ghana", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true },
+    { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true },
+    { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true }
 ];
 
 // ============================================================
@@ -219,7 +221,9 @@ const FULL_SURAH_SERVERS = {
     'matroud':    'https://server8.mp3quran.net/mtrod/',
     'rifai':      'https://server8.mp3quran.net/hani/',
     'tablawi':    'https://server12.mp3quran.net/tblawi/',
-    'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/'
+    'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
+    'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
+    'mansour_salmi': 'https://server14.mp3quran.net/mansor/'
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {

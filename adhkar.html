@@ -2245,18 +2245,24 @@
             }
 
             function speakArabic(a, btn) {
-                if (currentUtter && window.speechSynthesis.speaking) {
+                // If already speaking this item, stop
+                if (currentAudioBtn === btn && window.speechSynthesis.speaking) {
                     window.speechSynthesis.cancel();
-                    if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
-                    if (currentAudioBtn === btn) { currentAudioBtn = null; return; }
+                    btn.classList.remove("playing");
+                    currentAudioBtn = null;
+                    return;
                 }
+
+                // Stop any other speech
+                if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+                    window.speechSynthesis.cancel();
+                }
+                if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
+
                 if (!("speechSynthesis" in window)) {
                     toast("Audio not supported on this browser");
                     return;
                 }
-
-                // Cancel any pending speech
-                window.speechSynthesis.cancel();
 
                 // Use cached voices, or try to get them fresh
                 var voices = _cachedVoices.length ? _cachedVoices : window.speechSynthesis.getVoices();
@@ -2269,13 +2275,13 @@
                     var waitTimer = setInterval(function () {
                         waitAttempts++;
                         _cachedVoices = window.speechSynthesis.getVoices();
-                        if (_cachedVoices.length || waitAttempts > 10) {
+                        if (_cachedVoices.length || waitAttempts > 15) {
                             clearInterval(waitTimer);
-                            btn.classList.remove("playing");
-                            if (currentAudioBtn === btn) currentAudioBtn = null;
                             if (_cachedVoices.length) {
                                 speakArabic(a, btn);  // retry now that voices are loaded
                             } else {
+                                btn.classList.remove("playing");
+                                currentAudioBtn = null;
                                 toast("Voice not available — try Chrome or Edge");
                             }
                         }
@@ -2292,8 +2298,11 @@
                 var arVoice = getBestMaleArabicVoice(voices);
                 if (arVoice) {
                     u.voice = arVoice;
-                    u.lang = arVoice.lang;  // match the voice's actual lang
+                    u.lang = arVoice.lang;
                 }
+
+                // CRITICAL: keep a reference to the utterance so it's not garbage collected
+                currentUtter = u;
 
                 u.onstart = function () {
                     btn.classList.add("playing");
@@ -2302,20 +2311,26 @@
                 u.onend = function () {
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
+                    currentUtter = null;
                 };
                 u.onerror = function (e) {
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
+                    currentUtter = null;
                     console.warn("Speech error:", e);
                 };
 
-                currentUtter = u;
+                // Small delay to let cancel() complete, then speak
+                window.speechSynthesis.speak(u);
 
-                // Cancel any pending speech first, then speak
-                window.speechSynthesis.cancel();
-                setTimeout(() => {
-                    window.speechSynthesis.speak(u);
-                }, 100);
+                // Fallback: if onstart doesn't fire within 1.5s, show playing state anyway
+                // (some browsers don't fire onstart reliably)
+                setTimeout(function () {
+                    if (currentUtter === u && !btn.classList.contains("playing")) {
+                        btn.classList.add("playing");
+                        currentAudioBtn = btn;
+                    }
+                }, 1500);
             }
 
             /* ============================================================
