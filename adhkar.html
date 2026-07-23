@@ -994,20 +994,20 @@
         .adhkar-reminder {
             position: fixed;
             bottom: 1.75rem;
-            right: 1.75rem;
+            left: 1.75rem;
             z-index: 1100;
         }
 
         .adhkar-reminder-toggle {
-            width: 58px;
-            height: 58px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: none;
             background: linear-gradient(135deg, #10b981, #06b6d4);
             color: #fff;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.45);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
             transition: transform .25s, box-shadow .25s;
             display: grid;
             place-items: center;
@@ -1052,8 +1052,8 @@
 
         .adhkar-reminder-panel {
             position: absolute;
-            bottom: 72px;
-            right: 0;
+            bottom: 64px;
+            left: 0;
             width: 330px;
             max-width: calc(100vw - 3rem);
             background: var(--dark-light);
@@ -1062,7 +1062,7 @@
             padding: 1.4rem;
             box-shadow: 0 22px 55px rgba(0, 0, 0, 0.45);
             display: none;
-            transform-origin: bottom right;
+            transform-origin: bottom left;
         }
 
         .adhkar-reminder-panel.open {
@@ -1274,6 +1274,24 @@
 
             .hide-sm {
                 display: none;
+            }
+
+            /* Reminder FAB smaller on mobile, stays bottom-left */
+            .adhkar-reminder {
+                bottom: 1rem;
+                left: 1rem;
+            }
+
+            .adhkar-reminder-toggle {
+                width: 44px;
+                height: 44px;
+                font-size: 1.05rem;
+            }
+
+            .adhkar-reminder-panel {
+                bottom: 54px;
+                width: calc(100vw - 2rem);
+                max-width: 320px;
             }
         }
 
@@ -2198,15 +2216,22 @@
             /* ============================================================
                ARABIC TEXT-TO-SPEECH
                ------------------------------------------------------------
-               Browser TTS voices load ASYNCHRONOUSLY. On first call,
-               getVoices() returns an empty array. We must:
-               1. Pre-load voices on page load using onvoiceschanged
-               2. When speaking, if voices aren't ready, wait for them
-               3. Pick the best available MALE Arabic voice
+               Browser TTS is notoriously buggy. Common issues:
+               1. getVoices() returns [] on first call (async loading)
+               2. Chrome stops speech after ~15s (known bug)
+               3. cancel() right before speak() kills the utterance
+               4. Utterance gets garbage collected if not referenced
+
+               This implementation handles all of these:
+               - Pre-loads voices and caches them
+               - Keeps utterance reference alive
+               - Uses pause()/resume() hack to prevent Chrome timeout
+               - Does NOT call cancel() before speak()
                ============================================================ */
             let currentUtter = null;
             let currentAudioBtn = null;
             let _cachedVoices = [];
+            let _chromeKeepAlive = null;
 
             // Pre-load voices as early as possible
             if ("speechSynthesis" in window) {
@@ -2214,8 +2239,15 @@
                 window.speechSynthesis.onvoiceschanged = function () {
                     _cachedVoices = window.speechSynthesis.getVoices();
                 };
-                // Some browsers need a kick to start loading voices
+                // Force voices to load
                 window.speechSynthesis.getVoices();
+                // Chrome sometimes needs a dummy utterance to initialize
+                if (!_cachedVoices.length) {
+                    var dummy = new SpeechSynthesisUtterance("");
+                    dummy.volume = 0;
+                    window.speechSynthesis.speak(dummy);
+                    window.speechSynthesis.cancel();
+                }
             }
 
             function getBestMaleArabicVoice(voices) {
@@ -2224,50 +2256,56 @@
                     return v.lang && v.lang.toLowerCase().startsWith("ar");
                 });
                 if (!arVoices.length) {
-                    // Fallback: any voice with "ar" anywhere in lang
                     arVoices = voices.filter(function (v) {
                         return v.lang && v.lang.toLowerCase().includes("ar");
                     });
                 }
                 if (!arVoices.length) return null;
 
-                // Priority: well-known male Arabic voices
-                return arVoices.find(function (v) { return /hamed/i.test(v.name); }) ||      // Microsoft Hamed (Windows/Edge)
-                    arVoices.find(function (v) { return /maged/i.test(v.name); }) ||      // Apple Maged (macOS/iOS)
-                    arVoices.find(function (v) { return /naayf/i.test(v.name); }) ||       // Microsoft Naayf
+                return arVoices.find(function (v) { return /hamed/i.test(v.name); }) ||
+                    arVoices.find(function (v) { return /maged/i.test(v.name); }) ||
+                    arVoices.find(function (v) { return /naayf/i.test(v.name); }) ||
                     arVoices.find(function (v) { return /tarik|amir|abdul/i.test(v.name); }) ||
                     arVoices.find(function (v) {
                         var n = v.name.toLowerCase();
                         return n.includes("male") && !n.includes("female");
                     }) ||
-                    arVoices.find(function (v) { return /google/i.test(v.name); }) ||      // Google Arabic (usually male)
-                    arVoices[0];  // any Arabic voice as last resort
+                    arVoices.find(function (v) { return /google/i.test(v.name); }) ||
+                    arVoices[0];
             }
 
-            function speakArabic(a, btn) {
-                // If already speaking this item, stop
-                if (currentAudioBtn === btn && window.speechSynthesis.speaking) {
-                    window.speechSynthesis.cancel();
-                    btn.classList.remove("playing");
-                    currentAudioBtn = null;
-                    return;
+            function stopSpeaking() {
+                if (_chromeKeepAlive) {
+                    clearInterval(_chromeKeepAlive);
+                    _chromeKeepAlive = null;
                 }
-
-                // Stop any other speech
                 if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
                     window.speechSynthesis.cancel();
                 }
                 if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
+                currentAudioBtn = null;
+                currentUtter = null;
+            }
+
+            function speakArabic(a, btn) {
+                // If clicking the same button that's playing, stop
+                if (currentAudioBtn === btn && window.speechSynthesis.speaking) {
+                    stopSpeaking();
+                    return;
+                }
+
+                // Stop any current speech
+                stopSpeaking();
 
                 if (!("speechSynthesis" in window)) {
                     toast("Audio not supported on this browser");
                     return;
                 }
 
-                // Use cached voices, or try to get them fresh
+                // Get voices (cached or fresh)
                 var voices = _cachedVoices.length ? _cachedVoices : window.speechSynthesis.getVoices();
 
-                // If voices still empty, wait for them to load then speak
+                // If no voices yet, wait for them
                 if (!voices.length) {
                     btn.classList.add("playing");
                     currentAudioBtn = btn;
@@ -2275,10 +2313,10 @@
                     var waitTimer = setInterval(function () {
                         waitAttempts++;
                         _cachedVoices = window.speechSynthesis.getVoices();
-                        if (_cachedVoices.length || waitAttempts > 15) {
+                        if (_cachedVoices.length || waitAttempts > 20) {
                             clearInterval(waitTimer);
                             if (_cachedVoices.length) {
-                                speakArabic(a, btn);  // retry now that voices are loaded
+                                speakArabic(a, btn);
                             } else {
                                 btn.classList.remove("playing");
                                 currentAudioBtn = null;
@@ -2289,6 +2327,7 @@
                     return;
                 }
 
+                // Create utterance
                 var u = new SpeechSynthesisUtterance(a.arabic);
                 u.lang = "ar-SA";
                 u.rate = 0.8;
@@ -2301,36 +2340,60 @@
                     u.lang = arVoice.lang;
                 }
 
-                // CRITICAL: keep a reference to the utterance so it's not garbage collected
+                // Keep reference alive (prevents GC)
                 currentUtter = u;
 
                 u.onstart = function () {
                     btn.classList.add("playing");
                     currentAudioBtn = btn;
+
+                    // Chrome bug workaround: speech stops after ~15s
+                    // pause/resume every 10s keeps it alive
+                    if (_chromeKeepAlive) clearInterval(_chromeKeepAlive);
+                    _chromeKeepAlive = setInterval(function () {
+                        if (window.speechSynthesis.speaking) {
+                            window.speechSynthesis.pause();
+                            window.speechSynthesis.resume();
+                        } else {
+                            clearInterval(_chromeKeepAlive);
+                            _chromeKeepAlive = null;
+                        }
+                    }, 10000);
                 };
+
                 u.onend = function () {
+                    if (_chromeKeepAlive) {
+                        clearInterval(_chromeKeepAlive);
+                        _chromeKeepAlive = null;
+                    }
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
                     currentUtter = null;
                 };
+
                 u.onerror = function (e) {
+                    if (_chromeKeepAlive) {
+                        clearInterval(_chromeKeepAlive);
+                        _chromeKeepAlive = null;
+                    }
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
                     currentUtter = null;
                     console.warn("Speech error:", e);
                 };
 
-                // Small delay to let cancel() complete, then speak
+                // DO NOT call cancel() here — it kills the utterance
+                // Just speak directly
                 window.speechSynthesis.speak(u);
 
-                // Fallback: if onstart doesn't fire within 1.5s, show playing state anyway
+                // Fallback: if onstart doesn't fire within 2s, show playing state
                 // (some browsers don't fire onstart reliably)
                 setTimeout(function () {
                     if (currentUtter === u && !btn.classList.contains("playing")) {
                         btn.classList.add("playing");
                         currentAudioBtn = btn;
                     }
-                }, 1500);
+                }, 2000);
             }
 
             /* ============================================================
