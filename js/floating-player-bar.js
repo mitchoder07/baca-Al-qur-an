@@ -29,6 +29,8 @@
         'rifai':      'https://server8.mp3quran.net/hani/',
         'tablawi':    'https://server12.mp3quran.net/tblawi/',
         'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
+        'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
+        'mansour_salmi': 'https://server14.mp3quran.net/mansor/',
         'ali_jaber':  'https://server8.mp3quran.net/jbrl/',
         'abdulbasit_mj': 'https://server7.mp3quran.net/basit/',
         'husary_muj': 'https://server13.mp3quran.net/husr/',

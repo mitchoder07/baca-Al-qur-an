@@ -2,8 +2,6 @@
    BACA — server.js
    Serves static files + provides AI chat API
    Uses Groq (free, fast, OpenAI-compatible, no quota issues)
-   Get your free API key at: https://console.groq.com/keys
-   Run: node server.js  (then open http://localhost:3000)
    ============================================================ */
 
 const express = require('express');

@@ -1040,24 +1040,6 @@
         <div class="hero-inner">
             <div class="avatar-wrap">
                 <div class="avatar-ring">
-                    <!--
-          HOW TO ADD IMAGES:
-          1. Create a folder: images/reciters/ inside your project root
-          2. Name each image after the reciter id, e.g:
-               mishari.jpg, sudais.jpg, ali_jaber.jpg, etc.
-          3. The src below is set automatically by JS — you don't edit this.
-             If the image file is missing it falls back to the mic icon.
-
-          FIX (avatar not showing until refresh): this <img> used to start
-          with src="" and rely solely on inline onerror. An empty src makes
-          some browsers fire a spurious error before the JS below ever runs,
-          which permanently set display:none on the <img> — even though the
-          real photo went on to load successfully in the background, nothing
-          ever reversed that display:none. Now the placeholder is shown by
-          default and the <img> has NO src until JS assigns the real one;
-          onload/onerror are wired in JS (see populateHero()) so the swap
-          only happens once the real image is confirmed loaded.
-        -->
                     <img class="avatar-img" id="reciter-avatar" alt="" style="display:none">
                     <div class="avatar-placeholder" id="avatar-placeholder" style="display:flex">
                         <i class="fa-solid fa-microphone"></i>
@@ -1148,6 +1130,8 @@
             neana: { name: "Ahmed Neana", arabic: "أحمد نعينع", country: "Egypt", style: "Murattal", folder: "Ahmed_Neana_128kbps", image: "/images/reciters/neana.png", bio: "Sheikh Ahmed Neana follows the great Egyptian tradition of Quranic recitation. His voice carries the characteristic warmth and melodic richness of Egyptian reciters, and his recordings are appreciated for their emotional expressiveness and clear application of tajweed." },
             ayman_swed: { name: "Ayman Swed", arabic: "أيمن سويد", country: "Syria", style: "Murattal", folder: "Ayman_Sowaid_64kbps", image: "/images/reciters/ayman.png", bio: "Sheikh Ayman Rushdi Swed is a Syrian scholar of tajweed born in Damascus. A professor of Quranic sciences, he has dedicated his career to preserving and teaching correct Quranic recitation. His recordings are praised for exemplary tajweed and he has trained hundreds of Quran teachers worldwide." },
             okasha: { name: "Okasha Kameny", arabic: "عكاشة كاميني", country: "Ghana", style: "Murattal", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true, image: "/images/reciters/okasha.png", bio: "Sheikh Okasha Kameny is a Ghanaian Quran reciter known for his clear, deeply emotional recitation style. He has studied tajweed and Quranic sciences and his recitations have gained wide popularity, especially across West Africa and online. His recordings are appreciated for their sincerity and the natural, flowing pace of his delivery." },
+            yasser_dosari: { name: "Yasser Al-Dosari", arabic: "ياسر الدوسري", country: "Saudi Arabia", style: "Murattal", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true, image: "/images/reciters/yasser_dosari.png", bio: "Sheikh Yasser Al-Dosari is a Saudi Imam and Khatib known for his beautiful, emotional recitation. He serves as an Imam at a mosque in Riyadh and has memorized the Quran with multiple recitations. His recordings are beloved for their clarity, tajweed precision, and spiritual depth." },
+            mansour_salmi: { name: "Mansour Al-Salmi", arabic: "منور السالمي", country: "Saudi Arabia", style: "Murattal", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true, image: "/images/reciters/mansour_salmi.png", bio: "Sheikh Mansour Al-Salmi is a Saudi Quran reciter known for his calm, melodious voice and precise tajweed. His recitations are widely appreciated for their soothing quality and are popular for both learning and daily listening." },
         };
 
         // ═══════════════════════════════════════════════
@@ -1421,7 +1405,9 @@
             'matroud': 'https://server8.mp3quran.net/mtrod/',
             'rifai': 'https://server8.mp3quran.net/hani/',
             'tablawi': 'https://server12.mp3quran.net/tblawi/',
-            'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/'
+            'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
+            'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
+            'mansour_salmi': 'https://server14.mp3quran.net/mansor/'
         };
 
         function getFullSurahAudioUrl(surahNum, reciterId) {
@@ -1458,7 +1444,7 @@
                     // Repeat one: replay same surah
                     if (repeatMode === 'one') {
                         audio.currentTime = 0;
-                        audio.play().catch(() => {});
+                        audio.play().catch(() => { });
                         return;
                     }
                     // Repeat all or off+auto-advance: play next surah
@@ -1555,8 +1541,8 @@
             const icon = btn.querySelector("i");
             if (icon) {
                 icon.className = repeatMode === 'one' ? "fa-solid fa-repeat" :
-                                 repeatMode === 'all' ? "fa-solid fa-repeat" :
-                                 "fa-solid fa-repeat";
+                    repeatMode === 'all' ? "fa-solid fa-repeat" :
+                        "fa-solid fa-repeat";
             }
         }
         // ── SEEKABLE PROGRESS BAR ──

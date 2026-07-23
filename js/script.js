@@ -188,6 +188,8 @@ const RECITERS = [
     { id: "neana", name: "Ahmed Neana", folder: "Ahmed_Neana_128kbps" },
     { id: "ayman_swed", name: "Ayman Swed", folder: "Ayman_Sowaid_64kbps" },
     { id: "okasha", name: "Okasha Kameny", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true },
+    { id: "yasser_dosari", name: "Yasser Al-Dosari", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true },
+    { id: "mansour_salmi", name: "Mansour Al-Salmi", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true },
 ];
 
 function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
@@ -226,6 +228,9 @@ const FULL_SURAH_SERVERS = {
     'matroud': 'https://server8.mp3quran.net/mtrod/',
     'rifai': 'https://server8.mp3quran.net/hani/',
     'tablawi': 'https://server12.mp3quran.net/tblawi/',
+    'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
+    'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
+    'mansour_salmi': 'https://server14.mp3quran.net/mansor/'
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {
@@ -1950,6 +1955,8 @@ const RECITER_PROFILES = [
     { id: "neana", name: "Ahmed Neana", country: "Egypt", style: "Murattal", image: "images/reciters/neana.png" },
     { id: "ayman_swed", name: "Ayman Swed", country: "Syria", style: "Murattal", image: "images/reciters/ayman.png" },
     { id: "okasha", name: "Okasha Kameny", country: "Ghana", style: "Murattal", image: "images/reciters/okasha.png" },
+    { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/yasser_dosari.png" },
+    { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/mansour_salmi.png" },
 ];
 
 function initRecitersGrid() {
@@ -1997,6 +2004,8 @@ const RECITER_PROFILES_FOR_PICKER = [
     { id: "neana", name: "Ahmed Neana", country: "Egypt", image: "images/reciters/neana.jpg" },
     { id: "ayman_swed", name: "Ayman Swed", country: "Syria", image: "images/reciters/ayman_swed.jpg" },
     { id: "okasha", name: "Okasha Kameny", country: "Ghana", image: "images/reciters/okasha.png" },
+    { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", image: "images/reciters/yasser_dosari.png" },
+    { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", image: "images/reciters/mansour_salmi.png" },
 ];
 
 function initReciterPicker() {
