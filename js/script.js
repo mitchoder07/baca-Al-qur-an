@@ -1855,55 +1855,9 @@ ${trans}`;
 // SEARCH MODAL
 // ============================================================
 
-// Popular surahs shown when the search is empty
-const POPULAR_SURAHS = [1, 2, 18, 36, 55, 67, 112, 113, 114];
-
-function renderSearchResults(query) {
-    const results = document.getElementById("search-results");
-    if (!results) return;
-
-    if (!query) {
-        // Show popular surahs when search is empty
-        const popular = POPULAR_SURAHS.map(id => SURAH_LIST.find(s => s.id === id)).filter(Boolean);
-        results.innerHTML = '<div class="search-section-label">Popular Surahs</div>' +
-            popular.map(s => `
-                <div class="search-item" data-surah="${s.id}" style="cursor:pointer">
-                    <i data-lucide="book-open"></i>
-                    <span>${s.transliteration} <small style="opacity:.6">${s.translation}</small></span>
-                </div>`).join("");
-    } else {
-        const val = query.toLowerCase();
-        const matches = SURAH_LIST.filter(s =>
-            s.transliteration.toLowerCase().includes(val) ||
-            s.translation.toLowerCase().includes(val) ||
-            String(s.id) === val
-        ).slice(0, 12);
-        results.innerHTML = matches.length ?
-            matches.map(s => `
-                <div class="search-item" data-surah="${s.id}" style="cursor:pointer">
-                    <i data-lucide="book-open"></i>
-                    <span>${s.transliteration} <small style="opacity:.6">${s.translation} · ${s.total_verses} verses</small></span>
-                </div>`).join("")
-            : `<div class="search-item"><i data-lucide="search"></i><span>No results for "${escapeHtml(query)}"</span></div>`;
-    }
-
-    lucide.createIcons();
-    results.querySelectorAll(".search-item[data-surah]").forEach(item => {
-        item.addEventListener("click", () => {
-            document.querySelector(".search-modal")?.classList.remove("active");
-            openReader(Number(item.dataset.surah));
-        });
-    });
-}
-
 document.querySelector(".search-btn")?.addEventListener("click", () => {
     document.querySelector(".search-modal")?.classList.add("active");
-    // Clear input and show popular surahs
-    const input = document.getElementById("searchInput");
-    if (input) input.value = "";
-    renderSearchResults("");
-    // Focus the input (wrapped in setTimeout for mobile compatibility)
-    setTimeout(() => { document.getElementById("searchInput")?.focus(); }, 100);
+    document.getElementById("searchInput")?.focus();
 });
 document.querySelector(".close-search")?.addEventListener("click", () => {
     document.querySelector(".search-modal")?.classList.remove("active");
@@ -1913,7 +1867,26 @@ document.querySelector(".search-overlay")?.addEventListener("click", () => {
 });
 
 document.getElementById("searchInput")?.addEventListener("input", e => {
-    renderSearchResults(e.target.value.trim());
+    const val = e.target.value.trim().toLowerCase();
+    const results = document.querySelector(".search-results");
+    if (!results || !val) return;
+    const matches = SURAH_LIST.filter(s =>
+        s.transliteration.toLowerCase().includes(val) ||
+        s.translation.toLowerCase().includes(val) ||
+        String(s.id) === val
+    ).slice(0, 8);
+    results.innerHTML = matches.map(s => `
+    <div class="search-item" data-surah="${s.id}" style="cursor:pointer">
+      <i data-lucide="book-open"></i>
+      <span>${s.transliteration} <small style="opacity:.6">${s.translation}</small></span>
+    </div>`).join("") || `<div class="search-item"><i data-lucide="search"></i><span>No results for "${escapeHtml(val)}"</span></div>`;
+    lucide.createIcons();
+    results.querySelectorAll(".search-item[data-surah]").forEach(item => {
+        item.addEventListener("click", () => {
+            document.querySelector(".search-modal")?.classList.remove("active");
+            openReader(Number(item.dataset.surah));
+        });
+    });
 });
 
 // ================= KEYBOARD SHORTCUTS =================
@@ -2170,14 +2143,14 @@ const GAMIFICATION = {
     // Achievement definitions
     achievements: [
         { id: "first-page", icon: "book-open", name: "First Steps", desc: "Read your first page", check: s => s.pagesRead >= 1 },
-        { id: "first-surah", icon: "book-check", name: "Surah Complete", desc: "Complete your first surah", check: s => s.completedSurahs >= 1 },
+        { id: "first-surah", icon: "book-check", name: "Surah Complete", desc: "Complete your first surah", check: s => (s.completedSurahs || []).length >= 1 },
         { id: "streak-3", icon: "flame", name: "On Fire", desc: "3-day reading streak", check: s => s.streak >= 3 },
         { id: "streak-7", icon: "zap", name: "Week Warrior", desc: "7-day reading streak", check: s => s.streak >= 7 },
         { id: "streak-30", icon: "award", name: "Monthly Master", desc: "30-day reading streak", check: s => s.streak >= 30 },
         { id: "pages-50", icon: "layers", name: "Half Century", desc: "Read 50 pages", check: s => s.pagesRead >= 50 },
         { id: "pages-100", icon: "library", name: "Century Club", desc: "Read 100 pages", check: s => s.pagesRead >= 100 },
         { id: "juz-1", icon: "bookmark", name: "Juz Explorer", desc: "Explore your first juz", check: s => s.juzExplored >= 1 },
-        { id: "surahs-10", icon: "trophy", name: "Dedicated Reader", desc: "Complete 10 surahs", check: s => s.completedSurahs >= 10 },
+        { id: "surahs-10", icon: "trophy", name: "Dedicated Reader", desc: "Complete 10 surahs", check: s => (s.completedSurahs || []).length >= 10 },
         { id: "time-1h", icon: "clock", name: "Hour Power", desc: "Read for 1 hour total", check: s => s.readingTime >= 3600 },
         { id: "challenges-5", icon: "target", name: "Challenge Chaser", desc: "Complete 5 daily challenges", check: s => s.challengesCompleted >= 5 },
         { id: "verses-100", icon: "scroll", name: "Verse Voyager", desc: "Read 100 verses", check: s => s.versesRead >= 100 },

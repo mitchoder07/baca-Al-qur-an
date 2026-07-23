@@ -1043,13 +1043,17 @@
             transition: opacity .25s, transform .25s;
             box-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: .65rem;
-            max-width: calc(100vw - 24px);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            width: max-content;
+            max-width: min(380px, calc(100vw - 2rem));
             backdrop-filter: blur(12px);
+        }
+
+        .salah-toast i {
+            margin-top: .15rem;
+            flex-shrink: 0;
+            color: var(--primary);
         }
 
         body.light-mode .salah-toast {
@@ -1061,26 +1065,19 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        .salah-toast i {
-            color: var(--primary);
-            flex-shrink: 0;
-        }
-
-        /* Mobile: allow wrapping for longer messages */
-        @media (max-width: 640px) {
+        @media (max-width: 480px) {
             .salah-toast {
-                top: 80px;
-                padding: .7rem 1rem;
-                font-size: .82rem;
-                border-radius: 11px;
-                gap: .5rem;
-                white-space: normal;
-                text-align: center;
-                max-width: calc(100vw - 20px);
+                left: 1rem;
+                right: 1rem;
+                transform: translateY(-20px);
+                width: auto;
+                max-width: none;
+                padding: .75rem 1.1rem;
+                font-size: .85rem;
             }
 
-            .salah-toast i {
-                font-size: .85rem;
+            .salah-toast.show {
+                transform: translateY(0);
             }
         }
 
@@ -1618,7 +1615,6 @@
             ];
 
             function renderHijriDate() {
-                // Show Intl date immediately, then upgrade to AlAdhan API for accuracy
                 try {
                     const now = new Date();
                     const parts = new Intl.DateTimeFormat("en-US-u-ca-islamic-umalqura", {
@@ -1638,25 +1634,6 @@
                     document.getElementById("hijriDate").textContent = "Salah Guide";
                     document.getElementById("hijriDateAr").textContent = "كَيْفِيَّةُ الصَّلَاة";
                 }
-
-                // Upgrade to AlAdhan API (real-time Hijri) for better accuracy
-                const dd = String(new Date().getDate()).padStart(2, '0');
-                const mm = String(new Date().getMonth() + 1).padStart(2, '0');
-                const yyyy = new Date().getFullYear();
-                fetch(`https://api.aladhan.com/v1/gToH/${dd}-${mm}-${yyyy}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        const h = data?.data?.hijri;
-                        if (!h) return;
-                        const day = h.day;
-                        const monthNum = parseInt(h.month.number);
-                        const year = h.year;
-                        const monthName = HIJRI_MONTHS_EN[monthNum - 1] || h.month.en || 'Muharram';
-                        const monthNameAr = HIJRI_MONTHS_AR[monthNum - 1] || h.month.ar || 'مُحَرَّم';
-                        document.getElementById("hijriDate").textContent = `${monthName} ${day} ${year} AH`;
-                        document.getElementById("hijriDateAr").textContent = `${monthNameAr} ${day} ${year} هـ`;
-                    })
-                    .catch(() => {});
             }
 
             /* ============================================================

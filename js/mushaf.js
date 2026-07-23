@@ -362,22 +362,68 @@ function recordPageRead(pageNum, ayahsOnPage) {
 }
 
 // Called every time a full surah is rendered on screen (Surah View).
+// NOTE: this used to also push into stats.completedSurahs unconditionally
+// right here — meaning simply opening a surah (even for a second, even by
+// mistake) instantly marked it "completed" in the Reading Journey and could
+// unlock the "Surah Complete" achievement despite the user never actually
+// reading it. That's now handled separately by watchForSurahCompletion(),
+// which only fires once the last verse card has genuinely scrolled into view.
 function recordSurahRead(surahNum, totalVerses) {
     const stats = loadReadingStats();
     resetDailyCounterIfNeeded(stats);
     if (!stats.visitedSurahs) stats.visitedSurahs = [];
-    if (!stats.completedSurahs) stats.completedSurahs = [];
 
     if (!stats.visitedSurahs.includes(surahNum)) {
         stats.visitedSurahs.push(surahNum);
         stats.versesRead = (stats.versesRead || 0) + totalVerses;
         bumpReadingStreak(stats);
     }
-    if (!stats.completedSurahs.includes(surahNum)) {
-        stats.completedSurahs.push(surahNum);
-    }
 
     saveReadingStats(stats);
+}
+
+// Marks a surah as genuinely completed — only called once the reader has
+// actually scrolled to the last verse card in Surah View (see
+// watchForSurahCompletion). This is the counterpart to Page View's
+// completion check in recordPageRead(), which only marks a surah done when
+// its final ayah appears on a page that's actually been rendered/reached.
+function markSurahFullyRead(surahNum) {
+    const stats = loadReadingStats();
+    if (!stats.completedSurahs) stats.completedSurahs = [];
+    if (stats.completedSurahs.includes(surahNum)) return;
+
+    stats.completedSurahs.push(surahNum);
+    saveReadingStats(stats);
+
+    const meta = SURAH_LIST[surahNum - 1];
+    showToast(`Surah ${meta?.transliteration || surahNum} completed! ✓`);
+}
+
+// Watches the last verse card in the current Surah View render; once it's
+// actually scrolled into view, calls markSurahFullyRead(). Call this once
+// per surah render, after the verse cards are in the DOM.
+function watchForSurahCompletion(surahNum, rootEl) {
+    const cards = rootEl.querySelectorAll(".verse-card");
+    if (!cards.length) return;
+    const lastCard = cards[cards.length - 1];
+
+    if (!window.IntersectionObserver) {
+        // Very old browser fallback — no observer support, so just credit
+        // completion on render rather than leaving it permanently unreachable.
+        markSurahFullyRead(surahNum);
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                markSurahFullyRead(surahNum);
+                observer.disconnect();
+            }
+        });
+    }, { threshold: 0.6 });
+
+    observer.observe(lastCard);
 }
 
 // Track actual time spent reading in the Mushaf itself (previously only
@@ -1237,6 +1283,11 @@ async function renderSurahView() {
     }).join("");
 
     el.surahVerses.innerHTML = versesHtml;
+
+    // Only credit this surah as "completed" once the user actually scrolls
+    // to the last verse — not the instant the surah opens (see
+    // watchForSurahCompletion's comment for why that used to be wrong).
+    watchForSurahCompletion(surahNum, el.surahView);
 
     // Wire clicks
     wireWordClicks(el.surahView);
