@@ -65,7 +65,6 @@ Keep responses concise, warm, helpful. Use emojis sparingly. Respect Islamic eti
 
 // ============================================================
 // AI CHAT ENDPOINT — uses Groq (free, OpenAI-compatible)
-// Get your free API key at: https://console.groq.com/keys
 // ============================================================
 
 app.post('/api/chat', async (req, res) => {
