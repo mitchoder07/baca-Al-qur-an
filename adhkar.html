@@ -2214,186 +2214,125 @@
             });
 
             /* ============================================================
-               ARABIC TEXT-TO-SPEECH
+               ARABIC AUDIO PLAYBACK
                ------------------------------------------------------------
-               Browser TTS is notoriously buggy. Common issues:
-               1. getVoices() returns [] on first call (async loading)
-               2. Chrome stops speech after ~15s (known bug)
-               3. cancel() right before speak() kills the utterance
-               4. Utterance gets garbage collected if not referenced
-
-               This implementation handles all of these:
-               - Pre-loads voices and caches them
-               - Keeps utterance reference alive
-               - Uses pause()/resume() hack to prevent Chrome timeout
-               - Does NOT call cancel() before speak()
+               Uses Google Translate TTS API to generate real MP3 audio
+               for Arabic text. This is MUCH more reliable than browser
+               speechSynthesis (which often has no Arabic voices or
+               silently fails). The Google TTS voice is a clear male
+               Arabic voice that works on all browsers.
                ============================================================ */
-            let currentUtter = null;
             let currentAudioBtn = null;
-            let _cachedVoices = [];
-            let _chromeKeepAlive = null;
-
-            // Pre-load voices as early as possible
-            if ("speechSynthesis" in window) {
-                _cachedVoices = window.speechSynthesis.getVoices();
-                window.speechSynthesis.onvoiceschanged = function () {
-                    _cachedVoices = window.speechSynthesis.getVoices();
-                };
-                // Force voices to load
-                window.speechSynthesis.getVoices();
-                // Chrome sometimes needs a dummy utterance to initialize
-                if (!_cachedVoices.length) {
-                    var dummy = new SpeechSynthesisUtterance("");
-                    dummy.volume = 0;
-                    window.speechSynthesis.speak(dummy);
-                    window.speechSynthesis.cancel();
-                }
-            }
-
-            function getBestMaleArabicVoice(voices) {
-                if (!voices || !voices.length) return null;
-                var arVoices = voices.filter(function (v) {
-                    return v.lang && v.lang.toLowerCase().startsWith("ar");
-                });
-                if (!arVoices.length) {
-                    arVoices = voices.filter(function (v) {
-                        return v.lang && v.lang.toLowerCase().includes("ar");
-                    });
-                }
-                if (!arVoices.length) return null;
-
-                return arVoices.find(function (v) { return /hamed/i.test(v.name); }) ||
-                    arVoices.find(function (v) { return /maged/i.test(v.name); }) ||
-                    arVoices.find(function (v) { return /naayf/i.test(v.name); }) ||
-                    arVoices.find(function (v) { return /tarik|amir|abdul/i.test(v.name); }) ||
-                    arVoices.find(function (v) {
-                        var n = v.name.toLowerCase();
-                        return n.includes("male") && !n.includes("female");
-                    }) ||
-                    arVoices.find(function (v) { return /google/i.test(v.name); }) ||
-                    arVoices[0];
-            }
+            let _audioEl = null;
 
             function stopSpeaking() {
-                if (_chromeKeepAlive) {
-                    clearInterval(_chromeKeepAlive);
-                    _chromeKeepAlive = null;
-                }
-                if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-                    window.speechSynthesis.cancel();
+                if (_audioEl) {
+                    _audioEl.pause();
+                    _audioEl.src = '';
+                    _audioEl = null;
                 }
                 if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
                 currentAudioBtn = null;
-                currentUtter = null;
             }
 
             function speakArabic(a, btn) {
                 // If clicking the same button that's playing, stop
-                if (currentAudioBtn === btn && window.speechSynthesis.speaking) {
+                if (currentAudioBtn === btn && _audioEl && !_audioEl.paused) {
                     stopSpeaking();
                     return;
                 }
 
-                // Stop any current speech
+                // Stop any current audio
                 stopSpeaking();
 
-                if (!("speechSynthesis" in window)) {
-                    toast("Audio not supported on this browser");
-                    return;
+                // Build Google Translate TTS URL
+                // The API has a ~200 char limit, so we split long text
+                var text = a.arabic;
+                var maxLen = 180;
+                var chunks = [];
+                while (text.length > maxLen) {
+                    var cut = text.lastIndexOf(' ', maxLen);
+                    if (cut < 50) cut = maxLen;
+                    chunks.push(text.substring(0, cut));
+                    text = text.substring(cut).trim();
                 }
+                chunks.push(text);
 
-                // Get voices (cached or fresh)
-                var voices = _cachedVoices.length ? _cachedVoices : window.speechSynthesis.getVoices();
+                // Create audio element
+                _audioEl = new Audio();
+                _audioEl.volume = 1.0;
 
-                // If no voices yet, wait for them
-                if (!voices.length) {
-                    btn.classList.add("playing");
-                    currentAudioBtn = btn;
-                    var waitAttempts = 0;
-                    var waitTimer = setInterval(function () {
-                        waitAttempts++;
-                        _cachedVoices = window.speechSynthesis.getVoices();
-                        if (_cachedVoices.length || waitAttempts > 20) {
-                            clearInterval(waitTimer);
-                            if (_cachedVoices.length) {
-                                speakArabic(a, btn);
-                            } else {
-                                btn.classList.remove("playing");
-                                currentAudioBtn = null;
-                                toast("Voice not available — try Chrome or Edge");
-                            }
+                btn.classList.add("playing");
+                currentAudioBtn = btn;
+
+                // For single chunk, just play it
+                if (chunks.length === 1) {
+                    _audioEl.src = "/api/tts?text=" + encodeURIComponent(chunks[0]);
+                    _audioEl.play().catch(function(e) {
+                        console.warn("Audio play failed:", e);
+                        btn.classList.remove("playing");
+                        currentAudioBtn = null;
+                        toast("Tap again to play audio");
+                    });
+                } else {
+                    // For multiple chunks, play sequentially
+                    var chunkIndex = 0;
+                    function playChunk() {
+                        if (chunkIndex >= chunks.length) {
+                            btn.classList.remove("playing");
+                            currentAudioBtn = null;
+                            return;
                         }
-                    }, 200);
-                    return;
-                }
-
-                // Create utterance
-                var u = new SpeechSynthesisUtterance(a.arabic);
-                u.lang = "ar-SA";
-                u.rate = 0.8;
-                u.pitch = 1;
-                u.volume = 1;
-
-                var arVoice = getBestMaleArabicVoice(voices);
-                if (arVoice) {
-                    u.voice = arVoice;
-                    u.lang = arVoice.lang;
-                }
-
-                // Keep reference alive (prevents GC)
-                currentUtter = u;
-
-                u.onstart = function () {
-                    btn.classList.add("playing");
-                    currentAudioBtn = btn;
-
-                    // Chrome bug workaround: speech stops after ~15s
-                    // pause/resume every 10s keeps it alive
-                    if (_chromeKeepAlive) clearInterval(_chromeKeepAlive);
-                    _chromeKeepAlive = setInterval(function () {
-                        if (window.speechSynthesis.speaking) {
-                            window.speechSynthesis.pause();
-                            window.speechSynthesis.resume();
-                        } else {
-                            clearInterval(_chromeKeepAlive);
-                            _chromeKeepAlive = null;
-                        }
-                    }, 10000);
-                };
-
-                u.onend = function () {
-                    if (_chromeKeepAlive) {
-                        clearInterval(_chromeKeepAlive);
-                        _chromeKeepAlive = null;
+                        _audioEl.src = "/api/tts?text=" + encodeURIComponent(chunks[chunkIndex]);
+                        _audioEl.play().catch(function(e) {
+                            console.warn("Chunk play failed:", e);
+                            btn.classList.remove("playing");
+                            currentAudioBtn = null;
+                        });
+                        chunkIndex++;
                     }
+                    _audioEl.addEventListener('ended', playChunk);
+                    playChunk();
+                }
+
+                _audioEl.addEventListener('ended', function() {
+                    // Only remove if not playing chunks (chunk handler manages its own)
+                    if (chunks.length === 1) {
+                        btn.classList.remove("playing");
+                        currentAudioBtn = null;
+                    }
+                });
+
+                _audioEl.addEventListener('error', function() {
                     btn.classList.remove("playing");
                     currentAudioBtn = null;
-                    currentUtter = null;
-                };
-
-                u.onerror = function (e) {
-                    if (_chromeKeepAlive) {
-                        clearInterval(_chromeKeepAlive);
-                        _chromeKeepAlive = null;
+                    // Fallback to browser TTS if server proxy fails
+                    // (e.g. when using Live Server without server.js)
+                    if ("speechSynthesis" in window) {
+                        var voices = window.speechSynthesis.getVoices();
+                        var arVoice = voices.find(function(v) {
+                            return v.lang && v.lang.toLowerCase().startsWith("ar");
+                        });
+                        var u = new SpeechSynthesisUtterance(a.arabic);
+                        u.lang = "ar-SA";
+                        u.rate = 0.8;
+                        if (arVoice) {
+                            u.voice = arVoice;
+                            u.lang = arVoice.lang;
+                        }
+                        u.onstart = function() {
+                            btn.classList.add("playing");
+                            currentAudioBtn = btn;
+                        };
+                        u.onend = function() {
+                            btn.classList.remove("playing");
+                            currentAudioBtn = null;
+                        };
+                        window.speechSynthesis.speak(u);
+                    } else {
+                        toast("Audio requires running via: node server.js");
                     }
-                    btn.classList.remove("playing");
-                    currentAudioBtn = null;
-                    currentUtter = null;
-                    console.warn("Speech error:", e);
-                };
-
-                // DO NOT call cancel() here — it kills the utterance
-                // Just speak directly
-                window.speechSynthesis.speak(u);
-
-                // Fallback: if onstart doesn't fire within 2s, show playing state
-                // (some browsers don't fire onstart reliably)
-                setTimeout(function () {
-                    if (currentUtter === u && !btn.classList.contains("playing")) {
-                        btn.classList.add("playing");
-                        currentAudioBtn = btn;
-                    }
-                }, 2000);
+                });
             }
 
             /* ============================================================

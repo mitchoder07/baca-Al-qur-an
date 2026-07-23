@@ -123,6 +123,41 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // ============================================================
+// TTS PROXY — fetches Arabic audio from Google Translate TTS
+// (browsers can't call translate.google.com directly due to CORS)
+// ============================================================
+
+app.get('/api/tts', async (req, res) => {
+    try {
+        const { text } = req.query;
+        if (!text) {
+            return res.status(400).send('Missing text parameter');
+        }
+
+        const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ar&client=tw-ob`;
+
+        const response = await fetch(ttsUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
+
+        if (!response.ok) {
+            console.error('TTS API error:', response.status);
+            return res.status(502).send('TTS service unavailable');
+        }
+
+        const audioBuffer = await response.arrayBuffer();
+        res.set('Content-Type', 'audio/mpeg');
+        res.set('Cache-Control', 'public, max-age=86400');
+        return res.send(Buffer.from(audioBuffer));
+    } catch (error) {
+        console.error('TTS proxy error:', error);
+        return res.status(500).send('TTS failed');
+    }
+});
+
+// ============================================================
 // START SERVER
 // ============================================================
 
