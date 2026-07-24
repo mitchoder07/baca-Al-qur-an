@@ -2834,7 +2834,45 @@ body.light-mode .bookmark-actions button {
   }
 
   .surah-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .surah-card {
+    padding: 0.8rem;
+    border-radius: 16px;
+  }
+
+  .surah-number {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .surah-card h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .surah-arabic-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .surah-meaning {
+    font-size: 0.78rem;
+  }
+
+  .surah-meta {
+    font-size: 0.68rem;
+    gap: 0.4rem;
+  }
+
+  .surah-meta span {
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
   }
 
   .bismillah-header {

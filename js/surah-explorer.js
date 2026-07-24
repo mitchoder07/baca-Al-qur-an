@@ -13,52 +13,52 @@ function showToast(msg) {
 // ELEMENT REFS
 // ============================================================
 
-const grid            = document.getElementById("surah-grid");
-const searchInput     = document.getElementById("surah-search");
-const readerModal     = document.querySelector(".reader-modal");
-const readerClose     = document.querySelector(".reader-close");
-const surahModal      = document.querySelector(".surah-modal");
-const modalClose      = document.querySelector(".surah-modal-close");
-const readBtn         = document.getElementById("read-surah-btn");
-const modeBoth        = document.getElementById("mode-both");
-const modeArabic      = document.getElementById("mode-arabic");
+const grid = document.getElementById("surah-grid");
+const searchInput = document.getElementById("surah-search");
+const readerModal = document.querySelector(".reader-modal");
+const readerClose = document.querySelector(".reader-close");
+const surahModal = document.querySelector(".surah-modal");
+const modalClose = document.querySelector(".surah-modal-close");
+const readBtn = document.getElementById("read-surah-btn");
+const modeBoth = document.getElementById("mode-both");
+const modeArabic = document.getElementById("mode-arabic");
 const modeTranslation = document.getElementById("mode-translation");
-const audioPlayer     = document.getElementById("surah-audio");
-const playButton      = document.getElementById("audio-play-bton");
-const progressBar2    = document.getElementById("audio-progress2");
-const currentTimeEl2  = document.getElementById("current-time2");
-const durationTimeEl  = document.getElementById("duration-time");
-const miniPlay        = document.getElementById("mini-play");
-const miniNext        = document.getElementById("mini-next");
-const miniPrev        = document.getElementById("mini-prev");
-const floatingPlayer  = document.getElementById("floating-player");
-const floatingSurah   = document.getElementById("floating-surah");
-const floatingAyah    = document.getElementById("floating-ayah");
-const ayahPlayer      = document.getElementById("ayah-player");
-const quranAudio      = document.getElementById("quran-audio");
+const audioPlayer = document.getElementById("surah-audio");
+const playButton = document.getElementById("audio-play-bton");
+const progressBar2 = document.getElementById("audio-progress2");
+const currentTimeEl2 = document.getElementById("current-time2");
+const durationTimeEl = document.getElementById("duration-time");
+const miniPlay = document.getElementById("mini-play");
+const miniNext = document.getElementById("mini-next");
+const miniPrev = document.getElementById("mini-prev");
+const floatingPlayer = document.getElementById("floating-player");
+const floatingSurah = document.getElementById("floating-surah");
+const floatingAyah = document.getElementById("floating-ayah");
+const ayahPlayer = document.getElementById("ayah-player");
+const quranAudio = document.getElementById("quran-audio");
 
 // ============================================================
 // STATE
 // ============================================================
 
-let allSurahs           = [];
-let activeFilter        = "all";
-let selectedSurah       = null;
-let readerMode          = "both";
-let arabicFontSize      = 3;
+let allSurahs = [];
+let activeFilter = "all";
+let selectedSurah = null;
+let readerMode = "both";
+let arabicFontSize = 3;
 let translationFontSize = 1.05;
-let currentReciter      = 7;
-let reciterOptions      = [];
-let activePlayButton    = null;
-let currentAyahPlaying  = 1;
-let totalAyahsInSurah   = 0;
-let activeAudioMode     = "surah";
-let repeatMode          = "off";
-let siteTheme           = "dark";
-let readerThemeKey      = localStorage.getItem("readerTheme") || "dark";
-let dailyAyahData       = null;
+let currentReciter = 7;
+let reciterOptions = [];
+let activePlayButton = null;
+let currentAyahPlaying = 1;
+let totalAyahsInSurah = 0;
+let activeAudioMode = "surah";
+let repeatMode = "off";
+let siteTheme = "dark";
+let readerThemeKey = localStorage.getItem("readerTheme") || "dark";
+let dailyAyahData = null;
 
-window._juzSurahMap  = {};
+window._juzSurahMap = {};
 window._hizbSurahMap = {};
 
 // ============================================================
@@ -124,7 +124,7 @@ function formatTime(sec) {
 
 function showFloatingPlayer(surahName, ayahLabel) {
     floatingSurah.textContent = surahName;
-    floatingAyah.textContent  = ayahLabel;
+    floatingAyah.textContent = ayahLabel;
     floatingPlayer.classList.add("active");
 }
 
@@ -170,7 +170,7 @@ function syncReciterSelection(reciterId, { updateSelects = true, updateBadge = t
 
 async function getReciterChapterAudioUrl(surahNumber, reciterId = currentReciter) {
     try {
-        const res  = await fetch(`https://api.quran.com/api/v4/chapter_recitations/${reciterId}`);
+        const res = await fetch(`https://api.quran.com/api/v4/chapter_recitations/${reciterId}`);
         const data = await res.json();
         const file = (data.audio_files || []).find(f => Number(f.chapter_id) === Number(surahNumber));
         return file?.audio_url || null;
@@ -183,40 +183,40 @@ async function getReciterChapterAudioUrl(surahNumber, reciterId = currentReciter
 // For individual ayah playback via quran.com
 async function getAyahAudioUrl(surahNumber, ayahInSurah, reciterId = currentReciter) {
     try {
-        const res  = await fetch(`https://api.quran.com/api/v4/recitations/${reciterId}/by_ayah?chapter_number=${surahNumber}&verse_number=${ayahInSurah}`);
+        const res = await fetch(`https://api.quran.com/api/v4/recitations/${reciterId}/by_ayah?chapter_number=${surahNumber}&verse_number=${ayahInSurah}`);
         const data = await res.json();
-        const url  = data.audio_files?.[0]?.url;
+        const url = data.audio_files?.[0]?.url;
         if (url) return url.startsWith("http") ? url : `https://verses.quran.com/${url}`;
     } catch (err) {
         console.warn("Ayah audio fetch failed, using fallback:", err);
     }
     // Fallback: alquran.cloud CDN using global ayah number
     const globalNum = toGlobalAyahNumber(surahNumber, ayahInSurah);
-    const legacyId  = getLegacyReciterCode(reciterId);
+    const legacyId = getLegacyReciterCode(reciterId);
     return `https://cdn.islamic.network/quran/audio/128/${legacyId}/${globalNum}.mp3`;
 }
 
 function getLegacyReciterCode(reciterId) {
     const id = String(reciterId ?? 7);
     const map = {
-        "2":   "ar.abdulsamad",
-        "1":   "ar.abdulsamad",
-        "3":   "ar.abdurrahmaansudais",
-        "4":   "ar.shaatree",
-        "5":   "ar.hanirifai",
-        "6":   "ar.husary",
-        "7":   "ar.alafasy",
-        "8":   "ar.minshawi",
-        "9":   "ar.minshawimujawwad",
-        "10":  "ar.saoodshuraym",
-        "11":  "ar.alafasy",
-        "12":  "ar.husary",
-        "13":  "ar.mahermuaiqly",
-        "14":  "ar.hudhaify",
-        "15":  "ar.ahmedajamy",
-        "16":  "ar.muhammadjibreel",
-        "17":  "ar.muhammadayyoub",
-        "18":  "ar.abdulsamad",
+        "2": "ar.abdulsamad",
+        "1": "ar.abdulsamad",
+        "3": "ar.abdurrahmaansudais",
+        "4": "ar.shaatree",
+        "5": "ar.hanirifai",
+        "6": "ar.husary",
+        "7": "ar.alafasy",
+        "8": "ar.minshawi",
+        "9": "ar.minshawimujawwad",
+        "10": "ar.saoodshuraym",
+        "11": "ar.alafasy",
+        "12": "ar.husary",
+        "13": "ar.mahermuaiqly",
+        "14": "ar.hudhaify",
+        "15": "ar.ahmedajamy",
+        "16": "ar.muhammadjibreel",
+        "17": "ar.muhammadayyoub",
+        "18": "ar.abdulsamad",
         "158": "ar.alafasy",   // Ali Jabir fallback
     };
     return map[id] || "ar.alafasy";
@@ -236,25 +236,25 @@ function toGlobalAyahNumber(surahNum, ayahInSurah) {
 // ============================================================
 
 const FALLBACK_RECITERS = [
-    { id: 2,   reciter_name: "AbdulBaset AbdulSamad (Murattal)",    translated_name: { name: "Abdul Basit Abdul Samad (Murattal)" } },
-    { id: 1,   reciter_name: "AbdulBaset AbdulSamad (Mujawwad)",    translated_name: { name: "Abdul Basit Abdul Samad (Mujawwad)" } },
-    { id: 3,   reciter_name: "Abdur-Rahman as-Sudais",              translated_name: { name: "Abdur-Rahman As-Sudais" } },
-    { id: 4,   reciter_name: "Abu Bakr al-Shatri",                  translated_name: { name: "Abu Bakr Ash-Shaatree" } },
-    { id: 5,   reciter_name: "Hani ar-Rifai",                       translated_name: { name: "Hani Ar-Rifai" } },
-    { id: 6,   reciter_name: "Mahmoud Khalil Al-Husary (Murattal)", translated_name: { name: "Mahmoud Khalil Al-Husary (Murattal)" } },
-    { id: 7,   reciter_name: "Mishari Rashid al-Afasy",             translated_name: { name: "Mishary Rashid Al-Afasy" } },
-    { id: 8,   reciter_name: "Mohamed Siddiq al-Minshawi (Murattal)",translated_name: { name: "Muhammad Siddiq Al-Minshawi (Murattal)" } },
-    { id: 9,   reciter_name: "Mohamed Siddiq al-Minshawi (Mujawwad)",translated_name: { name: "Muhammad Siddiq Al-Minshawi (Mujawwad)" } },
-    { id: 10,  reciter_name: "Saud ash-Shuraym",                    translated_name: { name: "Saud Al-Shuraim" } },
-    { id: 11,  reciter_name: "Mohamed al-Tablawi",                  translated_name: { name: "Mohamed Al-Tablawi" } },
-    { id: 12,  reciter_name: "Mahmoud Khalil Al-Husary (Mujawwad)", translated_name: { name: "Mahmoud Khalil Al-Husary (Mujawwad)" } },
-    { id: 13,  reciter_name: "Maher Al Muaiqly",                    translated_name: { name: "Maher Al-Muaiqly" } },
-    { id: 14,  reciter_name: "Ali Al-Hudhaify",                     translated_name: { name: "Ali Al-Hudhaify" } },
-    { id: 15,  reciter_name: "Ahmed Al-Ajamy",                      translated_name: { name: "Ahmed Al-Ajamy" } },
-    { id: 16,  reciter_name: "Muhammad Jibreel",                    translated_name: { name: "Muhammad Jibreel" } },
-    { id: 17,  reciter_name: "Muhammad Ayyoub",                     translated_name: { name: "Muhammad Ayyoub" } },
-    { id: 18,  reciter_name: "Abdullah Basfar",                     translated_name: { name: "Abdullah Basfar" } },
-    { id: 158, reciter_name: "Abdullah Ali Jabir",                  translated_name: { name: "Abdullah Ali Jabir" } },
+    { id: 2, reciter_name: "AbdulBaset AbdulSamad (Murattal)", translated_name: { name: "Abdul Basit Abdul Samad (Murattal)" } },
+    { id: 1, reciter_name: "AbdulBaset AbdulSamad (Mujawwad)", translated_name: { name: "Abdul Basit Abdul Samad (Mujawwad)" } },
+    { id: 3, reciter_name: "Abdur-Rahman as-Sudais", translated_name: { name: "Abdur-Rahman As-Sudais" } },
+    { id: 4, reciter_name: "Abu Bakr al-Shatri", translated_name: { name: "Abu Bakr Ash-Shaatree" } },
+    { id: 5, reciter_name: "Hani ar-Rifai", translated_name: { name: "Hani Ar-Rifai" } },
+    { id: 6, reciter_name: "Mahmoud Khalil Al-Husary (Murattal)", translated_name: { name: "Mahmoud Khalil Al-Husary (Murattal)" } },
+    { id: 7, reciter_name: "Mishari Rashid al-Afasy", translated_name: { name: "Mishary Rashid Al-Afasy" } },
+    { id: 8, reciter_name: "Mohamed Siddiq al-Minshawi (Murattal)", translated_name: { name: "Muhammad Siddiq Al-Minshawi (Murattal)" } },
+    { id: 9, reciter_name: "Mohamed Siddiq al-Minshawi (Mujawwad)", translated_name: { name: "Muhammad Siddiq Al-Minshawi (Mujawwad)" } },
+    { id: 10, reciter_name: "Saud ash-Shuraym", translated_name: { name: "Saud Al-Shuraim" } },
+    { id: 11, reciter_name: "Mohamed al-Tablawi", translated_name: { name: "Mohamed Al-Tablawi" } },
+    { id: 12, reciter_name: "Mahmoud Khalil Al-Husary (Mujawwad)", translated_name: { name: "Mahmoud Khalil Al-Husary (Mujawwad)" } },
+    { id: 13, reciter_name: "Maher Al Muaiqly", translated_name: { name: "Maher Al-Muaiqly" } },
+    { id: 14, reciter_name: "Ali Al-Hudhaify", translated_name: { name: "Ali Al-Hudhaify" } },
+    { id: 15, reciter_name: "Ahmed Al-Ajamy", translated_name: { name: "Ahmed Al-Ajamy" } },
+    { id: 16, reciter_name: "Muhammad Jibreel", translated_name: { name: "Muhammad Jibreel" } },
+    { id: 17, reciter_name: "Muhammad Ayyoub", translated_name: { name: "Muhammad Ayyoub" } },
+    { id: 18, reciter_name: "Abdullah Basfar", translated_name: { name: "Abdullah Basfar" } },
+    { id: 158, reciter_name: "Abdullah Ali Jabir", translated_name: { name: "Abdullah Ali Jabir" } },
 ];
 
 async function populateReciterSelects() {
@@ -265,7 +265,7 @@ async function populateReciterSelects() {
     if (!selects.length) return;
 
     try {
-        const res  = await fetch("https://api.quran.com/api/v4/resources/recitations");
+        const res = await fetch("https://api.quran.com/api/v4/resources/recitations");
         const data = await res.json();
         const apiList = Array.isArray(data.recitations) ? data.recitations : [];
         // Merge: keep API list and ensure Ali Jabir (158) is present.
@@ -289,9 +289,9 @@ async function populateReciterSelects() {
     if (preferredId === 159) {
         localStorage.removeItem("favoriteReciter");
     }
-    const selected    = reciterOptions.find(r => Number(r.id) === preferredId)
-                     || reciterOptions.find(r => Number(r.id) === 7)
-                     || reciterOptions[0];
+    const selected = reciterOptions.find(r => Number(r.id) === preferredId)
+        || reciterOptions.find(r => Number(r.id) === 7)
+        || reciterOptions[0];
     if (selected) currentReciter = Number(selected.id);
 
     const optionsHtml = reciterOptions.map(r => {
@@ -301,7 +301,7 @@ async function populateReciterSelects() {
 
     selects.forEach(sel => {
         sel.innerHTML = optionsHtml;
-        sel.value     = String(currentReciter);
+        sel.value = String(currentReciter);
     });
 
     const badge = document.getElementById("current-reciter-badge");
@@ -336,25 +336,25 @@ function applyReaderTheme(key) {
     if (!readerThemes[key]) key = "dark";
     readerThemeKey = key;
     localStorage.setItem("readerTheme", key);
-    const t      = readerThemes[key];
+    const t = readerThemes[key];
     const reader = document.querySelector(".reader-content");
     if (!reader) return;
 
     reader.dataset.theme = key;
     reader.style.background = t.bg;
-    reader.style.color      = t.text;
+    reader.style.color = t.text;
 
     const props = {
-        "--reader-accent":       t.accent,
-        "--reader-accent-rgb":   t.accentRgb,
-        "--reader-text":         t.text,
-        "--reader-subtext":      t.subtext,
-        "--reader-arabic":       t.arabic,
-        "--reader-card-bg":      t.card,
-        "--reader-card-border":  t.cardBorder,
-        "--reader-header-border":t.cardBorder,
-        "--reader-tool-bg":      t.toolBg,
-        "--reader-drawer-bg":    t.drawerBg,
+        "--reader-accent": t.accent,
+        "--reader-accent-rgb": t.accentRgb,
+        "--reader-text": t.text,
+        "--reader-subtext": t.subtext,
+        "--reader-arabic": t.arabic,
+        "--reader-card-bg": t.card,
+        "--reader-card-border": t.cardBorder,
+        "--reader-header-border": t.cardBorder,
+        "--reader-tool-bg": t.toolBg,
+        "--reader-drawer-bg": t.drawerBg,
     };
     Object.entries(props).forEach(([k, v]) => reader.style.setProperty(k, v));
 
@@ -363,7 +363,7 @@ function applyReaderTheme(key) {
 
     const panel = document.getElementById("reader-theme-panel");
     if (panel) {
-        panel.style.background  = t.panel.bg;
+        panel.style.background = t.panel.bg;
         panel.style.borderColor = t.panel.border;
         panel.querySelectorAll(".theme-panel-label,.swatch-label").forEach(el => el.style.color = t.panel.label);
     }
@@ -372,17 +372,17 @@ function applyReaderTheme(key) {
         el.style.background = t.numBg; el.style.color = t.numColor; el.style.boxShadow = "none";
     });
 
-    const isLight   = key === "light";
-    const closeBtn  = document.querySelector(".reader-close");
+    const isLight = key === "light";
+    const closeBtn = document.querySelector(".reader-close");
     if (closeBtn) {
         closeBtn.style.background = isLight ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.06)";
-        closeBtn.style.color      = isLight ? "#0f172a" : "#fff";
+        closeBtn.style.color = isLight ? "#0f172a" : "#fff";
     }
 
     const miniSettingsBtn = document.getElementById("mini-settings-btn");
     if (miniSettingsBtn) {
         miniSettingsBtn.style.background = isLight ? "#e2e8f0" : "#1e293b";
-        miniSettingsBtn.style.color      = isLight ? "#0f172a" : "#fff";
+        miniSettingsBtn.style.color = isLight ? "#0f172a" : "#fff";
     }
 
     document.querySelectorAll(".theme-swatch").forEach(s => s.classList.toggle("active", s.dataset.theme === key));
@@ -394,7 +394,7 @@ function applyReaderTheme(key) {
 // ============================================================
 
 function initReaderThemePanel() {
-    const btn   = document.getElementById("reader-theme-btn");
+    const btn = document.getElementById("reader-theme-btn");
     const panel = document.getElementById("reader-theme-panel");
     if (!btn || !panel) return;
 
@@ -413,7 +413,7 @@ function initReaderThemePanel() {
 // ============================================================
 
 function initMiniSettingsDrawer() {
-    const btn    = document.getElementById("mini-settings-btn");
+    const btn = document.getElementById("mini-settings-btn");
     const drawer = document.getElementById("mini-settings-drawer");
     if (!btn || !drawer) return;
 
@@ -485,7 +485,7 @@ function initAnimatedPlaceholder() {
 
 function initFilterBar() {
     const filterBtn = document.getElementById("explorer-filter-btn");
-    const dropdown  = document.getElementById("filter-dropdown");
+    const dropdown = document.getElementById("filter-dropdown");
     if (!filterBtn || !dropdown) return;
 
     filterBtn.addEventListener("click", e => {
@@ -531,7 +531,7 @@ function compareAyahRef(a, b) { return a.surah !== b.surah ? a.surah - b.surah :
 
 function surahOverlapsRange(surahNum, ayahCount, rangeStart, rangeEnd) {
     const sStart = { surah: surahNum, ayah: 1 };
-    const sEnd   = { surah: surahNum, ayah: ayahCount };
+    const sEnd = { surah: surahNum, ayah: ayahCount };
     return compareAyahRef(sEnd, rangeStart) >= 0 && compareAyahRef(sStart, rangeEnd) < 0;
 }
 
@@ -544,17 +544,17 @@ function buildSurahSetForRange(rangeStart, rangeEnd, surahList) {
 }
 
 async function loadJuzData() {
-    const juzCon  = document.getElementById("juz-pills");
+    const juzCon = document.getElementById("juz-pills");
     const hizbCon = document.getElementById("hizb-pills");
-    if (juzCon)  juzCon.innerHTML  = `<span class="filter-loading">Loading…</span>`;
+    if (juzCon) juzCon.innerHTML = `<span class="filter-loading">Loading…</span>`;
     if (hizbCon) hizbCon.innerHTML = `<span class="filter-loading">Loading…</span>`;
 
     try {
-        const res  = await fetch("https://api.alquran.cloud/v1/meta");
-        const d    = (await res.json()).data;
+        const res = await fetch("https://api.alquran.cloud/v1/meta");
+        const d = (await res.json()).data;
         const surahList = allSurahs.length ? allSurahs : (d.surahs?.references || []);
 
-        const juzRefs  = d.juzs?.references || [];
+        const juzRefs = d.juzs?.references || [];
         const hizbRefs = d.hizbQuarters?.references || [];
 
         window._juzSurahMap = {};
@@ -565,19 +565,19 @@ async function loadJuzData() {
 
         window._hizbSurahMap = {};
         for (let h = 1; h <= 60; h++) {
-            const qIdx  = (h - 1) * 4;
+            const qIdx = (h - 1) * 4;
             const start = hizbRefs[qIdx];
-            const end   = hizbRefs[qIdx + 4] || { surah: 114, ayah: Number.MAX_SAFE_INTEGER };
+            const end = hizbRefs[qIdx + 4] || { surah: 114, ayah: Number.MAX_SAFE_INTEGER };
             if (start) window._hizbSurahMap[h] = buildSurahSetForRange(start, end, surahList);
         }
 
-        if (juzCon)  juzCon.innerHTML  = Array.from({length:30},(_,i)=>i+1).map(n=>`<button type="button" class="fpill" data-filter="juz-${n}">Juz ${n}</button>`).join("");
-        if (hizbCon) hizbCon.innerHTML = Array.from({length:60},(_,i)=>i+1).map(n=>`<button type="button" class="fpill" data-filter="hizb-${n}">Hizb ${n}</button>`).join("");
+        if (juzCon) juzCon.innerHTML = Array.from({ length: 30 }, (_, i) => i + 1).map(n => `<button type="button" class="fpill" data-filter="juz-${n}">Juz ${n}</button>`).join("");
+        if (hizbCon) hizbCon.innerHTML = Array.from({ length: 60 }, (_, i) => i + 1).map(n => `<button type="button" class="fpill" data-filter="hizb-${n}">Hizb ${n}</button>`).join("");
 
     } catch (err) {
         console.error("Failed to load juz/hizb:", err);
         const errHtml = `<span class="filter-error">Could not load — try refreshing</span>`;
-        if (juzCon)  juzCon.innerHTML  = errHtml;
+        if (juzCon) juzCon.innerHTML = errHtml;
         if (hizbCon) hizbCon.innerHTML = errHtml;
     }
 }
@@ -588,8 +588,8 @@ async function loadJuzData() {
 
 function getFilteredSurahs() {
     const val = searchInput.value.trim().toLowerCase();
-    let base  = allSurahs;
-    if (activeFilter === "makkah")       base = allSurahs.filter(s => s.revelationType === "Meccan");
+    let base = allSurahs;
+    if (activeFilter === "makkah") base = allSurahs.filter(s => s.revelationType === "Meccan");
     else if (activeFilter === "madinah") base = allSurahs.filter(s => s.revelationType === "Medinan");
     else if (activeFilter.startsWith("juz-")) {
         const n = Number(activeFilter.split("-")[1]);
@@ -601,7 +601,7 @@ function getFilteredSurahs() {
     if (!val) return base;
     return base.filter(s =>
         s.englishName.toLowerCase().includes(val) ||
-        s.name.toLowerCase().includes(val)         ||
+        s.name.toLowerCase().includes(val) ||
         String(s.number) === val
     );
 }
@@ -612,23 +612,23 @@ searchInput.addEventListener("input", () => renderSurahs(getFilteredSurahs()));
 // BOOKMARKS
 // ============================================================
 
-function getBookmarks()      { try { return JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch { return []; } }
+function getBookmarks() { try { return JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch { return []; } }
 function saveBookmarks(list) { localStorage.setItem("bookmarks", JSON.stringify(list)); }
 function isBookmarked(surah, ayah) { return getBookmarks().some(b => b.surah === surah && b.ayah === ayah); }
 function escapeHtml(s) {
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function toggleBookmark(entry) {
     let list = getBookmarks();
     const idx = list.findIndex(b => b.surah === entry.surah && b.ayah === entry.ayah);
     if (idx >= 0) { list.splice(idx, 1); showToast("Bookmark removed"); }
-    else          { list.unshift({ ...entry, savedAt: Date.now() }); showToast("Verse bookmarked ✓"); }
+    else { list.unshift({ ...entry, savedAt: Date.now() }); showToast("Verse bookmarked ✓"); }
     saveBookmarks(list); renderBookmarks(); refreshBookmarkButtonStates();
 }
 
 function renderBookmarks() {
-    const listEl  = document.getElementById("bookmarks-list");
+    const listEl = document.getElementById("bookmarks-list");
     const countEl = document.getElementById("bookmarks-count");
     if (!listEl) return;
     const bks = getBookmarks();
@@ -642,7 +642,7 @@ function renderBookmarks() {
             <div class="bookmark-card-main">
                 <div class="bookmark-card-meta">
                     <span class="bookmark-tag">${escapeHtml(b.surahName)} · Ayah ${b.ayah}</span>
-                    <span class="bookmark-date">${new Date(b.savedAt).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</span>
+                    <span class="bookmark-date">${new Date(b.savedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span>
                 </div>
                 <div class="bookmark-arabic">${escapeHtml(b.arabic)}</div>
                 <div class="bookmark-translation">${escapeHtml(b.translation)}</div>
@@ -661,7 +661,7 @@ function renderBookmarks() {
     });
     document.querySelectorAll(".remove-bookmark").forEach(btn => {
         btn.addEventListener("click", () => {
-            saveBookmarks(getBookmarks().filter(b => !(b.surah===Number(btn.dataset.surah)&&b.ayah===Number(btn.dataset.ayah))));
+            saveBookmarks(getBookmarks().filter(b => !(b.surah === Number(btn.dataset.surah) && b.ayah === Number(btn.dataset.ayah))));
             renderBookmarks(); refreshBookmarkButtonStates(); showToast("Bookmark removed");
         });
     });
@@ -672,14 +672,14 @@ function refreshBookmarkButtonStates() {
         const saved = isBookmarked(Number(btn.dataset.surah), Number(btn.dataset.ayah));
         btn.classList.toggle("bookmarked", saved);
         btn.innerHTML = saved ? `<i data-lucide="bookmark-check"></i>` : `<i data-lucide="bookmark"></i>`;
-        btn.title     = saved ? "Remove bookmark" : "Bookmark verse";
+        btn.title = saved ? "Remove bookmark" : "Bookmark verse";
     });
     const dailyBtn = document.getElementById("daily-bookmark-btn");
     if (dailyBtn && dailyAyahData) {
         const saved = isBookmarked(dailyAyahData.surah, dailyAyahData.ayah);
         dailyBtn.classList.toggle("bookmarked", saved);
         dailyBtn.innerHTML = saved ? `<i data-lucide="bookmark-check"></i>` : `<i data-lucide="bookmark"></i>`;
-        dailyBtn.title     = saved ? "Remove bookmark" : "Bookmark this ayah";
+        dailyBtn.title = saved ? "Remove bookmark" : "Bookmark this ayah";
     }
     lucide.createIcons();
 }
@@ -701,22 +701,22 @@ function initBookmarks() {
 
 async function loadDailyAyah() {
     try {
-        const now    = new Date();
-        const seed   = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+        const now = new Date();
+        const seed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
         const ayahNum = (seed % 6236) + 1;  // global 1-6236
 
-        const ayahRes  = await fetch(`https://api.alquran.cloud/v1/ayah/${ayahNum}/editions/quran-uthmani,en.sahih`);
+        const ayahRes = await fetch(`https://api.alquran.cloud/v1/ayah/${ayahNum}/editions/quran-uthmani,en.sahih`);
         const ayahData = await ayahRes.json();
         const a0 = ayahData.data[0], a1 = ayahData.data[1];
 
         const arabicEl = document.querySelector(".ayah-arabic");
-        const transEl  = document.querySelector(".ayah-translation");
+        const transEl = document.querySelector(".ayah-translation");
         if (arabicEl) arabicEl.textContent = a0.text;
-        if (transEl)  transEl.textContent  = a1.text;
+        if (transEl) transEl.textContent = a1.text;
 
-        const infoH3   = document.querySelector(".audio-info h3");
+        const infoH3 = document.querySelector(".audio-info h3");
         const infoSpan = document.querySelector(".audio-info span");
-        if (infoH3)   infoH3.textContent   = a0.surah.englishName;
+        if (infoH3) infoH3.textContent = a0.surah.englishName;
         if (infoSpan) infoSpan.textContent = `Verse ${a0.numberInSurah}`;
 
         dailyAyahData = {
@@ -729,7 +729,7 @@ async function loadDailyAyah() {
         // Load just the specific ayah's audio (NOT the full surah)
         if (quranAudio) {
             const audioUrl = await getAyahAudioUrl(a0.surah.number, a0.numberInSurah, currentReciter);
-            quranAudio.src    = audioUrl;
+            quranAudio.src = audioUrl;
             quranAudio.volume = 0.8;
             quranAudio.load();
         }
@@ -742,17 +742,17 @@ async function loadDailyAyah() {
 }
 
 function wireHomepageAudioPlayer() {
-    const playBtn      = document.getElementById("play-btn");
-    const progressEl   = document.getElementById("audio-progress");
+    const playBtn = document.getElementById("play-btn");
+    const progressEl = document.getElementById("audio-progress");
     const progressFill = progressEl?.querySelector(".audio-progress-fill");
-    const currentTimeEl= document.getElementById("current-time");
-    const durationEl   = document.getElementById("duration");
-    const muteBtn      = document.getElementById("mute-btn");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+    const muteBtn = document.getElementById("mute-btn");
     const volumeSlider = document.getElementById("volume-slider");
-    const speedBton    = document.getElementById("speed-bton");
-    const skipBack     = document.getElementById("skip-back-btn");
-    const skipFwd      = document.getElementById("skip-forward-btn");
-    const reciterSel   = document.getElementById("reciter-select");
+    const speedBton = document.getElementById("speed-bton");
+    const skipBack = document.getElementById("skip-back-btn");
+    const skipFwd = document.getElementById("skip-forward-btn");
+    const reciterSel = document.getElementById("reciter-select");
     if (!quranAudio || !playBtn) return;
 
     let homeSpeed = 1;
@@ -761,7 +761,7 @@ function wireHomepageAudioPlayer() {
         if (!dailyAyahData) return;
         const url = await getAyahAudioUrl(dailyAyahData.surah, dailyAyahData.ayah, reciterId);
         const wasPlaying = !quranAudio.paused;
-        quranAudio.src    = url;
+        quranAudio.src = url;
         quranAudio.volume = 0.8;
         quranAudio.load();
         if (wasPlaying) {
@@ -771,7 +771,7 @@ function wireHomepageAudioPlayer() {
 
     playBtn.onclick = () => {
         if (quranAudio.paused) { quranAudio.play(); playBtn.innerHTML = `<i data-lucide="pause"></i>`; }
-        else                   { quranAudio.pause(); playBtn.innerHTML = `<i data-lucide="play"></i>`;  }
+        else { quranAudio.pause(); playBtn.innerHTML = `<i data-lucide="play"></i>`; }
         lucide.createIcons();
     };
 
@@ -780,7 +780,7 @@ function wireHomepageAudioPlayer() {
         const pct = (quranAudio.currentTime / quranAudio.duration) * 100;
         if (progressFill) progressFill.style.width = pct + "%";
         if (currentTimeEl) currentTimeEl.textContent = formatTime(quranAudio.currentTime);
-        if (durationEl)    durationEl.textContent    = formatTime(quranAudio.duration);
+        if (durationEl) durationEl.textContent = formatTime(quranAudio.duration);
     });
 
     progressEl?.addEventListener("click", e => {
@@ -799,11 +799,11 @@ function wireHomepageAudioPlayer() {
     if (speedBton) speedBton.onclick = () => {
         homeSpeed = homeSpeed >= 2 ? 1 : homeSpeed + 0.25;
         quranAudio.playbackRate = homeSpeed;
-        speedBton.textContent   = `${homeSpeed}x`;
+        speedBton.textContent = `${homeSpeed}x`;
     };
 
     if (skipBack) skipBack.onclick = () => { quranAudio.currentTime = Math.max(0, quranAudio.currentTime - 10); };
-    if (skipFwd)  skipFwd.onclick  = () => { quranAudio.currentTime = Math.min(quranAudio.duration || 0, quranAudio.currentTime + 10); };
+    if (skipFwd) skipFwd.onclick = () => { quranAudio.currentTime = Math.min(quranAudio.duration || 0, quranAudio.currentTime + 10); };
 
     // Homepage reciter change — reloads the daily ayah's audio for the new reciter
     if (reciterSel) {
@@ -829,9 +829,9 @@ function initRepeatButton() {
     const btn = document.getElementById("repeat-btn");
     if (!btn) return;
     btn.addEventListener("click", () => {
-        if      (repeatMode === "off")   { repeatMode = "surah"; btn.innerHTML = `<i data-lucide="repeat-1"></i> Surah`; showToast("Repeat: Surah"); }
+        if (repeatMode === "off") { repeatMode = "surah"; btn.innerHTML = `<i data-lucide="repeat-1"></i> Surah`; showToast("Repeat: Surah"); }
         else if (repeatMode === "surah") { repeatMode = "quran"; btn.innerHTML = `<i data-lucide="repeat"></i> Qur'an`; showToast("Repeat: Qur'an"); }
-        else                             { repeatMode = "off";   btn.innerHTML = `<i data-lucide="repeat"></i> Off`;    showToast("Repeat: off"); }
+        else { repeatMode = "off"; btn.innerHTML = `<i data-lucide="repeat"></i> Off`; showToast("Repeat: off"); }
         lucide.createIcons();
     });
 }
@@ -859,14 +859,14 @@ function updateReaderModeUI() {
         el.style.display = readerMode === "arabic" ? "none" : "block";
     });
     document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
-    if (readerMode === "both")        modeBoth.classList.add("active");
-    if (readerMode === "arabic")      modeArabic.classList.add("active");
+    if (readerMode === "both") modeBoth.classList.add("active");
+    if (readerMode === "arabic") modeArabic.classList.add("active");
     if (readerMode === "translation") modeTranslation.classList.add("active");
     document.querySelectorAll(".mini-mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === readerMode));
 }
 
-modeBoth.addEventListener("click",        () => { readerMode = "both";        updateReaderModeUI(); });
-modeArabic.addEventListener("click",      () => { readerMode = "arabic";      updateReaderModeUI(); });
+modeBoth.addEventListener("click", () => { readerMode = "both"; updateReaderModeUI(); });
+modeArabic.addEventListener("click", () => { readerMode = "arabic"; updateReaderModeUI(); });
 modeTranslation.addEventListener("click", () => { readerMode = "translation"; updateReaderModeUI(); });
 
 // ============================================================
@@ -878,9 +878,9 @@ function applyFontSizes() {
     document.querySelectorAll(".verse-translation").forEach(el => el.style.fontSize = translationFontSize + "rem");
 }
 
-document.getElementById("font-increase").addEventListener("click", () => { arabicFontSize+=0.2; translationFontSize+=0.05; applyFontSizes(); });
-document.getElementById("font-decrease").addEventListener("click", () => { arabicFontSize-=0.2; translationFontSize-=0.05; applyFontSizes(); });
-document.getElementById("font-reset").addEventListener("click",    () => { arabicFontSize=3;    translationFontSize=1.05;  applyFontSizes(); });
+document.getElementById("font-increase").addEventListener("click", () => { arabicFontSize += 0.2; translationFontSize += 0.05; applyFontSizes(); });
+document.getElementById("font-decrease").addEventListener("click", () => { arabicFontSize -= 0.2; translationFontSize -= 0.05; applyFontSizes(); });
+document.getElementById("font-reset").addEventListener("click", () => { arabicFontSize = 3; translationFontSize = 1.05; applyFontSizes(); });
 
 // ============================================================
 // CONTINUE READING
@@ -890,12 +890,12 @@ function updateContinueReading() {
     const saved = JSON.parse(localStorage.getItem("lastRead"));
     if (!saved) return;
     document.getElementById("continue-surah").textContent = saved.surahName;
-    document.getElementById("continue-ayah").textContent  = `Ayah ${saved.ayah} of ${saved.totalAyahs}`;
-    document.getElementById("continue-meta").textContent  = `${saved.totalAyahs - saved.ayah} Ayahs Remaining`;
+    document.getElementById("continue-ayah").textContent = `Ayah ${saved.ayah} of ${saved.totalAyahs}`;
+    document.getElementById("continue-meta").textContent = `${saved.totalAyahs - saved.ayah} Ayahs Remaining`;
     const pct = saved.totalAyahs ? Math.round((saved.ayah / saved.totalAyahs) * 100) : 0;
-    document.getElementById("reading-status").textContent    = pct >= 100 ? "Completed" : "In Progress";
+    document.getElementById("reading-status").textContent = pct >= 100 ? "Completed" : "In Progress";
     document.getElementById("continue-progress").textContent = `${pct}% Completed`;
-    document.querySelector(".progress-fill").style.width     = pct + "%";
+    document.querySelector(".progress-fill").style.width = pct + "%";
 }
 
 document.getElementById("resume-reading-btn").addEventListener("click", () => {
@@ -949,7 +949,7 @@ playButton.addEventListener("click", () => {
 });
 
 audioPlayer.addEventListener("timeupdate", () => {
-    progressBar2.max   = audioPlayer.duration || 0;
+    progressBar2.max = audioPlayer.duration || 0;
     progressBar2.value = audioPlayer.currentTime;
     currentTimeEl2.textContent = formatTime(audioPlayer.currentTime);
     durationTimeEl.textContent = formatTime(audioPlayer.duration);
@@ -974,7 +974,7 @@ audioPlayer.addEventListener("ended", () => {
     } else { syncMiniPlayIcon(false); }
 });
 
-const speedBtn   = document.getElementById("speed-btn");
+const speedBtn = document.getElementById("speed-btn");
 let playbackRate = 1;
 speedBtn?.addEventListener("click", () => {
     playbackRate = playbackRate >= 2 ? 1 : playbackRate + 0.25;
@@ -982,7 +982,7 @@ speedBtn?.addEventListener("click", () => {
 });
 
 document.getElementById("next-surah-audio")?.addEventListener("click", () => { if (selectedSurah < 114) { selectedSurah++; readBtn.click(); } });
-document.getElementById("prev-surah-audio")?.addEventListener("click", () => { if (selectedSurah > 1)   { selectedSurah--; readBtn.click(); } });
+document.getElementById("prev-surah-audio")?.addEventListener("click", () => { if (selectedSurah > 1) { selectedSurah--; readBtn.click(); } });
 
 // ============================================================
 // LOAD SURAHS
@@ -990,9 +990,9 @@ document.getElementById("prev-surah-audio")?.addEventListener("click", () => { i
 
 async function loadSurahs() {
     try {
-        const res  = await fetch("https://api.alquran.cloud/v1/surah");
+        const res = await fetch("https://api.alquran.cloud/v1/surah");
         const data = await res.json();
-        allSurahs  = data.data;
+        allSurahs = data.data;
         renderSurahs(allSurahs);
         await loadJuzData();
     } catch (err) { console.error("Failed to load Surahs:", err); }
@@ -1010,7 +1010,7 @@ function renderSurahs(data) {
         html += `
         <div class="surah-card" data-number="${surah.number}" data-name="${surah.englishName}"
             data-arabic="${surah.name}" data-ayahs="${surah.numberOfAyahs}" data-type="${surah.revelationType}">
-            <button class="favorite-btn ${isFav?"active":""}" data-id="${surah.number}">★</button>
+            <button class="favorite-btn ${isFav ? "active" : ""}" data-id="${surah.number}">★</button>
             <div class="surah-number">${surah.number}</div>
             <h3>${surah.englishName}</h3>
             <div class="surah-english">${surah.name}</div>
@@ -1039,10 +1039,10 @@ function activateCards() {
         card.addEventListener("click", () => {
             selectedSurah = Number(card.dataset.number);
             document.getElementById("modal-surah-number").textContent = card.dataset.number;
-            document.getElementById("modal-surah-name").textContent   = card.dataset.name;
+            document.getElementById("modal-surah-name").textContent = card.dataset.name;
             document.getElementById("modal-surah-arabic").textContent = card.dataset.arabic;
-            document.getElementById("modal-surah-ayahs").textContent  = card.dataset.ayahs + " Ayahs";
-            document.getElementById("modal-surah-type").textContent   = card.dataset.type;
+            document.getElementById("modal-surah-ayahs").textContent = card.dataset.ayahs + " Ayahs";
+            document.getElementById("modal-surah-type").textContent = card.dataset.type;
             surahModal.classList.add("active"); lucide.createIcons();
         });
     });
@@ -1071,16 +1071,16 @@ function cleanAyah(text, surahNumber, ayahNumber) {
 readBtn.addEventListener("click", async () => {
     if (!selectedSurah) return;
     try {
-        const res  = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah}/editions/quran-uthmani,en.sahih`);
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah}/editions/quran-uthmani,en.sahih`);
         const data = await res.json();
-        const arabicAyahs  = data.data[0].ayahs;
+        const arabicAyahs = data.data[0].ayahs;
         const englishAyahs = data.data[1].ayahs;
-        totalAyahsInSurah  = arabicAyahs.length;
+        totalAyahsInSurah = arabicAyahs.length;
 
-        document.getElementById("reader-title").textContent       = data.data[0].englishName;
+        document.getElementById("reader-title").textContent = data.data[0].englishName;
         document.getElementById("reader-arabic-name").textContent = data.data[0].name;
-        document.getElementById("reader-meaning").textContent     = data.data[0].englishNameTranslation;
-        document.getElementById("reader-meta").textContent        = `${arabicAyahs.length} Ayahs • ${data.data[0].revelationType}`;
+        document.getElementById("reader-meaning").textContent = data.data[0].englishNameTranslation;
+        document.getElementById("reader-meta").textContent = `${arabicAyahs.length} Ayahs • ${data.data[0].revelationType}`;
 
         const bism = document.getElementById("bismillah-container");
         bism.innerHTML = (selectedSurah !== 1 && selectedSurah !== 9)
@@ -1155,13 +1155,13 @@ document.querySelector(".reader-overlay").addEventListener("click", closeReader)
 // SETTINGS / AUDIO DRAWER
 // ============================================================
 
-const settingsBtn    = document.getElementById("reader-settings-btn");
-const audioBtn       = document.getElementById("reader-audio-btn");
+const settingsBtn = document.getElementById("reader-settings-btn");
+const audioBtn = document.getElementById("reader-audio-btn");
 const settingsDrawer = document.getElementById("settings-drawer");
-const audioDrawer    = document.getElementById("audio-drawer");
+const audioDrawer = document.getElementById("audio-drawer");
 
 settingsBtn.addEventListener("click", () => { audioDrawer.classList.remove("active"); settingsDrawer.classList.toggle("active"); });
-audioBtn.addEventListener("click",    () => { settingsDrawer.classList.remove("active"); audioDrawer.classList.toggle("active"); });
+audioBtn.addEventListener("click", () => { settingsDrawer.classList.remove("active"); audioDrawer.classList.toggle("active"); });
 
 // ============================================================
 // FAVOURITE RECITER
@@ -1187,9 +1187,9 @@ document.addEventListener("change", async e => {
     try {
         if (activeAudioMode === "ayah" && activePlayButton) {
             const surah = Number(activePlayButton.dataset.surah);
-            const ayah  = Number(activePlayButton.dataset.ayah);
+            const ayah = Number(activePlayButton.dataset.ayah);
             const wasPlaying = !ayahPlayer.paused;
-            const url   = await getAyahAudioUrl(surah, ayah, currentReciter);
+            const url = await getAyahAudioUrl(surah, ayah, currentReciter);
             ayahPlayer.src = url;
             ayahPlayer.load();
             if (wasPlaying) ayahPlayer.play();
@@ -1226,14 +1226,14 @@ document.addEventListener("click", async e => {
     }
 
     const surah = Number(playBtn.dataset.surah);
-    const ayah  = Number(playBtn.dataset.ayah);
+    const ayah = Number(playBtn.dataset.ayah);
 
     try {
-        const url      = await getAyahAudioUrl(surah, ayah, currentReciter);
+        const url = await getAyahAudioUrl(surah, ayah, currentReciter);
         ayahPlayer.src = url;
         await ayahPlayer.play();
 
-        activePlayButton   = playBtn;
+        activePlayButton = playBtn;
         currentAyahPlaying = ayah;
 
         playBtn.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons();
@@ -1268,7 +1268,7 @@ miniPlay.addEventListener("click", () => {
         if (activeAudioMode === "surah") { playButton.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons(); }
     } else {
         audio.pause(); syncMiniPlayIcon(false);
-        if (activeAudioMode === "surah") { playButton.innerHTML = `<i data-lucide="play"></i>`;  lucide.createIcons(); }
+        if (activeAudioMode === "surah") { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
     }
 });
 
@@ -1302,11 +1302,11 @@ miniPrev.addEventListener("click", () => {
 
 document.addEventListener("click", e => {
     const btn = e.target.closest(".bookmark-btn"); if (!btn) return;
-    const card = btn.closest(".verse-card");        if (!card) return;
+    const card = btn.closest(".verse-card"); if (!card) return;
     toggleBookmark({
         surah: Number(btn.dataset.surah), ayah: Number(btn.dataset.ayah),
-        surahName:   document.getElementById("reader-title")?.textContent || "Surah",
-        arabic:      card.querySelector(".verse-arabic")?.innerText || "",
+        surahName: document.getElementById("reader-title")?.textContent || "Surah",
+        arabic: card.querySelector(".verse-arabic")?.innerText || "",
         translation: card.querySelector(".verse-translation")?.innerText || "",
     });
 });
@@ -1318,8 +1318,8 @@ document.addEventListener("click", e => {
 document.addEventListener("click", async e => {
     const btn = e.target.closest(".copy-btn"); if (!btn) return;
     const card = btn.closest(".verse-card");
-    const text = `${card.querySelector(".verse-arabic")?.innerText||""}\n\n${card.querySelector(".verse-translation")?.innerText||""}`;
-    try { await navigator.clipboard.writeText(text); btn.classList.add("copied"); showToast("Verse copied ✓"); setTimeout(()=>btn.classList.remove("copied"),800); }
+    const text = `${card.querySelector(".verse-arabic")?.innerText || ""}\n\n${card.querySelector(".verse-translation")?.innerText || ""}`;
+    try { await navigator.clipboard.writeText(text); btn.classList.add("copied"); showToast("Verse copied ✓"); setTimeout(() => btn.classList.remove("copied"), 800); }
     catch { showToast("Copy failed"); }
 });
 
@@ -1330,10 +1330,10 @@ document.addEventListener("click", async e => {
 document.addEventListener("click", async e => {
     const btn = e.target.closest(".share-btn"); if (!btn) return;
     const card = btn.closest(".verse-card");
-    const text = `${card.querySelector(".verse-arabic")?.innerText||""}\n\n${card.querySelector(".verse-translation")?.innerText||""}`;
+    const text = `${card.querySelector(".verse-arabic")?.innerText || ""}\n\n${card.querySelector(".verse-translation")?.innerText || ""}`;
     try {
-        if (navigator.share) { await navigator.share({ title:"Qur'an Verse", text }); showToast("Shared ✓"); }
-        else                  { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
+        if (navigator.share) { await navigator.share({ title: "Qur'an Verse", text }); showToast("Shared ✓"); }
+        else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
     } catch { showToast("Share cancelled"); }
 });
 

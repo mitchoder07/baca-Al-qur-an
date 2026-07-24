@@ -1,7 +1,7 @@
 /* ============================================================
    BACA — server.js
    Serves static files + provides AI chat API
-   Uses Groq (free, fast, OpenAI-compatible, no quota issues)
+   Uses Groq
    ============================================================ */
 
 const express = require('express');
