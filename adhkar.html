@@ -2245,49 +2245,43 @@
                 // Stop any current audio
                 stopSpeaking();
 
-                // Build Google Translate TTS URL
-                // The API has a ~200 char limit, so we split long text
-                var text = a.arabic;
-                var maxLen = 180;
-                var chunks = [];
-                while (text.length > maxLen) {
-                    var cut = text.lastIndexOf(' ', maxLen);
-                    if (cut < 50) cut = maxLen;
-                    chunks.push(text.substring(0, cut));
-                    text = text.substring(cut).trim();
+                // Build direct Google TTS URL (max ~200 chars, so split if needed)
+                const text = a.arabic;
+                const MAX_CHUNK = 180;
+                const chunks = [];
+                let remaining = text;
+                while (remaining.length > MAX_CHUNK) {
+                    let cut = remaining.lastIndexOf(' ', MAX_CHUNK);
+                    if (cut < 50) cut = MAX_CHUNK;
+                    chunks.push(remaining.substring(0, cut));
+                    remaining = remaining.substring(cut).trim();
                 }
-                chunks.push(text);
+                chunks.push(remaining);
 
                 // Create audio element
                 _audioEl = new Audio();
                 _audioEl.volume = 1.0;
-
                 btn.classList.add("playing");
                 currentAudioBtn = btn;
 
-                // For single chunk, just play it
                 if (chunks.length === 1) {
-                    _audioEl.src = "/api/tts?text=" + encodeURIComponent(chunks[0]);
-                    _audioEl.play().catch(function(e) {
-                        console.warn("Audio play failed:", e);
-                        btn.classList.remove("playing");
-                        currentAudioBtn = null;
-                        toast("Tap again to play audio");
+                    _audioEl.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(chunks[0])}&tl=ar`;
+                    _audioEl.play().catch(() => {
+                        // Direct TTS failed, try browser speechSynthesis
+                        fallbackToSpeechSynthesis(a, btn);
                     });
                 } else {
-                    // For multiple chunks, play sequentially
-                    var chunkIndex = 0;
+                    let chunkIndex = 0;
                     function playChunk() {
                         if (chunkIndex >= chunks.length) {
                             btn.classList.remove("playing");
                             currentAudioBtn = null;
                             return;
                         }
-                        _audioEl.src = "/api/tts?text=" + encodeURIComponent(chunks[chunkIndex]);
-                        _audioEl.play().catch(function(e) {
-                            console.warn("Chunk play failed:", e);
-                            btn.classList.remove("playing");
-                            currentAudioBtn = null;
+                        _audioEl.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(chunks[chunkIndex])}&tl=ar`;
+                        _audioEl.play().catch(() => {
+                            // If any chunk fails, switch entirely to browser TTS
+                            fallbackToSpeechSynthesis(a, btn);
                         });
                         chunkIndex++;
                     }
@@ -2295,46 +2289,54 @@
                     playChunk();
                 }
 
-                _audioEl.addEventListener('ended', function() {
-                    // Only remove if not playing chunks (chunk handler manages its own)
-                    if (chunks.length === 1) {
-                        btn.classList.remove("playing");
-                        currentAudioBtn = null;
-                    }
-                });
-
-                _audioEl.addEventListener('error', function() {
-                    btn.classList.remove("playing");
-                    currentAudioBtn = null;
-                    // Fallback to browser TTS if server proxy fails
-                    // (e.g. when using Live Server without server.js)
-                    if ("speechSynthesis" in window) {
-                        var voices = window.speechSynthesis.getVoices();
-                        var arVoice = voices.find(function(v) {
-                            return v.lang && v.lang.toLowerCase().startsWith("ar");
-                        });
-                        var u = new SpeechSynthesisUtterance(a.arabic);
-                        u.lang = "ar-SA";
-                        u.rate = 0.8;
-                        if (arVoice) {
-                            u.voice = arVoice;
-                            u.lang = arVoice.lang;
-                        }
-                        u.onstart = function() {
-                            btn.classList.add("playing");
-                            currentAudioBtn = btn;
-                        };
-                        u.onend = function() {
-                            btn.classList.remove("playing");
-                            currentAudioBtn = null;
-                        };
-                        window.speechSynthesis.speak(u);
-                    } else {
-                        toast("Audio requires running via: node server.js");
-                    }
+                _audioEl.addEventListener('error', () => {
+                    // Final safety net
+                    fallbackToSpeechSynthesis(a, btn);
                 });
             }
 
+            // Fallback function – tries to use Web Speech API with Arabic voice
+            function fallbackToSpeechSynthesis(a, btn) {
+                btn.classList.remove("playing");
+                currentAudioBtn = null;
+                if (!window.speechSynthesis) {
+                    toast("Audio not available. Please use a modern browser.");
+                    return;
+                }
+
+                // Ensure voices are loaded (some browsers need this)
+                const speakWithVoices = () => {
+                    const voices = speechSynthesis.getVoices();
+                    const arVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ar'));
+                    const utter = new SpeechSynthesisUtterance(a.arabic);
+                    utter.lang = arVoice ? arVoice.lang : 'ar-SA';
+                    utter.rate = 0.8;
+                    if (arVoice) utter.voice = arVoice;
+
+                    utter.onstart = () => {
+                        btn.classList.add("playing");
+                        currentAudioBtn = btn;
+                    };
+                    utter.onend = () => {
+                        btn.classList.remove("playing");
+                        currentAudioBtn = null;
+                    };
+                    utter.onerror = () => {
+                        btn.classList.remove("playing");
+                        currentAudioBtn = null;
+                        toast("No Arabic voice found. Try installing an Arabic TTS voice in your OS settings.");
+                    };
+                    speechSynthesis.speak(utter);
+                };
+
+                if (speechSynthesis.getVoices().length) {
+                    speakWithVoices();
+                } else {
+                    speechSynthesis.onvoiceschanged = () => {
+                        speakWithVoices();
+                    };
+                }
+            }
             /* ============================================================
                THEME TOGGLE
                ============================================================ */
