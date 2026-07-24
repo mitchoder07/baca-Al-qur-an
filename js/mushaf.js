@@ -118,42 +118,49 @@ const TRANSLATIONS = [
 // Tajweed rules mapping for alquran.cloud's quran-tajweed edition.
 // Format:  [letter[text]  |  [letter:number[text]  |  :number[text]
 //
-// CORRECTED mapping — verified by analyzing actual API data patterns
-// and cross-referencing with quran.com's tajweed implementation:
+// This maps each single-letter identifier to its rule, taken directly from
+// the identifier table used by the "quran-tajweed" edition's own reference
+// parser (islamic-network/alquran-tools, Tajweed.php — the library the
+// alquran.cloud edition was built to be parsed by):
 //
-//   n = Madd (superscript alef ـٰ prolongation) → MAD
-//   m = Madd (alef madd لٓ)                     → MAD
-//   o = Madd Wajib Muttasil (combined ـٰٓ)      → MAD
-//   p = Qalqalah (echo on ق ب ج د ط with sukun) → QALQALAH
-//   q = Qalqalah Sughra                         → QALQALAH
-//   g = Ghunnah (meem/nun with shaddah مّ نّ)   → GHUNNAH
-//   f = Ikhfa (nun sakinah hidden before 15 letters) → IKHFA
-//   c = Ikhfa Shafawi (meem sakinah before ba)  → IKHFA
-//   i = Ikhfa Shafawi (meem sakinah before ba)  → IKHFA
-//   w = Idgham Shafawi (meem sakinah before meem) → IDGHAM
-//   a = Idgham with Ghunnah (nun/tanwin before ي و م ن) → IDGHAM
-//   u = Idgham without Ghunnah (nun/tanwin before ل ر) → IDGHAM
-//   s = Sukun (silent, no color)                → null
-//   l = Lam Shamsiyyah (silent, no color)       → null
-//   h = Hamzat Wasl (connecting, no color)      → null
+//   h = Hamzat ul Wasl                                    → no color
+//   s = Silent                                            → no color
+//   l = Lam Shamsiyyah                                     → no color
+//   n = Madda Normal:      2 vowels                        → MADD
+//   p = Madda Permissible: 2, 4, 6 vowels                   → MADD
+//   m = Madda Necessary:   6 vowels                         → MADD
+//   o = Madda Obligatory:  4-5 vowels                       → MADD
+//   q = Qalaqah (echo on ق ط ب ج د with sukun)              → QALQALAH
+//   f = Ikhafa (nun sakinah hidden before 15 letters)       → IKHFA
+//   c = Ikhafa Shafawi (meem sakinah before ba)             → IKHFA
+//   w = Idgham Shafawi (meem sakinah before meem)           → IDGHAM
+//   a = Idgham with Ghunnah (nun/tanwin before ي و م ن)     → IDGHAM
+//   u = Idgham without Ghunnah (nun/tanwin before ل ر)      → IDGHAM
+//   d = Idgham Mutajanisayn                                 → IDGHAM
+//   b = Idgham Mutaqaribayn                                 → IDGHAM
+//   i = Iqlab (nun/tanwin before ب, becomes a meem sound)   → IQLAB
+//   g = Ghunnah (meem/nun with shaddah مّ نّ)                → GHUNNAH
 const TAJWEED_RULES = {
     // Madd (prolongation) — purple
     "n": "taj-madd",
     "m": "taj-madd",
     "o": "taj-madd",
+    "p": "taj-madd",
     // Qalqalah (echo) — red
-    "p": "taj-qalqalah",
     "q": "taj-qalqalah",
     // Ghunnah (nasalization) — orange
     "g": "taj-ghunnah",
     // Ikhfa (hiding) — gray
     "f": "taj-ikhfa",
     "c": "taj-ikhfa",
-    "i": "taj-ikhfa",
     // Idgham (merging) — yellow
     "w": "taj-idgham",
     "a": "taj-idgham",
     "u": "taj-idgham",
+    "d": "taj-idgham",
+    "b": "taj-idgham",
+    // Iqlab (nun/tanwin converted to meem before ب) — its own rule, blue
+    "i": "taj-iqlab",
     // No color (silent letters)
     "s": null,
     "l": null,
@@ -909,13 +916,18 @@ function init() {
     // Sync body chrome (navbar, toolbar, drawers) with siteTheme from index.html
     syncWithSiteTheme();
 
-    // Apply tajweed state
-    if (!state.tajweedOn) {
-        el.readArea.classList.add("tajweed-off");
-        el.tajweedIndicator.textContent = "Off";
-        el.tajweedIndicator.classList.remove("active");
-        el.tajweedTool.classList.remove("active");
-    }
+    // Apply tajweed state — sync every piece of UI that reflects it
+    // (toolbar button + indicator, and the settings drawer's On/Off
+    // segmented control) to the actual state.tajweedOn value. Previously
+    // this only handled the "off" case, so the drawer's On/Off buttons
+    // kept whatever classes were hardcoded in the HTML regardless of the
+    // real state — showing "On" as selected while nothing was colored.
+    el.readArea.classList.toggle("tajweed-off", !state.tajweedOn);
+    el.tajweedIndicator.textContent = state.tajweedOn ? "On" : "Off";
+    el.tajweedIndicator.classList.toggle("active", state.tajweedOn);
+    el.tajweedTool.classList.toggle("active", state.tajweedOn);
+    document.getElementById("tajweed-on")?.classList.toggle("active", state.tajweedOn);
+    document.getElementById("tajweed-off")?.classList.toggle("active", !state.tajweedOn);
 
     // Apply display mode (set active button)
 
