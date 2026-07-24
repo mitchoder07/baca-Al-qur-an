@@ -1165,6 +1165,13 @@ body.light-mode .nav-search-input {
     height: 14px;
 }
 
+.tajweed-guide-item .sign-icon {
+    margin-top: 2px;
+    min-width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
 .tajweed-guide-item div {
     flex: 1;
 }
