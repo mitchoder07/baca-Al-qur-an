@@ -1,10 +1,8 @@
 /* ============================================================
    BACA — Floating AI Chat Widget
-   Inject this into any page to add a floating chat button
    ============================================================ */
 
 (function () {
-    // Don't inject on ask.html (it has its own full chat)!!
     if (window.location.pathname.includes('ask.html')) return;
 
     // Create styles
@@ -49,6 +47,7 @@
             max-width: calc(100vw - 48px);
             height: 500px;
             max-height: calc(100vh - 140px);
+            max-height: calc(100dvh - 140px);
             background: #0f172a;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
@@ -213,7 +212,10 @@
             .baca-chat-panel {
                 width: calc(100vw - 32px);
                 right: 16px;
-                height: calc(100vh - 120px);
+                bottom: 80px;
+                height: 450px;
+                max-height: calc(100dvh - 110px);
+                border-radius: 16px;
             }
             .baca-chat-fab { bottom: 16px; right: 16px; }
         }

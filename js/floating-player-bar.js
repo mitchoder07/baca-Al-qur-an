@@ -1,5 +1,5 @@
 /* ============================================================
-   BACA — floating-player-bar.js  (v2 — professional redesign)
+   BACA — floating-player-bar.js
    A compact floating audio player with full controls.
    ============================================================ */
 
@@ -11,64 +11,64 @@
 
     // ── Audio servers (mp3quran.net) ──
     var SERVERS = {
-        'mishari':    'https://server8.mp3quran.net/afs/',
-        'sudais':     'https://server11.mp3quran.net/sds/',
+        'mishari': 'https://server8.mp3quran.net/afs/',
+        'sudais': 'https://server11.mp3quran.net/sds/',
         'abdulbasit': 'https://server7.mp3quran.net/basit/',
-        'husary':     'https://server13.mp3quran.net/husr/',
-        'minshawi':   'https://server10.mp3quran.net/minsh/',
-        'shaatree':   'https://server11.mp3quran.net/shatri/',
-        'muaiqly':    'https://server12.mp3quran.net/maher/',
-        'shuraym':    'https://server7.mp3quran.net/shur/',
-        'hudhaify':   'https://server8.mp3quran.net/bna/',
-        'ajamy':      'https://server10.mp3quran.net/ajm/',
-        'jibreel':    'https://server8.mp3quran.net/jbrl/',
-        'ayyoub':     'https://server16.mp3quran.net/ayyoub2/',
-        'ghamdi':     'https://server7.mp3quran.net/s_gmd/',
-        'basfar':     'https://server6.mp3quran.net/bsfr/',
-        'matroud':    'https://server8.mp3quran.net/mtrod/',
-        'rifai':      'https://server8.mp3quran.net/hani/',
-        'tablawi':    'https://server12.mp3quran.net/tblawi/',
-        'okasha':     'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
+        'husary': 'https://server13.mp3quran.net/husr/',
+        'minshawi': 'https://server10.mp3quran.net/minsh/',
+        'shaatree': 'https://server11.mp3quran.net/shatri/',
+        'muaiqly': 'https://server12.mp3quran.net/maher/',
+        'shuraym': 'https://server7.mp3quran.net/shur/',
+        'hudhaify': 'https://server8.mp3quran.net/bna/',
+        'ajamy': 'https://server10.mp3quran.net/ajm/',
+        'jibreel': 'https://server8.mp3quran.net/jbrl/',
+        'ayyoub': 'https://server16.mp3quran.net/ayyoub2/',
+        'ghamdi': 'https://server7.mp3quran.net/s_gmd/',
+        'basfar': 'https://server6.mp3quran.net/bsfr/',
+        'matroud': 'https://server8.mp3quran.net/mtrod/',
+        'rifai': 'https://server8.mp3quran.net/hani/',
+        'tablawi': 'https://server12.mp3quran.net/tblawi/',
+        'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
         'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
         'mansour_salmi': 'https://server14.mp3quran.net/mansor/',
-        'ali_jaber':  'https://server8.mp3quran.net/jbrl/',
+        'ali_jaber': 'https://server8.mp3quran.net/jbrl/',
         'abdulbasit_mj': 'https://server7.mp3quran.net/basit/',
         'husary_muj': 'https://server13.mp3quran.net/husr/',
-        'juhaynee':   'https://server8.mp3quran.net/afs/',
-        'johany':     'https://server8.mp3quran.net/afs/',
-        'qasim':      'https://server8.mp3quran.net/afs/',
-        'neana':      'https://server8.mp3quran.net/afs/',
+        'juhaynee': 'https://server8.mp3quran.net/afs/',
+        'johany': 'https://server8.mp3quran.net/afs/',
+        'qasim': 'https://server8.mp3quran.net/afs/',
+        'neana': 'https://server8.mp3quran.net/afs/',
         'ayman_swed': 'https://server8.mp3quran.net/afs/'
     };
 
     // ── Surah names (compact) ──
     var SURAH_NAMES = [
-        'Al-Fatihah','Al-Baqarah','Ali Imran','An-Nisa','Al-Maidah','Al-Anam','Al-Araf','Al-Anfal','At-Tawbah','Yunus',
-        'Hud','Yusuf','Ar-Rad','Ibrahim','Al-Hijr','An-Nahl','Al-Isra','Al-Kahf','Maryam','Ta-Ha',
-        'Al-Anbiya','Al-Hajj','Al-Muminun','An-Nur','Al-Furqan','Ash-Shuara','An-Naml','Al-Qasas','Al-Ankabut','Ar-Rum',
-        'Luqman','As-Sajdah','Al-Ahzab','Saba','Fatir','Ya-Sin','As-Saffat','Sad','Az-Zumar','Ghafir',
-        'Fussilat','Ash-Shuraa','Az-Zukhruf','Ad-Dukhan','Al-Jathiyah','Al-Ahqaf','Muhammad','Al-Fath','Al-Hujurat','Qaf',
-        'Adh-Dhariyat','At-Tur','An-Najm','Al-Qamar','Ar-Rahman','Al-Waqiah','Al-Hadid','Al-Mujadila','Al-Hashr','Al-Mumtahanah',
-        'As-Saf','Al-Jumuah','Al-Munafiqun','At-Taghabun','At-Talaq','At-Tahrim','Al-Mulk','Al-Qalam','Al-Haqqah','Al-Maarj',
-        'Nuh','Al-Jinn','Al-Muzzammil','Al-Muddaththir','Al-Qiyamah','Al-Insan','Al-Mursalat','An-Naba','An-Nazi-at','Abasa',
-        'At-Takwir','Al-Infitar','Al-Mutaffifin','Al-Inshiqaq','Al-Buruj','At-Tariq','Al-Ala','Al-Ghashiyah','Al-Fajr','Al-Balad',
-        'Ash-Shams','Al-Layl','Ad-Duha','Ash-Sharh','At-Tin','Al-Alaq','Al-Qadr','Al-Bayyinah','Az-Zalzalah','Al-Adiyat',
-        'Al-Qariah','At-Takathur','Al-Asr','Al-Humazah','Al-Fil','Quraysh','Al-Maun','Al-Kawthar','Al-Kafirun','An-Nasr',
-        'Al-Masad','Al-Ikhlas','Al-Falaq','An-Nas'
+        'Al-Fatihah', 'Al-Baqarah', 'Ali Imran', 'An-Nisa', 'Al-Maidah', 'Al-Anam', 'Al-Araf', 'Al-Anfal', 'At-Tawbah', 'Yunus',
+        'Hud', 'Yusuf', 'Ar-Rad', 'Ibrahim', 'Al-Hijr', 'An-Nahl', 'Al-Isra', 'Al-Kahf', 'Maryam', 'Ta-Ha',
+        'Al-Anbiya', 'Al-Hajj', 'Al-Muminun', 'An-Nur', 'Al-Furqan', 'Ash-Shuara', 'An-Naml', 'Al-Qasas', 'Al-Ankabut', 'Ar-Rum',
+        'Luqman', 'As-Sajdah', 'Al-Ahzab', 'Saba', 'Fatir', 'Ya-Sin', 'As-Saffat', 'Sad', 'Az-Zumar', 'Ghafir',
+        'Fussilat', 'Ash-Shuraa', 'Az-Zukhruf', 'Ad-Dukhan', 'Al-Jathiyah', 'Al-Ahqaf', 'Muhammad', 'Al-Fath', 'Al-Hujurat', 'Qaf',
+        'Adh-Dhariyat', 'At-Tur', 'An-Najm', 'Al-Qamar', 'Ar-Rahman', 'Al-Waqiah', 'Al-Hadid', 'Al-Mujadila', 'Al-Hashr', 'Al-Mumtahanah',
+        'As-Saf', 'Al-Jumuah', 'Al-Munafiqun', 'At-Taghabun', 'At-Talaq', 'At-Tahrim', 'Al-Mulk', 'Al-Qalam', 'Al-Haqqah', 'Al-Maarj',
+        'Nuh', 'Al-Jinn', 'Al-Muzzammil', 'Al-Muddaththir', 'Al-Qiyamah', 'Al-Insan', 'Al-Mursalat', 'An-Naba', 'An-Nazi-at', 'Abasa',
+        'At-Takwir', 'Al-Infitar', 'Al-Mutaffifin', 'Al-Inshiqaq', 'Al-Buruj', 'At-Tariq', 'Al-Ala', 'Al-Ghashiyah', 'Al-Fajr', 'Al-Balad',
+        'Ash-Shams', 'Al-Layl', 'Ad-Duha', 'Ash-Sharh', 'At-Tin', 'Al-Alaq', 'Al-Qadr', 'Al-Bayyinah', 'Az-Zalzalah', 'Al-Adiyat',
+        'Al-Qariah', 'At-Takathur', 'Al-Asr', 'Al-Humazah', 'Al-Fil', 'Quraysh', 'Al-Maun', 'Al-Kawthar', 'Al-Kafirun', 'An-Nasr',
+        'Al-Masad', 'Al-Ikhlas', 'Al-Falaq', 'An-Nas'
     ];
 
     // ── SVG Icons ──
     var ICONS = {
-        play:  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+        play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
         pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
-        prev:  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>',
-        next:  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>',
-        back10:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4l-8 8 8 8v-4"/><text x="14" y="17" font-size="9" fill="currentColor" stroke="none" font-weight="bold">10</text></svg>',
+        prev: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>',
+        next: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>',
+        back10: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4l-8 8 8 8v-4"/><text x="14" y="17" font-size="9" fill="currentColor" stroke="none" font-weight="bold">10</text></svg>',
         fwd10: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4l8 8-8 8v-4"/><text x="3" y="17" font-size="9" fill="currentColor" stroke="none" font-weight="bold">10</text></svg>',
         close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-        repeatOff:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>',
-        repeatOne:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><text x="12" y="15" font-size="7" fill="currentColor" stroke="none" font-weight="bold" text-anchor="middle">1</text></svg>',
-        repeatAll:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>'
+        repeatOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>',
+        repeatOne: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><text x="12" y="15" font-size="7" fill="currentColor" stroke="none" font-weight="bold" text-anchor="middle">1</text></svg>',
+        repeatAll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>'
     };
 
     // ── Helper functions ──
@@ -137,7 +137,7 @@
                                 document.body.classList.add('baca-fb-active');
                             }
                         }
-                    } catch (e) {}
+                    } catch (e) { }
                 }
             }
         });
@@ -167,7 +167,7 @@
                     isPlaying: !audio.paused && !audio.ended,
                     savedAt: Date.now()
                 }));
-            } catch (e) {}
+            } catch (e) { }
         }
 
         setInterval(saveState, SAVE_INTERVAL_MS);
@@ -175,7 +175,7 @@
         audio.addEventListener('pause', saveState);
         audio.addEventListener('loadedmetadata', saveState);
         audio.addEventListener('ended', function () {
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
         });
         window.addEventListener('beforeunload', saveState);
     }
@@ -188,12 +188,12 @@
         try {
             var raw = localStorage.getItem(STORAGE_KEY);
             if (raw) state = JSON.parse(raw);
-        } catch (e) {}
+        } catch (e) { }
         if (!state || !state.surahId) return;
 
         // Expire after 6 hours
         if (Date.now() - (state.savedAt || 0) > 6 * 60 * 60 * 1000) {
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
             return;
         }
 
@@ -218,32 +218,32 @@
         bar.setAttribute('aria-label', 'Audio player');
         bar.innerHTML =
             '<div class="baca-fb-top">' +
-                '<div class="baca-fb-info">' +
-                    '<div class="baca-fb-surah" id="baca-fb-surah">' + escapeHtml(surahName) + '</div>' +
-                    '<div class="baca-fb-reciter" id="baca-fb-reciter">' + escapeHtml(state.reciterName || 'Reciter') + '</div>' +
-                '</div>' +
-                '<button class="baca-fb-btn baca-fb-btn-close" id="baca-fb-close" aria-label="Close player">' + ICONS.close + '</button>' +
+            '<div class="baca-fb-info">' +
+            '<div class="baca-fb-surah" id="baca-fb-surah">' + escapeHtml(surahName) + '</div>' +
+            '<div class="baca-fb-reciter" id="baca-fb-reciter">' + escapeHtml(state.reciterName || 'Reciter') + '</div>' +
+            '</div>' +
+            '<button class="baca-fb-btn baca-fb-btn-close" id="baca-fb-close" aria-label="Close player">' + ICONS.close + '</button>' +
             '</div>' +
             '<div class="baca-fb-controls">' +
-                '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-prev" aria-label="Previous surah" title="Previous surah">' + ICONS.prev + '</button>' +
-                '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-back10" aria-label="Skip back 10 seconds" title="Back 10s">' + ICONS.back10 + '</button>' +
-                '<button class="baca-fb-btn baca-fb-btn-play" id="baca-fb-play" aria-label="Play / Pause">' +
-                    '<span class="baca-fb-icon-play">' + ICONS.play + '</span>' +
-                    '<span class="baca-fb-icon-pause" style="display:none">' + ICONS.pause + '</span>' +
-                    '<span class="baca-fb-spinner" style="display:none"></span>' +
-                '</button>' +
-                '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-fwd10" aria-label="Skip forward 10 seconds" title="Forward 10s">' + ICONS.fwd10 + '</button>' +
-                '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-next" aria-label="Next surah" title="Next surah">' + ICONS.next + '</button>' +
-                '<button class="baca-fb-btn baca-fb-btn-sm baca-fb-repeat" id="baca-fb-repeat" aria-label="Repeat" title="Repeat off">' + ICONS.repeatOff + '</button>' +
+            '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-prev" aria-label="Previous surah" title="Previous surah">' + ICONS.prev + '</button>' +
+            '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-back10" aria-label="Skip back 10 seconds" title="Back 10s">' + ICONS.back10 + '</button>' +
+            '<button class="baca-fb-btn baca-fb-btn-play" id="baca-fb-play" aria-label="Play / Pause">' +
+            '<span class="baca-fb-icon-play">' + ICONS.play + '</span>' +
+            '<span class="baca-fb-icon-pause" style="display:none">' + ICONS.pause + '</span>' +
+            '<span class="baca-fb-spinner" style="display:none"></span>' +
+            '</button>' +
+            '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-fwd10" aria-label="Skip forward 10 seconds" title="Forward 10s">' + ICONS.fwd10 + '</button>' +
+            '<button class="baca-fb-btn baca-fb-btn-sm" id="baca-fb-next" aria-label="Next surah" title="Next surah">' + ICONS.next + '</button>' +
+            '<button class="baca-fb-btn baca-fb-btn-sm baca-fb-repeat" id="baca-fb-repeat" aria-label="Repeat" title="Repeat off">' + ICONS.repeatOff + '</button>' +
             '</div>' +
             '<div class="baca-fb-progress-section">' +
-                '<div class="baca-fb-progress-bar" id="baca-fb-progress">' +
-                    '<div class="baca-fb-progress-fill" id="baca-fb-fill"></div>' +
-                '</div>' +
-                '<div class="baca-fb-time-row">' +
-                    '<span id="baca-fb-current">0:00</span>' +
-                    '<span id="baca-fb-duration">0:00</span>' +
-                '</div>' +
+            '<div class="baca-fb-progress-bar" id="baca-fb-progress">' +
+            '<div class="baca-fb-progress-fill" id="baca-fb-fill"></div>' +
+            '</div>' +
+            '<div class="baca-fb-time-row">' +
+            '<span id="baca-fb-current">0:00</span>' +
+            '<span id="baca-fb-duration">0:00</span>' +
+            '</div>' +
             '</div>';
 
         document.body.appendChild(bar);
@@ -297,7 +297,7 @@
             audio.addEventListener('loadedmetadata', function onMeta() {
                 audio.removeEventListener('loadedmetadata', onMeta);
                 if (seekTo && seekTo < (audio.duration || Infinity)) {
-                    try { audio.currentTime = seekTo; } catch (e) {}
+                    try { audio.currentTime = seekTo; } catch (e) { }
                 }
                 isLoaded = true;
                 showLoading(false);
@@ -319,7 +319,7 @@
             }
             audio.play().then(function () {
                 isPlaying = true; updatePlayIcon(); saveState();
-            }).catch(function () {});
+            }).catch(function () { });
         }
 
         function pause() {
@@ -336,7 +336,7 @@
                 var wasPlaying = isPlaying;
                 loadAudio(currentSurahId, 0);
                 if (wasPlaying) audio.addEventListener('canplay', function () {
-                    audio.play().then(function () { isPlaying = true; updatePlayIcon(); }).catch(function () {});
+                    audio.play().then(function () { isPlaying = true; updatePlayIcon(); }).catch(function () { });
                 }, { once: true });
             }
         }
@@ -348,7 +348,7 @@
                 var wasPlaying = isPlaying;
                 loadAudio(currentSurahId, 0);
                 if (wasPlaying) audio.addEventListener('canplay', function () {
-                    audio.play().then(function () { isPlaying = true; updatePlayIcon(); }).catch(function () {});
+                    audio.play().then(function () { isPlaying = true; updatePlayIcon(); }).catch(function () { });
                 }, { once: true });
             }
         }
@@ -405,7 +405,7 @@
                 isPlaying: isPlaying, savedAt: Date.now()
             };
             state = newState;
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newState)); } catch (e) {}
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newState)); } catch (e) { }
         }
 
         // Wire up events
@@ -431,14 +431,14 @@
             btn.setAttribute('aria-label', labels[repeatMode]);
             // Swap icon
             btn.innerHTML = repeatMode === 'one' ? ICONS.repeatOne :
-                            repeatMode === 'all' ? ICONS.repeatAll :
-                            ICONS.repeatOff;
+                repeatMode === 'all' ? ICONS.repeatAll :
+                    ICONS.repeatOff;
             // Highlight when active
             btn.classList.toggle('active', repeatMode !== 'off');
         }
         document.getElementById('baca-fb-close').addEventListener('click', function () {
             audio.pause(); audio.src = '';
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
             bar.classList.remove('visible');
             document.body.classList.remove('baca-fb-active');
             setTimeout(function () { bar.remove(); audio.remove(); }, 400);
@@ -461,7 +461,7 @@
             // Repeat one: replay the same surah
             if (repeatMode === 'one') {
                 audio.currentTime = 0;
-                audio.play().catch(function () {});
+                audio.play().catch(function () { });
                 return;
             }
             // Repeat all or auto-advance: play next surah
@@ -470,7 +470,7 @@
             } else {
                 // Last surah, repeat off → stop and close
                 isPlaying = false; updatePlayIcon();
-                try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+                try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
                 bar.classList.remove('visible');
                 document.body.classList.remove('baca-fb-active');
                 setTimeout(function () { bar.remove(); audio.remove(); }, 400);
