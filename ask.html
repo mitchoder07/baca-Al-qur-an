@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ask Baca AI — Baca</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -14,7 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-
     <style>
         :root {
             --primary: #10b981;
@@ -46,7 +44,19 @@
             background: var(--dark);
             color: var(--white);
             overflow: hidden;
+            /* FIX (mobile bottom content cut off): 100vh on mobile browsers is
+               calculated as the viewport height with the address bar HIDDEN —
+               the largest possible size. On first load (address bar visible),
+               the real visible area is shorter than that, so with a fixed
+               height + overflow:hidden the bottom of the page (chat input +
+               disclaimer) got pushed just past what's actually on screen with
+               no way to scroll down to it.
+               100dvh (dynamic viewport height) recalculates live as the
+               browser's UI shows/hides, so the layout always matches what's
+               actually visible. The 100vh line stays as a fallback for
+               browsers that don't support dvh yet. */
             height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
         }
@@ -281,6 +291,10 @@
         /* Input area */
         .chat-input-area {
             padding: 1rem 1.5rem;
+            /* FIX: add safe-area padding so the input box + disclaimer aren't
+               obscured by a phone's gesture nav bar / home indicator, which
+               sits in that inset area on many Android and iOS devices. */
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
             border-top: 1px solid var(--border);
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(20px);
@@ -407,6 +421,7 @@
 
             .chat-input-area {
                 padding: 0.7rem 1rem;
+                padding-bottom: calc(0.7rem + env(safe-area-inset-bottom));
             }
 
             .chat-input {
@@ -491,6 +506,7 @@
             </svg>
             <span class="logo-text">Baca</span>
         </a>
+
         <div class="nav-actions">
             <button class="theme-btn" id="askThemeBtn" title="Toggle theme">
                 <i class="fa-solid fa-moon"></i>
@@ -569,10 +585,6 @@
             });
         })();
 
-        // NOTE: The old #askHamburger / #askMobileNav elements have been
-        // removed. Navigation is now handled by js/shared-nav.js, which
-        // injects the unified hamburger button into this navbar.
-
         // Enter key to send
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -626,7 +638,6 @@
                         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                         .replace(/`(.+?)`/g, '<code>$1</code>')
                         .replace(/\n/g, '<br>');
-
                     addMessage('ai', formattedReply, true);
 
                     // Save to history
