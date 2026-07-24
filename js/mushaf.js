@@ -1730,13 +1730,16 @@ function renderReciterList(query) {
             }
             persistState();
             renderReciterList(el.reciterSearch.value);
-            // If audio is currently playing, reload with new reciter
-            if (state.currentAyahAudio && !el.ayahAudio.paused) {
-                const wasPlaying = true;
+            // If an ayah was loaded (playing OR paused), reload with new reciter
+            // so the next play uses the new reciter's voice
+            if (state.currentAyahAudio) {
+                const wasPlaying = !el.ayahAudio.paused;
                 const { surah, ayah } = state.currentAyahAudio;
                 el.ayahAudio.src = API.ayahAudio(surah, ayah, state.reciterId);
                 el.ayahAudio.load();
-                if (wasPlaying) el.ayahAudio.play().catch(() => { });
+                if (wasPlaying) {
+                    el.ayahAudio.play().catch(() => { });
+                }
             }
             showToast(`Reciter: ${reciter?.name}`);
         });

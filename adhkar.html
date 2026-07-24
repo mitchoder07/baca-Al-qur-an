@@ -2265,9 +2265,8 @@
                 currentAudioBtn = btn;
 
                 if (chunks.length === 1) {
-                    _audioEl.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(chunks[0])}&tl=ar`;
+                    _audioEl.src = "/api/tts?text=" + encodeURIComponent(chunks[0]);
                     _audioEl.play().catch(() => {
-                        // Direct TTS failed, try browser speechSynthesis
                         fallbackToSpeechSynthesis(a, btn);
                     });
                 } else {
@@ -2278,9 +2277,8 @@
                             currentAudioBtn = null;
                             return;
                         }
-                        _audioEl.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(chunks[chunkIndex])}&tl=ar`;
+                        _audioEl.src = "/api/tts?text=" + encodeURIComponent(chunks[chunkIndex]);
                         _audioEl.play().catch(() => {
-                            // If any chunk fails, switch entirely to browser TTS
                             fallbackToSpeechSynthesis(a, btn);
                         });
                         chunkIndex++;
@@ -2300,8 +2298,14 @@
                 btn.classList.remove("playing");
                 currentAudioBtn = null;
                 if (!window.speechSynthesis) {
-                    toast("Audio not available. Please use a modern browser.");
+                    toast("Audio requires running: node server.js");
                     return;
+                }
+
+                // Check if we're NOT on the Node server (e.g. Live Server on port 5500)
+                // In that case /api/tts won't work, so warn the user
+                if (window.location.port === '5500' || window.location.port === '3001') {
+                    toast("For audio, run: node server.js (not Live Server)");
                 }
 
                 // Ensure voices are loaded (some browsers need this)
@@ -2324,7 +2328,7 @@
                     utter.onerror = () => {
                         btn.classList.remove("playing");
                         currentAudioBtn = null;
-                        toast("No Arabic voice found. Try installing an Arabic TTS voice in your OS settings.");
+                        toast("Run 'node server.js' for audio. Browser TTS has no Arabic voice.");
                     };
                     speechSynthesis.speak(utter);
                 };
@@ -2335,6 +2339,10 @@
                     speechSynthesis.onvoiceschanged = () => {
                         speakWithVoices();
                     };
+                    // Also try after a short delay
+                    setTimeout(() => {
+                        if (speechSynthesis.getVoices().length) speakWithVoices();
+                    }, 1000);
                 }
             }
             /* ============================================================

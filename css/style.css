@@ -4157,7 +4157,7 @@ body.light-mode .surah-rev-order {
   }
 
   .verse-arabic {
-    font-size: 1.7rem !important;
+    font-size: 1.7rem;
     line-height: 2;
   }
 
@@ -4205,7 +4205,7 @@ body.light-mode .surah-rev-order {
   }
 
   .verse-arabic {
-    font-size: 1.45rem !important;
+    font-size: 1.45rem;
   }
 
   .tafsir-panel {

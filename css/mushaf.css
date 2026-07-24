@@ -1138,6 +1138,59 @@ body.light-mode .nav-search-input {
     height: 12px;
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Tajweed guide — detailed explanations in settings drawer */
+.tajweed-guide {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.tajweed-guide-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.6rem 0.7rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tajweed-guide-item .taj-dot {
+    margin-top: 3px;
+    width: 14px;
+    height: 14px;
+}
+
+.tajweed-guide-item div {
+    flex: 1;
+}
+
+.tajweed-guide-item strong {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--mushaf-text, #fff);
+    margin-bottom: 0.2rem;
+}
+
+.tajweed-guide-item p {
+    font-size: 0.72rem;
+    color: var(--mushaf-subtext, #94a3b8);
+    line-height: 1.5;
+    margin: 0;
+}
+
+body.light-mode .tajweed-guide-item,
+[data-mushaf-theme="light"] .tajweed-guide-item {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-mushaf-theme="light"] .tajweed-guide-item strong {
+    color: #0f172a;
 }
 
 /* When tajweed is OFF, hide all colors */
