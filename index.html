@@ -1464,7 +1464,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/script.js"></script>
     <script>
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     </script>
     <!-- AI Chat Widget -->
     <script src="js/chat-widget.js"></script>
@@ -1474,6 +1474,7 @@
 
     <!-- Shared hamburger menu (injects the nav button into this navbar) -->
     <script src="js/shared-nav.js"></script>
+    <script src="js/jumuah.js"></script>
 
     <!-- Floating player bar (resumes audio from reciter page) -->
     <script src="js/floating-player-bar.js"></script>

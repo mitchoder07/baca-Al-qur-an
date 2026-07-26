@@ -15,6 +15,18 @@
 // transliteration, translation (meaning), type, total_verses.
 // ============================================================
 
+// Lucide's icon library is loaded from an external CDN (unpkg.com). If that
+// request is ever slow, blocked (ad-blockers, restrictive networks, a CDN
+// hiccup), or offline, calling lucide.createIcons() directly throws a
+// ReferenceError -- and because some of those calls happen during the page's
+// initial top-to-bottom script execution (not inside an event handler), an
+// uncaught throw there silently aborts the rest of script.js, including the
+// gamification init at the bottom of this file. This guard keeps a missing
+// CDN from ever taking down streaks/achievements/daily challenges with it.
+function safeLucide() {
+    if (window.lucide) lucide.createIcons();
+}
+
 const SURAH_LIST = [
     { id: 1, revelationOrder: 5, name: "الفاتحة", transliteration: "Al-Fatihah", translation: "The Opener", type: "meccan", total_verses: 7 },
     { id: 2, revelationOrder: 87, name: "البقرة", transliteration: "Al-Baqarah", translation: "The Cow", type: "medinan", total_verses: 286 },
@@ -409,7 +421,7 @@ function syncMiniPlayIcon(playing) {
     miniPlay.innerHTML = playing
         ? `<i data-lucide="pause"></i>`
         : `<i data-lucide="play"></i>`;
-    lucide.createIcons();
+    safeLucide();
 }
 
 function getActiveAudio() {
@@ -624,7 +636,7 @@ function initThemeToggle() {
     const saved = localStorage.getItem("siteTheme") || "dark";
     if (saved === "light") {
         document.body.classList.add("light-mode"); siteTheme = "light";
-        themeBtn.innerHTML = `<i data-lucide="sun"></i>`; lucide.createIcons();
+        themeBtn.innerHTML = `<i data-lucide="sun"></i>`; safeLucide();
     }
     themeBtn.addEventListener("click", () => {
         siteTheme = siteTheme === "dark" ? "light" : "dark";
@@ -632,7 +644,7 @@ function initThemeToggle() {
         themeBtn.innerHTML = siteTheme === "light"
             ? `<i data-lucide="sun"></i>` : `<i data-lucide="moon"></i>`;
         localStorage.setItem("siteTheme", siteTheme);
-        lucide.createIcons();
+        safeLucide();
     });
 }
 
@@ -805,7 +817,7 @@ function renderBookmarks() {
     if (countEl) countEl.textContent = `${bks.length} saved`;
     if (!bks.length) {
         listEl.innerHTML = `<div class="bookmarks-empty" id="bookmarks-empty"><i data-lucide="bookmark"></i><p>No bookmarks yet. Save verses from the reader.</p></div>`;
-        lucide.createIcons(); return;
+        safeLucide(); return;
     }
     listEl.innerHTML = bks.map(b => `
     <article class="bookmark-card">
@@ -822,7 +834,7 @@ function renderBookmarks() {
         <button type="button" class="remove-bookmark" data-surah="${b.surah}" data-ayah="${b.ayah}" title="Remove"><i data-lucide="trash-2"></i></button>
       </div>
     </article>`).join("");
-    lucide.createIcons();
+    safeLucide();
 
     document.querySelectorAll(".open-bookmark").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -854,7 +866,7 @@ function refreshBookmarkButtonStates() {
         dailyBtn.innerHTML = saved ? `<i data-lucide="bookmark-check"></i>` : `<i data-lucide="bookmark"></i>`;
         dailyBtn.title = saved ? "Remove bookmark" : "Bookmark this ayah";
     }
-    lucide.createIcons();
+    safeLucide();
 }
 
 function initBookmarks() {
@@ -980,7 +992,7 @@ function initDailyAyahActions() {
         tafsirPanel.classList.add("active");
         tafsirBtn.title = "Close Tafsir";
         tafsirPanel.innerHTML = `<div class="daily-tafsir-loading"><i data-lucide="loader-2" class="spin"></i> Loading tafsir…</div>`;
-        lucide.createIcons();
+        safeLucide();
 
         try {
             const CDN_TAFSIR = `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${dailyAyahData.surah}/${dailyAyahData.ayah}.json`;
@@ -993,7 +1005,7 @@ function initDailyAyahActions() {
           <button class="daily-tafsir-close" title="Close"><i data-lucide="x"></i></button>
         </div>
         <p class="daily-tafsir-body">${text}</p>`;
-            lucide.createIcons();
+            safeLucide();
             tafsirPanel.querySelector(".daily-tafsir-close")?.addEventListener("click", () => {
                 tafsirPanel.classList.remove("active");
                 tafsirBtn.title = "View Tafsir";
@@ -1035,7 +1047,7 @@ function wireHomepageAudioPlayer() {
     playBtn.onclick = () => {
         if (quranAudio.paused) { quranAudio.play(); playBtn.innerHTML = `<i data-lucide="pause"></i>`; }
         else { quranAudio.pause(); playBtn.innerHTML = `<i data-lucide="play"></i>`; }
-        lucide.createIcons();
+        safeLucide();
     };
 
     quranAudio.addEventListener("timeupdate", () => {
@@ -1057,7 +1069,7 @@ function wireHomepageAudioPlayer() {
         quranAudio.muted = !quranAudio.muted;
         muteBtn.innerHTML = quranAudio.muted
             ? `<i data-lucide="volume-x"></i>` : `<i data-lucide="volume-2"></i>`;
-        lucide.createIcons();
+        safeLucide();
     };
 
     if (speedBton) speedBton.onclick = () => {
@@ -1081,12 +1093,12 @@ function wireHomepageAudioPlayer() {
                 if (wasPlaying) quranAudio.addEventListener("canplay", () => quranAudio.play(), { once: true });
             }
             playBtn.innerHTML = quranAudio.paused ? `<i data-lucide="play"></i>` : `<i data-lucide="pause"></i>`;
-            lucide.createIcons();
+            safeLucide();
         });
     }
 
     quranAudio.addEventListener("ended", () => {
-        playBtn.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons();
+        playBtn.innerHTML = `<i data-lucide="play"></i>`; safeLucide();
     });
 }
 
@@ -1109,7 +1121,7 @@ function initRepeatButton() {
         if (repeatMode === "off") { repeatMode = "surah"; btn.innerHTML = `<i data-lucide="repeat-1"></i> Surah`; showToast("Repeat: Surah"); }
         else if (repeatMode === "surah") { repeatMode = "quran"; btn.innerHTML = `<i data-lucide="repeat"></i> Qur'an`; showToast("Repeat: Qur'an"); }
         else { repeatMode = "off"; btn.innerHTML = `<i data-lucide="repeat"></i> Off`; showToast("Repeat: off"); }
-        lucide.createIcons();
+        safeLucide();
     });
 }
 
@@ -1255,7 +1267,7 @@ function activateCards() {
             document.getElementById("modal-surah-ayahs").textContent = card.dataset.ayahs + " Ayahs";
             document.getElementById("modal-surah-type").textContent = card.dataset.type;
             surahModal.classList.add("active");
-            lucide.createIcons();
+            safeLucide();
         });
     });
 }
@@ -1305,7 +1317,7 @@ async function loadTafsir(surahNum, ayahNum) {
     if (isAr) panel.setAttribute("dir", "rtl");
     panel.innerHTML = `<div class="tafsir-loading"><i data-lucide="loader-2" class="spin"></i> Loading ${sourceName} tafsir…</div>`;
     card.appendChild(panel);
-    lucide.createIcons();
+    safeLucide();
 
     try {
         const text = await fetchReaderTafsir(surahNum, ayahNum, source);
@@ -1320,7 +1332,7 @@ async function loadTafsir(surahNum, ayahNum) {
         <button class="tafsir-close" data-ayah="${ayahNum}"><i data-lucide="x"></i></button>
       </div>
       <p class="tafsir-body${isArabic ? " tafsir-arabic" : ""}">${escapeHtml(text).replace(/\n\n/g, "</p><p>").replace(/^/, "<p>").replace(/$/, "</p>")}</p>`;
-        lucide.createIcons();
+        safeLucide();
         panel.querySelector(".tafsir-close")?.addEventListener("click", () => panel.remove());
     } catch (err) {
         panel.innerHTML = `<p class="tafsir-error">Could not load tafsir. Please try again.</p>`;
@@ -1405,7 +1417,7 @@ async function openReader(surahNum, scrollToAyah = null) {
         requestAnimationFrame(() => {
             document.querySelector(".reader-content").scrollTop = 0;
         });
-        lucide.createIcons();
+        safeLucide();
         surahModal.classList.remove("active");
 
         if (scrollToAyah) {
@@ -1435,10 +1447,10 @@ function closeReader() {
     if (ayahPlayer) ayahPlayer.pause();
     if (activePlayButton) {
         activePlayButton.innerHTML = `<i data-lucide="play"></i>`;
-        lucide.createIcons();
+        safeLucide();
         activePlayButton = null;
     }
-    if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
+    if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); }
     syncMiniPlayIcon(false);
     hideFloatingPlayer();
     document.getElementById("reader-theme-panel")?.classList.remove("open");
@@ -1486,7 +1498,7 @@ function playSurahFromAyah(ayahNum) {
     audioPlayer.src = url;
     audioPlayer.load();
     audioPlayer.play().catch(() => { });
-    if (playButton) { playButton.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons(); }
+    if (playButton) { playButton.innerHTML = `<i data-lucide="pause"></i>`; safeLucide(); }
     syncMiniPlayIcon(true);
     showFloatingPlayer(
         SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah",
@@ -1505,13 +1517,13 @@ playButton?.addEventListener("click", () => {
         syncMiniPlayIcon(true);
         showFloatingPlayer(SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah", `Ayah 1`);
         scrollToActiveVerse(1);
-        lucide.createIcons();
+        safeLucide();
         return;
     }
     // Pause per-ayah player if running — the two modes must not play simultaneously
     if (!ayahPlayer.paused) {
         ayahPlayer.pause();
-        if (activePlayButton) { activePlayButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); activePlayButton = null; }
+        if (activePlayButton) { activePlayButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); activePlayButton = null; }
     }
     activeAudioMode = "surah";
     if (audioPlayer.paused) {
@@ -1525,7 +1537,7 @@ playButton?.addEventListener("click", () => {
         if (playButton) playButton.innerHTML = `<i data-lucide="play"></i>`;
         syncMiniPlayIcon(false);
     }
-    lucide.createIcons();
+    safeLucide();
 });
 
 audioPlayer.addEventListener("timeupdate", () => {
@@ -1558,7 +1570,7 @@ audioPlayer.addEventListener("ended", () => {
             selectedSurah = selectedSurah < 114 ? selectedSurah + 1 : 1;
             openReader(selectedSurah).then(() => { playSurahFromAyah(1); });
         } else {
-            if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
+            if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); }
             syncMiniPlayIcon(false);
             surahAyahCursor = 1;
         }
@@ -1659,7 +1671,7 @@ document.addEventListener("click", async e => {
     // Pause full-surah player if running
     if (!audioPlayer.paused) {
         audioPlayer.pause();
-        if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
+        if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); }
     }
 
     activeAudioMode = "ayah";
@@ -1667,13 +1679,13 @@ document.addEventListener("click", async e => {
     // Toggle off same button
     if (activePlayButton === playBtn && !ayahPlayer.paused) {
         ayahPlayer.pause();
-        playBtn.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons();
+        playBtn.innerHTML = `<i data-lucide="play"></i>`; safeLucide();
         syncMiniPlayIcon(false); return;
     }
 
     // Reset previous button
     if (activePlayButton && activePlayButton !== playBtn) {
-        activePlayButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons();
+        activePlayButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide();
     }
 
     const surah = Number(playBtn.dataset.surah);
@@ -1684,7 +1696,7 @@ document.addEventListener("click", async e => {
         await ayahPlayer.play();
         activePlayButton = playBtn;
         currentAyahPlaying = ayah;
-        playBtn.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons();
+        playBtn.innerHTML = `<i data-lucide="pause"></i>`; safeLucide();
         scrollToActiveVerse(ayah);
         showFloatingPlayer(
             document.getElementById("reader-title")?.textContent || "Surah",
@@ -1693,7 +1705,7 @@ document.addEventListener("click", async e => {
         syncMiniPlayIcon(true);
 
         ayahPlayer.onended = () => {
-            playBtn.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons();
+            playBtn.innerHTML = `<i data-lucide="play"></i>`; safeLucide();
             activePlayButton = null;
             // Keep currentAyahPlaying set so mini player next/prev still works
             syncMiniPlayIcon(false);
@@ -1725,10 +1737,10 @@ miniPlay?.addEventListener("click", () => {
     const audio = getActiveAudio();
     if (audio.paused) {
         audio.play().catch(() => { }); syncMiniPlayIcon(true);
-        if (activeAudioMode === "surah" && playButton) { playButton.innerHTML = `<i data-lucide="pause"></i>`; lucide.createIcons(); }
+        if (activeAudioMode === "surah" && playButton) { playButton.innerHTML = `<i data-lucide="pause"></i>`; safeLucide(); }
     } else {
         audio.pause(); syncMiniPlayIcon(false);
-        if (activeAudioMode === "surah" && playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; lucide.createIcons(); }
+        if (activeAudioMode === "surah" && playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); }
     }
 });
 
@@ -1777,7 +1789,7 @@ async function playSingleAyah(surah, ayah) {
         if (!ayahPlayer.paused) ayahPlayer.pause();
         if (activePlayButton) {
             activePlayButton.innerHTML = `<i data-lucide="play"></i>`;
-            lucide.createIcons();
+            safeLucide();
         }
 
         ayahPlayer.src = getAyahAudioUrl(surah, ayah, currentReciterId);
@@ -1898,7 +1910,7 @@ document.getElementById("searchInput")?.addEventListener("input", e => {
       <i data-lucide="book-open"></i>
       <span>${s.transliteration} <small style="opacity:.6">${s.translation}</small></span>
     </div>`).join("") || `<div class="search-item"><i data-lucide="search"></i><span>No results for "${escapeHtml(val)}"</span></div>`;
-    lucide.createIcons();
+    safeLucide();
     results.querySelectorAll(".search-item[data-surah]").forEach(item => {
         item.addEventListener("click", () => {
             document.querySelector(".search-modal")?.classList.remove("active");
@@ -1934,7 +1946,7 @@ function fixFloatingPlayerIcons() {
     if (miniPlay) miniPlay.innerHTML = `<i data-lucide="play"></i>`;
     if (miniPrev) miniPrev.innerHTML = `<i data-lucide="skip-back"></i>`;
     if (miniNext) miniNext.innerHTML = `<i data-lucide="skip-forward"></i>`;
-    lucide.createIcons();
+    safeLucide();
 }
 
 // ============================================================
@@ -2049,7 +2061,7 @@ function initReciterPicker() {
         search.value = "";
         renderPickerList("");
         modal.classList.add("active");
-        lucide.createIcons();
+        safeLucide();
         setTimeout(() => search.focus(), 200);
     });
 
@@ -2303,6 +2315,25 @@ function markSurahCompleted(surahNum) {
 }
 
 // Check and unlock achievements
+// Jumu'ah (Friday) bonus — every reading day counts, but Friday awards
+// double XP. getDay() === 5 is Friday in JavaScript's Date, in the
+// visitor's own local time, regardless of locale.
+//
+// Testing note: add ?jumuah=1 to any URL to preview Friday behaviour on
+// any day (e.g. index.html?jumuah=1), or ?jumuah=0 to force it off. This
+// only affects your own browser tab — nothing is written anywhere, so
+// there's no need to wait for an actual Friday to check this works.
+function isJumuahToday() {
+    const override = new URLSearchParams(location.search).get('jumuah');
+    if (override === '1') return true;
+    if (override === '0') return false;
+    return new Date().getDay() === 5;
+}
+
+function xpMultiplier() {
+    return isJumuahToday() ? 2 : 1;
+}
+
 function checkAchievements(stats) {
     if (!stats.unlockedAchievements) stats.unlockedAchievements = [];
     let newUnlocks = [];
@@ -2310,7 +2341,7 @@ function checkAchievements(stats) {
     GAMIFICATION.achievements.forEach(ach => {
         if (!stats.unlockedAchievements.includes(ach.id) && ach.check(stats)) {
             stats.unlockedAchievements.push(ach.id);
-            stats.xp = (stats.xp || 0) + 20;
+            stats.xp = (stats.xp || 0) + 20 * xpMultiplier();
             newUnlocks.push(ach);
         }
     });
@@ -2349,9 +2380,12 @@ function updateChallengeProgress(stats) {
     if (progress.count >= challenge.target && !progress.done) {
         progress.done = true;
         stats.challengesCompleted = (stats.challengesCompleted || 0) + 1;
-        stats.xp = (stats.xp || 0) + challenge.xp;
+        const earned = challenge.xp * xpMultiplier();
+        stats.xp = (stats.xp || 0) + earned;
         saveStats(stats);
-        showToast(`Daily Challenge Complete! +${challenge.xp} XP 🎉`);
+        showToast(isJumuahToday()
+            ? `Daily Challenge Complete! +${earned} XP (Jumu'ah 2× bonus) 🕌`
+            : `Daily Challenge Complete! +${earned} XP 🎉`);
     }
 
     localStorage.setItem(challengeKey, JSON.stringify(progress));
@@ -2408,7 +2442,7 @@ function renderAchievements(stats) {
         </div>`;
     }).join("");
 
-    if (window.lucide) lucide.createIcons();
+    if (window.lucide) safeLucide();
 }
 
 // Render today's challenge
@@ -2417,9 +2451,13 @@ function renderChallenge() {
     const titleEl = document.getElementById("challenge-title");
     const descEl = document.getElementById("challenge-desc");
     const xpEl = document.querySelector(".challenge-xp");
+    const card = document.getElementById("challenge-card");
     if (titleEl) titleEl.textContent = challenge.title;
     if (descEl) descEl.textContent = challenge.desc;
-    if (xpEl) xpEl.textContent = `+${challenge.xp} XP`;
+    if (xpEl) xpEl.textContent = isJumuahToday()
+        ? `+${challenge.xp * 2} XP · 2×`
+        : `+${challenge.xp} XP`;
+    if (card) card.classList.toggle("jumuah-bonus", isJumuahToday());
 }
 
 // Initialize gamification
@@ -2641,7 +2679,7 @@ function showTopicResults(topic) {
     }).join("");
 
     results.innerHTML = header + items;
-    lucide.createIcons();
+    safeLucide();
 
     // Wire click handlers
     results.querySelectorAll(".search-item[data-surah]").forEach(item => {
@@ -2732,7 +2770,7 @@ function initSearchModal() {
             results.innerHTML = `
                 <div class="search-item" style="cursor:default"><i data-lucide="search"></i><span>Search surahs, topics, or verses...</span></div>
                 <div class="search-item" style="cursor:default"><i data-lucide="tag"></i><span>Try: "mercy", "prayer", "charity", "Ayat al-Kursi"</span></div>`;
-            lucide.createIcons();
+            safeLucide();
             return;
         }
 
@@ -2744,7 +2782,7 @@ function initSearchModal() {
 
         if (!matches.length) {
             results.innerHTML = `<div class="search-item" style="cursor:default"><i data-lucide="search-x"></i><span>No results for "${escapeHtml(q)}"</span></div>`;
-            lucide.createIcons();
+            safeLucide();
             return;
         }
 
@@ -2755,7 +2793,7 @@ function initSearchModal() {
             </div>
         `).join("");
 
-        lucide.createIcons();
+        safeLucide();
 
         // Wire click handlers
         results.querySelectorAll(".search-item[data-type]").forEach(item => {
