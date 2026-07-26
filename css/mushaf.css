@@ -826,6 +826,14 @@ body.light-mode .nav-search-input {
     flex: 1;
     font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif;
     color: var(--mushaf-page-text);
+    line-height: 2.4;  /* generous spacing so ayah lines don't jam together */
+}
+
+/* On mobile, increase line spacing even more to prevent text from feeling cramped */
+@media (max-width: 768px) {
+    .mushaf-page .ayah-text-flow {
+        line-height: 2.6;
+    }
 }
 
 /* Short surah pages (≤ 15 ayahs) — center-align the text for a cleaner look,
