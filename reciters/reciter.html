@@ -1132,6 +1132,13 @@
             okasha: { name: "Okasha Kameny", arabic: "عكاشة كاميني", country: "Ghana", style: "Murattal", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true, image: "/images/reciters/okasha.png", bio: "Sheikh Okasha Kameny is a Ghanaian Quran reciter known for his clear, deeply emotional recitation style. He has studied tajweed and Quranic sciences and his recitations have gained wide popularity, especially across West Africa and online. His recordings are appreciated for their sincerity and the natural, flowing pace of his delivery." },
             yasser_dosari: { name: "Yasser Al-Dosari", arabic: "ياسر الدوسري", country: "Saudi Arabia", style: "Murattal", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true, image: "/images/reciters/yasser_dosari.png", bio: "Sheikh Yasser Al-Dosari is a Saudi Imam and Khatib known for his beautiful, emotional recitation. He serves as an Imam at a mosque in Riyadh and has memorized the Quran with multiple recitations. His recordings are beloved for their clarity, tajweed precision, and spiritual depth." },
             mansour_salmi: { name: "Mansour Al-Salmi", arabic: "منور السالمي", country: "Saudi Arabia", style: "Murattal", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true, image: "/images/reciters/mansour_salmi.png", bio: "Sheikh Mansour Al-Salmi is a Saudi Quran reciter known for his calm, melodious voice and precise tajweed. His recitations are widely appreciated for their soothing quality and are popular for both learning and daily listening." },
+            // ── Non-Hafs Riwayat reciters ──
+            husary_warsh: { name: "Al-Husary (Warsh)", arabic: "الحصري — ورش", country: "Egypt", style: "Warsh", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Warsh riwayah from Nafi. This riwayah is widely used in North and West Africa. His Warsh recitation maintains the same scholarly precision as his Hafs recitation, making it an excellent reference for students of this riwayah." },
+            husary_qalun: { name: "Al-Husary (Qalun)", arabic: "الحصري — قالون", country: "Egypt", style: "Qalun", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Qalun riwayah from Nafi. Qalun is the second most common riwayah after Hafs, popular in Libya, Tunisia, and parts of Egypt." },
+            abdulbasit_warsh: { name: "Abdul Basit (Warsh)", arabic: "عبدالباسط — ورش", country: "Egypt", style: "Warsh", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/basit.png", bio: "Sheikh Abdul Basit Abdul Samad reciting in the Warsh riwayah. His Warsh recitation showcases his extraordinary vocal range and emotional depth in this alternative qira'ah, offering a unique listening experience." },
+            ibrahim_dosari_warsh: { name: "Ibrahim Al-Dosari (Warsh)", arabic: "إبراهيم الدوسري — ورش", country: "Saudi Arabia", style: "Warsh", folder: "Ibrahim_Dosari_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/ibrahim_dosari_warsh.png", bio: "Sheikh Ibrahim Al-Dosari reciting in the Warsh riwayah from Nafi. A beautiful recitation in the North African tradition, bringing the Warsh riwayah to a wider audience." },
+            huthaifi_qalun: { name: "Ali Al-Hudhaify (Qalun)", arabic: "الحذيفي — قالون", country: "Saudi Arabia", style: "Qalun", folder: "Hudhaify_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-hudaify.png", bio: "Sheikh Ali Al-Hudhaify, Imam of the Prophet's Mosque, reciting in the Qalun riwayah. His Qalun recitation demonstrates the differences in pronunciation and rules compared to the more common Hafs riwayah." },
+            airawy_warsh: { name: "Mohammad Al-Airawy (Warsh)", arabic: "العيراوي — ورش", country: "Egypt", style: "Warsh", folder: "Al-Airawy_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/airawy_warsh.png", bio: "Sheikh Mohammad Al-Airawy reciting in the Warsh riwayah from Nafi. A clear and measured recitation that follows the Warsh tradition, popular in North African countries." },
         };
 
         // ═══════════════════════════════════════════════
@@ -1407,7 +1414,13 @@
             'tablawi': 'https://server12.mp3quran.net/tblawi/',
             'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
             'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
-            'mansour_salmi': 'https://server14.mp3quran.net/mansor/'
+            'mansour_salmi': 'https://server14.mp3quran.net/mansor/',
+            'husary_warsh':        'https://server13.mp3quran.net/husr/Rewayat-Warsh-A-n-Nafi/',
+            'husary_qalun':        'https://server13.mp3quran.net/husr/Rewayat-Qalon-A-n-Nafi/',
+            'abdulbasit_warsh':    'https://server7.mp3quran.net/basit/Rewayat-Warsh-A-n-Nafi/',
+            'ibrahim_dosari_warsh':'https://server10.mp3quran.net/ibrahim_dosri/Rewayat-Warsh-A-n-Nafi/',
+            'huthaifi_qalun':      'https://server9.mp3quran.net/huthifi_qalon/',
+            'airawy_warsh':        'https://server6.mp3quran.net/earawi/'
         };
 
         function getFullSurahAudioUrl(surahNum, reciterId) {

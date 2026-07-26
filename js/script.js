@@ -190,6 +190,13 @@ const RECITERS = [
     { id: "okasha", name: "Okasha Kameny", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true },
     { id: "yasser_dosari", name: "Yasser Al-Dosari", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true },
     { id: "mansour_salmi", name: "Mansour Al-Salmi", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true },
+    // ── Non-Hafs Riwayat reciters ──
+    { id: "husary_warsh", name: "Al-Husary (Warsh)", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
+    { id: "husary_qalun", name: "Al-Husary (Qalun)", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun" },
+    { id: "abdulbasit_warsh", name: "Abdul Basit (Warsh)", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
+    { id: "ibrahim_dosari_warsh", name: "Ibrahim Al-Dosari (Warsh)", folder: "Ibrahim_Dosari_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
+    { id: "huthaifi_qalun", name: "Ali Al-Hudhaify (Qalun)", folder: "Hudhaify_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun" },
+    { id: "airawy_warsh", name: "Mohammad Al-Airawy (Warsh)", folder: "Al-Airawy_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
 ];
 
 function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
@@ -230,7 +237,13 @@ const FULL_SURAH_SERVERS = {
     'tablawi': 'https://server12.mp3quran.net/tblawi/',
     'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
     'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
-    'mansour_salmi': 'https://server14.mp3quran.net/mansor/'
+    'mansour_salmi': 'https://server14.mp3quran.net/mansor/',
+    'husary_warsh':        'https://server13.mp3quran.net/husr/Rewayat-Warsh-A-n-Nafi/',
+    'husary_qalun':        'https://server13.mp3quran.net/husr/Rewayat-Qalon-A-n-Nafi/',
+    'abdulbasit_warsh':    'https://server7.mp3quran.net/basit/Rewayat-Warsh-A-n-Nafi/',
+    'ibrahim_dosari_warsh':'https://server10.mp3quran.net/ibrahim_dosri/Rewayat-Warsh-A-n-Nafi/',
+    'huthaifi_qalun':      'https://server9.mp3quran.net/huthifi_qalon/',
+    'airawy_warsh':        'https://server6.mp3quran.net/earawi/'
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {
@@ -1957,6 +1970,12 @@ const RECITER_PROFILES = [
     { id: "okasha", name: "Okasha Kameny", country: "Ghana", style: "Murattal", image: "images/reciters/okasha.png" },
     { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/yasser_dosari.png" },
     { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/mansour_salmi.png" },
+    { id: "husary_warsh", name: "Al-Husary (Warsh)", country: "Egypt", style: "Warsh", image: "images/reciters/al-husary.png", riwayah: "Warsh" },
+    { id: "husary_qalun", name: "Al-Husary (Qalun)", country: "Egypt", style: "Qalun", image: "images/reciters/al-husary.png", riwayah: "Qalun" },
+    { id: "abdulbasit_warsh", name: "Abdul Basit (Warsh)", country: "Egypt", style: "Warsh", image: "images/reciters/basit.png", riwayah: "Warsh" },
+    { id: "ibrahim_dosari_warsh", name: "Ibrahim Al-Dosari (Warsh)", country: "Saudi Arabia", style: "Warsh", image: "images/reciters/ibrahim_dosari_warsh.png", riwayah: "Warsh" },
+    { id: "huthaifi_qalun", name: "Ali Al-Hudhaify (Qalun)", country: "Saudi Arabia", style: "Qalun", image: "images/reciters/al-hudaify.png", riwayah: "Qalun" },
+    { id: "airawy_warsh", name: "Mohammad Al-Airawy (Warsh)", country: "Egypt", style: "Warsh", image: "images/reciters/airawy_warsh.png", riwayah: "Warsh" },
 ];
 
 function initRecitersGrid() {
@@ -2006,6 +2025,12 @@ const RECITER_PROFILES_FOR_PICKER = [
     { id: "okasha", name: "Okasha Kameny", country: "Ghana", image: "images/reciters/okasha.png" },
     { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", image: "images/reciters/yasser_dosari.png" },
     { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", image: "images/reciters/mansour_salmi.png" },
+    { id: "husary_warsh", name: "Al-Husary (Warsh)", country: "Egypt", image: "images/reciters/al-husary.png" },
+    { id: "husary_qalun", name: "Al-Husary (Qalun)", country: "Egypt", image: "images/reciters/al-husary.png" },
+    { id: "abdulbasit_warsh", name: "Abdul Basit (Warsh)", country: "Egypt", image: "images/reciters/basit.png" },
+    { id: "ibrahim_dosari_warsh", name: "Ibrahim Al-Dosari (Warsh)", country: "Saudi Arabia", image: "images/reciters/ibrahim_dosari_warsh.png" },
+    { id: "huthaifi_qalun", name: "Ali Al-Hudhaify (Qalun)", country: "Saudi Arabia", image: "images/reciters/al-hudaify.png" },
+    { id: "airawy_warsh", name: "Mohammad Al-Airawy (Warsh)", country: "Egypt", image: "images/reciters/airawy_warsh.png" },
 ];
 
 function initReciterPicker() {

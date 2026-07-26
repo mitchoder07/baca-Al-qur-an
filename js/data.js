@@ -157,7 +157,14 @@ const RECITERS = [
     { id: "ayman_swed", name: "Ayman Swed", country: "Syria", folder: "Ayman_Sowaid_64kbps" },
     { id: "okasha", name: "Okasha Kameny", country: "Ghana", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true },
     { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true },
-    { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true }
+    { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true },
+    // ── Non-Hafs Riwayat reciters ──
+    { id: "husary_warsh", name: "Al-Husary (Warsh)", country: "Egypt", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
+    { id: "husary_qalun", name: "Al-Husary (Qalun)", country: "Egypt", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun" },
+    { id: "abdulbasit_warsh", name: "Abdul Basit (Warsh)", country: "Egypt", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
+    { id: "ibrahim_dosari_warsh", name: "Ibrahim Al-Dosari (Warsh)", country: "Saudi Arabia", folder: "Ibrahim_Dosari_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
+    { id: "huthaifi_qalun", name: "Ali Al-Hudhaify (Qalun)", country: "Saudi Arabia", folder: "Hudhaify_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun" },
+    { id: "airawy_warsh", name: "Mohammad Al-Airawy (Warsh)", country: "Egypt", folder: "Al-Airawy_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" }
 ];
 
 // ============================================================
@@ -223,7 +230,14 @@ const FULL_SURAH_SERVERS = {
     'tablawi': 'https://server12.mp3quran.net/tblawi/',
     'okasha': 'https://server16.mp3quran.net/okasha/Rewayat-Albizi-A-n-Ibn-Katheer/',
     'yasser_dosari': 'https://server11.mp3quran.net/yasser/',
-    'mansour_salmi': 'https://server14.mp3quran.net/mansor/'
+    'mansour_salmi': 'https://server14.mp3quran.net/mansor/',
+    // ── Non-Hafs Riwayat servers ──
+    'husary_warsh':        'https://server13.mp3quran.net/husr/Rewayat-Warsh-A-n-Nafi/',
+    'husary_qalun':        'https://server13.mp3quran.net/husr/Rewayat-Qalon-A-n-Nafi/',
+    'abdulbasit_warsh':    'https://server7.mp3quran.net/basit/Rewayat-Warsh-A-n-Nafi/',
+    'ibrahim_dosari_warsh':'https://server10.mp3quran.net/ibrahim_dosri/Rewayat-Warsh-A-n-Nafi/',
+    'huthaifi_qalun':      'https://server9.mp3quran.net/huthifi_qalon/',
+    'airawy_warsh':        'https://server6.mp3quran.net/earawi/'
 };
 
 function getFullSurahAudioUrl(surahNum, reciterId) {
