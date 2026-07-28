@@ -2584,54 +2584,97 @@ setTimeout(initGamification, 500);
 
 const TOPIC_VERSES = {
     mercy: [
-        { surah: 1, ayah: 1, ref: "Al-Fatihah 1:1" },
-        { surah: 1, ayah: 3, ref: "Al-Fatihah 1:3" },
-        { surah: 7, ayah: 156, ref: "Al-A'raf 7:156" },
-        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53" },
-        { surah: 55, ayah: 1, ref: "Ar-Rahman 55:1" },
+        { surah: 1, ayah: 1, ref: "Al-Fatihah 1:1", note: "Opens every surah invoking Allah's mercy" },
+        { surah: 1, ayah: 3, ref: "Al-Fatihah 1:3", note: "Names mercy as Allah's defining attribute" },
+        { surah: 7, ayah: 156, ref: "Al-A'raf 7:156", note: "Allah's mercy described as all-encompassing" },
+        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "A direct promise of forgiveness, whatever the sin" },
+        { surah: 55, ayah: 1, ref: "Ar-Rahman 55:1", note: "Surah Ar-Rahman opens by naming His mercy" },
     ],
     prayer: [
-        { surah: 2, ayah: 3, ref: "Al-Baqarah 2:3" },
-        { surah: 2, ayah: 45, ref: "Al-Baqarah 2:45" },
-        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153" },
-        { surah: 4, ayah: 103, ref: "An-Nisa 4:103" },
-        { surah: 17, ayah: 78, ref: "Al-Isra 17:78" },
-        { surah: 20, ayah: 14, ref: "Ta-Ha 20:14" },
-        { surah: 29, ayah: 45, ref: "Al-Ankabut 29:45" },
+        { surah: 2, ayah: 3, ref: "Al-Baqarah 2:3", note: "Prayer named among the first signs of belief" },
+        { surah: 2, ayah: 45, ref: "Al-Baqarah 2:45", note: "Patience and prayer paired as a source of strength" },
+        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Allah is with those who stay patient in prayer" },
+        { surah: 4, ayah: 103, ref: "An-Nisa 4:103", note: "Establishes prayer as a timed, structured duty" },
+        { surah: 17, ayah: 78, ref: "Al-Isra 17:78", note: "Names the daily prayer windows, Fajr included" },
+        { surah: 20, ayah: 14, ref: "Ta-Ha 20:14", note: "Prayer given as the very purpose of remembrance" },
+        { surah: 29, ayah: 45, ref: "Al-Ankabut 29:45", note: "Prayer described as a guard against wrongdoing" },
     ],
     knowledge: [
-        { surah: 2, ayah: 269, ref: "Al-Baqarah 2:269" },
-        { surah: 3, ayah: 7, ref: "Ali 'Imran 3:7" },
-        { surah: 20, ayah: 114, ref: "Ta-Ha 20:114" },
-        { surah: 39, ayah: 9, ref: "Az-Zumar 39:9" },
-        { surah: 58, ayah: 11, ref: "Al-Mujadila 58:11" },
-        { surah: 96, ayah: 1, ref: "Al-Alaq 96:1" },
+        { surah: 2, ayah: 269, ref: "Al-Baqarah 2:269", note: "Wisdom described as a great, granted gift" },
+        { surah: 3, ayah: 7, ref: "Ali 'Imran 3:7", note: "Praises those firmly grounded in true knowledge" },
+        { surah: 20, ayah: 114, ref: "Ta-Ha 20:114", note: "A short daily dua for increased knowledge" },
+        { surah: 39, ayah: 9, ref: "Az-Zumar 39:9", note: "Knowledge distinguished as a mark of understanding" },
+        { surah: 58, ayah: 11, ref: "Al-Mujadila 58:11", note: "Knowledge paired with faith as a path to honor" },
+        { surah: 96, ayah: 1, ref: "Al-Alaq 96:1", note: "The Qur'an's first revealed word: 'Read'" },
     ],
     protection: [
-        { surah: 1, ayah: 5, ref: "Al-Fatihah 1:5" },
-        { surah: 2, ayah: 201, ref: "Al-Baqarah 2:201" },
-        { surah: 3, ayah: 155, ref: "Ali 'Imran 3:155" },
-        { surah: 7, ayah: 200, ref: "Al-A'raf 7:200" },
-        { surah: 16, ayah: 98, ref: "An-Nahl 16:98" },
-        { surah: 113, ayah: 1, ref: "Al-Falaq 113:1" },
-        { surah: 114, ayah: 1, ref: "An-Nas 114:1" },
+        { surah: 1, ayah: 5, ref: "Al-Fatihah 1:5", note: "A daily plea for Allah's help alone" },
+        { surah: 2, ayah: 201, ref: "Al-Baqarah 2:201", note: "A widely recited dua for protection in both worlds" },
+        { surah: 3, ayah: 173, ref: "Ali 'Imran 3:173", note: "\u201cAllah is sufficient for us\u201d — trust in the face of fear" },
+        { surah: 7, ayah: 200, ref: "Al-A'raf 7:200", note: "Seeking refuge from whispers of doubt or evil" },
+        { surah: 16, ayah: 98, ref: "An-Nahl 16:98", note: "The instruction to seek refuge before reciting" },
+        { surah: 113, ayah: 1, ref: "Al-Falaq 113:1", note: "Surah Al-Falaq, recited for protection each day" },
+        { surah: 114, ayah: 1, ref: "An-Nas 114:1", note: "Surah An-Nas, protection from whispers of harm" },
     ],
     charity: [
-        { surah: 2, ayah: 43, ref: "Al-Baqarah 2:43" },
-        { surah: 2, ayah: 177, ref: "Al-Baqarah 2:177" },
-        { surah: 2, ayah: 261, ref: "Al-Baqarah 2:261" },
-        { surah: 2, ayah: 274, ref: "Al-Baqarah 2:274" },
-        { surah: 9, ayah: 103, ref: "At-Tawbah 9:103" },
-        { surah: 107, ayah: 1, ref: "Al-Ma'un 107:1" },
+        { surah: 2, ayah: 43, ref: "Al-Baqarah 2:43", note: "Charity paired with prayer as a core obligation" },
+        { surah: 2, ayah: 177, ref: "Al-Baqarah 2:177", note: "Defines true righteousness through generosity" },
+        { surah: 2, ayah: 261, ref: "Al-Baqarah 2:261", note: "The parable of a gift multiplied seven-hundredfold" },
+        { surah: 2, ayah: 274, ref: "Al-Baqarah 2:274", note: "A promise of reward for quiet, regular giving" },
+        { surah: 9, ayah: 103, ref: "At-Tawbah 9:103", note: "Charity described as purifying wealth and the soul" },
+        { surah: 107, ayah: 1, ref: "Al-Ma'un 107:1", note: "Warns against neglecting the orphan and the needy" },
     ],
     hope: [
-        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153" },
-        { surah: 3, ayah: 139, ref: "Ali 'Imran 3:139" },
-        { surah: 13, ayah: 28, ref: "Ar-Ra'd 13:28" },
-        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53" },
-        { surah: 65, ayah: 3, ref: "At-Talaq 65:3" },
-        { surah: 94, ayah: 5, ref: "Ash-Sharh 94:5" },
-        { surah: 94, ayah: 6, ref: "Ash-Sharh 94:6" },
+        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Patience in hardship framed as a form of hope" },
+        { surah: 3, ayah: 139, ref: "Ali 'Imran 3:139", note: "A reminder not to lose heart in adversity" },
+        { surah: 13, ayah: 28, ref: "Ar-Ra'd 13:28", note: "Hearts find rest in the remembrance of Allah" },
+        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "A call to never despair of Allah's mercy" },
+        { surah: 65, ayah: 3, ref: "At-Talaq 65:3", note: "Trust in Allah described as true sufficiency" },
+        { surah: 94, ayah: 5, ref: "Ash-Sharh 94:5", note: "The famous promise: with hardship comes ease" },
+        { surah: 94, ayah: 6, ref: "Ash-Sharh 94:6", note: "Repeated for emphasis — ease truly follows hardship" },
+    ],
+    patience: [
+        { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Patience and prayer named as sources of help" },
+        { surah: 2, ayah: 155, ref: "Al-Baqarah 2:155", note: "Names the tests of life met with patience" },
+        { surah: 3, ayah: 200, ref: "Ali 'Imran 3:200", note: "A direct command to endure and stay steadfast" },
+        { surah: 11, ayah: 115, ref: "Hud 11:115", note: "Patience linked to a reward that is never lost" },
+        { surah: 39, ayah: 10, ref: "Az-Zumar 39:10", note: "The patient rewarded without limit or measure" },
+        { surah: 103, ayah: 3, ref: "Al-'Asr 103:3", note: "Patience named essential to a life not in loss" },
+    ],
+    gratitude: [
+        { surah: 2, ayah: 152, ref: "Al-Baqarah 2:152", note: "Gratitude tied directly to Allah's remembrance of us" },
+        { surah: 14, ayah: 7, ref: "Ibrahim 14:7", note: "A direct promise: gratitude leads to increase" },
+        { surah: 16, ayah: 18, ref: "An-Nahl 16:18", note: "A reminder of the sheer scale of Allah's favors" },
+        { surah: 27, ayah: 19, ref: "An-Naml 27:19", note: "Prophet Sulayman's own dua for gratitude" },
+        { surah: 31, ayah: 12, ref: "Luqman 31:12", note: "Luqman's wisdom: gratitude benefits oneself" },
+    ],
+    forgiveness: [
+        { surah: 3, ayah: 134, ref: "Ali 'Imran 3:134", note: "Restraining anger named among the righteous" },
+        { surah: 7, ayah: 199, ref: "Al-A'raf 7:199", note: "A practical guide to responding with patience" },
+        { surah: 24, ayah: 22, ref: "An-Nur 24:22", note: "Forgiving others tied to Allah forgiving us" },
+        { surah: 42, ayah: 40, ref: "Ash-Shuraa 42:40", note: "Pardoning described as more rewarding than revenge" },
+        { surah: 64, ayah: 14, ref: "At-Taghabun 64:14", note: "Forgiving even those closest to us who wrong us" },
+    ],
+    family: [
+        { surah: 17, ayah: 24, ref: "Al-Isra 17:24", note: "The well-known dua asking mercy for one's parents" },
+        { surah: 25, ayah: 74, ref: "Al-Furqan 25:74", note: "A dua for a family that brings genuine comfort" },
+        { surah: 30, ayah: 21, ref: "Ar-Rum 30:21", note: "Marriage described as a source of tranquility and love" },
+        { surah: 31, ayah: 14, ref: "Luqman 31:14", note: "Kindness to parents linked with gratitude to Allah" },
+        { surah: 46, ayah: 15, ref: "Al-Ahqaf 46:15", note: "A dua thanking Allah while honoring one's parents" },
+    ],
+    repentance: [
+        { surah: 2, ayah: 222, ref: "Al-Baqarah 2:222", note: "Repentance named among what Allah loves most" },
+        { surah: 4, ayah: 110, ref: "An-Nisa 4:110", note: "A simple promise: ask sincerely, and He forgives" },
+        { surah: 25, ayah: 70, ref: "Al-Furqan 25:70", note: "Sincere repentance can turn past wrongs into good" },
+        { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "Allah's forgiveness open regardless of past sin" },
+        { surah: 66, ayah: 8, ref: "At-Tahrim 66:8", note: "The call toward sincere, lasting repentance" },
+    ],
+    hereafter: [
+        { surah: 2, ayah: 281, ref: "Al-Baqarah 2:281", note: "A call to live mindful of the final Day" },
+        { surah: 3, ayah: 185, ref: "Ali 'Imran 3:185", note: "A direct reminder: every soul will taste death" },
+        { surah: 21, ayah: 35, ref: "Al-Anbiya 21:35", note: "Life's trials framed as tests before the return" },
+        { surah: 29, ayah: 57, ref: "Al-Ankabut 29:57", note: "Reinforces that all return to Allah after death" },
+        { surah: 99, ayah: 7, ref: "Az-Zalzalah 99:7", note: "Even the smallest good will be seen and weighed" },
     ],
 };
 
@@ -2642,7 +2685,14 @@ const TOPIC_NAMES = {
     protection: "Protection",
     charity: "Charity",
     hope: "Hope",
+    patience: "Patience",
+    gratitude: "Gratitude",
+    forgiveness: "Forgiveness",
+    family: "Family",
+    repentance: "Repentance",
+    hereafter: "The Hereafter",
 };
+
 
 function initTopics() {
     document.querySelectorAll(".topic-card").forEach(card => {
@@ -2671,10 +2721,12 @@ function showTopicResults(topic) {
     </div>`;
 
     const items = verses.map(v => {
-        const meta = SURAH_LIST[v.surah - 1];
         return `<div class="search-item" data-surah="${v.surah}" data-ayah="${v.ayah}" style="cursor:pointer">
             <i data-lucide="book-open"></i>
-            <span>${escapeHtml(meta?.transliteration || "Surah")} <small style="opacity:.6">${v.ref}</small></span>
+            <span>
+                ${escapeHtml(v.ref)}
+                ${v.note ? `<br><small style="opacity:.55;font-style:italic">${escapeHtml(v.note)}</small>` : ""}
+            </span>
         </div>`;
     }).join("");
 
@@ -2696,31 +2748,152 @@ function showTopicResults(topic) {
 }
 
 // ============================================================
-// GUIDED JOURNEYS — Click "Start Journey" to open reader at first verse
+// GUIDED JOURNEYS — one verse a day, tracked per calendar day
+//
+// Each journey's day list already exists 1:1 with its advertised day
+// count (data-verses has exactly 7 entries for a "7 Days" journey, 14
+// for "14 Days", etc.) — this was already true in the markup, it just
+// was never read back. Progress now persists in its own localStorage
+// key, advances at most once per real calendar day (so the "N Days"
+// label on each card is now actually true), and awards XP through the
+// same stats/xpMultiplier() system the rest of the app already uses,
+// so it also benefits from the Jumu'ah 2x bonus on Fridays.
 // ============================================================
 
+const JOURNEY_DAY_XP = 10;
+const JOURNEY_COMPLETE_XP = 50;
+
+function loadJourneys() {
+    try {
+        return JSON.parse(localStorage.getItem("bacaJourneys")) || {};
+    } catch {
+        return {};
+    }
+}
+
+function saveJourneys(data) {
+    localStorage.setItem("bacaJourneys", JSON.stringify(data));
+}
+
+function getJourneyState(card) {
+    const id = card.dataset.journey;
+    const verses = (card.dataset.verses || "").split(",").filter(Boolean);
+    const total = verses.length || 1;
+    const journeys = loadJourneys();
+    const progress = journeys[id] || null;
+    return { id, verses, total, progress, journeys };
+}
+
+function renderJourneyCard(card) {
+    const { total, progress } = getJourneyState(card);
+    const badge = card.querySelector(".journey-badge");
+    const btn = card.querySelector("button");
+    const bar = card.querySelector(".journey-progress");
+    const fill = card.querySelector(".journey-progress-fill");
+    if (!badge || !btn) return;
+
+    if (!progress) {
+        badge.textContent = `${total} Day${total > 1 ? "s" : ""}`;
+        badge.classList.remove("done");
+        btn.textContent = "Start Journey";
+        if (bar) bar.hidden = true;
+        return;
+    }
+
+    if (progress.completed) {
+        badge.textContent = "Completed ✓";
+        badge.classList.add("done");
+        btn.textContent = "Read Again";
+        if (bar) { bar.hidden = false; }
+        if (fill) fill.style.width = "100%";
+        return;
+    }
+
+    badge.textContent = `Day ${progress.day} of ${total}`;
+    badge.classList.remove("done");
+    const readyForNextDay = progress.lastAdvanceDate !== getTodayStr();
+    btn.textContent = readyForNextDay ? `Continue \u2014 Day ${progress.day + 1}` : `Re-read Day ${progress.day}`;
+    if (bar) bar.hidden = false;
+    if (fill) fill.style.width = Math.round((progress.day / total) * 100) + "%";
+}
+
+function renderAllJourneyCards() {
+    document.querySelectorAll(".journey-card").forEach(renderJourneyCard);
+}
+
 function initJourneys() {
+    renderAllJourneyCards();
+
     document.querySelectorAll(".journey-card").forEach(card => {
         const btn = card.querySelector("button");
         if (!btn) return;
+
         btn.addEventListener("click", e => {
             e.stopPropagation();
-            const start = card.dataset.start;
-            if (!start) return;
-            const [surah, ayah] = start.split(":").map(Number);
+            const { id, verses, total, progress, journeys } = getJourneyState(card);
             const journeyTitle = card.querySelector("h3")?.textContent?.trim() || "Journey";
+            const today = getTodayStr();
 
-            // Save journey progress
-            const journeyData = {
-                title: journeyTitle,
-                verses: card.dataset.verses?.split(",") || [start],
-                currentIndex: 0,
-                startedAt: Date.now(),
-            };
-            localStorage.setItem("activeJourney", JSON.stringify(journeyData));
+            // Not started yet — begin at day 1.
+            if (!progress) {
+                journeys[id] = { day: 1, lastAdvanceDate: today, completed: false, startedAt: Date.now() };
+                saveJourneys(journeys);
+                const [surah, ayah] = (verses[0] || card.dataset.start).split(":").map(Number);
+                showToast(`Day 1 of ${total} \u2014 ${journeyTitle} 📖`);
+                setTimeout(() => openReader(surah, ayah), 400);
+                renderJourneyCard(card);
+                return;
+            }
 
-            showToast(`Starting: ${journeyTitle} 📖`);
-            setTimeout(() => openReader(surah, ayah), 500);
+            // Already completed — "Read Again" just reopens day 1 without
+            // touching the saved completion.
+            if (progress.completed) {
+                const [surah, ayah] = verses[0].split(":").map(Number);
+                showToast(`Reviewing: ${journeyTitle}`);
+                setTimeout(() => openReader(surah, ayah), 400);
+                return;
+            }
+
+            // Already advanced today — re-open today's verse, don't skip ahead.
+            if (progress.lastAdvanceDate === today) {
+                const [surah, ayah] = verses[progress.day - 1].split(":").map(Number);
+                showToast(`Day ${progress.day} of ${total} \u2014 ${journeyTitle}`);
+                setTimeout(() => openReader(surah, ayah), 400);
+                return;
+            }
+
+            // A new calendar day has passed — advance one day.
+            const nextDay = progress.day + 1;
+            const stats = loadStats();
+            const earned = JOURNEY_DAY_XP * xpMultiplier();
+            stats.xp = (stats.xp || 0) + earned;
+
+            if (nextDay >= total) {
+                progress.day = total;
+                progress.completed = true;
+                progress.lastAdvanceDate = today;
+                const bonus = JOURNEY_COMPLETE_XP * xpMultiplier();
+                stats.xp += bonus;
+                saveStats(stats);
+                journeys[id] = progress;
+                saveJourneys(journeys);
+                const [surah, ayah] = verses[total - 1].split(":").map(Number);
+                showToast(`Journey complete! ${journeyTitle} \u2014 +${earned + bonus} XP 🎉`);
+                setTimeout(() => openReader(surah, ayah), 400);
+            } else {
+                progress.day = nextDay;
+                progress.lastAdvanceDate = today;
+                saveStats(stats);
+                journeys[id] = progress;
+                saveJourneys(journeys);
+                const [surah, ayah] = verses[nextDay - 1].split(":").map(Number);
+                showToast(`Day ${nextDay} of ${total} \u2014 ${journeyTitle} (+${earned} XP)`);
+                setTimeout(() => openReader(surah, ayah), 400);
+            }
+
+            renderJourneyCard(card);
+            if (typeof updateStatsUI === "function") updateStatsUI(loadStats());
+            if (typeof checkAchievements === "function") checkAchievements(loadStats());
         });
     });
 }
