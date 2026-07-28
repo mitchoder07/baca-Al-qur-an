@@ -927,6 +927,102 @@ body.light-mode .surah-meaning {
   cursor: pointer;
 }
 
+.journey-badge.done {
+  background: rgba(251, 191, 36, 0.18);
+  color: #fbbf24;
+}
+
+.journey-progress {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+
+.journey-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--primary), #06b6d4);
+  transition: width 0.4s ease;
+}
+
+body.light-mode .journey-progress {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   COMPACT MOBILE CARDS — Topics & Journeys
+   Matches the density of .surah-card on small screens so users can
+   scroll through them quickly instead of one giant card per screen.
+   ============================================================ */
+@media (max-width: 768px) {
+  .topics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .topic-card {
+    padding: 0.9rem 0.6rem;
+    border-radius: 16px;
+  }
+
+  .topic-card svg,
+  .topic-card i {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0.4rem;
+  }
+
+  .topic-card h3 {
+    font-size: 0.82rem;
+  }
+
+  .journey-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .journey-card {
+    padding: 0.85rem;
+    border-radius: 16px;
+  }
+
+  .journey-card .journey-badge {
+    padding: 0.28rem 0.6rem;
+    font-size: 0.65rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .journey-card h3 {
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+    line-height: 1.25;
+  }
+
+  .journey-card p {
+    font-size: 0.7rem;
+    line-height: 1.4;
+    margin-bottom: 0.6rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .journey-progress {
+    margin-bottom: 0.6rem;
+  }
+
+  .journey-card button {
+    width: 100%;
+    padding: 0.55rem 0.6rem;
+    font-size: 0.72rem;
+  }
+}
+
 /* Continue Reading Section */
 
 .continue-reading {
