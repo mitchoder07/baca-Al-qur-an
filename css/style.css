@@ -3139,6 +3139,47 @@ body.light-mode .bookmark-actions button {
   border-color: var(--primary);
 }
 
+@media (max-width: 768px) {
+  .progress-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
+  }
+
+  .progress-card {
+    padding: 0.9rem 0.75rem;
+    border-radius: 16px;
+    gap: 0.7rem;
+  }
+
+  .progress-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+
+  .progress-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .progress-value {
+    font-size: 1.1rem;
+  }
+
+  .progress-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.3px;
+    margin-top: 0.1rem;
+  }
+
+  .streak-flame {
+    font-size: 2.2rem;
+    right: -6px;
+    bottom: -6px;
+    opacity: 0.5;
+  }
+}
+
 .progress-icon {
   width: 52px;
   height: 52px;
@@ -3671,10 +3712,6 @@ body.light-mode .footer-col h4 {
 
   .challenge-left {
     flex-direction: column;
-  }
-
-  .progress-grid {
-    grid-template-columns: 1fr;
   }
 }
 
