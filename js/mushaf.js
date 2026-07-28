@@ -288,7 +288,8 @@ function loadReadingStats() {
     const fallback = {
         streak: 0, lastReadDate: null, readingTime: 0, pagesRead: 0,
         versesRead: 0, juzExplored: 0, completedSurahs: [], totalDays: 0,
-        challengesCompleted: 0, todayPages: 0, todayDate: null, xp: 0,
+        challengesCompleted: 0, todayPages: 0, todayVerses: 0,
+        todayReadingSeconds: 0, todaySurahs: 0, todayDate: null, xp: 0,
         unlockedAchievements: [], visitedPages: [], visitedSurahs: [],
     };
     try {
@@ -312,6 +313,9 @@ function resetDailyCounterIfNeeded(stats) {
     if (stats.todayDate !== today) {
         stats.todayDate = today;
         stats.todayPages = 0;
+        stats.todayVerses = 0;
+        stats.todayReadingSeconds = 0;
+        stats.todaySurahs = 0;
     }
 }
 
@@ -347,6 +351,7 @@ function recordPageRead(pageNum, ayahsOnPage) {
         stats.pagesRead = (stats.pagesRead || 0) + 1;
         stats.todayPages = (stats.todayPages || 0) + 1;
         stats.versesRead = (stats.versesRead || 0) + ayahsOnPage.length;
+        stats.todayVerses = (stats.todayVerses || 0) + ayahsOnPage.length;
 
         const juzNum = Math.ceil(pageNum / 20.13); // ~20 pages per juz
         if (juzNum > (stats.juzExplored || 0)) stats.juzExplored = juzNum;
@@ -362,6 +367,7 @@ function recordPageRead(pageNum, ayahsOnPage) {
         const meta = SURAH_LIST[sNum - 1];
         if (meta && bySurah[sNum].includes(meta.total_verses) && !stats.completedSurahs.includes(sNum)) {
             stats.completedSurahs.push(sNum);
+            stats.todaySurahs = (stats.todaySurahs || 0) + 1;
         }
     });
 
@@ -383,6 +389,7 @@ function recordSurahRead(surahNum, totalVerses) {
     if (!stats.visitedSurahs.includes(surahNum)) {
         stats.visitedSurahs.push(surahNum);
         stats.versesRead = (stats.versesRead || 0) + totalVerses;
+        stats.todayVerses = (stats.todayVerses || 0) + totalVerses;
         bumpReadingStreak(stats);
     }
 
@@ -396,10 +403,12 @@ function recordSurahRead(surahNum, totalVerses) {
 // its final ayah appears on a page that's actually been rendered/reached.
 function markSurahFullyRead(surahNum) {
     const stats = loadReadingStats();
+    resetDailyCounterIfNeeded(stats);
     if (!stats.completedSurahs) stats.completedSurahs = [];
     if (stats.completedSurahs.includes(surahNum)) return;
 
     stats.completedSurahs.push(surahNum);
+    stats.todaySurahs = (stats.todaySurahs || 0) + 1;
     saveReadingStats(stats);
 
     const meta = SURAH_LIST[surahNum - 1];
@@ -443,7 +452,9 @@ function startReadingTimeTracking() {
             accumulator += 30;
             if (accumulator >= 60) {
                 const stats = loadReadingStats();
+                resetDailyCounterIfNeeded(stats);
                 stats.readingTime = (stats.readingTime || 0) + accumulator;
+                stats.todayReadingSeconds = (stats.todayReadingSeconds || 0) + accumulator;
                 saveReadingStats(stats);
                 accumulator = 0;
             }

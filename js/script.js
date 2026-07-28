@@ -2218,20 +2218,23 @@ function loadStats() {
         return JSON.parse(localStorage.getItem("bacaStats")) || {
             streak: 0,
             lastReadDate: null,
-            readingTime: 0,         // seconds
-            pagesRead: 0,
-            versesRead: 0,
+            readingTime: 0,         // seconds, lifetime
+            pagesRead: 0,           // lifetime
+            versesRead: 0,          // lifetime
             juzExplored: 0,
             completedSurahs: [],
             totalDays: 0,
             challengesCompleted: 0,
             todayPages: 0,
+            todayVerses: 0,             // verses read TODAY — resets daily
+            todayReadingSeconds: 0,     // reading time TODAY — resets daily
+            todaySurahs: 0,             // surahs completed TODAY — resets daily
             todayDate: null,
             xp: 0,
             unlockedAchievements: [],
         };
     } catch {
-        return { streak: 0, lastReadDate: null, readingTime: 0, pagesRead: 0, versesRead: 0, juzExplored: 0, completedSurahs: [], totalDays: 0, challengesCompleted: 0, todayPages: 0, todayDate: null, xp: 0, unlockedAchievements: [] };
+        return { streak: 0, lastReadDate: null, readingTime: 0, pagesRead: 0, versesRead: 0, juzExplored: 0, completedSurahs: [], totalDays: 0, challengesCompleted: 0, todayPages: 0, todayVerses: 0, todayReadingSeconds: 0, todaySurahs: 0, todayDate: null, xp: 0, unlockedAchievements: [] };
     }
 }
 
@@ -2269,10 +2272,13 @@ function trackPageRead(pageNum) {
     const stats = loadStats();
     const today = getTodayStr();
 
-    // Reset daily counter if new day
+    // Reset daily counters if new day
     if (stats.todayDate !== today) {
         stats.todayDate = today;
         stats.todayPages = 0;
+        stats.todayVerses = 0;
+        stats.todayReadingSeconds = 0;
+        stats.todaySurahs = 0;
     }
 
     stats.pagesRead = (stats.pagesRead || 0) + 1;
@@ -2294,7 +2300,19 @@ function trackPageRead(pageNum) {
 // Track reading time (called periodically)
 function trackReadingTime(seconds) {
     const stats = loadStats();
+    const today = getTodayStr();
+
+    // Reset daily counters if new day
+    if (stats.todayDate !== today) {
+        stats.todayDate = today;
+        stats.todayPages = 0;
+        stats.todayVerses = 0;
+        stats.todayReadingSeconds = 0;
+        stats.todaySurahs = 0;
+    }
+
     stats.readingTime = (stats.readingTime || 0) + seconds;
+    stats.todayReadingSeconds = (stats.todayReadingSeconds || 0) + seconds;
     saveStats(stats);
     checkAchievements(stats);
     updateStatsUI(stats);
@@ -2304,13 +2322,26 @@ function trackReadingTime(seconds) {
 // Mark a surah as completed
 function markSurahCompleted(surahNum) {
     const stats = loadStats();
+    const today = getTodayStr();
+
+    // Reset daily counters if new day
+    if (stats.todayDate !== today) {
+        stats.todayDate = today;
+        stats.todayPages = 0;
+        stats.todayVerses = 0;
+        stats.todayReadingSeconds = 0;
+        stats.todaySurahs = 0;
+    }
+
     if (!stats.completedSurahs) stats.completedSurahs = [];
     if (!stats.completedSurahs.includes(surahNum)) {
         stats.completedSurahs.push(surahNum);
+        stats.todaySurahs = (stats.todaySurahs || 0) + 1;
         saveStats(stats);
         showToast(`Surah ${SURAH_LIST[surahNum - 1]?.transliteration || surahNum} completed! ✓`);
         checkAchievements(stats);
         updateStatsUI(stats);
+        updateChallengeProgress(stats);
     }
 }
 
@@ -2370,11 +2401,11 @@ function updateChallengeProgress(stats) {
     if (challenge.unit === "pages") {
         progress.count = stats.todayPages || 0;
     } else if (challenge.unit === "minutes") {
-        progress.count = Math.floor((stats.readingTime || 0) / 60);
+        progress.count = Math.floor((stats.todayReadingSeconds || 0) / 60);
     } else if (challenge.unit === "verses") {
-        progress.count = stats.versesRead || 0;
+        progress.count = stats.todayVerses || 0;
     } else if (challenge.unit === "surah") {
-        progress.count = (stats.completedSurahs || []).length;
+        progress.count = stats.todaySurahs || 0;
     }
 
     if (progress.count >= challenge.target && !progress.done) {
@@ -2464,11 +2495,14 @@ function renderChallenge() {
 function initGamification() {
     const stats = loadStats();
 
-    // Reset daily counter if new day
+    // Reset daily counters if new day
     const today = getTodayStr();
     if (stats.todayDate !== today) {
         stats.todayDate = today;
         stats.todayPages = 0;
+        stats.todayVerses = 0;
+        stats.todayReadingSeconds = 0;
+        stats.todaySurahs = 0;
         saveStats(stats);
     }
 
