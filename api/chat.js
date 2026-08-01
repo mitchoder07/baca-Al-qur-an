@@ -54,11 +54,61 @@ When a user asks about a specific surah, respond with:
   Always include #surah=NUMBER at the end of the mushaf.html link so it opens the correct surah.
   Surah numbers: Al-Fatihah=1, Al-Baqarah=2, Ali Imran=3, An-Nisa=4, Al-Maidah=5, Al-Anam=6, Al-Araf=7, Al-Anfal=8, At-Tawbah=9, Yunus=10, Hud=11, Yusuf=12, Ar-Rad=13, Ibrahim=14, Al-Hijr=15, An-Nahl=16, Al-Isra=17, Al-Kahf=18, Maryam=19, Ta-Ha=20, Al-Anbiya=21, Al-Hajj=22, Al-Muminun=23, An-Nur=24, Al-Furqan=25, Ash-Shuara=26, An-Naml=27, Al-Qasas=28, Al-Ankabut=29, Ar-Rum=30, Luqman=31, As-Sajdah=32, Al-Ahzab=33, Saba=34, Fatir=35, Ya-Sin=36, As-Saffat=37, Sad=38, Az-Zumar=39, Ghafir=40, Fussilat=41, Ash-Shura=42, Az-Zukhruf=43, Ad-Dukhan=44, Al-Jathiyah=45, Al-Ahqaf=46, Muhammad=47, Al-Fath=48, Al-Hujurat=49, Qaf=50, Adh-Dhariyat=51, At-Tur=52, An-Najm=53, Al-Qamar=54, Ar-Rahman=55, Al-Waqiah=56, Al-Hadid=57, Al-Mujadila=58, Al-Hashr=59, Al-Mumtahanah=60, As-Saff=61, Al-Jumuah=62, Al-Munafiqun=63, At-Taghabun=64, At-Talaq=65, At-Tahrim=66, Al-Mulk=67, Al-Qalam=68, Al-Haqqah=69, Al-Maarij=70, Nuh=71, Al-Jinn=72, Al-Muzzammil=73, Al-Muddaththir=74, Al-Qiyamah=75, Al-Insan=76, Al-Mursalat=77, An-Naba=78, An-Naziat=79, Abasa=80, At-Takwir=81, Al-Infitar=82, Al-Mutaffifin=83, Al-Inshiqaq=84, Al-Buruj=85, At-Tariq=86, Al-Ala=87, Al-Ghashiyah=88, Al-Fajr=89, Al-Balad=90, Ash-Shams=91, Al-Layl=92, Ad-Duha=93, Ash-Sharh=94, At-Tin=95, Al-Alaq=96, Al-Qadr=97, Al-Bayyinah=98, Az-Zalzalah=99, Al-Adiyat=100, Al-Qariah=101, At-Takathur=102, Al-Asr=103, Al-Humazah=104, Al-Fil=105, Quraysh=106, Al-Maun=107, Al-Kawthar=108, Al-Kafirun=109, An-Nasr=110, Al-Masad=111, Al-Ikhlas=112, Al-Falaq=113, An-Nas=114
 
-If a user types an Arabic word and asks where it appears in the Quran, be honest about the limits of your memory: give your best answer if you're reasonably confident, but don't claim a specific surah/ayah with false certainty, and never contradict yourself within the same reply (e.g. saying a verse "is not the primary occurrence" and then also calling it "the most relevant occurrence" in the same answer — pick one clear answer and commit to it, or say plainly that you're not fully certain and suggest they use Baca's search feature to look it up directly).
+If a user types an Arabic word and asks where it appears in the Quran, use the SEARCH RESULTS block if one is provided in this conversation (it will appear as a system message right before the user's question) — those are real, verified matches from the actual Quran text, not your memory. Cite only what's in that block: surah name, ayah number, and a mushaf.html#surah=NUMBER link. If the block says no matches were found, say so honestly and suggest the user try Baca's in-app search or check their spelling — do not guess a surah/ayah from memory as a fallback. If no SEARCH RESULTS block is present for a word-location question (e.g. the word was written in Latin transliteration, not Arabic script), ask the user to type the word in Arabic script so it can be looked up exactly, rather than guessing.
 
 Answer decisively. Don't backtrack, hedge, or restate the same claim with a different conclusion later in the same response — if you catch yourself unsure mid-answer, stop and give one clear, honest answer instead of thinking out loud.
 
 Keep responses concise, warm, helpful. Use emojis sparingly. Respect Islamic etiquette. Max 3-4 paragraphs.`;
+
+// ============================================================
+// REAL QURAN SEARCH — grounds word-location answers in actual
+// verified verse text instead of the model's memory. Uses the
+// public Al Quran Cloud API (no key needed): searches the Uthmani
+// Arabic edition for an exact substring match and returns real
+// surah/ayah hits. This is what fixes the AI confidently citing
+// (and then contradicting itself about) a verse it never actually
+// looked up.
+// ============================================================
+
+async function searchQuranWord(term) {
+    try {
+        const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(term)}/all/quran-uthmani`;
+        const response = await fetch(url);
+        if (!response.ok) return null; // e.g. 400 when the API finds literally nothing
+        const data = await response.json();
+        const matches = data?.data?.matches || [];
+        if (!matches.length) return { count: 0, matches: [] };
+
+        return {
+            count: data.data.count || matches.length,
+            matches: matches.slice(0, 8).map(m => ({
+                surahNumber: m.surah?.number,
+                surahName: m.surah?.englishName,
+                ayah: m.numberInSurah,
+                text: m.text
+            }))
+        };
+    } catch (err) {
+        console.error('Quran search error:', err);
+        return null; // treat network/API failure the same as "couldn't search" — model falls back to asking for Arabic script
+    }
+}
+
+function formatSearchResultsForPrompt(term, results) {
+    if (!results) {
+        return `SEARCH RESULTS for "${term}": The search tool failed to respond. Do not guess — tell the user the lookup is temporarily unavailable and suggest they try Baca's in-app search instead.`;
+    }
+    if (results.count === 0) {
+        return `SEARCH RESULTS for "${term}": No matches found in the Quran text. Tell the user honestly that this exact form wasn't found, and suggest checking the spelling/diacritics or trying Baca's in-app search.`;
+    }
+    const lines = results.matches.map(m =>
+        `- Surah ${m.surahName} (${m.surahNumber}:${m.ayah}) — ${m.text}`
+    ).join('\n');
+    const more = results.count > results.matches.length
+        ? `\n(${results.count} total matches found — showing the first ${results.matches.length}.)`
+        : '';
+    return `SEARCH RESULTS for "${term}" — these are real, verified matches from the Quran text. Cite only these:\n${lines}${more}`;
+}
 
 // ============================================================
 // AI CHAT ENDPOINT — uses Groq (free, OpenAI-compatible)
@@ -91,6 +141,17 @@ module.exports = async (req, res) => {
             for (const msg of history.slice(-10)) {
                 messages.push({ role: msg.role, content: msg.content });
             }
+        }
+
+        // If the message contains actual Arabic script, run a real search
+        // against the Quran text and inject verified results before the
+        // model answers — this is what grounds word-location questions in
+        // fact instead of the model's (unreliable) memory of exact wording.
+        const arabicMatch = message.match(/[\u0600-\u06FF][\u0600-\u06FF\s]{0,30}/);
+        if (arabicMatch) {
+            const term = arabicMatch[0].trim();
+            const results = await searchQuranWord(term);
+            messages.push({ role: 'system', content: formatSearchResultsForPrompt(term, results) });
         }
 
         messages.push({ role: 'user', content: message });
