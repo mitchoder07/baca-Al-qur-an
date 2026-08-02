@@ -1,8 +1,6 @@
 /* ============================================================
    BACA — Vercel Serverless Function for AI Chat
-   Lives at /api/chat.js — Vercel's file-based routing.
-   Uses Groq with llama-3.3-70b-versatile for best tool-calling
-   and Quran knowledge accuracy.
+   Uses GLM-4.6 via z-ai-web-dev-sdk with Groq fallback.
    ============================================================ */
 
 const SYSTEM_PROMPT = `You are "Baca AI", the intelligent assistant for the Baca Quran website (baca-al-qur-an.vercel.app). You are knowledgeable, warm, and deeply respectful of Islamic etiquette.
@@ -26,49 +24,41 @@ QURAN FACTS:
 
 SURAH LINKS:
 When mentioning a surah, include a clickable link: [Read Surah Name](mushaf.html#surah=NUMBER)
-Example: [Read Surah Al-Baqarah](mushaf.html#surah=2)
 
 WORD/THEME SEARCH RULES — CRITICAL FOR ACCURACY:
-When a user asks "where does [word] appear in the Quran?" or "which surah mentions [topic]?":
 1. ALWAYS use the search_quran_text tool — NEVER answer from memory alone
-2. If they gave Arabic script: search with language="arabic" using that exact text
-3. If they gave transliteration/English/theme: call the tool TWICE — once with your best Arabic spelling (language="arabic"), once with an English keyword (language="english")
-4. If zero matches: try ONE more time with a different spelling or synonym before concluding
-5. ONLY cite surah/ayah that the tool actually returned — never fabricate references
-6. If the tool is unavailable or returns nothing after retries: say so honestly, don't guess
+2. If they gave Arabic script: search with language="arabic"
+3. If they gave transliteration/English/theme: call TWICE — Arabic + English
+4. If zero matches: try ONE more time with different spelling
+5. ONLY cite surah/ayah that the tool returned — never fabricate
+6. If tool unavailable: say so honestly, don't guess
+7. NEVER make up Arabic text, translations, or ayah numbers
 
 ANSWERING RULES:
-- Be DECISIVE. Give one clear answer. Don't hedge or backtrack.
-- Be ACCURATE. If you're not sure, say so. Never fabricate ayah numbers or surah references.
-- Be CONCISE. Max 3-4 paragraphs. Use bullet points for lists.
-- Be WARM. Use respectful Islamic greetings when appropriate. Use emojis sparingly.
-- Be HELPFUL. When relevant, suggest related surahs to read or Baca features to try.
-- For factual Quran questions (surah info, verse counts, revelation type), answer directly from your knowledge.
-- For word/theme location questions, ALWAYS use the search tool.
+- Be DECISIVE. One clear answer. Don't hedge.
+- Be ACCURATE. If unsure, say so. Never fabricate.
+- Be CONCISE. Max 3-4 paragraphs.
+- Be WARM. Respectful Islamic etiquette.
+- For factual Quran questions: answer from knowledge.
+- For word/theme location: ALWAYS use the search tool.
+- If you realize you might be wrong: STOP and correct yourself.
 
 ISLAMIC ETIQUETTE:
 - Use "SWT" after Allah, "PBUH" or ﷺ after Prophet Muhammad
-- Be respectful when discussing scholars, companions, and Islamic rulings
-- When uncertain about a ruling, recommend consulting a qualified scholar
-- Never issue fatwas — direct fiqh questions to scholars`;
+- Never issue fatwas — direct fiqh questions to scholars
+
+CRITICAL: Do NOT improvise, paraphrase, or reconstruct Quranic verses from memory. If you need to quote a verse, use the search tool to get the exact text. Fabricating Quranic text is a serious error.`;
 
 const QURAN_SEARCH_TOOL = {
     type: 'function',
     function: {
         name: 'search_quran_text',
-        description: "Search the real Quran text for a word or phrase. Returns verified surah/ayah matches. Use this whenever someone asks where a word appears, which surah mentions a topic, or to verify a verse reference. For transliterations or themes, call twice: once with Arabic (language='arabic') and once with English (language='english').",
+        description: "Search the real Quran text for a word or phrase. Returns verified surah/ayah matches with exact text. Use this whenever someone asks where a word appears, which surah mentions a topic, or to verify a verse reference.",
         parameters: {
             type: 'object',
             properties: {
-                query: {
-                    type: 'string',
-                    description: 'The Arabic word (exact or without diacritics) or English keyword/phrase to search for'
-                },
-                language: {
-                    type: 'string',
-                    enum: ['arabic', 'english'],
-                    description: "'arabic' searches Arabic Quran text, 'english' searches English translation"
-                }
+                query: { type: 'string', description: 'The Arabic word or English keyword to search for' },
+                language: { type: 'string', enum: ['arabic', 'english'], description: "'arabic' searches Arabic text, 'english' searches English translation" }
             },
             required: ['query', 'language']
         }
@@ -82,182 +72,124 @@ function stripArabicDiacritics(text) {
 async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-        return await fetch(url, { ...options, signal: controller.signal });
-    } finally {
-        clearTimeout(timeout);
-    }
+    try { return await fetch(url, { ...options, signal: controller.signal }); }
+    finally { clearTimeout(timeout); }
 }
 
 async function searchQuranText(query, language) {
     const edition = language === 'arabic' ? 'quran-simple-clean' : 'en.sahih';
     const cleanQuery = language === 'arabic' ? stripArabicDiacritics(query) : query;
-
-    if (!cleanQuery) {
-        return { error: 'Empty search query.' };
-    }
+    if (!cleanQuery) return { error: 'Empty search query.' };
 
     const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(cleanQuery)}/all/${edition}`;
-
     let response;
     try {
         response = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 7000);
-    } catch (err) {
-        return { error: 'Search temporarily unavailable. Do not guess — tell the user honestly.' };
-    }
+    } catch { return { error: 'Search temporarily unavailable.' }; }
 
     let data;
-    try {
-        data = await response.json();
-    } catch {
-        return { error: 'Search temporarily unavailable.' };
-    }
+    try { data = await response.json(); } catch { return { error: 'Search temporarily unavailable.' }; }
 
     const matches = data?.data?.matches;
     if (Array.isArray(matches) && matches.length > 0) {
         return {
             count: data.data.count || matches.length,
             matches: matches.slice(0, 8).map(m => ({
-                surahNumber: m.surah?.number,
-                surahName: m.surah?.englishName,
-                ayah: m.numberInSurah,
-                text: m.text
+                surahNumber: m.surah?.number, surahName: m.surah?.englishName,
+                ayah: m.numberInSurah, text: m.text
             }))
         };
     }
-
-    return { count: 0, matches: [], note: 'No matches. Try a different spelling or English keyword.' };
+    return { count: 0, matches: [], note: 'No matches. Try a different spelling.' };
 }
 
-function sanitizeAssistantMessage(message) {
-    const clean = { role: 'assistant', content: message.content ?? null };
-    if (message.tool_calls && message.tool_calls.length > 0) {
-        clean.tool_calls = message.tool_calls.map(tc => ({
-            id: tc.id,
-            type: tc.type,
-            function: { name: tc.function?.name, arguments: tc.function?.arguments }
-        }));
-    }
-    return clean;
-}
-
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const MAX_TOOL_ROUNDS = 3;
 
-async function callGroq(apiKey, messages, withTools) {
-    return fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model: GROQ_MODEL,
-            messages,
-            ...(withTools ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
-            temperature: 0.3,
-            max_tokens: 1000
-        })
-    }, 20000);
-}
-
 module.exports = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
         const { message, history } = req.body || {};
+        if (!message) return res.status(400).json({ error: 'Message is required' });
 
-        if (!message) {
-            return res.status(400).json({ error: 'Message is required' });
-        }
-
-        const apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) {
-            return res.status(500).json({ error: 'AI not configured. Set GROQ_API_KEY environment variable.' });
-        }
-
-        const messages = [
-            { role: 'system', content: SYSTEM_PROMPT }
-        ];
-
+        const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
         if (history && Array.isArray(history)) {
             for (const msg of history.slice(-8)) {
                 messages.push({ role: msg.role, content: msg.content });
             }
         }
-
         messages.push({ role: 'user', content: message });
+
+        let zai = null;
+        let useGroq = false;
+
+        // Try GLM via z-ai SDK first (better accuracy)
+        try {
+            const ZAI = (await import('z-ai-web-dev-sdk')).default;
+            zai = await ZAI.create();
+        } catch (e) {
+            console.log('z-ai SDK not available, falling back to Groq');
+            useGroq = true;
+        }
+
+        const apiKey = process.env.GROQ_API_KEY;
+        if (useGroq && !apiKey) {
+            return res.status(500).json({ error: 'AI not configured.' });
+        }
 
         let choice = null;
         for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
             const isLastAllowedRound = round === MAX_TOOL_ROUNDS;
             let response;
-            try {
-                response = await callGroq(apiKey, messages, !isLastAllowedRound);
-            } catch (err) {
-                console.error('Groq API error:', err.message);
-                return res.status(500).json({ error: 'AI service unavailable' });
+
+            if (!useGroq) {
+                // Use GLM-4.6
+                response = await zai.chat.completions.create({
+                    model: 'glm-4.6',
+                    messages,
+                    ...(isLastAllowedRound ? {} : { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' }),
+                    temperature: 0.2,
+                    max_tokens: 1000
+                });
+            } else {
+                // Fallback: Groq with llama-3.3-70b-versatile
+                const groqRes = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+                    body: JSON.stringify({
+                        model: 'llama-3.3-70b-versatile',
+                        messages,
+                        ...(isLastAllowedRound ? {} : { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' }),
+                        temperature: 0.2,
+                        max_tokens: 1000
+                    })
+                }, 20000);
+                response = await groqRes.json();
             }
 
-            if (!response.ok) {
-                const errText = await response.text().catch(() => '');
-                console.error('Groq API error:', response.status, errText.slice(0, 500));
-                if (response.status === 400 && errText.includes('model')) {
-                    console.log('Trying fallback: llama-3.1-70b-versatile');
-                    const fallbackResponse = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: 'llama-3.1-70b-versatile',
-                            messages,
-                            ...(!isLastAllowedRound ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
-                            temperature: 0.3,
-                            max_tokens: 1000
-                        })
-                    }, 20000);
-                    if (!fallbackResponse.ok) {
-                        return res.status(500).json({ error: 'AI service unavailable' });
-                    }
-                    const fallbackData = await fallbackResponse.json();
-                    choice = fallbackData.choices?.[0];
-                    break;
-                }
-                return res.status(500).json({ error: 'AI service unavailable' });
-            }
-
-            const data = await response.json();
-            choice = data.choices?.[0];
+            choice = response.choices?.[0];
             const toolCalls = choice?.message?.tool_calls;
 
-            if (!toolCalls || toolCalls.length === 0) {
-                break;
-            }
+            if (!toolCalls || toolCalls.length === 0) break;
 
-            messages.push(sanitizeAssistantMessage(choice.message));
+            messages.push({
+                role: 'assistant',
+                content: choice.message.content || null,
+                tool_calls: toolCalls.map(tc => ({
+                    id: tc.id, type: tc.type,
+                    function: { name: tc.function.name, arguments: tc.function.arguments }
+                }))
+            });
 
             for (const call of toolCalls) {
                 let args;
-                try {
-                    args = JSON.parse(call.function.arguments);
-                } catch {
-                    args = {};
-                }
+                try { args = JSON.parse(call.function.arguments); } catch { args = {}; }
                 const result = await searchQuranText(args.query || '', args.language || 'english');
-                messages.push({
-                    role: 'tool',
-                    tool_call_id: call.id,
-                    content: JSON.stringify(result)
-                });
+                messages.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) });
             }
         }
 
         const reply = choice?.message?.content || 'I could not generate a response.';
-
         return res.status(200).json({ reply });
     } catch (error) {
         console.error('Chat API error:', error);
