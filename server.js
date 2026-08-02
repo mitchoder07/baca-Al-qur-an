@@ -15,6 +15,15 @@ app.use(express.static(__dirname));
 
 // ============================================================
 // SYSTEM PROMPT
+//
+// MODEL NOTE (fixed): this used to run on llama-3.3-70b-versatile,
+// which Groq announced as deprecated on 2026-06-17 with full
+// shutdown by August 2026 — i.e. right around when this file was
+// last touched. That's almost certainly why responses were
+// intermittently failing ("Sorry, I could not process that") —
+// some requests were landing during the sunset window. Moved to
+// openai/gpt-oss-120b, Groq's own recommended replacement, which
+// also supports tool calling.
 // ============================================================
 
 const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website.
@@ -59,9 +68,10 @@ When a user asks about a specific surah, respond with:
 
 If someone asks where a word or theme appears in the Quran (in Arabic script, in transliteration, by its English meaning, or just as a topic like "mercy" or "patience"), use the search_quran_text tool rather than answering from memory:
 - If they gave you the word in Arabic script, call the tool with that exact Arabic text and language="arabic".
-- If they only gave you a transliteration (e.g. "kafilah"), an English word, or a theme, figure out the best short English keyword or phrase for it and call the tool with language="english". Most people asking about a word don't read Arabic — don't ask them to type it in Arabic script. Do the translation yourself and search in English.
+- If they only gave you a transliteration (e.g. "kafilah"), an English word, or a theme: call the tool TWICE in the same turn — once with your own best-guess Arabic spelling (language="arabic"), and once with a short English keyword/phrase translation (language="english"). Arabic words often surface in a translation search using a different English word than you'd expect (e.g. "guardian", "custodian", "sponsor" for a single Arabic root), so trying both at once meaningfully improves your odds of a real hit. Most people asking about a word don't read Arabic — never ask them to type it in Arabic script yourself.
+- If every search comes back with zero matches, try again ONCE with a different Arabic spelling (a plausible alternate root form, e.g. singular vs plural, or a different but related English keyword) before concluding. Quran search is exact-text matching, not semantic — a single miss doesn't prove the word or concept is absent.
 - Cite only what the tool actually returns: surah name, ayah number, and a mushaf.html#surah=NUMBER link. Never state a surah/ayah you didn't get from the tool.
-- If the tool returns zero matches, say so honestly (e.g. the exact word/phrasing may differ across translations) and suggest Baca's in-app search — don't fall back to guessing from memory.
+- If, after retrying, everything still comes back empty, don't flatly claim "this word is not in the Quran" — you've only ruled out the exact strings you tried, not the whole Quran. Instead say plainly that you couldn't find that exact spelling or phrasing in the texts you searched, that translations vary in wording so it may appear differently, and point them to Baca's in-app search or invite them to try rephrasing.
 - If the tool fails to respond at all, say the lookup is temporarily unavailable — don't guess.
 
 Answer decisively. Don't backtrack, hedge, or restate the same claim with a different conclusion later in the same response — if you catch yourself unsure mid-answer, stop and give one clear, honest answer instead of thinking out loud.
@@ -83,13 +93,13 @@ const QURAN_SEARCH_TOOL = {
     type: 'function',
     function: {
         name: 'search_quran_text',
-        description: "Search the real Quran text for a word or short phrase and get back real, verified surah/ayah matches. Use this any time someone asks where a word appears, or asks for verses about a topic. If they gave the word in Arabic script, search with language='arabic' using that exact text. If they only know a transliteration, an English meaning, or a theme (e.g. 'mercy', 'guardian', 'patience'), translate it yourself into the best short English keyword or phrase and search with language='english'.",
+        description: "Search the real Quran text for a word or short phrase and get back real, verified surah/ayah matches. Use this any time someone asks where a word appears, or asks for verses about a topic. If they gave the word in Arabic script, search with language='arabic' using that exact text. If they only know a transliteration, an English meaning, or a theme (e.g. 'mercy', 'guardian', 'patience'), you can call this tool twice in the same turn: once with your own best-guess Arabic spelling (language='arabic'), and once with an English keyword/phrase (language='english').",
         parameters: {
             type: 'object',
             properties: {
                 query: {
                     type: 'string',
-                    description: 'The Arabic word (exact script) or an English keyword/short phrase to search for'
+                    description: 'The Arabic word (exact script, diacritics optional) or an English keyword/short phrase to search for'
                 },
                 language: {
                     type: 'string',
@@ -102,19 +112,40 @@ const QURAN_SEARCH_TOOL = {
     }
 };
 
+// Strip Arabic diacritics (harakat, tanwin, sukun, madda, quranic annotation
+// marks) so a search matches regardless of whether the caller's guess at the
+// vowelling matches the text's actual vowelling exactly. We also switch the
+// searched edition itself to "quran-simple-clean" (Arabic with NO diacritics
+// at all) so the query and the source text are on equal, diacritic-free
+// footing — searching a fully-voweled edition with a partially-voweled guess
+// was a likely cause of real, existing words coming back as "not found".
+function stripArabicDiacritics(text) {
+    return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D4-\u08FF]/g, '').trim();
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
 async function searchQuranText(query, language) {
-    const edition = language === 'arabic' ? 'quran-uthmani' : 'en.sahih';
-    const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(query)}/all/${edition}`;
+    const edition = language === 'arabic' ? 'quran-simple-clean' : 'en.sahih';
+    const cleanQuery = language === 'arabic' ? stripArabicDiacritics(query) : query;
+
+    if (!cleanQuery) {
+        return { error: 'Empty search query — ask the user to clarify the word or phrase.' };
+    }
+
+    const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(cleanQuery)}/all/${edition}`;
     let response;
 
     try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
-        response = await fetch(url, {
-            headers: { 'Accept': 'application/json' },
-            signal: controller.signal
-        });
-        clearTimeout(timeout);
+        response = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 7000);
     } catch (err) {
         console.error('Quran search — network error:', err.message);
         return { error: 'The search tool is temporarily unavailable. Do not guess — tell the user honestly and suggest Baca\'s in-app search.' };
@@ -145,8 +176,46 @@ async function searchQuranText(query, language) {
         };
     }
 
-    console.log(`Quran search — no matches for "${query}" (${language}), status ${response.status}, body:`, JSON.stringify(data).slice(0, 300));
-    return { count: 0, matches: [], note: 'No matches found for this exact query — tell the user honestly, this is not a tool failure.' };
+    console.log(`Quran search — no matches for "${cleanQuery}" (${language}), status ${response.status}, body:`, JSON.stringify(data).slice(0, 300));
+    return { count: 0, matches: [], note: 'No matches for this exact query. This is exact-text search, not semantic — try a different spelling/root form or an alternate English keyword before concluding the word is absent.' };
+}
+
+// Strip a Groq/OpenAI-shaped assistant message down to only the fields that
+// are safe to replay back into the next request. Passing the raw object
+// straight through worked most of the time, but some providers are strict
+// about echoing back exactly the fields they expect on the next call — this
+// removes any risk of an unexpected field causing the follow-up request
+// itself to be rejected.
+function sanitizeAssistantMessage(message) {
+    const clean = { role: 'assistant', content: message.content ?? null };
+    if (message.tool_calls && message.tool_calls.length > 0) {
+        clean.tool_calls = message.tool_calls.map(tc => ({
+            id: tc.id,
+            type: tc.type,
+            function: { name: tc.function?.name, arguments: tc.function?.arguments }
+        }));
+    }
+    return clean;
+}
+
+const GROQ_MODEL = 'openai/gpt-oss-120b';
+const MAX_TOOL_ROUNDS = 2; // initial call + up to 2 follow-ups if it keeps calling tools
+
+async function callGroq(apiKey, messages, withTools) {
+    return fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: GROQ_MODEL,
+            messages,
+            ...(withTools ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
+            temperature: 0.4,
+            max_tokens: 1000
+        })
+    }, 15000);
 }
 
 // ============================================================
@@ -179,42 +248,38 @@ app.post('/api/chat', async (req, res) => {
 
         messages.push({ role: 'user', content: message });
 
-        const groqHeaders = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        };
+        // Agentic loop: let the model call search_quran_text, feed back real
+        // results, and — if it wants to try again with a different query —
+        // allow up to MAX_TOOL_ROUNDS follow-ups before forcing a final text
+        // answer. Previously this only ever ran ONE round, so if the model's
+        // first guess didn't match, it had no choice but to report "not
+        // found" even when a different spelling would have hit.
+        let choice = null;
+        for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+            const isLastAllowedRound = round === MAX_TOOL_ROUNDS;
+            let response;
+            try {
+                response = await callGroq(apiKey, messages, !isLastAllowedRound);
+            } catch (err) {
+                console.error('Groq API network/timeout error:', err.message);
+                return res.status(500).json({ error: 'AI service unavailable' });
+            }
 
-        // First call: give the model the search tool and let IT decide
-        // whether this question needs a real lookup, and what to search
-        // for (Arabic word, or an English keyword for transliterations/
-        // themes — see the tool description above).
-        let response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: groqHeaders,
-            body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
-                messages: messages,
-                tools: [QURAN_SEARCH_TOOL],
-                tool_choice: 'auto',
-                temperature: 0.4,
-                max_tokens: 1000
-            })
-        });
+            if (!response.ok) {
+                const errText = await response.text().catch(() => '');
+                console.error('Groq API error:', response.status, errText.slice(0, 500));
+                return res.status(500).json({ error: 'AI service unavailable' });
+            }
 
-        if (!response.ok) {
-            const errText = await response.text();
-            console.error('Groq API error:', response.status, errText);
-            return res.status(500).json({ error: 'AI service unavailable' });
-        }
+            const data = await response.json();
+            choice = data.choices?.[0];
+            const toolCalls = choice?.message?.tool_calls;
 
-        let data = await response.json();
-        let choice = data.choices?.[0];
-        const toolCalls = choice?.message?.tool_calls;
+            if (!toolCalls || toolCalls.length === 0) {
+                break; // model gave a final answer
+            }
 
-        if (toolCalls && toolCalls.length > 0) {
-            // The model asked to search — run the real tool, then ask it
-            // to give a final answer grounded in the actual results.
-            messages.push(choice.message);
+            messages.push(sanitizeAssistantMessage(choice.message));
 
             for (const call of toolCalls) {
                 let args;
@@ -230,26 +295,6 @@ app.post('/api/chat', async (req, res) => {
                     content: JSON.stringify(result)
                 });
             }
-
-            response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                method: 'POST',
-                headers: groqHeaders,
-                body: JSON.stringify({
-                    model: 'llama-3.3-70b-versatile',
-                    messages: messages,
-                    temperature: 0.4,
-                    max_tokens: 1000
-                })
-            });
-
-            if (!response.ok) {
-                const errText = await response.text();
-                console.error('Groq API error (follow-up):', response.status, errText);
-                return res.status(500).json({ error: 'AI service unavailable' });
-            }
-
-            data = await response.json();
-            choice = data.choices?.[0];
         }
 
         const reply = choice?.message?.content || 'I could not generate a response.';
