@@ -1148,6 +1148,18 @@ body.light-mode .journey-progress {
   bottom: 24px;
 }
 
+/* On mobile, the floating chat bubble (js/chat-widget.js) sits at
+   bottom:16px/right:16px, roughly 72px tall including its margin. The
+   resume toast is nearly full-width on small screens, so instead of
+   overlapping the bubble horizontally, lift the toast to sit cleanly
+   above it — this only changes the toast's own position, nothing about
+   how the chat bubble itself displays or behaves when tapped. */
+@media (max-width: 600px) {
+  #continue-hint.visible {
+    bottom: 88px;
+  }
+}
+
 .continue-hint-inner {
   display: flex;
   align-items: center;
