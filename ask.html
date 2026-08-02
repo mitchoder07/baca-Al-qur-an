@@ -644,7 +644,8 @@
                     chatHistory.push({ role: 'user', content: message });
                     chatHistory.push({ role: 'assistant', content: data.reply });
                 } else {
-                    addMessage('ai', 'Sorry, I could not process your request. Please try again.');
+                    const errMsg = data.error || 'Unknown error occurred. Please try again.';
+                    addMessage('ai', errMsg);
                 }
             } catch (error) {
                 typingEl.remove();
