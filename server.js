@@ -1,7 +1,7 @@
 /* ============================================================
    BACA — server.js
    Serves static files + provides AI chat API
-   Uses Groq (free, fast, OpenAI-compatible, no quota issues)
+   Uses GLM-4.6 via z-ai-web-dev-sdk (better accuracy than Groq)
    ============================================================ */
 
 const express = require('express');
@@ -14,7 +14,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
 
 // ============================================================
-// SYSTEM PROMPT — optimized for accuracy and engagement
+// SYSTEM PROMPT
 // ============================================================
 
 const SYSTEM_PROMPT = `You are "Baca AI", the intelligent assistant for the Baca Quran website (baca-al-qur-an.vercel.app). You are knowledgeable, warm, and deeply respectful of Islamic etiquette.
@@ -48,21 +48,25 @@ When a user asks "where does [word] appear in the Quran?" or "which surah mentio
 4. If zero matches: try ONE more time with a different spelling or synonym before concluding
 5. ONLY cite surah/ayah that the tool actually returned — never fabricate references
 6. If the tool is unavailable or returns nothing after retries: say so honestly, don't guess
+7. NEVER make up Arabic text, translations, or ayah numbers that the tool did not return
 
 ANSWERING RULES:
 - Be DECISIVE. Give one clear answer. Don't hedge or backtrack.
-- Be ACCURATE. If you're not sure, say so. Never fabricate ayah numbers or surah references.
+- Be ACCURATE. If you're not sure, say "I'm not certain about this." Never fabricate.
 - Be CONCISE. Max 3-4 paragraphs. Use bullet points for lists.
 - Be WARM. Use respectful Islamic greetings when appropriate. Use emojis sparingly.
 - Be HELPFUL. When relevant, suggest related surahs to read or Baca features to try.
 - For factual Quran questions (surah info, verse counts, revelation type), answer directly from your knowledge.
 - For word/theme location questions, ALWAYS use the search tool.
+- If you start to give an answer and realize you might be wrong, STOP and correct yourself immediately.
 
 ISLAMIC ETIQUETTE:
 - Use "SWT" after Allah, "PBUH" or ﷺ after Prophet Muhammad
 - Be respectful when discussing scholars, companions, and Islamic rulings
 - When uncertain about a ruling, recommend consulting a qualified scholar
-- Never issue fatwas — direct fiqh questions to scholars`;
+- Never issue fatwas — direct fiqh questions to scholars
+
+CRITICAL: Do NOT improvise, paraphrase, or reconstruct Quranic verses from memory. If you need to quote a verse, use the search tool to get the exact text. Fabricating Quranic text is a serious error.`;
 
 // ============================================================
 // QURAN SEARCH TOOL
@@ -72,7 +76,7 @@ const QURAN_SEARCH_TOOL = {
     type: 'function',
     function: {
         name: 'search_quran_text',
-        description: "Search the real Quran text for a word or phrase. Returns verified surah/ayah matches. Use this whenever someone asks where a word appears, which surah mentions a topic, or to verify a verse reference. For transliterations or themes, call twice: once with Arabic (language='arabic') and once with English (language='english').",
+        description: "Search the real Quran text for a word or phrase. Returns verified surah/ayah matches with exact text. Use this whenever someone asks where a word appears, which surah mentions a topic, or to verify a verse reference. For transliterations or themes, call twice: once with Arabic (language='arabic') and once with English (language='english').",
         parameters: {
             type: 'object',
             properties: {
@@ -145,43 +149,20 @@ async function searchQuranText(query, language) {
     return { count: 0, matches: [], note: 'No matches. Try a different spelling or English keyword.' };
 }
 
-function sanitizeAssistantMessage(message) {
-    const clean = { role: 'assistant', content: message.content ?? null };
-    if (message.tool_calls && message.tool_calls.length > 0) {
-        clean.tool_calls = message.tool_calls.map(tc => ({
-            id: tc.id,
-            type: tc.type,
-            function: { name: tc.function?.name, arguments: tc.function?.arguments }
-        }));
-    }
-    return clean;
+// ============================================================
+// AI CHAT ENDPOINT — Uses GLM-4.6 via z-ai-web-dev-sdk
+// ============================================================
+
+let zaiInstance = null;
+
+async function getZai() {
+    if (zaiInstance) return zaiInstance;
+    const ZAI = (await import('z-ai-web-dev-sdk')).default;
+    zaiInstance = await ZAI.create();
+    return zaiInstance;
 }
 
-// Model: llama-3.3-70b-versatile is Groq's most capable model for tool calling
-// and Quran knowledge. If it's deprecated, fall back to llama-3.1-70b-versatile.
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const MAX_TOOL_ROUNDS = 3;
-
-async function callGroq(apiKey, messages, withTools) {
-    return fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model: GROQ_MODEL,
-            messages,
-            ...(withTools ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
-            temperature: 0.3,
-            max_tokens: 1000
-        })
-    }, 20000);
-}
-
-// ============================================================
-// AI CHAT ENDPOINT
-// ============================================================
 
 app.post('/api/chat', async (req, res) => {
     try {
@@ -191,10 +172,7 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        const apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) {
-            return res.status(500).json({ error: 'AI not configured. Set GROQ_API_KEY environment variable.' });
-        }
+        const zai = await getZai();
 
         const messages = [
             { role: 'system', content: SYSTEM_PROMPT }
@@ -211,54 +189,34 @@ app.post('/api/chat', async (req, res) => {
         let choice = null;
         for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
             const isLastAllowedRound = round === MAX_TOOL_ROUNDS;
-            let response;
-            try {
-                response = await callGroq(apiKey, messages, !isLastAllowedRound);
-            } catch (err) {
-                console.error('Groq API error:', err.message);
-                return res.status(500).json({ error: 'AI service unavailable' });
-            }
 
-            if (!response.ok) {
-                const errText = await response.text().catch(() => '');
-                console.error('Groq API error:', response.status, errText.slice(0, 500));
-                // If model is deprecated, try fallback
-                if (response.status === 400 && errText.includes('model')) {
-                    console.log('Trying fallback model: llama-3.1-70b-versatile');
-                    const fallbackResponse = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: 'llama-3.1-70b-versatile',
-                            messages,
-                            ...(withTools ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
-                            temperature: 0.3,
-                            max_tokens: 1000
-                        })
-                    }, 20000);
-                    if (!fallbackResponse.ok) {
-                        return res.status(500).json({ error: 'AI service unavailable' });
-                    }
-                    const fallbackData = await fallbackResponse.json();
-                    choice = fallbackData.choices?.[0];
-                    break;
-                }
-                return res.status(500).json({ error: 'AI service unavailable' });
-            }
+            const response = await zai.chat.completions.create({
+                model: 'glm-4.6',
+                messages,
+                ...(isLastAllowedRound ? {} : { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' }),
+                temperature: 0.2,
+                max_tokens: 1000
+            });
 
-            const data = await response.json();
-            choice = data.choices?.[0];
+            choice = response.choices?.[0];
             const toolCalls = choice?.message?.tool_calls;
 
             if (!toolCalls || toolCalls.length === 0) {
                 break;
             }
 
-            messages.push(sanitizeAssistantMessage(choice.message));
+            // Add assistant message with tool calls
+            messages.push({
+                role: 'assistant',
+                content: choice.message.content || null,
+                tool_calls: toolCalls.map(tc => ({
+                    id: tc.id,
+                    type: tc.type,
+                    function: { name: tc.function.name, arguments: tc.function.arguments }
+                }))
+            });
 
+            // Execute each tool call
             for (const call of toolCalls) {
                 let args;
                 try {
@@ -304,7 +262,6 @@ app.get('/api/tts', async (req, res) => {
         });
 
         if (!response.ok) {
-            console.error('TTS API error:', response.status);
             return res.status(502).send('TTS service unavailable');
         }
 
