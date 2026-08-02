@@ -1,106 +1,73 @@
 /* ============================================================
    BACA — Vercel Serverless Function for AI Chat
-   Lives at /api/chat.js — Vercel's file-based routing picks this up
-   automatically, zero config needed. Uses Groq (free, fast,
-   OpenAI-compatible), the exact same provider and SYSTEM_PROMPT as
-   server.js (the Render/Express version of this endpoint), so both
-   deployment targets behave identically and share one GROQ_API_KEY
-   environment variable — set it in the Vercel dashboard under
-   Project Settings → Environment Variables.
-   Get a free Groq key at: https://console.groq.com/keys
-
-   MODEL NOTE (fixed): this used to run on llama-3.3-70b-versatile,
-   which Groq announced as deprecated on 2026-06-17 with shutdown by
-   August 2026 — i.e. right around when this file was last touched.
-   That's almost certainly why responses were intermittently failing
-   ("Sorry, I could not process that") — some requests were landing
-   during the sunset window. Moved to openai/gpt-oss-120b, Groq's own
-   recommended replacement, which also supports tool calling.
+   Lives at /api/chat.js — Vercel's file-based routing.
+   Uses Groq with llama-3.3-70b-versatile for best tool-calling
+   and Quran knowledge accuracy.
    ============================================================ */
 
-// ============================================================
-// SYSTEM PROMPT — kept in sync with server.js's SYSTEM_PROMPT
-// ============================================================
+const SYSTEM_PROMPT = `You are "Baca AI", the intelligent assistant for the Baca Quran website (baca-al-qur-an.vercel.app). You are knowledgeable, warm, and deeply respectful of Islamic etiquette.
 
-const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website.
+YOUR CAPABILITIES:
+- Answer questions about any surah, ayah, or topic in the Quran
+- Find where any word or phrase appears in the Quran using the search_quran_text tool
+- Explain Islamic concepts, rulings, and practices
+- Help users navigate the Baca app features
+- Provide context and tafsir insights
 
 ABOUT BACA:
-Baca is a beautiful Quran reading platform built with HTML, CSS, and JavaScript. Features include:
-- Mushaf Reader (mushaf.html): Read the Quran in authentic Uthmani script with page-by-page navigation, tajweed color coding, word-by-word audio, and bookmarks
-- Adhkar Page (adhkar.html): Daily Islamic remembrances with counters, audio, and notification reminders
-- Reading Stats: Gamification with streaks, daily challenges, achievements, and progress tracking
-- Reciters: 25+ Quran reciters with full surah audio
-- Daily Ayah: A daily verse with reflection
-- Guided Journeys: Structured reading paths (Finding Peace, Strengthening Salah, etc.)
-- Topics: Filter verses by theme (Mercy, Prayer, Knowledge, Protection, Charity, Hope)
-- Islamic Date: Shows Hijri calendar with week number
-- Search: Search surahs by name, number, or topic
-- Themes: 5 reader themes (Dark, Warm, Teal, Sapphire, Light)
-- Translations: 17+ languages in the reading modal
-- Tafsir: Ibn Kathir, Ma'arif-ul-Quran, and Jalalayn
-- Share as Image: Generate beautiful verse images with Baca branding
+Baca is a Quran reading platform with: Mushaf Reader (604-page Uthmani script, tajweed colors, word-by-word audio), 34+ reciters (including Warsh & Qalun riwayat), Daily Adhkar with audio, How to Pray guide, Reading Journey stats, Baca AI assistant, Daily Ayah, tafsir (Ibn Kathir, Maarif, Jalalayn), 17+ translations, and share-as-image.
 
-ABOUT THE DEVELOPER:
-Baca was built by Abdullah Yusuf, a cybersecurity graduate with hands-on IT support experience. He writes clean code in Python, builds responsive websites, and designs user interfaces in Figma. He's from Nigeria and is passionate about strengthening Nigeria's digital infrastructure. He built Baca with love for the Ummah.
+QURAN FACTS:
+- 114 surahs, 6,236 verses, 30 juz, 60 hizbs
+- Meccan (86 surahs) vs Medinan (28 surahs)
+- Al-Fatihah=1 (7 verses), Al-Baqarah=2 (286, longest), Al-Kawthar=108 (3, shortest)
+- Ayat al-Kursi = 2:255, Surah Ya-Sin=36, Al-Mulk=67 (read before sleep), Al-Kahf=18 (read on Fridays)
+- Last 3 surahs (112-114) = "3 Quls"
 
-QURAN KNOWLEDGE:
-The Quran has 114 surahs, 6,236 verses, 30 juz, and 60 hizbs.
-Surahs are categorized as Meccan (revealed in Mecca) or Medinan (revealed in Medina).
-The first surah is Al-Fatihah (7 verses). The longest is Al-Baqarah (286 verses). The shortest is Al-Kawthar (3 verses).
-The last 3 surahs are Al-Ikhlas (112), Al-Falaq (113), An-Nas (114) — often called the "3 Quls".
-Ayat al-Kursi is in Surah Al-Baqarah, verse 255 (2:255).
-Surah Ya-Sin is surah 36, known as "the heart of the Quran".
-Surah Al-Mulk (67) is recommended to read before sleeping.
-Surah Al-Kahf (18) is recommended to read on Fridays.
+SURAH LINKS:
+When mentioning a surah, include a clickable link: [Read Surah Name](mushaf.html#surah=NUMBER)
+Example: [Read Surah Al-Baqarah](mushaf.html#surah=2)
 
-When a user asks about a specific surah, respond with:
-- Surah name (Arabic + English)
-- Number of verses
-- Meccan or Medinan
-- Brief description
-- A link with the surah number: [Read Surah Al-Baqarah](mushaf.html#surah=2) or [Read Surah Ya-Sin](mushaf.html#surah=36)
-  Always include #surah=NUMBER at the end of the mushaf.html link so it opens the correct surah.
-  Surah numbers: Al-Fatihah=1, Al-Baqarah=2, Ali Imran=3, An-Nisa=4, Al-Maidah=5, Al-Anam=6, Al-Araf=7, Al-Anfal=8, At-Tawbah=9, Yunus=10, Hud=11, Yusuf=12, Ar-Rad=13, Ibrahim=14, Al-Hijr=15, An-Nahl=16, Al-Isra=17, Al-Kahf=18, Maryam=19, Ta-Ha=20, Al-Anbiya=21, Al-Hajj=22, Al-Muminun=23, An-Nur=24, Al-Furqan=25, Ash-Shuara=26, An-Naml=27, Al-Qasas=28, Al-Ankabut=29, Ar-Rum=30, Luqman=31, As-Sajdah=32, Al-Ahzab=33, Saba=34, Fatir=35, Ya-Sin=36, As-Saffat=37, Sad=38, Az-Zumar=39, Ghafir=40, Fussilat=41, Ash-Shura=42, Az-Zukhruf=43, Ad-Dukhan=44, Al-Jathiyah=45, Al-Ahqaf=46, Muhammad=47, Al-Fath=48, Al-Hujurat=49, Qaf=50, Adh-Dhariyat=51, At-Tur=52, An-Najm=53, Al-Qamar=54, Ar-Rahman=55, Al-Waqiah=56, Al-Hadid=57, Al-Mujadila=58, Al-Hashr=59, Al-Mumtahanah=60, As-Saff=61, Al-Jumuah=62, Al-Munafiqun=63, At-Taghabun=64, At-Talaq=65, At-Tahrim=66, Al-Mulk=67, Al-Qalam=68, Al-Haqqah=69, Al-Maarij=70, Nuh=71, Al-Jinn=72, Al-Muzzammil=73, Al-Muddaththir=74, Al-Qiyamah=75, Al-Insan=76, Al-Mursalat=77, An-Naba=78, An-Naziat=79, Abasa=80, At-Takwir=81, Al-Infitar=82, Al-Mutaffifin=83, Al-Inshiqaq=84, Al-Buruj=85, At-Tariq=86, Al-Ala=87, Al-Ghashiyah=88, Al-Fajr=89, Al-Balad=90, Ash-Shams=91, Al-Layl=92, Ad-Duha=93, Ash-Sharh=94, At-Tin=95, Al-Alaq=96, Al-Qadr=97, Al-Bayyinah=98, Az-Zalzalah=99, Al-Adiyat=100, Al-Qariah=101, At-Takathur=102, Al-Asr=103, Al-Humazah=104, Al-Fil=105, Quraysh=106, Al-Maun=107, Al-Kawthar=108, Al-Kafirun=109, An-Nasr=110, Al-Masad=111, Al-Ikhlas=112, Al-Falaq=113, An-Nas=114
+WORD/THEME SEARCH RULES — CRITICAL FOR ACCURACY:
+When a user asks "where does [word] appear in the Quran?" or "which surah mentions [topic]?":
+1. ALWAYS use the search_quran_text tool — NEVER answer from memory alone
+2. If they gave Arabic script: search with language="arabic" using that exact text
+3. If they gave transliteration/English/theme: call the tool TWICE — once with your best Arabic spelling (language="arabic"), once with an English keyword (language="english")
+4. If zero matches: try ONE more time with a different spelling or synonym before concluding
+5. ONLY cite surah/ayah that the tool actually returned — never fabricate references
+6. If the tool is unavailable or returns nothing after retries: say so honestly, don't guess
 
-If someone asks where a word or theme appears in the Quran (in Arabic script, in transliteration, by its English meaning, or just as a topic like "mercy" or "patience"), use the search_quran_text tool rather than answering from memory:
-- If they gave you the word in Arabic script, call the tool with that exact Arabic text and language="arabic".
-- If they only gave you a transliteration (e.g. "kafilah"), an English word, or a theme: call the tool TWICE in the same turn — once with your own best-guess Arabic spelling (language="arabic"), and once with a short English keyword/phrase translation (language="english"). Arabic words often surface in a translation search using a different English word than you'd expect (e.g. "guardian", "custodian", "sponsor" for a single Arabic root), so trying both at once meaningfully improves your odds of a real hit. Most people asking about a word don't read Arabic — never ask them to type it in Arabic script yourself.
-- If every search comes back with zero matches, try again ONCE with a different Arabic spelling (a plausible alternate root form, e.g. singular vs plural, or a different but related English keyword) before concluding. Quran search is exact-text matching, not semantic — a single miss doesn't prove the word or concept is absent.
-- Cite only what the tool actually returns: surah name, ayah number, and a mushaf.html#surah=NUMBER link. Never state a surah/ayah you didn't get from the tool.
-- If, after retrying, everything still comes back empty, don't flatly claim "this word is not in the Quran" — you've only ruled out the exact strings you tried, not the whole Quran. Instead say plainly that you couldn't find that exact spelling or phrasing in the texts you searched, that translations vary in wording so it may appear differently, and point them to Baca's in-app search or invite them to try rephrasing.
-- If the tool fails to respond at all, say the lookup is temporarily unavailable — don't guess.
+ANSWERING RULES:
+- Be DECISIVE. Give one clear answer. Don't hedge or backtrack.
+- Be ACCURATE. If you're not sure, say so. Never fabricate ayah numbers or surah references.
+- Be CONCISE. Max 3-4 paragraphs. Use bullet points for lists.
+- Be WARM. Use respectful Islamic greetings when appropriate. Use emojis sparingly.
+- Be HELPFUL. When relevant, suggest related surahs to read or Baca features to try.
+- For factual Quran questions (surah info, verse counts, revelation type), answer directly from your knowledge.
+- For word/theme location questions, ALWAYS use the search tool.
 
-Answer decisively. Don't backtrack, hedge, or restate the same claim with a different conclusion later in the same response — if you catch yourself unsure mid-answer, stop and give one clear, honest answer instead of thinking out loud.
-
-Keep responses concise, warm, helpful. Use emojis sparingly. Respect Islamic etiquette. Max 3-4 paragraphs.`;
-
-// ============================================================
-// REAL QURAN SEARCH TOOL — grounds word/theme-location answers in
-// actual verified verse text instead of the model's memory. Uses
-// the public Al Quran Cloud API (no key needed).
-//
-// The model decides when to call this and what to search for —
-// Arabic script for exact words, or an English keyword/phrase for
-// transliterations, meanings, and themes (so people who don't read
-// Arabic can still use word/topic lookup, not just Arabic typists).
-// ============================================================
+ISLAMIC ETIQUETTE:
+- Use "SWT" after Allah, "PBUH" or ﷺ after Prophet Muhammad
+- Be respectful when discussing scholars, companions, and Islamic rulings
+- When uncertain about a ruling, recommend consulting a qualified scholar
+- Never issue fatwas — direct fiqh questions to scholars`;
 
 const QURAN_SEARCH_TOOL = {
     type: 'function',
     function: {
         name: 'search_quran_text',
-        description: "Search the real Quran text for a word or short phrase and get back real, verified surah/ayah matches. Use this any time someone asks where a word appears, or asks for verses about a topic. If they gave the word in Arabic script, search with language='arabic' using that exact text. If they only know a transliteration, an English meaning, or a theme (e.g. 'mercy', 'guardian', 'patience'), you can call this tool twice in the same turn: once with your own best-guess Arabic spelling (language='arabic'), and once with an English keyword/phrase (language='english').",
+        description: "Search the real Quran text for a word or phrase. Returns verified surah/ayah matches. Use this whenever someone asks where a word appears, which surah mentions a topic, or to verify a verse reference. For transliterations or themes, call twice: once with Arabic (language='arabic') and once with English (language='english').",
         parameters: {
             type: 'object',
             properties: {
                 query: {
                     type: 'string',
-                    description: 'The Arabic word (exact script, diacritics optional) or an English keyword/short phrase to search for'
+                    description: 'The Arabic word (exact or without diacritics) or English keyword/phrase to search for'
                 },
                 language: {
                     type: 'string',
                     enum: ['arabic', 'english'],
-                    description: "'arabic' to search the Arabic Quran text, 'english' to search English translation text"
+                    description: "'arabic' searches Arabic Quran text, 'english' searches English translation"
                 }
             },
             required: ['query', 'language']
@@ -108,13 +75,6 @@ const QURAN_SEARCH_TOOL = {
     }
 };
 
-// Strip Arabic diacritics (harakat, tanwin, sukun, madda, quranic annotation
-// marks) so a search matches regardless of whether the caller's guess at the
-// vowelling matches the text's actual vowelling exactly. We also switch the
-// searched edition itself to "quran-simple-clean" (Arabic with NO diacritics
-// at all) so the query and the source text are on equal, diacritic-free
-// footing — searching a fully-voweled edition with a partially-voweled guess
-// was a likely cause of real, existing words coming back as "not found".
 function stripArabicDiacritics(text) {
     return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D4-\u08FF]/g, '').trim();
 }
@@ -134,29 +94,23 @@ async function searchQuranText(query, language) {
     const cleanQuery = language === 'arabic' ? stripArabicDiacritics(query) : query;
 
     if (!cleanQuery) {
-        return { error: 'Empty search query — ask the user to clarify the word or phrase.' };
+        return { error: 'Empty search query.' };
     }
 
     const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(cleanQuery)}/all/${edition}`;
-    let response;
 
+    let response;
     try {
         response = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 7000);
     } catch (err) {
-        console.error('Quran search — network error:', err.message);
-        return { error: 'The search tool is temporarily unavailable. Do not guess — tell the user honestly and suggest Baca\'s in-app search.' };
+        return { error: 'Search temporarily unavailable. Do not guess — tell the user honestly.' };
     }
 
-    // IMPORTANT: this API commonly returns a non-2xx status (e.g. 400)
-    // specifically WHEN a query has zero matches, not just on real errors.
-    // So we still try to read the body even if response.ok is false.
     let data;
     try {
         data = await response.json();
-    } catch (err) {
-        const bodyPreview = await response.text().catch(() => '(unreadable)');
-        console.error(`Quran search — non-JSON response, status ${response.status}:`, bodyPreview.slice(0, 300));
-        return { error: 'The search tool is temporarily unavailable. Do not guess — tell the user honestly and suggest Baca\'s in-app search.' };
+    } catch {
+        return { error: 'Search temporarily unavailable.' };
     }
 
     const matches = data?.data?.matches;
@@ -172,16 +126,9 @@ async function searchQuranText(query, language) {
         };
     }
 
-    console.log(`Quran search — no matches for "${cleanQuery}" (${language}), status ${response.status}, body:`, JSON.stringify(data).slice(0, 300));
-    return { count: 0, matches: [], note: 'No matches for this exact query. This is exact-text search, not semantic — try a different spelling/root form or an alternate English keyword before concluding the word is absent.' };
+    return { count: 0, matches: [], note: 'No matches. Try a different spelling or English keyword.' };
 }
 
-// Strip a Groq/OpenAI-shaped assistant message down to only the fields that
-// are safe to replay back into the next request. Passing the raw object
-// straight through worked most of the time, but some providers are strict
-// about echoing back exactly the fields they expect on the next call — this
-// removes any risk of an unexpected field causing the follow-up request
-// itself to be rejected.
 function sanitizeAssistantMessage(message) {
     const clean = { role: 'assistant', content: message.content ?? null };
     if (message.tool_calls && message.tool_calls.length > 0) {
@@ -194,8 +141,8 @@ function sanitizeAssistantMessage(message) {
     return clean;
 }
 
-const GROQ_MODEL = 'openai/gpt-oss-120b';
-const MAX_TOOL_ROUNDS = 2; // initial call + up to 2 follow-ups if it keeps calling tools
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const MAX_TOOL_ROUNDS = 3;
 
 async function callGroq(apiKey, messages, withTools) {
     return fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
@@ -208,16 +155,11 @@ async function callGroq(apiKey, messages, withTools) {
             model: GROQ_MODEL,
             messages,
             ...(withTools ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
-            temperature: 0.4,
+            temperature: 0.3,
             max_tokens: 1000
         })
-    }, 15000);
+    }, 20000);
 }
-
-// ============================================================
-// AI CHAT ENDPOINT — uses Groq (free, OpenAI-compatible)
-// Get your free API key at: https://console.groq.com/keys
-// ============================================================
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
@@ -236,26 +178,18 @@ module.exports = async (req, res) => {
             return res.status(500).json({ error: 'AI not configured. Set GROQ_API_KEY environment variable.' });
         }
 
-        // Build conversation messages
         const messages = [
             { role: 'system', content: SYSTEM_PROMPT }
         ];
 
         if (history && Array.isArray(history)) {
-            for (const msg of history.slice(-10)) {
+            for (const msg of history.slice(-8)) {
                 messages.push({ role: msg.role, content: msg.content });
             }
         }
 
         messages.push({ role: 'user', content: message });
 
-        // Agentic loop: let the model call search_quran_text, feed back real
-        // results, and — if it wants to try again with a different query
-        // (e.g. its first Arabic guess or English keyword came back empty)
-        // — allow up to MAX_TOOL_ROUNDS follow-ups before forcing a final
-        // text answer. Previously this only ever ran ONE round, so if the
-        // model's first guess didn't match, it had no choice but to report
-        // "not found" even when a different spelling would have hit.
         let choice = null;
         for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
             const isLastAllowedRound = round === MAX_TOOL_ROUNDS;
@@ -263,13 +197,36 @@ module.exports = async (req, res) => {
             try {
                 response = await callGroq(apiKey, messages, !isLastAllowedRound);
             } catch (err) {
-                console.error('Groq API network/timeout error:', err.message);
+                console.error('Groq API error:', err.message);
                 return res.status(500).json({ error: 'AI service unavailable' });
             }
 
             if (!response.ok) {
                 const errText = await response.text().catch(() => '');
                 console.error('Groq API error:', response.status, errText.slice(0, 500));
+                if (response.status === 400 && errText.includes('model')) {
+                    console.log('Trying fallback: llama-3.1-70b-versatile');
+                    const fallbackResponse = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'llama-3.1-70b-versatile',
+                            messages,
+                            ...(!isLastAllowedRound ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
+                            temperature: 0.3,
+                            max_tokens: 1000
+                        })
+                    }, 20000);
+                    if (!fallbackResponse.ok) {
+                        return res.status(500).json({ error: 'AI service unavailable' });
+                    }
+                    const fallbackData = await fallbackResponse.json();
+                    choice = fallbackData.choices?.[0];
+                    break;
+                }
                 return res.status(500).json({ error: 'AI service unavailable' });
             }
 
@@ -278,12 +235,9 @@ module.exports = async (req, res) => {
             const toolCalls = choice?.message?.tool_calls;
 
             if (!toolCalls || toolCalls.length === 0) {
-                break; // model gave a final answer
+                break;
             }
 
-            // Model wants to search (possibly more than once this round) —
-            // run every requested search for real, then loop back so it can
-            // either answer or try again with what it learned.
             messages.push(sanitizeAssistantMessage(choice.message));
 
             for (const call of toolCalls) {
