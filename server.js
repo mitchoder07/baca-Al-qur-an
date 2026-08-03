@@ -1,7 +1,6 @@
 /* ============================================================
    BACA — server.js
-   Serves static files + provides AI chat API
-   Uses Groq with automatic model fallback
+   Uses Groq (llama-3.3-70b-versatile) with Quran verification tools.
    ============================================================ */
 
 const express = require('express');
@@ -16,46 +15,74 @@ app.use(express.static(__dirname));
 const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website.
 
 ABOUT BACA:
-Baca is a beautiful Quran reading platform with: Mushaf Reader (604-page Uthmani script, tajweed colors, word-by-word audio), 34+ reciters (including Warsh & Qalun riwayat), Daily Adhkar with audio, How to Pray guide, Reading Journey stats, Baca AI assistant, Daily Ayah, tafsir (Ibn Kathir, Maarif, Jalalayn), 17+ translations, and share-as-image.
+Baca is a Quran reading platform with: Mushaf Reader, 34+ reciters, Daily Adhkar, How to Pray guide, Reading Journey stats, tafsir (Ibn Kathir, Maarif, Jalalayn), 17+ translations.
 
 ABOUT THE DEVELOPER:
-Baca was built by Abdullah Yusuf, a cybersecurity graduate from Nigeria. He built Baca with love for the Ummah.
+Baca was built by Abdullah Yusuf, a cybersecurity graduate from Nigeria.
 
 QURAN FACTS:
-The Quran has 114 surahs, 6,236 verses, 30 juz, and 60 hizbs.
-Al-Fatihah=1 (7 verses), Al-Baqarah=2 (286, longest), Al-Kawthar=108 (3, shortest).
-Ayat al-Kursi = 2:255, Surah Ya-Sin=36, Al-Mulk=67 (read before sleep), Al-Kahf=18 (read on Fridays).
+114 surahs, 6,236 verses, 30 juz, 60 hizbs. Al-Fatihah=1, Al-Baqarah=2 (286 verses, longest), Al-Kawthar=108 (3 verses, shortest). Ayat al-Kursi = 2:255.
 
 When mentioning a surah, include: [Read Surah Name](mushaf.html#surah=NUMBER)
 
-WORD/THEME SEARCH RULES:
-When asked "where does [word] appear in the Quran?":
-1. ALWAYS use the search_quran_text tool — NEVER answer from memory
-2. For Arabic script: search with language="arabic"
-3. For transliteration/English: call TWICE — Arabic + English
-4. If zero matches: try once more with different spelling
-5. ONLY cite results the tool returned — never fabricate
-6. If tool fails: say so honestly, don't guess
+TOOLS — YOU HAVE TWO TOOLS. USE THEM.
 
-CRITICAL: Do NOT fabricate or reconstruct Quranic verses from memory. Use the search tool for exact text.
+Tool 1: search_quran_text — Search for a word/theme in the Quran.
+- When asked "where does [word] appear?" or "which surah mentions [topic]?"
+- For Arabic script: language="arabic"
+- For English/transliteration: call TWICE — Arabic + English
+- If zero matches: try once more with different spelling
+- ONLY cite what the tool returns
+
+Tool 2: get_verse — Fetch the EXACT text of a specific verse.
+- When asked "what is verse X of surah Y?" or "show me surah Z ayah N"
+- When asked to quote ANY specific verse
+- When you want to include a verse in your answer
+- ALWAYS use this tool instead of quoting from memory
+
+CRITICAL RULES — READ CAREFULLY:
+1. NEVER quote Arabic text from memory. ALWAYS use get_verse to fetch the exact text.
+2. NEVER quote English translations from memory. ALWAYS use get_verse.
+3. NEVER guess what a verse says. If you don't have the exact text from the tool, say "Let me fetch that verse for you" and call get_verse.
+4. Fabricating Quranic text is the MOST SERIOUS error you can make. It misguides people. DO NOT DO IT.
+5. If you are not 100% certain of a verse reference, use the search tool to verify.
+6. When someone asks "what does verse X say?", you MUST call get_verse. No exceptions.
+7. When someone asks "is [word] in surah Y?", you MUST call search_quran_text. No exceptions.
 
 Answer decisively. Be concise (max 3-4 paragraphs). Be warm. Respect Islamic etiquette.`;
 
-const QURAN_SEARCH_TOOL = {
-    type: 'function',
-    function: {
-        name: 'search_quran_text',
-        description: "Search the real Quran text for a word or phrase. Returns verified surah/ayah matches. Use whenever someone asks where a word appears or for verses about a topic.",
-        parameters: {
-            type: 'object',
-            properties: {
-                query: { type: 'string', description: 'Arabic word or English keyword to search' },
-                language: { type: 'string', enum: ['arabic', 'english'], description: "'arabic' for Arabic text, 'english' for English translation" }
-            },
-            required: ['query', 'language']
+const TOOLS = [
+    {
+        type: 'function',
+        function: {
+            name: 'search_quran_text',
+            description: "Search the Quran for a word or phrase. Returns verified surah/ayah matches. Use when someone asks where a word appears or for verses about a topic.",
+            parameters: {
+                type: 'object',
+                properties: {
+                    query: { type: 'string', description: 'Arabic word or English keyword to search' },
+                    language: { type: 'string', enum: ['arabic', 'english'], description: "'arabic' for Arabic text, 'english' for English translation" }
+                },
+                required: ['query', 'language']
+            }
+        }
+    },
+    {
+        type: 'function',
+        function: {
+            name: 'get_verse',
+            description: "Fetch the EXACT Arabic text and English translation of a specific verse by surah number and ayah number. ALWAYS use this when asked 'what does verse X say?' or 'show me surah Y ayah Z' or when you need to quote a specific verse. NEVER quote verses from memory — always fetch them with this tool.",
+            parameters: {
+                type: 'object',
+                properties: {
+                    surah: { type: 'integer', description: 'Surah number (1-114)' },
+                    ayah: { type: 'integer', description: 'Ayah/verse number within the surah' }
+                },
+                required: ['surah', 'ayah']
+            }
         }
     }
-};
+];
 
 function stripArabicDiacritics(text) {
     return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D4-\u08FF]/g, '').trim();
@@ -75,9 +102,8 @@ async function searchQuranText(query, language) {
 
     const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(cleanQuery)}/all/${edition}`;
     let response;
-    try {
-        response = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 7000);
-    } catch { return { error: 'Search unavailable.' }; }
+    try { response = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 7000); }
+    catch { return { error: 'Search unavailable.' }; }
 
     let data;
     try { data = await response.json(); } catch { return { error: 'Search unavailable.' }; }
@@ -87,12 +113,50 @@ async function searchQuranText(query, language) {
         return {
             count: data.data.count || matches.length,
             matches: matches.slice(0, 8).map(m => ({
-                surahNumber: m.surah?.number, surahName: m.surah?.englishName,
-                ayah: m.numberInSurah, text: m.text
+                surahNumber: m.surah?.number,
+                surahName: m.surah?.englishName,
+                ayah: m.numberInSurah,
+                text: m.text
             }))
         };
     }
     return { count: 0, matches: [], note: 'No matches. Try different spelling.' };
+}
+
+async function getVerse(surah, ayah) {
+    const url = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.sahih`;
+    let response;
+    try { response = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 7000); }
+    catch { return { error: 'Verse lookup unavailable.' }; }
+
+    let data;
+    try { data = await response.json(); } catch { return { error: 'Verse lookup unavailable.' }; }
+
+    const editions = data?.data;
+    if (Array.isArray(editions) && editions.length >= 1) {
+        const arabic = editions.find(e => e.edition?.identifier === 'quran-uthmani');
+        const english = editions.find(e => e.edition?.identifier === 'en.sahih');
+        return {
+            surah: surah,
+            ayah: ayah,
+            surahName: arabic?.surah?.englishName || english?.surah?.englishName || `Surah ${surah}`,
+            arabicText: arabic?.text || '',
+            englishText: english?.text || '',
+            revelationType: arabic?.surah?.revelationType || '',
+            juz: arabic?.juz || '',
+            page: arabic?.page || ''
+        };
+    }
+    return { error: `Could not find Surah ${surah} verse ${ayah}.` };
+}
+
+async function executeTool(name, args) {
+    if (name === 'search_quran_text') {
+        return await searchQuranText(args.query || '', args.language || 'english');
+    } else if (name === 'get_verse') {
+        return await getVerse(parseInt(args.surah) || 0, parseInt(args.ayah) || 0);
+    }
+    return { error: 'Unknown tool.' };
 }
 
 function sanitizeAssistantMessage(message) {
@@ -106,16 +170,13 @@ function sanitizeAssistantMessage(message) {
     return clean;
 }
 
-// Model fallback chain
 const MODELS = [
     'llama-3.3-70b-versatile',
     'llama-3.1-70b-versatile',
-    'openai/gpt-oss-120b',
-    'openai/gpt-oss-20b',
     'llama-3.1-8b-instant'
 ];
 
-const MAX_TOOL_ROUNDS = 2;
+const MAX_TOOL_ROUNDS = 4;
 
 async function callGroq(apiKey, messages, withTools, model) {
     return fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
@@ -124,8 +185,8 @@ async function callGroq(apiKey, messages, withTools, model) {
         body: JSON.stringify({
             model,
             messages,
-            ...(withTools ? { tools: [QURAN_SEARCH_TOOL], tool_choice: 'auto' } : {}),
-            temperature: 0.4,
+            ...(withTools ? { tools: TOOLS, tool_choice: 'auto' } : {}),
+            temperature: 0.3,
             max_tokens: 1000
         })
     }, 15000);
@@ -137,11 +198,11 @@ app.post('/api/chat', async (req, res) => {
         if (!message) return res.status(400).json({ error: 'Message is required' });
 
         const apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) return res.status(500).json({ error: 'AI not configured. Set GROQ_API_KEY env variable.' });
+        if (!apiKey) return res.status(500).json({ error: 'AI not configured. Set GROQ_API_KEY.' });
 
         const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
         if (history?.length) {
-            for (const msg of history.slice(-10)) {
+            for (const msg of history.slice(-6)) {
                 messages.push({ role: msg.role, content: msg.content });
             }
         }
@@ -160,17 +221,16 @@ app.post('/api/chat', async (req, res) => {
                     response = await callGroq(apiKey, messages, !isLastRound, model);
                     if (response.ok) { modelWorked = true; break; }
                     const errText = await response.text().catch(() => '');
-                    lastError = `Model ${model}: ${response.status} ${errText.slice(0, 200)}`;
-                    console.error(lastError);
+                    lastError = `${model}: ${response.status}`;
+                    console.error(lastError, errText.slice(0, 200));
                     if (response.status === 401 || response.status === 403) break;
                 } catch (err) {
-                    lastError = `Model ${model}: ${err.message}`;
-                    console.error(lastError);
+                    lastError = `${model}: ${err.message}`;
                 }
             }
 
             if (!modelWorked || !response) {
-                return res.status(500).json({ error: 'All AI models unavailable. Please try again later.' });
+                return res.status(500).json({ error: 'AI service unavailable.' });
             }
 
             const data = await response.json();
@@ -184,7 +244,7 @@ app.post('/api/chat', async (req, res) => {
             for (const call of toolCalls) {
                 let args;
                 try { args = JSON.parse(call.function.arguments); } catch { args = {}; }
-                const result = await searchQuranText(args.query || '', args.language || 'english');
+                const result = await executeTool(call.function.name, args);
                 messages.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) });
             }
         }
@@ -195,7 +255,7 @@ app.post('/api/chat', async (req, res) => {
         return res.status(200).json({ reply });
     } catch (error) {
         console.error('Chat API error:', error);
-        return res.status(500).json({ error: 'Failed to get AI response: ' + error.message });
+        return res.status(500).json({ error: 'Failed: ' + error.message });
     }
 });
 
