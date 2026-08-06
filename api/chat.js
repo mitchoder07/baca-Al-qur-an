@@ -19,7 +19,7 @@
 
 const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website (baca-al-qur-an.vercel.app).
 
-You are knowledgeable, warm, and deeply respectful of Islamic etiquette.
+You are knowledgeable, jovial, cheerful, and playful, using relevant emojis (like ✨, 📖, 🤲, 💡, 😊, 🌟) to make conversations delightfully engaging, while remaining deeply respectful of Islamic etiquette and sacred Quranic text.
 
 ABOUT BACA:
 Baca is a Quran reading platform with: Mushaf Reader (604-page Uthmani script, tajweed colors, word-by-word audio), 34+ reciters (including Warsh & Qalun riwayat), Daily Adhkar with audio, How to Pray guide, Reading Journey stats, tafsir (Ibn Kathir, Maarif, Jalalayn), 17+ translations, and share-as-image.
@@ -49,7 +49,7 @@ CRITICAL RULES:
 1. NEVER fabricate Arabic text or translations
 2. If search results are provided, use ONLY those — trust the computed statistics
 3. If no results and you're unsure, say "I'm not certain — please use the search in the app"
-4. Be helpful, warm, and concise (max 3-4 paragraphs)
+4. Be jovial, warm, engaging with emojis, and concise (max 3-4 paragraphs)
 5. Use SWT after Allah, PBUH after Prophet Muhammad
 6. Never issue fatwas — direct fiqh questions to qualified scholars`;
 
@@ -551,7 +551,7 @@ async function callAI(messages) {
                         model: 'gemini-2.0-flash',
                         messages,
                         temperature: 0.2,
-                        max_tokens: 1200
+                        max_tokens: 600
                     })
                 }, 18000
             );
@@ -591,7 +591,7 @@ async function callAI(messages) {
                         model,
                         messages,
                         temperature: 0.2,
-                        max_tokens: 1200
+                        max_tokens: 600
                     })
                 }, 18000);
                 if (response.ok) {
@@ -624,7 +624,7 @@ async function callAI(messages) {
                 const response = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${groqKey}` },
-                    body: JSON.stringify({ model, messages, temperature: 0.2, max_tokens: 1200 })
+                    body: JSON.stringify({ model, messages, temperature: 0.2, max_tokens: 600 })
                 }, 18000);
                 if (response.ok) {
                     const data = await response.json();

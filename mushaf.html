@@ -141,7 +141,7 @@
                 <i data-lucide="chevron-left"></i>
             </button>
             <div class="nav-selector-wrap">
-                <button id="nav-selector-btn" class="nav-selector-btn" title="Jump to surah / page / juz">
+                <button id="nav-selector-btn" class="nav-selector-btn" title="Jump to surah / page / juz / ayah">
                     <span id="nav-selector-label">Page 1</span>
                     <i data-lucide="chevron-down"></i>
                 </button>
@@ -150,9 +150,24 @@
                         <button class="nav-tab active" data-tab="surah">Surah</button>
                         <button class="nav-tab" data-tab="juz">Juz</button>
                         <button class="nav-tab" data-tab="page">Page</button>
+                        <button class="nav-tab" data-tab="ayah">Ayah</button>
                     </div>
                     <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Search surah…">
                     <div class="nav-list" id="nav-list"></div>
+                    <div class="nav-ayah-panel" id="nav-ayah-panel" hidden>
+                        <div class="nav-ayah-group">
+                            <label class="nav-ayah-label" for="nav-ayah-surah">Surah</label>
+                            <select id="nav-ayah-surah" class="nav-ayah-select"></select>
+                        </div>
+                        <div class="nav-ayah-group">
+                            <div class="nav-ayah-label-row">
+                                <label class="nav-ayah-label" for="nav-ayah-num">Ayah</label>
+                                <span class="nav-ayah-range" id="nav-ayah-range">1 – 7</span>
+                            </div>
+                            <input type="number" id="nav-ayah-num" class="nav-ayah-input" min="1" max="7" value="1" placeholder="Ayah #">
+                        </div>
+                        <button type="button" id="nav-ayah-go-btn" class="nav-ayah-go-btn">Go to Ayah</button>
+                    </div>
                 </div>
             </div>
             <button id="nav-next-btn" class="nav-arrow" title="Next">

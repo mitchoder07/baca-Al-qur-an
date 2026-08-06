@@ -497,13 +497,14 @@ body.light-mode .nav-dropdown {
     border: none;
     background: transparent;
     color: var(--mushaf-subtext);
-    padding: 0.45rem;
+    padding: 0.45rem 0.2rem;
     border-radius: 7px;
     font-family: inherit;
     font-weight: 600;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     cursor: pointer;
     transition: background 0.18s, color 0.18s;
+    text-align: center;
 }
 
 .nav-tab.active {
@@ -536,6 +537,97 @@ body.light-mode .nav-search-input {
     max-height: 320px;
     overflow-y: auto;
     padding-right: 4px;
+}
+
+/* Ayah navigation panel */
+.nav-ayah-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.25rem 0.1rem;
+}
+
+.nav-ayah-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.nav-ayah-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-ayah-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--mushaf-subtext);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.nav-ayah-range {
+    font-size: 0.75rem;
+    color: var(--mushaf-accent);
+    font-weight: 600;
+}
+
+.nav-ayah-select,
+.nav-ayah-input {
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+    background: var(--mushaf-tool-bg);
+    border: 1px solid var(--border);
+    color: var(--mushaf-text);
+    border-radius: 10px;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.88rem;
+    transition: border-color 0.2s;
+}
+
+body.light-mode .nav-ayah-select,
+body.light-mode .nav-ayah-input {
+    background: #f8fafc;
+}
+
+.nav-ayah-select:focus,
+.nav-ayah-input:focus {
+    border-color: var(--mushaf-accent);
+}
+
+.nav-ayah-select option {
+    background: var(--mushaf-drawer-bg);
+    color: var(--mushaf-text);
+}
+
+body.light-mode .nav-ayah-select option {
+    background: #ffffff;
+    color: #0f172a;
+}
+
+.nav-ayah-go-btn {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--mushaf-accent);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.1s;
+    margin-top: 0.25rem;
+}
+
+.nav-ayah-go-btn:hover {
+    filter: brightness(1.1);
+}
+
+.nav-ayah-go-btn:active {
+    transform: scale(0.98);
 }
 
 .nav-list-item {
