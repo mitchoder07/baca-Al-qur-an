@@ -1,12 +1,4 @@
-/* ============================================================
-   BACA — floating-player-bar.css
-   ------------------------------------------------------------
-   A compact floating audio player that sits at the bottom-center
-   of the screen. Inspired by Spotify's mini player.
-   Features: play/pause, prev, next, skip ±10s, seekable progress,
-   surah info, close button.
-   ============================================================ */
-
+/* floating-player-bar.css */
 .baca-fb {
     position: fixed;
     bottom: 16px;
@@ -40,7 +32,7 @@ body.light-mode .baca-fb {
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.03);
 }
 
-/* ── Top row: info + close ── */
+/* Top row: info + close */
 .baca-fb-top {
     display: flex;
     align-items: center;
@@ -80,7 +72,7 @@ body.light-mode .baca-fb-reciter {
     color: #64748b;
 }
 
-/* ── Controls row ── */
+/* Controls row */
 .baca-fb-controls {
     display: flex;
     align-items: center;
@@ -178,7 +170,7 @@ body.light-mode .baca-fb-btn:hover {
     background: rgba(16, 185, 129, 0.12);
 }
 
-/* ── Progress bar ── */
+/* Progress bar */
 .baca-fb-progress-section {
     padding: 0 0.9rem 0.6rem;
 }
@@ -234,7 +226,7 @@ body.light-mode .baca-fb-time-row {
     color: #64748b;
 }
 
-/* ── Loading spinner ── */
+/* Loading spinner */
 .baca-fb-spinner {
     width: 16px;
     height: 16px;
@@ -251,7 +243,7 @@ body.light-mode .baca-fb-time-row {
     }
 }
 
-/* ── Mobile layout ── */
+/* Mobile layout */
 @media (max-width: 640px) {
     .baca-fb {
         bottom: 12px;
@@ -303,7 +295,7 @@ body.light-mode .baca-fb-time-row {
     }
 }
 
-/* ── Shift chat widget FAB up when bar is visible ── */
+/* Shift chat widget FAB up when bar is visible */
 body.baca-fb-active .baca-chat-fab {
     bottom: 100px;
 }

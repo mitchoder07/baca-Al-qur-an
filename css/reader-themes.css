@@ -1,29 +1,5 @@
-/* ============================================================
-   BACA — READER THEMES
-   Loaded after style.css, before reader-additions.css.
-   ============================================================
-   TABLE OF CONTENTS
-   ------------------------------------------------------------
-   1. Arabic font upgrade (Noto Naskh Arabic)
-   2. Olive (Teal) reader theme
-   3. Sapphire reader theme
-   4. Theme panel — swatch layout support
-   5. Verse highlight animation (jump-to-verse flash)
-   6. Reader theme button + panel (sticky theme picker)
-   7. Theme swatches (Dark / Warm / Olive / Sapphire / Light)
-   8. Filter dropdown (surah explorer filter panel)
-   9. Light mode — site-wide overrides (navbar, hero, cards,
-      audio player, search modal, surah modal, floating player,
-      progress bar, topic/journey cards)
-   10. Mini settings drawer (floating player)
-   11. Filter loading / error states
-   ============================================================ */
-
-/* =====================================================
-   1. ARABIC FONT UPGRADE
-   Noto Naskh Arabic — clean, professional, widely
-   supported, designed specifically for Qur'anic text
-   ===================================================== */
+/* reader-themes.css */
+/* 1. ARABIC FONT UPGRADE — Noto Naskh Arabic */
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
 
@@ -58,9 +34,7 @@
     --reader-drawer-bg: #0d1f1e;
 }
 
-/* =====================================================
-   SAPPHIRE THEME
-   ===================================================== */
+/* SAPPHIRE THEME */
 
 .swatch-sapphire {
     background: linear-gradient(135deg, #0c0f1d, #111827);
@@ -95,9 +69,7 @@
     accent-color: #818cf8;
 }
 
-/* =====================================================
-   THEME PANEL — add sapphire swatch layout support
-   ===================================================== */
+/* THEME PANEL — add sapphire swatch layout support */
 
 .theme-swatches {
     display: flex;
@@ -105,9 +77,7 @@
     flex-wrap: wrap;
 }
 
-/* =====================================================
-   VERSE HIGHLIGHT ANIMATION
-   ===================================================== */
+/* VERSE HIGHLIGHT ANIMATION */
 
 @keyframes verseHighlight {
     0% {
@@ -133,9 +103,7 @@
     animation: verseHighlight 1.8s ease forwards;
 }
 
-/* =====================================================
-   READER THEME — sticky wrapper keeps panel with button
-   ===================================================== */
+/* READER THEME — sticky wrapper keeps panel with button */
 
 .reader-theme-wrap {
     position: sticky;
@@ -162,9 +130,7 @@
     background: rgba(var(--reader-accent-rgb), 0.15);
 }
 
-/* =====================================================
-   READER THEME PANEL — anchored below the sticky button
-   ===================================================== */
+/* READER THEME PANEL — anchored below the sticky button */
 
 #reader-theme-panel {
     display: none;
@@ -255,9 +221,7 @@
     white-space: nowrap;
 }
 
-/* =====================================================
-   FILTER DROPDOWN (beside search)
-   ===================================================== */
+/* FILTER DROPDOWN (beside search) */
 
 @keyframes filterDrop {
     from {
@@ -451,9 +415,7 @@ body.light-mode #filter-clear-btn:hover {
     padding-right: 62px;
 }
 
-/* =====================================================
-   ANIMATED PLACEHOLDER
-   ===================================================== */
+/* ANIMATED PLACEHOLDER */
 
 @keyframes placeholderFade {
     0% {
@@ -485,9 +447,7 @@ body.light-mode #filter-clear-btn:hover {
     animation: placeholderFade 2.8s ease forwards;
 }
 
-/* =====================================================
-   SITE-WIDE LIGHT MODE
-   ===================================================== */
+/* SITE-WIDE LIGHT MODE */
 
 body.light-mode {
     --dark: #f8fafc;
@@ -607,7 +567,6 @@ body.light-mode .audio-btn:hover {
     color: #fff;
 }
 
-
 body.light-mode #reciter-select option {
     background: #fff;
     color: #0f172a;
@@ -720,9 +679,7 @@ body.light-mode .journey-card button {
     color: #fff;
 }
 
-/* =====================================================
-   MINI SETTINGS DRAWER (floating player)
-   ===================================================== */
+/* MINI SETTINGS DRAWER (floating player) */
 
 #mini-settings-btn {
     width: 42px;
@@ -856,9 +813,7 @@ body.light-mode .mini-drawer-row button.active {
     color: #059669;
 }
 
-/* =====================================================
-   FILTER LOADING / ERROR
-   ===================================================== */
+/* FILTER LOADING / ERROR */
 
 .filter-loading,
 .filter-error {

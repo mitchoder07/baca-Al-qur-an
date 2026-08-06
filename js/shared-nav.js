@@ -1,15 +1,8 @@
-/* ============================================================
-   BACA — shared-nav.js
-   ------------------------------------------------------------
-   This script adds a unified hamburger menu to EVERY page on
-   the site. Unlike v1 (which added a floating FAB on top of
-   existing navbars — bad).
-   ============================================================ */
-
+/* shared-nav.js */
 (function () {
     'use strict';
 
-    // ── Detect site root from this script's src ──────────────
+    // Detect site root from this script's src
     // e.g. src="js/shared-nav.js"     → root = ''
     //      src="../js/shared-nav.js"  → root = '../'
     var thisScript = (document.currentScript ||
@@ -25,7 +18,7 @@
 
     function R(path) { return rootPrefix + path; }
 
-    // ── Navigation links ─────────────────────────────────────
+    // Navigation links
     var NAV_LINKS = [
         { label: 'Home', icon: 'home', href: R('index.html'), page: 'index.html' },
         { label: 'Read Quran', icon: 'book-open', href: R('mushaf.html'), page: 'mushaf.html' },
@@ -36,7 +29,7 @@
         { label: 'Ask (AI)', icon: 'message-circle', href: R('ask.html'), page: 'ask.html' },
     ];
 
-    // ── Detect current page ──────────────────────────────────
+    // Detect current page
     // Use the FULL path (not just the filename) so that
     // reciters/index.html doesn't match the Home link (index.html).
     var fullPath = window.location.pathname;
@@ -75,8 +68,8 @@
         return fullPath === expectedPath;
     }
 
-    // ── SVG icons (inline so no icon-font dependency) ────────
-    // ── SVG icons (inline, explicit dimensions to prevent FOUC) ──
+    // SVG icons (inline so no icon-font dependency)
+    // SVG icons (inline, explicit dimensions to prevent FOUC)
     var ICONS = {
         'home': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
         'book-open': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
@@ -89,7 +82,7 @@
         'x': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
     };
 
-    // ── Baca logo SVG ────────────────────────────────────────
+    // Baca logo SVG
     var LOGO_SVG = '<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
         '<path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="url(#bacaNavLogoGrad)" opacity="0.18"/>' +
         '<path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" stroke="url(#bacaNavLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>' +
@@ -99,7 +92,7 @@
         '<stop offset="0" stop-color="#10b981"/><stop offset="0.5" stop-color="#06b6d4"/><stop offset="1" stop-color="#6366f1"/>' +
         '</linearGradient></defs></svg>';
 
-    // ── Inject CSS link if not already present ───────────────
+    // Inject CSS link if not already present
     var cssHref = R('css/shared-nav.css');
     if (!document.querySelector('link[href*="shared-nav.css"]')) {
         var link = document.createElement('link');
@@ -108,10 +101,8 @@
         document.head.appendChild(link);
     }
 
-    // ── Remove OLD hamburger buttons and mobile-nav divs ─────
-    // This cleans up any legacy navigation so only the new
-    // unified hamburger remains. We look for the common IDs and
-    // classes that existed in the codebase before this script.
+    // Remove old hamburger buttons and mobile-nav divs
+    // (common IDs/classes from before this unified script).
     function removeLegacyNav() {
         var selectors = [
             '#hamburger-btn',          // index.html old hamburger
@@ -138,7 +129,7 @@
         });
     }
 
-    // ── Find the navbar to inject into ───────────────────────
+    // Find the navbar to inject into
     function findNavbar() {
         // Priority order:
         // 1. header.navbar (most pages)
@@ -149,7 +140,7 @@
             document.querySelector('header');
     }
 
-    // ── Find or create a nav-actions container ───────────────
+    // Find or create a nav-actions container
     function findOrCreateNavActions(navbar) {
         // Look for an existing .nav-actions container
         var existing = navbar.querySelector('.nav-actions');
@@ -181,7 +172,7 @@
         return div2;
     }
 
-    // ── Build the hamburger button ───────────────────────────
+    // Build the hamburger button
     function buildToggleButton() {
         var btn = document.createElement('button');
         btn.className = 'baca-nav-toggle';
@@ -195,7 +186,7 @@
         return btn;
     }
 
-    // ── Build the drawer ─────────────────────────────────────
+    // Build the drawer
     function buildDrawer() {
         var drawer = document.createElement('nav');
         drawer.className = 'baca-nav-drawer';
@@ -241,7 +232,7 @@
         return drawer;
     }
 
-    // ── Main: wait for DOM, then integrate ───────────────────
+    // Main: wait for DOM, then integrate
     function integrate() {
         removeLegacyNav();
 
@@ -264,7 +255,7 @@
         document.body.appendChild(backdrop);
         document.body.appendChild(drawer);
 
-        // ── Toggle behaviour ──────────────────────────────────
+        // Toggle behaviour
         function openDrawer() {
             drawer.classList.add('open');
             backdrop.classList.add('open');

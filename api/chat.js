@@ -1,22 +1,4 @@
-/* ============================================================
-   BACA — Vercel Serverless Function for AI Chat (v2)
-   
-   AI Providers (all FREE):
-   1. Google Gemini 2.0 Flash — 1,500 req/day free
-   2. OpenRouter — DeepSeek R1, Nemotron 550B, Qwen3 (free tier)
-   3. Groq — Llama 3.3 70B (free fallback)
-   
-   Get FREE API keys:
-   - Gemini:   https://aistudio.google.com/apikey
-   - OpenRouter: https://openrouter.ai/keys (no credit card)
-   - Groq:     https://console.groq.com/keys
-   
-   Set in Vercel env: GEMINI_API_KEY, OPENROUTER_API_KEY, GROQ_API_KEY
-   
-   v2 changes: Quran.com API v4 search with pagination,
-   server-side stats, surah-specific search, smarter detection.
-   ============================================================ */
-
+/* chat.js */
 const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website (baca-al-qur-an.vercel.app).
 
 You are knowledgeable, warm, and pleasantly jovial — using tasteful emojis sparingly (like ✨, 📖, 🤲) to keep the tone friendly and uplifting, while remaining deeply respectful of Islamic etiquette and sacred Quranic text. Keep it balanced and not overly playful.
@@ -53,9 +35,7 @@ CRITICAL RULES:
 5. Use SWT after Allah, PBUH after Prophet Muhammad
 6. Never issue fatwas — direct fiqh questions to qualified scholars`;
 
-// ============================================================
 // UTILITIES
-// ============================================================
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = 12000) {
     const controller = new AbortController();
@@ -151,9 +131,7 @@ async function surahNameToNumber(input) {
     return SURAH_NAMES[clean] || SURAH_NAMES[input.toLowerCase()] || SURAH_NAMES['al-' + clean] || SURAH_NAMES[clean.replace(/\s+/g, '-')] || null;
 }
 
-// ============================================================
 // QURAN.COM API v4 — Primary search (better, paginated)
-// ============================================================
 
 async function searchQuranComV4(query, options = {}) {
     const { maxPages = 3, perPage = 50, language = 'en' } = options;
@@ -200,9 +178,7 @@ async function searchQuranComV4(query, options = {}) {
     return { totalResults, matches: allResults };
 }
 
-// ============================================================
 // AL-QURAN CLOUD API — Fallback search + verse lookup
-// ============================================================
 
 async function searchAlQuranCloud(query, language) {
     const edition = language === 'arabic' ? 'quran-simple-clean' : 'en.sahih';
@@ -295,9 +271,7 @@ async function getVerse(surah, ayah) {
     return { error: `Could not find Surah ${surah} verse ${ayah}.` };
 }
 
-// ============================================================
 // SMART SEARCH — Combines both APIs, computes statistics
-// ============================================================
 
 function computeStatistics(matches) {
     const uniqueSurahs = new Map();
@@ -351,7 +325,7 @@ async function autoSearchQuran(userMessage) {
     const msg = userMessage.toLowerCase();
     let searchContext = '';
 
-    // ── 1. VERSE LOOKUP (e.g., "verse 255 of surah 2") ──
+    // 1. VERSE LOOKUP (e.g., "verse 255 of surah 2")
     const verseMatch = userMessage.match(/(?:verse|ayah|ayat)\s*(\d+)[\s,]*(?:of|in|from)?\s*(?:surah\s*)?(\d+|[\w'-]+)/i);
     const verseMatch2 = userMessage.match(/(?:surah)\s*(\d+|[\w'-]+)[\s,]*(?:verse|ayah|ayat)\s*(\d+)/i);
 
@@ -370,7 +344,7 @@ async function autoSearchQuran(userMessage) {
         }
     }
 
-    // ── 2. DETECT SURAH-SPECIFIC SEARCH ("is X in surah Y?") ──
+    // 2. DETECT SURAH-SPECIFIC SEARCH ("is X in surah Y?")
     let surahSpecificSearch = null;
     const surahSpecificPatterns = [
         /(?:is|are|does|do)\s+["']?([^"']+?)["']?\s+(?:in|mentioned|found|appear)\s+(?:in\s+)?(?:surah|chapter)\s+(\d+|[\w'\s-]+?)(?:\s*\?|$)/i,
@@ -399,7 +373,7 @@ async function autoSearchQuran(userMessage) {
         }
     }
 
-    // ── 3. DETECT SEARCH WORD (general) ──
+    // 3. DETECT SEARCH WORD (general)
     let searchWord = null;
     const patterns = [
         /how\s+many\s+(?:surahs?|chapters?|verses?|ayahs?|times?)\s+(?:is|are|does|do)\s+["']?([^"']+?)["']?\s+(?:in|mentioned|found|appear)/i,
@@ -447,7 +421,7 @@ async function autoSearchQuran(userMessage) {
     const arabicMatch = userMessage.match(/[\u0600-\u06FF]{2,}/);
     if (arabicMatch && !searchWord) searchWord = arabicMatch[0];
 
-    // ── 4. EXECUTE SEARCHES ──
+    // 4. EXECUTE SEARCHES
     let allMatches = [];
     let totalApiCount = 0;
     const isCountQuestion = /how\s+many/i.test(userMessage);
@@ -519,7 +493,7 @@ async function autoSearchQuran(userMessage) {
         }
     }
 
-    // ── 5. SURAH-SPECIFIC SEARCH ──
+    // 5. SURAH-SPECIFIC SEARCH
     if (surahSpecificSearch) {
         const { word, surahNumber, surahInput } = surahSpecificSearch;
         
@@ -555,9 +529,7 @@ async function autoSearchQuran(userMessage) {
     return searchContext;
 }
 
-// ============================================================
 // AI CALL — Gemini (primary) → OpenRouter (secondary) → Groq (fallback)
-// ============================================================
 
 async function callAI(messages) {
     // PRIMARY: Google Gemini 2.0 Flash (FREE — 1,500 requests/day)
@@ -659,9 +631,7 @@ async function callAI(messages) {
     return null;
 }
 
-// ============================================================
 // ENDPOINT
-// ============================================================
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });

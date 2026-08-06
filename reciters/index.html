@@ -51,7 +51,7 @@
             min-height: 100vh;
         }
 
-        /* ── GLOW BACKGROUND (matches main site) ── */
+        /* GLOW BACKGROUND (matches main site) */
         .bg-glow {
             position: fixed;
             border-radius: 50%;
@@ -85,7 +85,7 @@
             background: #6366f1;
         }
 
-        /* ── NAVBAR ── */
+        /* NAVBAR */
         .navbar {
             position: fixed;
             top: 0;
@@ -150,7 +150,7 @@
             color: var(--primary);
         }
 
-        /* ── HERO ── */
+        /* HERO */
         .reciters-hero {
             padding: 8rem 8% 2rem;
             text-align: center;
@@ -191,7 +191,7 @@
             line-height: 1.6;
         }
 
-        /* ── SEARCH ── */
+        /* SEARCH */
         .reciters-search-wrap {
             max-width: 500px;
             margin: 2rem auto 2.5rem;
@@ -232,7 +232,7 @@
             color: #64748b;
         }
 
-        /* ── GRID + CARDS (mirror index.html styles) ── */
+        /* GRID + CARDS (mirror index.html styles) */
         .reciters-section {
             padding: 0 8% 6rem;
             position: relative;
@@ -327,7 +327,7 @@
             display: block;
         }
 
-        /* ── LIGHT MODE ── */
+        /* LIGHT MODE */
         body.light-mode {
             background: #f1f5f9;
             color: #0f172a;
@@ -381,7 +381,7 @@
             color: #94a3b8;
         }
 
-        /* ── MOBILE ── */
+        /* MOBILE */
         @media (max-width: 640px) {
             .reciters-hero {
                 padding: 7rem 6% 1.5rem;
@@ -411,21 +411,7 @@
 
 <body>
 
-    <!-- ============================================================
-         BACA — RECITERS DIRECTORY (reciters/index.html)
-         ============================================================
-         PAGE OUTLINE
-         ------------------------------------------------------------
-         1. Glow background (decorative)
-         2. Navbar (minimal — shared-nav.js injects the floating
-            hamburger into .nav-actions)
-         3. Hero
-         4. Reciters section (search input + grid, rendered from the
-            RECITER_PROFILES array below)
-         5. Script: light-mode sync, RECITER_PROFILES data (kept in
-            sync with js/script.js's RECITER_PROFILES — see note
-            there), renderGrid(), search filtering
-         ============================================================ -->
+    <!-- Baca - Reciters directory -->
 
     <!-- Glow background -->
     <div class="bg-glow glow-1"></div>

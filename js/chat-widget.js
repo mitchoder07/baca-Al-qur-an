@@ -1,7 +1,4 @@
-/* ============================================================
-   BACA — Floating AI Chat Widget
-   ============================================================ */
-
+/* chat-widget.js */
 (function () {
     if (window.location.pathname.includes('ask.html')) return;
 

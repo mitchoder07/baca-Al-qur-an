@@ -45,7 +45,7 @@
             flex-direction: column
         }
 
-        /* ── LIGHT MODE ── */
+        /* LIGHT MODE */
         body.light-mode {
             --dark: #f8fafc;
             --dark-mid: #ffffff;
@@ -597,22 +597,7 @@
 
 <body>
 
-    <!-- ============================================================
-         BACA — QURAN WORD QUIZ (game.html)
-         ============================================================
-         PAGE OUTLINE
-         ------------------------------------------------------------
-         1. Navbar (logo; shared-nav.js injects the floating
-            hamburger into .nav-actions)
-         2. Game wrap: title, difficulty selector (Easy/Medium/Hard),
-            stats bar (correct/wrong/streak/level), progress bar
-         3. Game area: word card (Arabic + transliteration + location
-            + hint), multiple-choice options grid, skip/confirm buttons
-         4. Result screen (shown after a round: score + best streak)
-         5. Feedback toast
-         6. Script: light-mode sync, WORD_BANK data (105 words tagged
-            by conceptual difficulty, not letter count), quiz logic
-         ============================================================ -->
+    <!-- Baca - Word Quiz game -->
 
     <header class="navbar">
         <a href="index.html" class="topbar-logo" aria-label="Baca — Home">
@@ -721,7 +706,7 @@
     <div class="feedback-toast" id="feedback-toast"></div>
 
     <script>
-        // ── LIGHT MODE SYNC — reads site-wide preference from localStorage ──
+        // LIGHT MODE SYNC — reads site-wide preference from localStorage
         if (localStorage.getItem("siteTheme") === "light") document.body.classList.add("light-mode");
 
         // ═══════════════════════════════════════════════════════════════
@@ -734,7 +719,7 @@
         // diff 3 = Hard:   specific scholarly/theological terms
         // ═══════════════════════════════════════════════════════════════
         const WORD_BANK = [
-            // ── EASY ─────────────────────────────────────────────────────
+            // EASY
             { arabic: "اللَّهُ", translit: "Allahu", meaning: "Allah (God)", surah: 1, ayah: 1, diff: 1, hint: "The name of God in Arabic" },
             { arabic: "رَبِّ", translit: "Rabbi", meaning: "Lord / My Lord", surah: 1, ayah: 2, diff: 1, hint: "Used in du'a: 'Rabbi zidni...'" },
             { arabic: "قُلْ", translit: "Qul", meaning: "Say", surah: 112, ayah: 1, diff: 1, hint: "Command given to the Prophet ﷺ" },
@@ -766,7 +751,7 @@
             { arabic: "حَجٌّ", translit: "Hajj", meaning: "Pilgrimage", surah: 3, ayah: 97, diff: 1, hint: "Journey to the Sacred House in Makkah" },
             { arabic: "بَيْتٌ", translit: "Bayt", meaning: "House", surah: 2, ayah: 125, diff: 1, hint: "Al-Bayt Al-Haram = the Sacred House" },
 
-            // ── MEDIUM ───────────────────────────────────────────────────
+            // MEDIUM
             { arabic: "تَقْوَى", translit: "Taqwa", meaning: "God-consciousness / piety", surah: 2, ayah: 2, diff: 2, hint: "Being aware of Allah at all times" },
             { arabic: "تَوْبَةٌ", translit: "Tawbah", meaning: "Repentance / Return", surah: 9, ayah: 3, diff: 2, hint: "Name of the 9th Surah" },
             { arabic: "فِتْنَةٌ", translit: "Fitnah", meaning: "Trial / Temptation", surah: 2, ayah: 155, diff: 2, hint: "And We will surely test you" },
@@ -802,7 +787,7 @@
             { arabic: "نِفَاقٌ", translit: "Nifaq", meaning: "Hypocrisy", surah: 9, ayah: 64, diff: 2, hint: "The trait of the munafiqeen" },
             { arabic: "آخِرَةٌ", translit: "Akhirah", meaning: "The Hereafter", surah: 2, ayah: 4, diff: 2, hint: "The eternal life after death" },
 
-            // ── HARD ─────────────────────────────────────────────────────
+            // HARD
             { arabic: "اسْتِغْفَارٌ", translit: "Istighfar", meaning: "Seeking forgiveness", surah: 3, ayah: 17, diff: 3, hint: null },
             { arabic: "تَوَكُّلٌ", translit: "Tawakkul", meaning: "Reliance on Allah", surah: 3, ayah: 159, diff: 3, hint: null },
             { arabic: "خُشُوعٌ", translit: "Khushu'", meaning: "Humility / Awe in prayer", surah: 23, ayah: 2, diff: 3, hint: null },
@@ -845,7 +830,7 @@
         function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
         function randFrom(arr) { if (!arr || !arr.length) return null; return arr[Math.floor(Math.random() * arr.length)]; }
 
-        // ── STATE ──
+        // STATE
         let difficulty = 1;
         let score = { correct: 0, wrong: 0, streak: 0, bestStreak: 0 };
         let questionNum = 0;
@@ -857,7 +842,7 @@
 
         const LEVEL_NAMES = { 1: "Easy", 2: "Medium", 3: "Hard" };
 
-        // ── DIFFICULTY — data-diff="1"/"2"/"3" so Number() works correctly ──
+        // DIFFICULTY — data-diff="1"/"2"/"3" so Number() works correctly
         document.querySelectorAll(".diff-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));

@@ -1,57 +1,4 @@
-/* ============================================================
-   BACA — MAIN STYLESHEET
-   ============================================================
-   TABLE OF CONTENTS (in actual file order — line numbers are
-   approximate since content shifts as the file grows; search for
-   the exact heading text to jump to a section)
-   ------------------------------------------------------------
-   Root variables, reset, base body/html styles
-   Light mode variable overrides
-   Arabic font upgrade (Noto Naskh Arabic / Amiri)
-   Navbar, hamburger button, mobile nav dropdown
-   Hero Section
-   Daily Ayah Section + Daily Tafsir Panel
-   Ayah Section (verse-of-the-day card)
-   Audio Player (home page)
-   Ayah / Surah Explorer + filter pills
-   Topic Section
-   Journey Section
-   Continue Reading Section + Continue Reading Hint toast
-   Reciters Section + Compact Reciters Preview (index.html)
-   Daily Reflection Section
-   Floating keyframes
-   Surah Modal (preview before full reader)
-   Surah Reader / Reader Modal (Mushaf) — includes settings
-     drawer, audio drawer, floating mini player, translation &
-     tafsir dropdowns
-   Search Modal
-   Reciter Picker Modal
-   Bookmarks Section
-   Media Responsiveness (early breakpoints)
-   Reading Progress Section (gamification) + Stats grid
-   Daily Challenge Section
-   Achievements Section
-   Footer + Footer Feedback Form
-   Topic/Journey card interaction polish
-   Search result styling
-   Light Mode overrides (gamification, footer, search, etc.)
-   Reader — Translation & Tafsir display in verse cards
-   Footer Islamic Date strip
-   Hijri Calendar Card widget
-   Revelation Order badge (surah cards)
-   Reader Tafsir Panel
-   Reading Modal / Tafsir readability fixes
-   Theme Sync — audio drawer, settings drawer, floating player,
-     reader-select dropdowns (all keyed off --reader-* variables
-     set per active reader theme)
-   Chat widget visibility rules (hidden in reader modal, mobile-
-     only on the Mushaf page)
-   Footer Feedback Form
-   Light mode adjustments (misc, added incrementally)
-   Light mode navbar / mobile nav (hamburger dropdown)
-   Scrollable navbar (horizontal scroll for many nav links)
-   ============================================================ */
-
+/* style.css */
 /* Google Font */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
@@ -159,9 +106,7 @@ body.light-mode .section-header h2 {
   color: unset;
 }
 
-/* =====================================================
-   ARABIC FONT — upgrade Amiri references site-wide
-   ===================================================== */
+/* ARABIC FONT — upgrade Amiri references site-wide */
 
 .ayah-arabic,
 .surah-english,
@@ -952,11 +897,7 @@ body.light-mode .journey-progress {
   background: rgba(0, 0, 0, 0.08);
 }
 
-/* ============================================================
-   COMPACT MOBILE CARDS — Topics & Journeys
-   Matches the density of .surah-card on small screens so users can
-   scroll through them quickly instead of one giant card per screen.
-   ============================================================ */
+/* COMPACT MOBILE CARDS — Topics & Journeys: match .surah-card density on small screens. */
 @media (max-width: 768px) {
   .topics-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2424,7 +2365,7 @@ body.light-mode .reciters-see-all-btn:hover {
   color: var(--primary);
 }
 
-/* ================= FONT CONTROLS ================= */
+/* FONT CONTROLS */
 
 .font-controls {
   display: flex;
@@ -3118,9 +3059,7 @@ body.light-mode .bookmark-actions button {
   }
 }
 
-/* ============================================================
-   READING PROGRESS SECTION
-   ============================================================ */
+/* READING PROGRESS SECTION */
 
 .reading-progress-section {
   padding: 6rem 8%;
@@ -3317,9 +3256,7 @@ body.light-mode .stats-grid {
   margin-top: 0.3rem;
 }
 
-/* ============================================================
-   DAILY CHALLENGE
-   ============================================================ */
+/* DAILY CHALLENGE */
 
 .daily-challenge-section {
   padding: 4rem 8% 6rem;
@@ -3435,9 +3372,7 @@ body.light-mode .challenge-info h3 {
   font-weight: 700;
 }
 
-/* ============================================================
-   ACHIEVEMENTS
-   ============================================================ */
+/* ACHIEVEMENTS */
 
 .achievements-section {
   padding: 4rem 8% 6rem;
@@ -3527,9 +3462,7 @@ body.light-mode .achievement-name {
   line-height: 1.4;
 }
 
-/* ============================================================
-   FOOTER
-   ============================================================ */
+/* FOOTER */
 
 .baca-footer {
   background: var(--dark);
@@ -3727,9 +3660,7 @@ body.light-mode .footer-col h4 {
   }
 }
 
-/* ============================================================
-   TOPIC CARDS — clickable with hover effect
-   ============================================================ */
+/* TOPIC CARDS — clickable with hover effect */
 
 .topic-card {
   cursor: pointer;
@@ -3739,17 +3670,13 @@ body.light-mode .footer-col h4 {
   transform: translateY(-2px) scale(0.98);
 }
 
-/* ============================================================
-   JOURNEY CARDS — button hover
-   ============================================================ */
+/* JOURNEY CARDS — button hover */
 
 .journey-card button {
   cursor: pointer;
 }
 
-/* ============================================================
-   SEARCH RESULTS — improved styling
-   ============================================================ */
+/* SEARCH RESULTS — improved styling */
 
 .search-item small {
   font-size: 0.78rem;
@@ -3769,9 +3696,7 @@ body.light-mode .footer-col h4 {
   display: none !important;
 }
 
-/* ============================================================
-   LIGHT MODE — Gamification sections
-   ============================================================ */
+/* LIGHT MODE — Gamification sections */
 
 body.light-mode .progress-card {
   background: #fff;
@@ -3881,9 +3806,7 @@ body.light-mode .journey-card {
   background: #fff;
 }
 
-/* ============================================================
-   READER — Translation & Tafsir display in verse cards
-   ============================================================ */
+/* READER — Translation & Tafsir display in verse cards */
 
 .reader-select {
   width: 100%;
@@ -3975,12 +3898,7 @@ body.light-mode .reader-select option {
   color: var(--white);
 }
 
-/* ============================================================
-   FOOTER ISLAMIC DATE STRIP
-   Deliberately theme-independent: every color below is a fixed
-   value, never a --dark/--white/--text variable, so this stays
-   identical in dark mode and light mode.
-   ============================================================ */
+/* FOOTER ISLAMIC DATE STRIP — deliberately theme-independent (fixed colors, no vars). */
 
 .footer-islamic-date:hover {
   transform: translateY(-2px);
@@ -4053,11 +3971,7 @@ body.light-mode .reader-select option {
 
 @media (max-width: 600px) {}
 
-/* ============================================================
-   HIJRI CALENDAR CARD — two-part design beside Daily Ayah title
-   Top: teal section with Islamic date
-   Bottom: dark section with week number
-   ============================================================ */
+/* HIJRI CALENDAR CARD — two-part: teal Islamic date on top, dark week number below. */
 
 .daily-ayah-header {
   display: flex;
@@ -4213,9 +4127,7 @@ body.light-mode .hcc-week-num {
   }
 }
 
-/* ============================================================
-   REVELATION ORDER BADGE on surah cards
-   ============================================================ */
+/* REVELATION ORDER BADGE on surah cards */
 
 .surah-rev-order {
   display: inline-block;
@@ -4242,9 +4154,7 @@ body.light-mode .surah-rev-order {
   margin-right: 4px;
 }
 
-/* ============================================================
-   READER TAFSIR PANEL — styling for tafsir shown in verse cards
-   ============================================================ */
+/* READER TAFSIR PANEL — styling for tafsir shown in verse cards */
 
 .tafsir-panel {
   margin-top: 1rem;
@@ -4653,13 +4563,13 @@ body.light-mode .surah-rev-order {
   color: var(--reader-accent) !important;
 }
 
-/* ── HIDE CHAT WIDGET WHEN READING MODAL IS OPEN ── */
+/* HIDE CHAT WIDGET WHEN READING MODAL IS OPEN */
 body.reader-open .baca-chat-fab,
 body.reader-open .baca-chat-panel {
   display: none !important;
 }
 
-/* ── MUSHAF PAGE: chat widget mobile-only ── */
+/* MUSHAF PAGE: chat widget mobile-only */
 @media (min-width: 769px) {
 
   body.mushaf-page .baca-chat-fab,
@@ -4668,7 +4578,7 @@ body.reader-open .baca-chat-panel {
   }
 }
 
-/* ── FOOTER FEEDBACK FORM ── */
+/* FOOTER FEEDBACK FORM */
 .footer-feedback {
   max-width: 600px;
   margin: 2.5rem auto 0;
@@ -4849,9 +4759,7 @@ body.light-mode .feedback-card textarea::placeholder {
   }
 }
 
-/* ============================================================
-   LIGHT MODE — Mobile nav (hamburger dropdown)
-   ============================================================ */
+/* LIGHT MODE — Mobile nav (hamburger dropdown) */
 
 body.light-mode .mobile-nav {
   background: rgba(255, 255, 255, 0.98);
@@ -4872,9 +4780,7 @@ body.light-mode .hamburger-btn {
   color: #0f172a;
 }
 
-/* ============================================================
-   SCROLLABLE NAVBAR — horizontal scroll for many nav links
-   ============================================================ */
+/* SCROLLABLE NAVBAR — horizontal scroll for many nav links */
 
 .nav-links {
   overflow-x: auto;

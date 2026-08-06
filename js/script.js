@@ -1,4 +1,3 @@
-// ============================================================
 // AL FURQAN — script.js
 // DATA SOURCES (all static CDN, zero live API servers):
 //   Surah list + verses + transliteration:
@@ -7,13 +6,10 @@
 //     cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/{surah}/{ayah}.json
 //   Audio (EveryAyah):
 //     everyayah.com/data/{reciterFolder}/{padded3}.mp3
-// ============================================================
 
-// ============================================================
 // STATIC DATA — surah list (no fetch needed at all)
 // Generated from quran-json index. Includes: id, name (Arabic),
 // transliteration, translation (meaning), type, total_verses.
-// ============================================================
 
 // Lucide's icon library is loaded from an external CDN (unpkg.com). If that
 // request is ever slow, blocked (ad-blockers, restrictive networks, a CDN
@@ -144,8 +140,6 @@ const SURAH_LIST = [
     { id: 114, revelationOrder: 21, name: "الناس", transliteration: "An-Nas", translation: "The Mankind", type: "meccan", total_verses: 6 }
 ];
 
-
-
 // HIZB STARTS — first ayah of each of the 60 Hizbs
 const HIZB_STARTS = [
     [1, 1], [2, 75], [2, 142], [2, 203], [2, 253], [3, 15], [3, 93], [3, 171], [4, 24], [4, 88],
@@ -156,9 +150,7 @@ const HIZB_STARTS = [
     [46, 1], [48, 18], [51, 31], [55, 1], [58, 1], [62, 1], [67, 1], [72, 1], [78, 1], [87, 1]
 ];
 
-// ============================================================
 // STATIC CDN ENDPOINTS (no live API — all jsDelivr / EveryAyah)
-// ============================================================
 
 const CDN = {
     // Full surah with Arabic text + transliteration + English translation
@@ -168,10 +160,8 @@ const CDN = {
         `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${surah}/${ayah}.json`,
 };
 
-// ============================================================
 // EVERYAYAH RECITERS — folder names on everyayah.com
 // Audio URL: https://everyayah.com/data/{folder}/{surah_padded}{ayah_padded}.mp3
-// ============================================================
 
 const RECITERS = [
     { id: "mishari", name: "Mishary Rashid Alafasy", folder: "Alafasy_128kbps" },
@@ -202,7 +192,7 @@ const RECITERS = [
     { id: "okasha", name: "Okasha Kameny", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true },
     { id: "yasser_dosari", name: "Yasser Al-Dosari", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true },
     { id: "mansour_salmi", name: "Mansour Al-Salmi", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true },
-    // ── Non-Hafs Riwayat reciters ──
+    // Non-Hafs Riwayat reciters
     { id: "husary_warsh", name: "Al-Husary (Warsh)", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
     { id: "husary_qalun", name: "Al-Husary (Qalun)", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun" },
     { id: "abdulbasit_warsh", name: "Abdul Basit (Warsh)", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh" },
@@ -222,12 +212,8 @@ function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
     return `https://everyayah.com/data/${reciter.folder}/${s}${a}.mp3`;
 }
 
-
-
-// ============================================================
 // FULL SURAH AUDIO — plays the entire surah as one continuous track
 // Uses mp3quran.net which provides full surah MP3 files
-// ============================================================
 
 const FULL_SURAH_SERVERS = {
     'mishari': 'https://server8.mp3quran.net/afs/',
@@ -264,9 +250,7 @@ function getFullSurahAudioUrl(surahNum, reciterId) {
     return `${server}${padded}.mp3`;
 }
 
-// ============================================================
 // TOAST
-// ============================================================
 
 function showToast(msg) {
     const t = document.getElementById("toast");
@@ -276,9 +260,7 @@ function showToast(msg) {
     setTimeout(() => t.classList.remove("show"), 1900);
 }
 
-// ============================================================
 // ELEMENT REFS
-// ============================================================
 
 const grid = document.getElementById("surah-grid");
 const searchInput = document.getElementById("surah-search");
@@ -304,9 +286,7 @@ const floatingAyah = document.getElementById("floating-ayah");
 const ayahPlayer = document.getElementById("ayah-player");
 const quranAudio = document.getElementById("quran-audio");
 
-// ============================================================
 // STATE
-// ============================================================
 
 let allSurahs = [];       // populated from SURAH_LIST
 let activeFilter = "all";
@@ -334,9 +314,7 @@ const JUZ_STARTS = [
     [29, 46], [33, 31], [36, 28], [39, 32], [41, 47], [46, 1], [51, 31], [58, 1], [67, 1], [78, 1]
 ];
 
-// ============================================================
 // READER THEMES
-// ============================================================
 
 const readerThemes = {
     dark: {
@@ -396,9 +374,7 @@ const readerThemes = {
     },
 };
 
-// ============================================================
 // HELPERS
-// ============================================================
 
 function formatTime(sec) {
     if (!sec || isNaN(sec)) return "0:00";
@@ -439,9 +415,7 @@ function capitalizeType(t) {
     return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
-// ============================================================
 // POPULATE RECITER SELECTS (from static RECITERS array)
-// ============================================================
 
 function populateReciterSelects() {
     const selects = [
@@ -481,9 +455,7 @@ function updateReciterBadge() {
     badge.textContent = r.name;
 }
 
-// ============================================================
 // VERSE SCROLL + HIGHLIGHT
-// ============================================================
 
 function scrollToActiveVerse(ayahNumber) {
     const readerContent = document.querySelector(".reader-content");
@@ -497,9 +469,7 @@ function scrollToActiveVerse(ayahNumber) {
     setTimeout(() => card.classList.remove("verse-active"), 1800);
 }
 
-// ============================================================
 // APPLY READER THEME
-// ============================================================
 
 function applyReaderTheme(key) {
     if (!readerThemes[key]) key = "dark";
@@ -571,9 +541,7 @@ function applyReaderTheme(key) {
     refreshBookmarkButtonStates();
 }
 
-// ============================================================
 // READER THEME PANEL
-// ============================================================
 
 function initReaderThemePanel() {
     const btn = document.getElementById("reader-theme-btn");
@@ -590,9 +558,7 @@ function initReaderThemePanel() {
     applyReaderTheme(readerThemeKey);
 }
 
-// ============================================================
 // MINI SETTINGS DRAWER
-// ============================================================
 
 function initMiniSettingsDrawer() {
     const btn = document.getElementById("mini-settings-btn");
@@ -626,9 +592,7 @@ function initMiniSettingsDrawer() {
     });
 }
 
-// ============================================================
 // SITE-WIDE THEME TOGGLE
-// ============================================================
 
 function initThemeToggle() {
     const themeBtn = document.querySelector(".theme-btn");
@@ -648,9 +612,7 @@ function initThemeToggle() {
     });
 }
 
-// ============================================================
 // ANIMATED SEARCH PLACEHOLDER
-// ============================================================
 
 function initAnimatedPlaceholder() {
     if (!searchInput) return;
@@ -671,9 +633,7 @@ function initAnimatedPlaceholder() {
     }, 3200);
 }
 
-// ============================================================
 // FILTER BAR
-// ============================================================
 
 function initFilterBar() {
     const filterBtn = document.getElementById("explorer-filter-btn");
@@ -725,9 +685,7 @@ function initFilterBar() {
     if (hizbCon) hizbCon.innerHTML = Array.from({ length: 60 }, (_, i) => i + 1).map(n => `<button type="button" class="fpill" data-filter="hizb-${n}">Hizb ${n}</button>`).join("");
 }
 
-// ============================================================
 // JUZ / HIZB FILTER LOGIC (static — no API)
-// ============================================================
 
 function surahInJuz(surahId, juzNum) {
     const juzIdx = juzNum - 1;
@@ -756,9 +714,7 @@ function surahInHizb(surahId, hizbNum) {
     return true;
 }
 
-// ============================================================
 // FILTER LOGIC
-// ============================================================
 
 function getFilteredSurahs() {
     const val = searchInput ? searchInput.value.trim().toLowerCase() : "";
@@ -793,9 +749,7 @@ function getFilteredSurahs() {
 
 if (searchInput) searchInput.addEventListener("input", () => renderSurahs(getFilteredSurahs()));
 
-// ============================================================
 // BOOKMARKS
-// ============================================================
 
 function getBookmarks() { try { return JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch { return []; } }
 function saveBookmarks(list) { localStorage.setItem("bookmarks", JSON.stringify(list)); }
@@ -880,9 +834,7 @@ function initBookmarks() {
     });
 }
 
-// ============================================================
 // DAILY AYAH — picks a verse by date, uses static CDN
-// ============================================================
 
 async function loadDailyAyah() {
     try {
@@ -942,7 +894,7 @@ async function loadDailyAyah() {
 
 function initDailyAyahActions() {
 
-    // ── COPY ──
+    // COPY
     document.getElementById("daily-copy-btn")?.addEventListener("click", async () => {
         if (!dailyAyahData) return;
         const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, Ayah ${dailyAyahData.ayah}`;
@@ -954,7 +906,7 @@ function initDailyAyahActions() {
         }
     });
 
-    // ── SHARE ──
+    // SHARE
     document.getElementById("daily-share-btn")?.addEventListener("click", async () => {
         if (!dailyAyahData) return;
         if (window.BacaShare && typeof window.BacaShare.previewVerseImage === 'function') {
@@ -975,7 +927,7 @@ function initDailyAyahActions() {
         }
     });
 
-    // ── TAFSIR ──
+    // TAFSIR
     const tafsirBtn = document.getElementById("daily-tafsir-btn");
     const tafsirPanel = createDailyTafsirPanel();
 
@@ -1110,9 +1062,7 @@ function syncAllReciterSelects(sourceSelect) {
     updateReciterBadge();
 }
 
-// ============================================================
 // REPEAT BUTTON
-// ============================================================
 
 function initRepeatButton() {
     const btn = document.getElementById("repeat-btn");
@@ -1125,9 +1075,7 @@ function initRepeatButton() {
     });
 }
 
-// ============================================================
 // READER MODE
-// ============================================================
 
 function updateReaderModeUI() {
     document.querySelectorAll(".verse-arabic").forEach(el => {
@@ -1151,9 +1099,7 @@ modeBoth?.addEventListener("click", () => { readerMode = "both"; updateReaderMod
 modeArabic?.addEventListener("click", () => { readerMode = "arabic"; updateReaderModeUI(); });
 modeTranslation?.addEventListener("click", () => { readerMode = "translation"; updateReaderModeUI(); });
 
-// ============================================================
 // FONT SIZES
-// ============================================================
 
 function applyFontSizes() {
     document.querySelectorAll(".verse-arabic").forEach(el => el.style.fontSize = arabicFontSize + "rem");
@@ -1174,9 +1120,7 @@ document.getElementById("font-increase")?.addEventListener("click", () => { arab
 document.getElementById("font-decrease")?.addEventListener("click", () => { arabicFontSize = Math.max(1.5, arabicFontSize - 0.2); translationFontSize = Math.max(0.8, translationFontSize - 0.05); applyFontSizes(); });
 document.getElementById("font-reset")?.addEventListener("click", () => { arabicFontSize = 2.25; translationFontSize = 1.05; applyFontSizes(); });
 
-// ============================================================
 // CONTINUE READING
-// ============================================================
 
 function updateContinueReading() {
     const saved = (() => { try { return JSON.parse(localStorage.getItem("lastRead")); } catch { return null; } })();
@@ -1198,9 +1142,7 @@ document.getElementById("resume-reading-btn")?.addEventListener("click", () => {
     openReader(Number(saved.surah), saved.ayah);
 });
 
-// ============================================================
 // LOAD SURAHS (from static SURAH_LIST — instant, no fetch)
-// ============================================================
 
 function loadSurahs() {
     allSurahs = SURAH_LIST.map(s => ({
@@ -1214,9 +1156,7 @@ function loadSurahs() {
     renderSurahs(allSurahs);
 }
 
-// ============================================================
 // RENDER SURAH GRID
-// ============================================================
 
 function renderSurahs(data) {
     if (!grid) return;
@@ -1275,9 +1215,7 @@ function activateCards() {
 modalClose?.addEventListener("click", () => surahModal.classList.remove("active"));
 document.querySelector(".surah-modal-overlay")?.addEventListener("click", () => surahModal.classList.remove("active"));
 
-// ============================================================
 // BISMILLAH STRIP
-// ============================================================
 
 function cleanAyah(text, surahNumber, ayahNumber) {
     // Surah 9 (At-Tawbah) has no Bismillah; Surah 1's verse 1 IS the Bismillah
@@ -1292,9 +1230,7 @@ function cleanAyah(text, surahNumber, ayahNumber) {
     return text;
 }
 
-// ============================================================
 // TAFSIR PANEL — loads on demand from static CDN
-// ============================================================
 
 async function loadTafsir(surahNum, ayahNum) {
     const panelId = `tafsir-panel-${surahNum}-${ayahNum}`;
@@ -1339,9 +1275,7 @@ async function loadTafsir(surahNum, ayahNum) {
     }
 }
 
-// ============================================================
 // OPEN READER — fetches surah from static CDN and renders
-// ============================================================
 
 async function openReader(surahNum, scrollToAyah = null) {
     if (!surahNum) return;
@@ -1435,9 +1369,7 @@ readBtn?.addEventListener("click", () => {
     if (selectedSurah) openReader(selectedSurah);
 });
 
-// ============================================================
 // READER CLOSE
-// ============================================================
 
 function closeReader() {
     readerModal.classList.remove("active");
@@ -1460,9 +1392,7 @@ function closeReader() {
 readerClose?.addEventListener("click", closeReader);
 document.querySelector(".reader-overlay")?.addEventListener("click", closeReader);
 
-// ============================================================
 // SETTINGS / AUDIO DRAWER (reader toolbar)
-// ============================================================
 
 document.getElementById("reader-settings-btn")?.addEventListener("click", () => {
     document.getElementById("audio-drawer")?.classList.remove("active");
@@ -1473,10 +1403,8 @@ document.getElementById("reader-audio-btn")?.addEventListener("click", () => {
     document.getElementById("audio-drawer")?.classList.toggle("active");
 });
 
-// ============================================================
 // FULL-SURAH AUDIO (EveryAyah — full surah mp3 not available,
 // so we stream ayah-by-ayah auto-advancing as full-surah mode)
-// ============================================================
 
 function loadSurahAudio({ autoplay = false } = {}) {
     if (!selectedSurah || !currentSurahVerses.length) return;
@@ -1592,9 +1520,7 @@ document.getElementById("prev-surah-audio")?.addEventListener("click", () => {
     if (selectedSurah > 1) { selectedSurah--; openReader(selectedSurah).then(() => { playSurahFromAyah(1); }); }
 });
 
-// ============================================================
 // RECITER CHANGE (reader dropdown)
-// ============================================================
 
 document.addEventListener("change", e => {
     if (e.target.id !== "reciter-select2") return;
@@ -1617,9 +1543,7 @@ document.addEventListener("change", e => {
     }
 });
 
-// ============================================================
 // FAVOURITE RECITER
-// ============================================================
 
 // FAVOURITE RECITER — toggle heart icon, save to localStorage
 function isFavoriteReciter(reciterId) {
@@ -1660,9 +1584,7 @@ document.addEventListener("change", e => {
     }
 });
 
-// ============================================================
 // PER-AYAH PLAY (individual verse audio buttons)
-// ============================================================
 
 document.addEventListener("click", async e => {
     const playBtn = e.target.closest(".play-btn");
@@ -1719,9 +1641,7 @@ document.addEventListener("click", async e => {
     }
 });
 
-// ============================================================
 // TAFSIR BUTTON
-// ============================================================
 
 document.addEventListener("click", e => {
     const btn = e.target.closest(".tafsir-btn");
@@ -1729,9 +1649,7 @@ document.addEventListener("click", e => {
     loadTafsir(Number(btn.dataset.surah), Number(btn.dataset.ayah));
 });
 
-// ============================================================
 // FLOATING MINI PLAYER
-// ============================================================
 
 miniPlay?.addEventListener("click", () => {
     const audio = getActiveAudio();
@@ -1813,9 +1731,7 @@ async function playSingleAyah(surah, ayah) {
     }
 }
 
-// ============================================================
 // BOOKMARK VERSE (reader)
-// ============================================================
 
 document.addEventListener("click", e => {
     const btn = e.target.closest(".bookmark-btn"); if (!btn) return;
@@ -1829,9 +1745,7 @@ document.addEventListener("click", e => {
     });
 });
 
-// ============================================================
 // COPY
-// ============================================================
 
 document.addEventListener("click", async e => {
     const btn = e.target.closest(".copy-btn"); if (!btn) return;
@@ -1847,9 +1761,7 @@ document.addEventListener("click", async e => {
     } catch { showToast("Copy failed"); }
 });
 
-// ============================================================
 // SHARE
-// ============================================================
 
 document.addEventListener("click", async e => {
     const btn = e.target.closest(".share-btn"); if (!btn) return;
@@ -1881,9 +1793,7 @@ ${trans}`;
     }
 });
 
-// ============================================================
 // SEARCH MODAL
-// ============================================================
 
 document.querySelector(".search-btn")?.addEventListener("click", () => {
     document.querySelector(".search-modal")?.classList.add("active");
@@ -1919,7 +1829,7 @@ document.getElementById("searchInput")?.addEventListener("input", e => {
     });
 });
 
-// ================= KEYBOARD SHORTCUTS =================
+// Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
     const searchModal = document.querySelector(".search-modal");
     if (!searchModal) return;
@@ -1938,9 +1848,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// ============================================================
 // FLOATING PLAYER ICONS (fix on init)
-// ============================================================
 
 function fixFloatingPlayerIcons() {
     if (miniPlay) miniPlay.innerHTML = `<i data-lucide="play"></i>`;
@@ -1949,9 +1857,7 @@ function fixFloatingPlayerIcons() {
     safeLucide();
 }
 
-// ============================================================
 // RECITER PROFILES (for dropdown and search)
-// ============================================================
 
 const RECITER_PROFILES = [
     { id: "mishari", name: "Mishary Alafasy", country: "Kuwait", style: "Murattal", image: "images/reciters/mishary.png" },
@@ -2006,8 +1912,7 @@ function initRecitersGrid() {
       </a>`).join("");
 }
 
-// ==================== Reciter Picker for "Listen" Button ====================
-
+// Reciter picker for Listen button
 const RECITER_PROFILES_FOR_PICKER = [
     { id: "mishari", name: "Mishary Rashid Alafasy", country: "Kuwait", image: "images/reciters/mishari.jpg" },
     { id: "sudais", name: "Abdul Rahman As-Sudais", country: "Saudi Arabia", image: "images/reciters/sudais.jpg" },
@@ -2114,8 +2019,7 @@ function initReciterPicker() {
 // Navigation is now handled by js/shared-nav.js (unified hamburger button
 // injected into the navbar). No toggle code needed here.
 
-// =========================== Continue Reading Hint =================================
-
+// Continue reading hint
 function initContinueReadingHint() {
     const saved = (() => { try { return JSON.parse(localStorage.getItem("lastRead")); } catch { return null; } })();
     if (!saved?.surahName) return; // no history yet
@@ -2158,9 +2062,7 @@ function initContinueReadingHint() {
     }, 8000);
 }
 
-// ============================================================
 // INIT
-// ============================================================
 
 populateReciterSelects();
 loadSurahs();
@@ -2178,9 +2080,7 @@ initRecitersGrid();
 fixFloatingPlayerIcons();
 updateContinueReading();
 initContinueReadingHint();
-// ============================================================
 // GAMIFICATION — Reading Stats, Streaks, Challenges, Achievements
-// ============================================================
 
 const GAMIFICATION = {
     // Default daily goal (pages)
@@ -2612,9 +2512,7 @@ function initGamification() {
 // Call init at the end (after other initializers)
 setTimeout(initGamification, 500);
 
-// ============================================================
 // TOPICS — Click a topic card to find related verses
-// ============================================================
 
 const TOPIC_VERSES = {
     mercy: [
@@ -2727,7 +2625,6 @@ const TOPIC_NAMES = {
     hereafter: "The Hereafter",
 };
 
-
 function initTopics() {
     document.querySelectorAll(".topic-card").forEach(card => {
         card.addEventListener("click", () => {
@@ -2781,7 +2678,6 @@ function showTopicResults(topic) {
     document.querySelector(".search-modal")?.classList.add("active");
 }
 
-// ============================================================
 // GUIDED JOURNEYS — one verse a day, tracked per calendar day
 //
 // Each journey's day list already exists 1:1 with its advertised day
@@ -2792,7 +2688,6 @@ function showTopicResults(topic) {
 // label on each card is now actually true), and awards XP through the
 // same stats/xpMultiplier() system the rest of the app already uses,
 // so it also benefits from the Jumu'ah 2x bonus on Fridays.
-// ============================================================
 
 const JOURNEY_DAY_XP = 10;
 const JOURNEY_COMPLETE_XP = 50;
@@ -2932,9 +2827,7 @@ function initJourneys() {
     });
 }
 
-// ============================================================
 // SEARCH MODAL — Make it actually search surahs, topics, and verses
-// ============================================================
 
 function initSearchModal() {
     const searchInput = document.getElementById("searchInput");
@@ -3026,9 +2919,7 @@ setTimeout(() => {
     initSearchModal();
 }, 600);
 
-// ============================================================
 // READER TRANSLATION & TAFSIR SELECTION
-// ============================================================
 
 const READER_TRANSLATIONS = {
     20: { name: "Saheeh International", lang: "en" },
@@ -3187,9 +3078,7 @@ async function injectTranslationsAndTafsir() {
     }
 }
 
-// ============================================================
 // REFLECTION OF THE DAY — functional with real Quranic reflections
-// ============================================================
 
 const DAILY_REFLECTIONS = [
     { text: "And whoever puts their trust in Allah, He is sufficient for them. Indeed, Allah will accomplish His purpose.", ref: "Surah At-Talaq 65:3" },
@@ -3243,9 +3132,7 @@ setTimeout(() => {
     initDailyReflection();
 }, 800);
 
-// ============================================================
 // ISLAMIC (HIJRI) DATE — calculated using the Umm al-Qura algorithm
-// ============================================================
 
 const HIJRI_MONTHS = [
     'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
@@ -3258,7 +3145,6 @@ let _aladhanHijriCache = null;
 let _aladhanHijriCacheDate = null;
 
 // HIJRI DATE ADJUSTMENT
-// =====================
 // The AlAdhan API uses the Umm al-Qura calendar (official Saudi calendar).
 // Some regions follow local moon sighting which can differ by ±1 day.
 const HIJRI_ADJUSTMENT = 0;

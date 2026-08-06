@@ -21,11 +21,9 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/shared-nav.css">
 
-    <!-- ===== Adhkar-specific inline styles ===== -->
+    <!-- Adhkar-specific inline styles -->
     <style>
-        /* ====================================================
-           LAYOUT
-           ==================================================== */
+        /* LAYOUT */
         .adhkar-page {
             padding-top: 100px;
             padding-bottom: 5rem;
@@ -39,9 +37,7 @@
             padding: 0 1.5rem;
         }
 
-        /* ====================================================
-           HERO
-           ==================================================== */
+        /* HERO */
         .adhkar-hero {
             position: relative;
             text-align: center;
@@ -188,9 +184,7 @@
             position: relative;
         }
 
-        /* ====================================================
-           STATS ROW
-           ==================================================== */
+        /* STATS ROW */
         .adhkar-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -251,9 +245,7 @@
             margin-top: .2rem;
         }
 
-        /* ====================================================
-           PROGRESS SECTION
-           ==================================================== */
+        /* PROGRESS SECTION */
         .adhkar-progress-wrap {
             background: var(--dark-light);
             border: 1px solid var(--border);
@@ -365,9 +357,7 @@
             flex-shrink: 0;
         }
 
-        /* ====================================================
-           BUTTONS
-           ==================================================== */
+        /* BUTTONS */
         .adhkar-btn {
             display: inline-flex;
             align-items: center;
@@ -419,9 +409,7 @@
             font-size: .9rem;
         }
 
-        /* ====================================================
-           TOOLBAR
-           ==================================================== */
+        /* TOOLBAR */
         .adhkar-toolbar {
             margin: 0 0 1.25rem;
             display: flex;
@@ -473,9 +461,7 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
         }
 
-        /* ====================================================
-           CATEGORY PILLS
-           ==================================================== */
+        /* CATEGORY PILLS */
         .adhkar-categories {
             display: flex;
             gap: .6rem;
@@ -548,9 +534,7 @@
             background: rgba(255, 255, 255, 0.25);
         }
 
-        /* ====================================================
-           ADHKAR GRID + CARDS
-           ==================================================== */
+        /* ADHKAR GRID + CARDS */
         .adhkar-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -956,9 +940,7 @@
             animation: countPop .35s ease;
         }
 
-        /* ====================================================
-           EMPTY STATE
-           ==================================================== */
+        /* EMPTY STATE */
         .adhkar-empty {
             text-align: center;
             padding: 4rem 1rem;
@@ -989,9 +971,7 @@
             margin: 0 auto;
         }
 
-        /* ====================================================
-           REMINDER FAB + PANEL
-           ==================================================== */
+        /* REMINDER FAB + PANEL */
         .adhkar-reminder {
             position: fixed;
             bottom: 1.75rem;
@@ -1173,9 +1153,7 @@
             font-weight: 600;
         }
 
-        /* ====================================================
-           TOAST
-           ==================================================== */
+        /* TOAST */
         .adhkar-toast {
             position: fixed;
             top: 95px;
@@ -1213,9 +1191,7 @@
             color: var(--primary);
         }
 
-        /* ====================================================
-           RESPONSIVE
-           ==================================================== */
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .adhkar-grid {
                 grid-template-columns: 1fr;
@@ -1334,33 +1310,16 @@
 
 <body>
 
-    <!-- ============================================================
-         BACA — ADHKAR (adhkar.html)
-         ============================================================
-         PAGE OUTLINE
-         ------------------------------------------------------------
-         1. Glow background
-         2. Navbar
-         3. Adhkar page (morning/evening dhikr cards, counters)
-         4. Reminder FAB + panel (schedule dhikr reminders)
-         5. Toast
-         6. Footer
-         7. Scripts
-         NOTE: same as salah.html — this file's <style> block defines
-         .mobile-nav, .nav-links, .search-modal, and
-         .reciter-picker-modal, none of which are used anywhere in
-         this page (verified). Leftover from before js/shared-nav.js
-         unified navigation. Left in place to avoid touching CSS
-         without full tracing; safe to remove if you want to trim
-         the file.
-         ============================================================ -->
+    <!-- Adhkar page outline: glow bg, navbar, dhikr cards, reminder FAB, toast, footer.
+         NOTE: the <style> block below still defines .mobile-nav/.nav-links/.search-modal/
+         .reciter-picker-modal, unused here (leftover from pre-shared-nav). Safe to remove. -->
 
-    <!-- ================= GLOW BACKGROUND ================= -->
+    <!-- GLOW BACKGROUND -->
     <div class="bg-glow glow-1"></div>
     <div class="bg-glow glow-2"></div>
     <div class="bg-glow glow-3"></div>
 
-    <!-- ================= NAVBAR ================= -->
+    <!-- NAVBAR -->
     <header class="navbar">
         <a href="index.html" class="logo">
             <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -1404,7 +1363,7 @@
         </div>
     </header>
 
-    <!-- ================= ADHKAR PAGE ================= -->
+    <!-- ADHKAR PAGE -->
     <main class="adhkar-page">
         <div class="adhkar-container">
 
@@ -1529,7 +1488,7 @@
         </div>
     </main>
 
-    <!-- ================= REMINDER FAB + PANEL ================= -->
+    <!-- REMINDER FAB + PANEL -->
     <div class="adhkar-reminder">
         <button class="adhkar-reminder-toggle" id="reminderToggle" title="Prayer-time reminders"
             aria-label="Prayer-time reminders">
@@ -1557,13 +1516,13 @@
         </div>
     </div>
 
-    <!-- ================= TOAST ================= -->
+    <!-- TOAST -->
     <div class="adhkar-toast" id="adhkarToast">
         <i class="fa-solid fa-circle-check"></i>
         <span id="toastMsg"></span>
     </div>
 
-    <!-- ================= FOOTER ================= -->
+    <!-- FOOTER -->
     <footer class="baca-footer">
         <div class="footer-content">
             <div class="footer-col footer-brand">
@@ -1649,15 +1608,13 @@
         </div>
     </footer>
 
-    <!-- ================= SCRIPTS ================= -->
+    <!-- SCRIPTS -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         (function () {
             "use strict";
 
-            /* ============================================================
-               HIJRI DATE
-               ============================================================ */
+            /* HIJRI DATE */
             const HIJRI_MONTHS_EN = [
                 'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
                 'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban",
@@ -1711,9 +1668,7 @@
                     .catch(() => { }); // silent fail — Intl date is already showing
             }
 
-            /* ============================================================
-               ADHKAR DATA — authentic, with tashkeel
-               ============================================================ */
+            /* ADHKAR DATA — authentic, with tashkeel */
             const ADHKAR = [
                 // ---------- MORNING & EVENING ----------
                 {
@@ -1938,9 +1893,7 @@
                 { id: "favorites", label: "Favourites", icon: "fa-solid fa-heart" }
             ];
 
-            /* ============================================================
-               STATE
-               ============================================================ */
+            /* STATE */
             const STORE_FAV = "adhkar.favorites";
             const STORE_CNT = "adhkar.counters";
             const STORE_RMND = "adhkar.reminder";
@@ -1961,9 +1914,7 @@
                 counters: loadJSON(STORE_CNT, {})
             };
 
-            /* ============================================================
-               ELEMENTS
-               ============================================================ */
+            /* ELEMENTS */
             const grid = document.getElementById("adhkarGrid");
             const pillsWrap = document.getElementById("categoryPills");
             const searchInput = document.getElementById("searchInput");
@@ -1983,9 +1934,7 @@
             const RING_CIRC = 2 * Math.PI * 44;      // progress ring (r=44)
             const COUNTER_CIRC = 2 * Math.PI * 28;   // card counter ring (r=28)
 
-            /* ============================================================
-               CATEGORY PILLS
-               ============================================================ */
+            /* CATEGORY PILLS */
             function renderPills() {
                 pillsWrap.innerHTML = "";
                 CATEGORIES.forEach(cat => {
@@ -2022,9 +1971,7 @@
                 });
             }
 
-            /* ============================================================
-               FILTERING
-               ============================================================ */
+            /* FILTERING */
             function getFiltered() {
                 const q = state.search.trim().toLowerCase();
                 return ADHKAR.filter(a => {
@@ -2038,9 +1985,7 @@
                 });
             }
 
-            /* ============================================================
-               RENDER — Adhkar grid
-               ============================================================ */
+            /* RENDER — Adhkar grid */
             function render() {
                 const list = getFiltered();
                 grid.innerHTML = "";
@@ -2146,9 +2091,7 @@
                 updateProgress();
             }
 
-            /* ============================================================
-               PROGRESS
-               ============================================================ */
+            /* PROGRESS */
             const MOTIVATIONAL = [
                 { threshold: 0, icon: "fa-seedling", text: "Begin your remembrance — every dhikr is a seed planted." },
                 { threshold: 25, icon: "fa-leaf", text: "Beautiful start — keep your tongue moist with dhikr." },
@@ -2180,9 +2123,7 @@
                 statFav.textContent = Object.keys(state.favorites).length;
             }
 
-            /* ============================================================
-               RESET
-               ============================================================ */
+            /* RESET */
             resetBtn.addEventListener("click", () => {
                 state.counters = {};
                 try { localStorage.removeItem(STORE_CNT); } catch (e) { }
@@ -2190,9 +2131,7 @@
                 toast("All counters reset");
             });
 
-            /* ============================================================
-               SEARCH
-               ============================================================ */
+            /* SEARCH */
             let searchTimer;
             searchInput.addEventListener("input", (e) => {
                 clearTimeout(searchTimer);
@@ -2202,9 +2141,7 @@
                 }, 180);
             });
 
-            /* ============================================================
-               FAV FILTER (toolbar)
-               ============================================================ */
+            /* FAV FILTER (toolbar) */
             favBtn.addEventListener("click", () => {
                 state.favOnly = !state.favOnly;
                 favBtn.classList.toggle("active", state.favOnly);
@@ -2212,15 +2149,7 @@
                 render();
             });
 
-            /* ============================================================
-               ARABIC AUDIO PLAYBACK
-               ------------------------------------------------------------
-               Uses Google Translate TTS API to generate real MP3 audio
-               for Arabic text. This is MUCH more reliable than browser
-               speechSynthesis (which often has no Arabic voices or
-               silently fails). The Google TTS voice is a clear male
-               Arabic voice that works on all browsers.
-               ============================================================ */
+            /* ARABIC AUDIO PLAYBACK Uses Google Translate TTS API to generate real MP3 audio for Arabic text. This is MUCH more reliable than browser speechSynthesis (which often has no Arabic voices or silently fails). The Google TTS voice is a clear male Arabic voice that works on all browsers. */
             let currentAudioBtn = null;
             let _audioEl = null;
 
@@ -2344,9 +2273,7 @@
                     }, 1000);
                 }
             }
-            /* ============================================================
-               THEME TOGGLE
-               ============================================================ */
+            /* THEME TOGGLE */
             (function initTheme() {
                 const themeBtn = document.querySelector(".theme-btn");
                 const saved = localStorage.getItem("siteTheme") || "dark";
@@ -2397,9 +2324,7 @@
                 if (fy) fy.textContent = new Date().getFullYear();
             })();
 
-            /* ============================================================
-               TOAST
-               ============================================================ */
+            /* TOAST */
             let toastTimer;
             function toast(msg) {
                 toastMsg.innerHTML = msg;
@@ -2408,9 +2333,7 @@
                 toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
             }
 
-            /* ============================================================
-               REMINDER (Fajr / Maghrib)
-               ============================================================ */
+            /* REMINDER (Fajr / Maghrib) */
             const reminderToggle = document.getElementById("reminderToggle");
             const reminderPanel = document.getElementById("reminderPanel");
             const enableReminder = document.getElementById("enableReminderBtn");
@@ -2531,9 +2454,7 @@
                 scheduleReminders();
             }
 
-            /* ============================================================
-               INIT
-               ============================================================ */
+            /* INIT */
             // onvoiceschanged is already set up in the TTS section above
             // to cache voices into _cachedVoices. No duplicate here.
 

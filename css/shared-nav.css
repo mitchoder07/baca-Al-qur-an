@@ -1,11 +1,5 @@
-/* ============================================================
-   BACA — shared-nav.css
-   FOUC fix: explicit SVG dimensions, strict icon display rules,
-   and initial drawer visibility constraints to prevent flash of
-   large unstyled hamburger/close icons on page load.
-   ============================================================ */
-
-/* ── THE HAMBURGER BUTTON (in-navbar, chameleon) ── */
+/* shared-nav.css */
+/* THE HAMBURGER BUTTON (in-navbar, chameleon) */
 .baca-nav-toggle {
     width: 42px;
     height: 42px;
@@ -38,7 +32,7 @@
     transform: scale(0.94);
 }
 
-/* ── EXPLICIT SVG DIMENSIONS — prevents FOUC of huge icons ── */
+/* EXPLICIT SVG DIMENSIONS — prevents FOUC of huge icons */
 .baca-nav-toggle svg,
 .baca-nav-drawer-close svg,
 .baca-nav-drawer-link svg,
@@ -68,7 +62,7 @@
     height: 30px;
 }
 
-/* ── STRICT ICON DISPLAY RULES — toggle open/close ── */
+/* STRICT ICON DISPLAY RULES — toggle open/close */
 .baca-nav-toggle-icon-open,
 .baca-nav-toggle-icon-close {
     display: inline-flex;
@@ -100,7 +94,7 @@
     display: inline-flex !important;
 }
 
-/* ── LIGHT MODE ADAPTATION ── */
+/* LIGHT MODE ADAPTATION */
 body.light-mode .baca-nav-toggle {
     background: rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.1);
@@ -112,7 +106,7 @@ body.light-mode .baca-nav-toggle:hover {
     color: #059669;
 }
 
-/* ── MUSHAF PAGE ADAPTATION ── */
+/* MUSHAF PAGE ADAPTATION */
 [data-mushaf-theme="light"] .baca-nav-toggle {
     background: rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.1);
@@ -123,7 +117,7 @@ body.light-mode .baca-nav-toggle:hover {
     color: #059669;
 }
 
-/* ── SLIDE-IN DRAWER — INITIAL VISIBILITY CONSTRAINTS (FOUC) ── */
+/* SLIDE-IN DRAWER — INITIAL VISIBILITY CONSTRAINTS (FOUC) */
 .baca-nav-drawer {
     position: fixed;
     top: 0;
@@ -266,7 +260,7 @@ body.light-mode .baca-nav-toggle:hover {
     line-height: 1.5;
 }
 
-/* ── BACKDROP — INITIAL VISIBILITY CONSTRAINTS ── */
+/* BACKDROP — INITIAL VISIBILITY CONSTRAINTS */
 .baca-nav-backdrop {
     position: fixed;
     inset: 0;
@@ -285,7 +279,7 @@ body.light-mode .baca-nav-toggle:hover {
     visibility: visible;
 }
 
-/* ── LIGHT MODE DRAWER ── */
+/* LIGHT MODE DRAWER */
 body.light-mode .baca-nav-drawer {
     background: #f8fafc;
     color: #0f172a;
@@ -337,7 +331,7 @@ body.light-mode .baca-nav-drawer-logo {
     color: #0f172a;
 }
 
-/* ── SMALL SCREENS ── */
+/* SMALL SCREENS */
 @media (max-width: 640px) {
     .baca-nav-toggle {
         width: 40px;
@@ -359,7 +353,7 @@ body.light-mode .baca-nav-drawer-logo {
     }
 }
 
-/* ── REDUCED MOTION ── */
+/* REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
     .baca-nav-drawer,
     .baca-nav-backdrop,

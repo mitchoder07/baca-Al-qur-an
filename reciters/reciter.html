@@ -695,7 +695,7 @@
             transform: translateY(-3px)
         }
 
-        /* ── LIGHT MODE ── */
+        /* LIGHT MODE */
         body.light-mode {
             background: #f1f5f9;
             color: #0f172a;
@@ -956,24 +956,7 @@
 
 <body>
 
-    <!-- ============================================================
-         BACA — RECITER PROFILE (reciters/reciter.html)
-         Opened via reciters/index.html?r=<id> (or salah.html/adhkar.html
-         reciter picker) — the ?r= id is read by this page's script to
-         load the matching profile from RECITER_PROFILES.
-         ============================================================
-         PAGE OUTLINE
-         ------------------------------------------------------------
-         1. Navbar
-         2. Sticky player (prev/play/next, surah + reciter name,
-            progress bar — visible once playback starts)
-         3. Hero (reciter avatar, name, country, style)
-         4. Surah section (searchable list of all 114 surahs, tap
-            to play with this reciter)
-         5. Audio element + back-to-top button
-         6. Script: light-mode sync, reciter profile lookup, surah
-            list rendering + search, sticky player wiring
-         ============================================================ -->
+    <!-- Baca - Reciter profile (loaded via ?r=<id>) -->
 
     <header class="navbar">
         <a href="../index.html" class="logo">
@@ -1132,7 +1115,7 @@
             okasha: { name: "Okasha Kameny", arabic: "عكاشة كاميني", country: "Ghana", style: "Murattal", folder: "Okasha_Kameny_64kbps", fullSurahOnly: true, image: "/images/reciters/okasha.png", bio: "Sheikh Okasha Kameny is a Ghanaian Quran reciter known for his clear, deeply emotional recitation style. He has studied tajweed and Quranic sciences and his recitations have gained wide popularity, especially across West Africa and online. His recordings are appreciated for their sincerity and the natural, flowing pace of his delivery." },
             yasser_dosari: { name: "Yasser Al-Dosari", arabic: "ياسر الدوسري", country: "Saudi Arabia", style: "Murattal", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true, image: "/images/reciters/yasser_dosari.png", bio: "Sheikh Yasser Al-Dosari is a Saudi Imam and Khatib known for his beautiful, emotional recitation. He serves as an Imam at a mosque in Riyadh and has memorized the Quran with multiple recitations. His recordings are beloved for their clarity, tajweed precision, and spiritual depth." },
             mansour_salmi: { name: "Mansour Al-Salmi", arabic: "منور السالمي", country: "Saudi Arabia", style: "Murattal", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true, image: "/images/reciters/mansour_salmi.png", bio: "Sheikh Mansour Al-Salmi is a Saudi Quran reciter known for his calm, melodious voice and precise tajweed. His recitations are widely appreciated for their soothing quality and are popular for both learning and daily listening." },
-            // ── Non-Hafs Riwayat reciters ──
+            // Non-Hafs Riwayat reciters
             husary_warsh: { name: "Al-Husary (Warsh)", arabic: "الحصري — ورش", country: "Egypt", style: "Warsh", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Warsh riwayah from Nafi. This riwayah is widely used in North and West Africa. His Warsh recitation maintains the same scholarly precision as his Hafs recitation, making it an excellent reference for students of this riwayah." },
             husary_qalun: { name: "Al-Husary (Qalun)", arabic: "الحصري — قالون", country: "Egypt", style: "Qalun", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Qalun riwayah from Nafi. Qalun is the second most common riwayah after Hafs, popular in Libya, Tunisia, and parts of Egypt." },
             abdulbasit_warsh: { name: "Abdul Basit (Warsh)", arabic: "عبدالباسط — ورش", country: "Egypt", style: "Warsh", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/basit.png", bio: "Sheikh Abdul Basit Abdul Samad reciting in the Warsh riwayah. His Warsh recitation showcases his extraordinary vocal range and emotional depth in this alternative qira'ah, offering a unique listening experience." },
@@ -1278,7 +1261,7 @@
         window.currentSurahId = null;
         window.reciterId = reciterId;
 
-        // ── helpers ──
+        // helpers
         function pad3(n) { return String(n).padStart(3, "0"); }
 
         // BUG FIX 1: audio URL now uses reciterData.folder from ABOVE — NOT hardcoded
@@ -1294,7 +1277,7 @@
             return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
         }
 
-        // ── HERO ──
+        // HERO
         function populateHero() {
             document.title = `${reciterData.name} — Al Furqan`;
             document.getElementById("reciter-name").textContent = reciterData.name;
@@ -1342,7 +1325,7 @@
             }, 120);
         }
 
-        // ── RENDER ROWS ──
+        // RENDER ROWS
         function renderSurahs(list) {
             const el = document.getElementById("surah-list");
             if (!list.length) {
@@ -1377,7 +1360,7 @@
             });
         }
 
-        // ── PLAY LOGIC ──
+        // PLAY LOGIC
         // BUG FIX (full-surah audio): previously this played the surah
         // ayah-by-ayah via everyayah.com (each ayah = separate mp3), which
         // meant the progress bar reset every few seconds and users couldn't
@@ -1509,7 +1492,7 @@
             }
         }
 
-        // ── AUDIO PROGRESS ──
+        // AUDIO PROGRESS
         audio.addEventListener("timeupdate", () => {
             if (!audio.duration) return;
             const pct = (audio.currentTime / audio.duration) * 100;
@@ -1523,7 +1506,7 @@
         audio.addEventListener("play", () => setPlaying(true));
         audio.addEventListener("pause", () => setPlaying(false));
 
-        // ── STICKY CONTROLS ──
+        // STICKY CONTROLS
         document.getElementById("sp-play").addEventListener("click", () => {
             if (!currentSurahId) return;
             isPlaying ? audio.pause() : audio.play();
@@ -1535,7 +1518,7 @@
             if (currentSurahId < 114) playSurahFromStart(currentSurahId + 1);
         });
 
-        // ── REPEAT BUTTON ──
+        // REPEAT BUTTON
         // Cycles: off → one (repeat current surah) → all (loop all surahs) → off
         document.getElementById("sp-repeat").addEventListener("click", () => {
             if (repeatMode === 'off') repeatMode = 'one';
@@ -1558,7 +1541,7 @@
                         "fa-solid fa-repeat";
             }
         }
-        // ── SEEKABLE PROGRESS BAR ──
+        // SEEKABLE PROGRESS BAR
         // Upgraded from a simple click handler to a full drag/seek handler
         // so users on both mobile and desktop can scrub through the surah.
         // Supports: click-to-jump, touch-drag, mouse-drag.
@@ -1610,7 +1593,7 @@
             bar.addEventListener("click", e => setProgressFromX(e.clientX));
         })();
 
-        // ── SEARCH ──
+        // SEARCH
         document.getElementById("surah-search").addEventListener("input", e => {
             const q = e.target.value.trim().toLowerCase();
             renderSurahs(q
@@ -1622,12 +1605,12 @@
                 : [...SURAH_LIST]);
         });
 
-        // ── BACK TO TOP ──
+        // BACK TO TOP
         const backTop = document.getElementById("back-top");
         window.addEventListener("scroll", () => backTop.classList.toggle("show", window.scrollY > 400));
         backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-        // ── INIT ──
+        // INIT
         populateHero();
         renderSurahs(SURAH_LIST);
 

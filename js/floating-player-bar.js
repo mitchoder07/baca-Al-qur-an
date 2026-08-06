@@ -1,15 +1,11 @@
-/* ============================================================
-   BACA — floating-player-bar.js
-   A compact floating audio player with full controls.
-   ============================================================ */
-
+/* floating-player-bar.js */
 (function () {
     'use strict';
 
     var STORAGE_KEY = 'bacaFloatingPlayer';
     var SAVE_INTERVAL_MS = 2000;
 
-    // ── Audio servers (mp3quran.net) ──
+    // Audio servers (mp3quran.net)
     var SERVERS = {
         'mishari': 'https://server8.mp3quran.net/afs/',
         'sudais': 'https://server11.mp3quran.net/sds/',
@@ -47,7 +43,7 @@
         'ayman_swed': 'https://server8.mp3quran.net/afs/'
     };
 
-    // ── Surah names (compact) ──
+    // Surah names (compact)
     var SURAH_NAMES = [
         'Al-Fatihah', 'Al-Baqarah', 'Ali Imran', 'An-Nisa', 'Al-Maidah', 'Al-Anam', 'Al-Araf', 'Al-Anfal', 'At-Tawbah', 'Yunus',
         'Hud', 'Yusuf', 'Ar-Rad', 'Ibrahim', 'Al-Hijr', 'An-Nahl', 'Al-Isra', 'Al-Kahf', 'Maryam', 'Ta-Ha',
@@ -63,7 +59,7 @@
         'Al-Masad', 'Al-Ikhlas', 'Al-Falaq', 'An-Nas'
     ];
 
-    // ── SVG Icons ──
+    // SVG Icons
     var ICONS = {
         play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
         pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
@@ -77,7 +73,7 @@
         repeatAll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>'
     };
 
-    // ── Helper functions ──
+    // Helper functions
     function getAudioUrl(surahId, reciterId) {
         var server = SERVERS[reciterId] || SERVERS['mishari'];
         return server + String(surahId).padStart(3, '0') + '.mp3';
@@ -100,7 +96,7 @@
         });
     }
 
-    // ── Determine which page we're on ──
+    // Determine which page we're on
     var path = window.location.pathname;
     var filename = path.split('/').pop() || 'index.html';
     var dirParts = path.split('/').filter(Boolean);
@@ -109,7 +105,7 @@
     var isReciterProfile = path.indexOf('/reciters/reciter.html') !== -1;
     var isTargetPage = (filename === 'index.html') || (filename === 'game.html');
 
-    // ── Main execution ──
+    // Main execution
     if (isReciterProfile) {
         setupReciterPageSaving();
     } else if (isTargetPage) {
@@ -119,7 +115,7 @@
             setupFloatingBar();
         }
 
-        // ── Handle bfcache (back/forward navigation) ──
+        // Handle bfcache (back/forward navigation)
         // When the user presses the back button or swipes back on mobile,
         // the browser restores the page from the back-forward cache (bfcache).
         // Scripts don't re-run in this case, so the floating bar may not appear.
@@ -149,9 +145,7 @@
         });
     }
 
-    // ============================================================
     // PART 1: reciter.html — save playback state
-    // ============================================================
     function setupReciterPageSaving() {
         var audio = document.getElementById('reciter-audio');
         if (!audio) return;
@@ -186,9 +180,7 @@
         window.addEventListener('beforeunload', saveState);
     }
 
-    // ============================================================
     // PART 2: Target pages — show floating bar + resume
-    // ============================================================
     function setupFloatingBar() {
         var state = null;
         try {
@@ -261,7 +253,7 @@
         audio.preload = 'auto';
         document.body.appendChild(audio);
 
-        // ── PREVENT SIMULTANEOUS PLAYBACK ──
+        // PREVENT SIMULTANEOUS PLAYBACK
         // When the daily ayah audio (quran-audio) starts playing, pause the
         // floating bar. When the floating bar starts playing, pause the daily
         // ayah audio. Only one should play at a time.
