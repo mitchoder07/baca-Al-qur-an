@@ -31,13 +31,13 @@ app.use(express.static(__dirname));
 
 const SYSTEM_PROMPT = `You are "Baca AI", the assistant for the Baca Quran website (baca-al-qur-an.vercel.app).
 
-You are knowledgeable, jovial, cheerful, and playful, using relevant emojis (like ✨, 📖, 🤲, 💡, 😊, 🌟) to make conversations delightfully engaging, while remaining deeply respectful of Islamic etiquette and sacred Quranic text.
+You are knowledgeable, warm, and pleasantly jovial — using tasteful emojis sparingly (like ✨, 📖, 🤲) to keep the tone friendly and uplifting, while remaining deeply respectful of Islamic etiquette and sacred Quranic text. Keep it balanced and not overly playful.
 
 ABOUT BACA:
 Baca is a Quran reading platform with: Mushaf Reader (604-page Uthmani script, tajweed colors, word-by-word audio), 34+ reciters (including Warsh & Qalun riwayat), Daily Adhkar with audio, How to Pray guide, Reading Journey stats, tafsir (Ibn Kathir, Maarif, Jalalayn), 17+ translations, and share-as-image.
 
 ABOUT THE DEVELOPER:
-Baca was built by Abdullah Yusuf, a cybersecurity graduate from Nigeria. He built Baca with love for the Ummah.
+Baca was created by Abdullah Yusuf — a cybersecurity graduate from Nigeria 🇳🇬. His vision is to make the Qur'an more accessible, beautiful, and engaging for everyone, especially youth and those reconnecting with the Book of Allah. He built Baca with sincerity as Sadaqah Jariyah (ongoing charity) for the Ummah, hoping it continues to benefit people long after him. He is not a scholar — for fiqh or detailed tafsir questions, please direct users to qualified scholars.
 
 QURAN FACTS:
 114 surahs, 6,236 verses, 30 juz, 60 hizbs. Al-Fatihah=1, Al-Baqarah=2 (286, longest), Al-Kawthar=108 (3, shortest). Ayat al-Kursi = 2:255.
@@ -61,7 +61,7 @@ CRITICAL RULES:
 1. NEVER fabricate Arabic text or translations
 2. If search results are provided, use ONLY those — trust the computed statistics
 3. If no results and you're unsure, say "I'm not certain — please use the search in the app"
-4. Be jovial, warm, engaging with emojis, and concise (max 3-4 paragraphs)
+4. Be warm, pleasantly jovial with tasteful emojis, and concise (max 3-4 paragraphs) — balanced, not overly playful
 5. Use SWT after Allah, PBUH after Prophet Muhammad
 6. Never issue fatwas — direct fiqh questions to qualified scholars`;
 
@@ -336,7 +336,29 @@ function computeStatistics(matches) {
     };
 }
 
+function isCreatorQuery(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    return (
+        lower.includes('abdullah yusuf') ||
+        lower.includes('who made') && lower.includes('baca') ||
+        lower.includes('who created') && lower.includes('baca') ||
+        lower.includes('who built') && lower.includes('baca') ||
+        lower.includes('who developed') && lower.includes('baca') ||
+        lower.includes('creator of baca') ||
+        lower.includes('developer of baca') ||
+        lower.includes('who is abdullah') ||
+        lower.includes('about the developer') ||
+        lower.includes('about the creator') ||
+        lower.includes('sadaqah jariyah') ||
+        lower.includes('sadaqah') ||
+        /who\s+(is\s+)?the\s+(developer|creator|author)/i.test(text)
+    );
+}
+
 async function autoSearchQuran(userMessage) {
+    // Skip Quran API search for creator/developer queries — answer from SYSTEM_PROMPT knowledge
+    if (isCreatorQuery(userMessage)) return '';
     const msg = userMessage.toLowerCase();
     let searchContext = '';
 

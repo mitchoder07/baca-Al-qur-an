@@ -1,5 +1,8 @@
 /* ============================================================
    BACA — shared-nav.css
+   FOUC fix: explicit SVG dimensions, strict icon display rules,
+   and initial drawer visibility constraints to prevent flash of
+   large unstyled hamburger/close icons on page load.
    ============================================================ */
 
 /* ── THE HAMBURGER BUTTON (in-navbar, chameleon) ── */
@@ -19,7 +22,6 @@
     transition: background 0.18s ease, border-color 0.18s ease,
                 transform 0.18s ease, color 0.18s ease;
     -webkit-tap-highlight-color: transparent;
-    /* Inherit font so the ☰ glyph renders consistently */
     font-family: inherit;
     font-size: 1.05rem;
     line-height: 1;
@@ -36,26 +38,69 @@
     transform: scale(0.94);
 }
 
+/* ── EXPLICIT SVG DIMENSIONS — prevents FOUC of huge icons ── */
+.baca-nav-toggle svg,
+.baca-nav-drawer-close svg,
+.baca-nav-drawer-link svg,
+.baca-nav-drawer-logo svg {
+    display: block;
+    flex-shrink: 0;
+}
+
 .baca-nav-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.baca-nav-drawer-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.baca-nav-drawer-link svg {
+    width: 18px;
+    height: 18px;
+    opacity: 0.85;
+}
+
+.baca-nav-drawer-logo svg {
+    width: 30px;
+    height: 30px;
+}
+
+/* ── STRICT ICON DISPLAY RULES — toggle open/close ── */
+.baca-nav-toggle-icon-open,
+.baca-nav-toggle-icon-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    line-height: 0;
+}
+
+.baca-nav-toggle-icon-open svg,
+.baca-nav-toggle-icon-close svg {
     width: 20px;
     height: 20px;
     display: block;
 }
 
-/* When the drawer is open, rotate the icon into an X */
-.baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-open {
-    display: none;
-}
-.baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-close {
-    display: block;
-}
+/* Default: show open icon, hide close icon */
 .baca-nav-toggle .baca-nav-toggle-icon-close {
-    display: none;
+    display: none !important;
 }
 
-/* ── LIGHT MODE ADAPTATION ──
-   On pages that add body.light-mode (adhkar, salah, ask, reciters),
-   the navbar text becomes dark, so the button should match. */
+.baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-open {
+    display: none !important;
+}
+
+.baca-nav-toggle[aria-expanded="true"] .baca-nav-toggle-icon-close {
+    display: inline-flex !important;
+}
+
+/* ── LIGHT MODE ADAPTATION ── */
 body.light-mode .baca-nav-toggle {
     background: rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.1);
@@ -67,9 +112,7 @@ body.light-mode .baca-nav-toggle:hover {
     color: #059669;
 }
 
-/* ── MUSHAF PAGE ADAPTATION ──
-   The mushaf topbar has its own theme attribute. Make sure the
-   button is visible on both dark and light mushaf themes. */
+/* ── MUSHAF PAGE ADAPTATION ── */
 [data-mushaf-theme="light"] .baca-nav-toggle {
     background: rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.1);
@@ -80,7 +123,7 @@ body.light-mode .baca-nav-toggle:hover {
     color: #059669;
 }
 
-/* ── SLIDE-IN DRAWER ── */
+/* ── SLIDE-IN DRAWER — INITIAL VISIBILITY CONSTRAINTS (FOUC) ── */
 .baca-nav-drawer {
     position: fixed;
     top: 0;
@@ -91,17 +134,22 @@ body.light-mode .baca-nav-toggle:hover {
     color: #fff;
     z-index: 10020;
     transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s, opacity 0.3s;
     display: flex;
     flex-direction: column;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
     font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    /* FOUC: hidden until opened — prevents flash of drawer on load */
     visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
 }
 
 .baca-nav-drawer.open {
     transform: translateX(0);
     visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
 }
 
 /* Drawer header */
@@ -121,12 +169,6 @@ body.light-mode .baca-nav-toggle:hover {
     gap: 0.55rem;
     text-decoration: none;
     color: #fff;
-}
-
-.baca-nav-drawer-logo svg {
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
 }
 
 .baca-nav-drawer-logo-text {
@@ -157,11 +199,6 @@ body.light-mode .baca-nav-toggle:hover {
 .baca-nav-drawer-close:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(16, 185, 129, 0.4);
-}
-
-.baca-nav-drawer-close svg {
-    width: 18px;
-    height: 18px;
 }
 
 /* Drawer body */
@@ -211,13 +248,6 @@ body.light-mode .baca-nav-toggle:hover {
     font-weight: 600;
 }
 
-.baca-nav-drawer-link svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    opacity: 0.85;
-}
-
 .baca-nav-drawer-link.active svg {
     opacity: 1;
 }
@@ -236,7 +266,7 @@ body.light-mode .baca-nav-toggle:hover {
     line-height: 1.5;
 }
 
-/* ── BACKDROP ── */
+/* ── BACKDROP — INITIAL VISIBILITY CONSTRAINTS ── */
 .baca-nav-backdrop {
     position: fixed;
     inset: 0;
@@ -245,16 +275,17 @@ body.light-mode .baca-nav-toggle:hover {
     z-index: 10015;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
 }
 
 .baca-nav-backdrop.open {
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
 }
 
-/* ── LIGHT MODE DRAWER ──
-   The drawer adapts to light mode for consistency with the page. */
+/* ── LIGHT MODE DRAWER ── */
 body.light-mode .baca-nav-drawer {
     background: #f8fafc;
     color: #0f172a;
@@ -313,6 +344,13 @@ body.light-mode .baca-nav-drawer-logo {
         height: 40px;
     }
     .baca-nav-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+    .baca-nav-toggle-icon-open,
+    .baca-nav-toggle-icon-close,
+    .baca-nav-toggle-icon-open svg,
+    .baca-nav-toggle-icon-close svg {
         width: 18px;
         height: 18px;
     }
