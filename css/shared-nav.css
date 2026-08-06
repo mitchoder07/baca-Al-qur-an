@@ -14,7 +14,7 @@
     flex-shrink: 0;
     padding: 0;
     transition: background 0.18s ease, border-color 0.18s ease,
-                transform 0.18s ease, color 0.18s ease;
+        transform 0.18s ease, color 0.18s ease;
     -webkit-tap-highlight-color: transparent;
     font-family: inherit;
     font-size: 1.05rem;
@@ -62,7 +62,7 @@
     height: 30px;
 }
 
-/* STRICT ICON DISPLAY RULES — toggle open/close */
+/* ICON DISPLAY RULES — toggle open/close */
 .baca-nav-toggle-icon-open,
 .baca-nav-toggle-icon-close {
     display: inline-flex;
@@ -100,6 +100,7 @@ body.light-mode .baca-nav-toggle {
     border-color: rgba(0, 0, 0, 0.1);
     color: inherit;
 }
+
 body.light-mode .baca-nav-toggle:hover {
     background: rgba(16, 185, 129, 0.1);
     border-color: rgba(16, 185, 129, 0.4);
@@ -112,6 +113,7 @@ body.light-mode .baca-nav-toggle:hover {
     border-color: rgba(0, 0, 0, 0.1);
     color: #0f172a;
 }
+
 [data-mushaf-theme="light"] .baca-nav-toggle:hover {
     background: rgba(16, 185, 129, 0.12);
     color: #059669;
@@ -337,10 +339,12 @@ body.light-mode .baca-nav-drawer-logo {
         width: 40px;
         height: 40px;
     }
+
     .baca-nav-toggle svg {
         width: 18px;
         height: 18px;
     }
+
     .baca-nav-toggle-icon-open,
     .baca-nav-toggle-icon-close,
     .baca-nav-toggle-icon-open svg,
@@ -348,6 +352,7 @@ body.light-mode .baca-nav-drawer-logo {
         width: 18px;
         height: 18px;
     }
+
     .baca-nav-drawer {
         width: 88vw;
     }
@@ -355,6 +360,7 @@ body.light-mode .baca-nav-drawer-logo {
 
 /* REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
+
     .baca-nav-drawer,
     .baca-nav-backdrop,
     .baca-nav-toggle {
