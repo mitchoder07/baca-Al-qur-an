@@ -419,22 +419,6 @@ function escapeHtml(s) {
     }[c]));
 }
 
-// Strip HTML tags from a string (e.g. quran.com translations have <sup> footnotes)
-function stripHtml(s) {
-    if (s == null) return "";
-    return String(s).replace(/<[^>]*>/g, "");
-}
-
-// Strip HTML tags AND decode common entities, for clean display
-function cleanText(s) {
-    if (s == null) return "";
-    let out = String(s).replace(/<[^>]*>/g, "");
-    // Decode a few common entities
-    out = out.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
-    return out;
-}
-
 function formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return "0:00";
     const m = Math.floor(seconds / 60);
@@ -447,20 +431,10 @@ function capitalizeType(t) {
     return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
-function pad3(n) { return String(n).padStart(3, "0"); }
-
 // Arabic-Indic digits for ayah markers (e.g. ١, ٢, ٣...)
 function toArabicNum(n) {
     const map = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
     return String(n).split("").map(d => map[+d] ?? d).join("");
-}
-
-// Convert hex color to "r,g,b" string for use in rgba()
-function hexToRgb(hex) {
-    hex = hex.replace("#", "");
-    if (hex.length === 3) hex = hex.split("").map(c => c + c).join("");
-    const n = parseInt(hex, 16);
-    return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
 }
 
 // Generic fetch with timeout + JSON
@@ -511,14 +485,6 @@ function applyTheme(theme) {
     persistState();
 }
 
-function toggleSiteTheme() {
-    // Cycle: dark → warm → olive → sapphire → light → dark
-    const order = ["dark", "warm", "olive", "sapphire", "light"];
-    const next = order[(order.indexOf(state.theme) + 1) % order.length];
-    applyTheme(next);
-    showToast(`Theme: ${next.charAt(0).toUpperCase() + next.slice(1)}`);
-}
-
 // Sync body theme with siteTheme from index.html (localStorage "siteTheme")
 // When the user navigates from index.html to mushaf.html, we respect the site theme
 // they chose on the home page as the STARTING point, but the user can still switch
@@ -534,41 +500,6 @@ function syncWithSiteTheme() {
 }
 
 /* TAJWEED — parse quran-tajweed markup (handles <tajweed-rule> tags and unicode markers). */
-
-// Parse tajweed markup from alquran.cloud's quran-tajweed edition.
-// Format:  [letter[text]  |  [letter:number[text]  |  :number[text]
-// All wrapped text ends with ].
-// Returns [{text, rule}] segments where rule is a CSS class name or null.
-function parseTajweedSegments(text) {
-    if (!text) return [{ text: "", rule: null }];
-
-    const segments = [];
-    // Regex matches all three formats:
-    //   [letter[number[text]   → group 1=letter, group 2=number, group 3=text
-    //   [letter[text]           → group 1=letter, group 2=undefined, group 3=text
-    //   :number[text]           → group 1=undefined, group 2=number, group 3=text
-    const re = /(?:\[([a-z])(?::(\d+))?\[|:(\d+)\[)([^\]]*)\]/g;
-    let lastIdx = 0;
-    let m;
-    while ((m = re.exec(text)) !== null) {
-        // Push any plain text before this match
-        if (m.index > lastIdx) {
-            segments.push({ text: text.slice(lastIdx, m.index), rule: null });
-        }
-        const letter = m[1];
-        const number = m[2] || m[3];
-        // Prefer letter for rule lookup; fall back to number
-        const ruleKey = letter || number;
-        const ruleClass = TAJWEED_RULES[ruleKey] || null;
-        segments.push({ text: m[4], rule: ruleClass });
-        lastIdx = m.index + m[0].length;
-    }
-    // Push any remaining plain text
-    if (lastIdx < text.length) {
-        segments.push({ text: text.slice(lastIdx), rule: null });
-    }
-    return segments.length ? segments : [{ text, rule: null }];
-}
 
 // Render Arabic text as clickable words with optional tajweed colors.
 // Returns HTML string.

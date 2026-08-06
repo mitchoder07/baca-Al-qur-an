@@ -2099,36 +2099,6 @@ function updateStreak(stats) {
     stats.totalDays = (stats.totalDays || 0) + 1;
 }
 
-// Track a page read
-function trackPageRead(pageNum) {
-    const stats = loadStats();
-    const today = getTodayStr();
-
-    // Reset daily counters if new day
-    if (stats.todayDate !== today) {
-        stats.todayDate = today;
-        stats.todayPages = 0;
-        stats.todayVerses = 0;
-        stats.todayReadingSeconds = 0;
-        stats.todaySurahs = 0;
-    }
-
-    stats.pagesRead = (stats.pagesRead || 0) + 1;
-    stats.todayPages = (stats.todayPages || 0) + 1;
-    updateStreak(stats);
-
-    // Track juz explored
-    const juzNum = Math.ceil(pageNum / 20.13); // approx 20 pages per juz
-    if (juzNum > (stats.juzExplored || 0)) {
-        stats.juzExplored = juzNum;
-    }
-
-    saveStats(stats);
-    checkAchievements(stats);
-    updateStatsUI(stats);
-    updateChallengeProgress(stats);
-}
-
 // Track reading time (called periodically)
 function trackReadingTime(seconds) {
     const stats = loadStats();
@@ -2149,32 +2119,6 @@ function trackReadingTime(seconds) {
     checkAchievements(stats);
     updateStatsUI(stats);
     updateChallengeProgress(stats);
-}
-
-// Mark a surah as completed
-function markSurahCompleted(surahNum) {
-    const stats = loadStats();
-    const today = getTodayStr();
-
-    // Reset daily counters if new day
-    if (stats.todayDate !== today) {
-        stats.todayDate = today;
-        stats.todayPages = 0;
-        stats.todayVerses = 0;
-        stats.todayReadingSeconds = 0;
-        stats.todaySurahs = 0;
-    }
-
-    if (!stats.completedSurahs) stats.completedSurahs = [];
-    if (!stats.completedSurahs.includes(surahNum)) {
-        stats.completedSurahs.push(surahNum);
-        stats.todaySurahs = (stats.todaySurahs || 0) + 1;
-        saveStats(stats);
-        showToast(`Surah ${SURAH_LIST[surahNum - 1]?.transliteration || surahNum} completed! ✓`);
-        checkAchievements(stats);
-        updateStatsUI(stats);
-        updateChallengeProgress(stats);
-    }
 }
 
 // Check and unlock achievements
@@ -2852,26 +2796,6 @@ setTimeout(() => {
 }, 600);
 
 // READER TRANSLATION & TAFSIR SELECTION
-
-const READER_TRANSLATIONS = {
-    20: { name: "Saheeh International", lang: "en" },
-    95: { name: "Maududi (Tafhim)", lang: "en" },
-    84: { name: "Mufti Taqi Usmani", lang: "en" },
-    22: { name: "Yusuf Ali", lang: "en" },
-    19: { name: "Pickthall", lang: "en" },
-    85: { name: "Abdul Haleem", lang: "en" },
-    203: { name: "Hilali & Khan", lang: "en" },
-    149: { name: "Bridges' Translation", lang: "en" },
-    97: { name: "Tafheem-ul-Quran", lang: "ur" },
-    234: { name: "Fatah Muhammad Jalandhri", lang: "ur" },
-    33: { name: "Indonesian MoRA", lang: "id" },
-    31: { name: "Hamidullah", lang: "fr" },
-    77: { name: "Diyanet Isleri", lang: "tr" },
-    45: { name: "Kuliev", lang: "ru" },
-    56: { name: "Ma Jian", lang: "zh" },
-    103: { name: "Helmi Nasr", lang: "pt" },
-    54: { name: "Maulana Junagarhi", lang: "hi" },
-};
 
 // Load saved preferences
 let readerTranslationId = localStorage.getItem("readerTranslation") || "20";
