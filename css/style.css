@@ -6,9 +6,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
 
 :root {
-  /* --primary: #f5d06f; */
   --primary: #10b981;
-  /* --primary: #22c55e; */
   --dark: #0f172a;
   --dark-light: #1e293b;
   --white: #ffffff;

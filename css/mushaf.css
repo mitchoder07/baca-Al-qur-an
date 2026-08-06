@@ -205,7 +205,7 @@ body.light-mode {
     --mushaf-overlay: rgba(0, 0, 0, 0.35);
 }
 
-/* Reader theme variants — applied to BODY so all UI (modal, drawers, floating
+/* Reader theme variants: applied to BODY so all UI (modal, drawers, floating
    player, read area) inherits the same theme variables.
    The .mushaf-read-area also gets data-theme for backwards-compat with the
    rules above, but the canonical source of theme variables is now body. */
