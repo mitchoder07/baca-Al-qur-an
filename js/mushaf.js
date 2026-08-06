@@ -224,6 +224,11 @@ const el = {
     navDropdown: document.getElementById("nav-dropdown"),
     navSearchInput: document.getElementById("nav-search-input"),
     navList: document.getElementById("nav-list"),
+    navAyahPanel: document.getElementById("nav-ayah-panel"),
+    navAyahSurah: document.getElementById("nav-ayah-surah"),
+    navAyahNum: document.getElementById("nav-ayah-num"),
+    navAyahRange: document.getElementById("nav-ayah-range"),
+    navAyahGoBtn: document.getElementById("nav-ayah-go-btn"),
     reciterDrawer: document.getElementById("reciter-drawer"),
     reciterList: document.getElementById("reciter-list"),
     reciterSearch: document.getElementById("reciter-search"),
@@ -1975,16 +1980,102 @@ el.miniProgress?.addEventListener("input", () => {
 });
 
 /* ============================================================
-   NAVIGATOR (surah/juz/page dropdown)
+   NAVIGATOR (surah/juz/page/ayah dropdown)
    ============================================================ */
 
 let navTab = "surah";
+
+function populateNavAyahPanel() {
+    if (!el.navAyahSurah) return;
+    if (!el.navAyahSurah.children.length) {
+        el.navAyahSurah.innerHTML = SURAH_LIST.map(s =>
+            `<option value="${s.id}">${s.id}. ${s.transliteration} (${s.name})</option>`
+        ).join("");
+    }
+    // Set current active surah
+    let curSurah = state.surah || 1;
+    if (state.view === "page" && state.page) {
+        const [s] = PAGE_STARTS[state.page - 1] || [1, 1];
+        curSurah = s;
+    }
+    el.navAyahSurah.value = curSurah;
+    updateAyahRange();
+}
+
+function updateAyahRange() {
+    if (!el.navAyahSurah || !el.navAyahNum) return;
+    const surahId = parseInt(el.navAyahSurah.value) || 1;
+    const meta = SURAH_LIST[surahId - 1];
+    const maxVerses = meta ? meta.total_verses : 7;
+    el.navAyahNum.max = maxVerses;
+    el.navAyahNum.placeholder = `1 – ${maxVerses}`;
+    if (el.navAyahRange) {
+        el.navAyahRange.textContent = `1 – ${maxVerses}`;
+    }
+    const curVal = parseInt(el.navAyahNum.value);
+    if (curVal > maxVerses) el.navAyahNum.value = maxVerses;
+    else if (!curVal || curVal < 1) el.navAyahNum.value = 1;
+}
+
+function goToAyahNavigation() {
+    const surah = parseInt(el.navAyahSurah?.value) || 1;
+    const meta = SURAH_LIST[surah - 1];
+    const maxVerses = meta ? meta.total_verses : 7;
+    let ayah = parseInt(el.navAyahNum?.value) || 1;
+    if (ayah < 1) ayah = 1;
+    if (ayah > maxVerses) ayah = maxVerses;
+
+    el.navDropdown.hidden = true;
+
+    if (state.view === "page") {
+        state.page = findPageNumber(surah, ayah);
+        persistState();
+        render().then(() => {
+            setTimeout(() => {
+                const marker = document.querySelector(`.ayah-marker[data-surah="${surah}"][data-ayah="${ayah}"]`);
+                if (marker) {
+                    marker.scrollIntoView({ behavior: "smooth", block: "center" });
+                    marker.classList.add("active-ayah");
+                    setTimeout(() => marker.classList.remove("active-ayah"), 2000);
+                }
+            }, 400);
+        });
+    } else {
+        state.surah = surah;
+        persistState();
+        render().then(() => {
+            setTimeout(() => {
+                const card = document.querySelector(`.verse-card[data-surah="${surah}"][data-ayah="${ayah}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: "smooth", block: "center" });
+                    card.classList.add("active-ayah");
+                    setTimeout(() => card.classList.remove("active-ayah"), 2000);
+                }
+            }, 400);
+        });
+    }
+}
 
 function renderNavList(tab) {
     navTab = tab;
     document.querySelectorAll(".nav-tab").forEach(t => {
         t.classList.toggle("active", t.dataset.tab === tab);
     });
+
+    if (tab === "ayah") {
+        if (el.navSearchInput) el.navSearchInput.hidden = true;
+        if (el.navList) el.navList.hidden = true;
+        if (el.navAyahPanel) {
+            el.navAyahPanel.hidden = false;
+            populateNavAyahPanel();
+            setTimeout(() => el.navAyahNum?.focus(), 50);
+        }
+        return;
+    }
+
+    if (el.navSearchInput) el.navSearchInput.hidden = false;
+    if (el.navList) el.navList.hidden = false;
+    if (el.navAyahPanel) el.navAyahPanel.hidden = true;
 
     let items = [];
     if (tab === "surah") {
@@ -2095,7 +2186,7 @@ el.navSearchInput?.addEventListener("input", e => {
             const meta = SURAH_LIST[s - 1];
             return { id: j, num: j, name: `Juz ${j}`, meta: `Starts at ${meta?.transliteration} ${a}`, arabic: "" };
         }).filter(j => String(j.id) === q || j.name.toLowerCase().includes(q));
-    } else {
+    } else if (navTab === "page") {
         items = Array.from({ length: TOTAL_PAGES }, (_, i) => {
             const p = i + 1;
             const [s, a] = PAGE_STARTS[i];
@@ -2109,9 +2200,26 @@ el.navSearchInput?.addEventListener("input", e => {
 document.querySelectorAll(".nav-tab").forEach(t => {
     t.addEventListener("click", () => {
         renderNavList(t.dataset.tab);
-        el.navSearchInput.value = "";
-        el.navSearchInput.focus();
+        if (t.dataset.tab !== "ayah") {
+            el.navSearchInput.value = "";
+            el.navSearchInput.focus();
+        }
     });
+});
+
+el.navAyahSurah?.addEventListener("change", () => {
+    updateAyahRange();
+});
+
+el.navAyahGoBtn?.addEventListener("click", () => {
+    goToAyahNavigation();
+});
+
+el.navAyahNum?.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        goToAyahNavigation();
+    }
 });
 
 el.navSelectorBtn?.addEventListener("click", e => {
