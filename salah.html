@@ -1222,36 +1222,19 @@
             }
         }
 
-        /* Hide shared style.css chrome we don't use */
-        .search-modal,
-        .reciter-picker-modal,
-        .mobile-nav {
-            display: none !important;
-        }
-
         /* Light mode navbar overrides */
         body.light-mode .navbar {
             background: rgba(255, 255, 255, 0.92);
             border-bottom-color: rgba(0, 0, 0, 0.08);
         }
 
-        body.light-mode .navbar .nav-links a {
-            color: #0f172a;
-        }
-
-        body.light-mode .navbar .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        body.light-mode .navbar .nav-actions button.theme-btn,
-        body.light-mode .navbar .nav-actions .salah-btn {
+        body.light-mode .navbar .nav-actions button.theme-btn {
             background: #f1f5f9 !important;
             color: #0f172a !important;
             border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
-        body.light-mode .navbar .nav-actions button.theme-btn:hover,
-        body.light-mode .navbar .nav-actions .salah-btn:hover {
+        body.light-mode .navbar .nav-actions button.theme-btn:hover {
             background: var(--primary) !important;
             color: #fff !important;
             border-color: var(--primary);
@@ -1259,8 +1242,6 @@
     </style></head>
 
 <body>
-
-    <!-- Baca - How to Pray guide. NOTE: <style> still defines unused .mobile-nav/.nav-links/.search-modal/.reciter-picker-modal (leftover pre-shared-nav); safe to remove. -->
 
     <!-- GLOW BACKGROUND -->
     <div class="bg-glow glow-1"></div>

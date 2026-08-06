@@ -1272,36 +1272,19 @@
             }
         }
 
-        /* Hide search/reader chrome from shared style.css that we don't use */
-        .search-modal,
-        .reciter-picker-modal,
-        .mobile-nav {
-            display: none !important;
-        }
-
         /* Light mode navbar */
         body.light-mode .navbar {
             background: rgba(255, 255, 255, 0.92);
             border-bottom-color: rgba(0, 0, 0, 0.08);
         }
 
-        body.light-mode .navbar .nav-links a {
-            color: #0f172a;
-        }
-
-        body.light-mode .navbar .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        body.light-mode .navbar .nav-actions button.theme-btn,
-        body.light-mode .navbar .nav-actions .adhkar-btn {
+        body.light-mode .navbar .nav-actions button.theme-btn {
             background: #f1f5f9 !important;
             color: #0f172a !important;
             border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
-        body.light-mode .navbar .nav-actions button.theme-btn:hover,
-        body.light-mode .navbar .nav-actions .adhkar-btn:hover {
+        body.light-mode .navbar .nav-actions button.theme-btn:hover {
             background: var(--primary) !important;
             color: #fff !important;
             border-color: var(--primary);
@@ -1309,10 +1292,6 @@
     </style></head>
 
 <body>
-
-    <!-- Adhkar page outline: glow bg, navbar, dhikr cards, reminder FAB, toast, footer.
-         NOTE: the <style> block below still defines .mobile-nav/.nav-links/.search-modal/
-         .reciter-picker-modal, unused here (leftover from pre-shared-nav). Safe to remove. -->
 
     <!-- GLOW BACKGROUND -->
     <div class="bg-glow glow-1"></div>

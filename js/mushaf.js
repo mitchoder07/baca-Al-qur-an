@@ -131,7 +131,11 @@ const state = {
     tajweedOn: localStorage.getItem("mushafTajweed") === "true",
     arabicFont: parseFloat(localStorage.getItem("mushafArabicFont")) || 2.2,
     translationFont: parseFloat(localStorage.getItem("mushafTranslationFont")) || 1.0,
-    bookmarks: JSON.parse(localStorage.getItem("mushafBookmarks") || "[]"),
+    bookmarks: (() => {
+        // Corrupted/hand-edited localStorage must never brick the reader
+        try { return JSON.parse(localStorage.getItem("mushafBookmarks") || "[]") || []; }
+        catch { return []; }
+    })(),
     tafsirSource: "ibnkathir",
     // Cached fetches
     surahCache: {},    // { surahNum: { uthmani, tajweed, translit, translations: {} } }
@@ -139,8 +143,6 @@ const state = {
     // Runtime
     currentAyahAudio: null,    // {surah, ayah}
     isPlaying: false,
-    audioQueue: [],            // list of {surah, ayah} to play in order
-    audioCursor: 0,
     wordModalContext: null,    // {surah, ayah, wordIndex, words:[]}
 };
 
@@ -214,8 +216,6 @@ const el = {
     // Note: mushaf-theme-btn and mushaf-search-btn were removed from toolbar.
     // Theme is controlled via Settings drawer's theme swatches.
     // Search is accessible via the "/" keyboard shortcut.
-    hamburgerBtn: document.getElementById("hamburger-btn"),
-    mobileNav: document.getElementById("mobile-nav"),
     tajweedTool: document.getElementById("tajweed-tool"),
     tajweedIndicator: document.getElementById("tajweed-indicator"),
     reciterTool: document.getElementById("reciter-tool"),
@@ -419,22 +419,6 @@ function escapeHtml(s) {
     }[c]));
 }
 
-// Strip HTML tags from a string (e.g. quran.com translations have <sup> footnotes)
-function stripHtml(s) {
-    if (s == null) return "";
-    return String(s).replace(/<[^>]*>/g, "");
-}
-
-// Strip HTML tags AND decode common entities, for clean display
-function cleanText(s) {
-    if (s == null) return "";
-    let out = String(s).replace(/<[^>]*>/g, "");
-    // Decode a few common entities
-    out = out.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
-    return out;
-}
-
 function formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return "0:00";
     const m = Math.floor(seconds / 60);
@@ -447,20 +431,10 @@ function capitalizeType(t) {
     return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
-function pad3(n) { return String(n).padStart(3, "0"); }
-
 // Arabic-Indic digits for ayah markers (e.g. ١, ٢, ٣...)
 function toArabicNum(n) {
     const map = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
     return String(n).split("").map(d => map[+d] ?? d).join("");
-}
-
-// Convert hex color to "r,g,b" string for use in rgba()
-function hexToRgb(hex) {
-    hex = hex.replace("#", "");
-    if (hex.length === 3) hex = hex.split("").map(c => c + c).join("");
-    const n = parseInt(hex, 16);
-    return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
 }
 
 // Generic fetch with timeout + JSON
@@ -511,14 +485,6 @@ function applyTheme(theme) {
     persistState();
 }
 
-function toggleSiteTheme() {
-    // Cycle: dark → warm → olive → sapphire → light → dark
-    const order = ["dark", "warm", "olive", "sapphire", "light"];
-    const next = order[(order.indexOf(state.theme) + 1) % order.length];
-    applyTheme(next);
-    showToast(`Theme: ${next.charAt(0).toUpperCase() + next.slice(1)}`);
-}
-
 // Sync body theme with siteTheme from index.html (localStorage "siteTheme")
 // When the user navigates from index.html to mushaf.html, we respect the site theme
 // they chose on the home page as the STARTING point, but the user can still switch
@@ -534,49 +500,6 @@ function syncWithSiteTheme() {
 }
 
 /* TAJWEED — parse quran-tajweed markup (handles <tajweed-rule> tags and unicode markers). */
-
-// Parse tajweed markup from alquran.cloud's quran-tajweed edition.
-// Format:  [letter[text]  |  [letter:number[text]  |  :number[text]
-// All wrapped text ends with ].
-// Returns [{text, rule}] segments where rule is a CSS class name or null.
-function parseTajweedSegments(text) {
-    if (!text) return [{ text: "", rule: null }];
-
-    const segments = [];
-    // Regex matches all three formats:
-    //   [letter[number[text]   → group 1=letter, group 2=number, group 3=text
-    //   [letter[text]           → group 1=letter, group 2=undefined, group 3=text
-    //   :number[text]           → group 1=undefined, group 2=number, group 3=text
-    const re = /(?:\[([a-z])(?::(\d+))?\[|:(\d+)\[)([^\]]*)\]/g;
-    let lastIdx = 0;
-    let m;
-    while ((m = re.exec(text)) !== null) {
-        // Push any plain text before this match
-        if (m.index > lastIdx) {
-            segments.push({ text: text.slice(lastIdx, m.index), rule: null });
-        }
-        const letter = m[1];
-        const number = m[2] || m[3];
-        // Prefer letter for rule lookup; fall back to number
-        const ruleKey = letter || number;
-        const ruleClass = TAJWEED_RULES[ruleKey] || null;
-        segments.push({ text: m[4], rule: ruleClass });
-        lastIdx = m.index + m[0].length;
-    }
-    // Push any remaining plain text
-    if (lastIdx < text.length) {
-        segments.push({ text: text.slice(lastIdx), rule: null });
-    }
-    return segments.length ? segments : [{ text, rule: null }];
-}
-
-// Strip tajweed markup to get plain text
-function stripTajweedMarkup(text) {
-    if (!text) return "";
-    return text
-        .replace(/(?:\[([a-z])(?::(\d+))?\[|:(\d+)\[)([^\]]*)\]/g, "$3")
-        .replace(/[\[\]:]/g, "");
-}
 
 // Render Arabic text as clickable words with optional tajweed colors.
 // Returns HTML string.
@@ -884,9 +807,6 @@ function init() {
     // Render navigator
     renderNavList("surah");
 
-    // Wire events
-    wireEvents();
-
     // Start tracking actual time spent reading (this is where reading
     // really happens, unlike the homepage dashboard).
     startReadingTimeTracking();
@@ -1117,9 +1037,8 @@ async function renderPageView() {
     wireWordClicks(el.pageView);
     wireAyahMarkerClicks(el.pageView);
 
-    // Apply font sizes and reading mode
+    // Apply font sizes
     applyFontSizes();
-    applyReadingMode();
 
     if (window.lucide) lucide.createIcons();
 }
@@ -1137,26 +1056,6 @@ function applyFontSizes() {
     });
     document.querySelectorAll(".verse-translation-block").forEach(elx => {
         elx.style.fontSize = state.translationFont + "rem";
-    });
-}
-
-/* APPLY READING MODE — Both / Arabic only / Translation only */
-
-function applyReadingMode() {
-    const pageTextFlow = document.querySelector(".mushaf-page .ayah-text-flow");
-    if (pageTextFlow) {
-        if (state.displayMode === "translation") {
-            pageTextFlow.style.display = "none";
-        } else {
-            pageTextFlow.style.display = "";
-        }
-    }
-    // In surah view (if it existed), hide/show Arabic vs translation
-    document.querySelectorAll(".verse-arabic").forEach(elx => {
-        elx.style.display = state.displayMode === "translation" ? "none" : "";
-    });
-    document.querySelectorAll(".verse-translations").forEach(elx => {
-        elx.style.display = state.displayMode === "arabic" ? "none" : "";
     });
 }
 
@@ -2168,9 +2067,6 @@ el.navNext?.addEventListener("click", () => {
     }
 });
 
-el.pageSlider?.addEventListener("input", () => {
-    // Throttle by only changing on commit (change event)
-});
 el.pageSlider?.addEventListener("change", () => {
     state.page = parseInt(el.pageSlider.value);
     state.view = "page";
@@ -2538,7 +2434,7 @@ document.addEventListener("keydown", e => {
     }
     // Escape closes modals/drawers
     if (e.key === "Escape") {
-        if (!el.searchModal.classList.contains("open")) { } else { closeSearchModal(); return; }
+        if (el.searchModal.classList.contains("open")) { closeSearchModal(); return; }
         if (!el.wordModalOverlay.hidden) { el.wordModalOverlay.hidden = true; state.wordModalContext = null; return; }
         if (!el.ayahPopover.hidden) { el.ayahPopover.hidden = true; return; }
         closeAllDrawers();
@@ -2555,13 +2451,5 @@ document.addEventListener("keydown", e => {
         }
     }
 });
-
-/* WIRE EVENTS (called from init) */
-
-function wireEvents() {
-    // Most event handlers are wired above via direct addEventListener calls.
-    // This function exists for any post-render wiring that's needed.
-    // (No-op for now — handlers are attached at script load time.)
-}
 
 /* END */
