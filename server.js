@@ -136,7 +136,7 @@ async function surahNameToNumber(input) {
         const n = parseInt(input);
         return (n >= 1 && n <= 114) ? n : null;
     }
-    const clean = input.toLowerCase().replace(/^(al-|ar-|as-|ash-|at-|az-|an-)/, '').replace(/^(al-|ar-|as-|ash-|at-|az-|an-)/, '').trim();
+    const clean = input.toLowerCase().replace(/^(al-|ar-|as-|ash-|at-|az-|an-)/, '').trim();
     return SURAH_NAMES[clean] || SURAH_NAMES[input.toLowerCase()] || SURAH_NAMES['al-' + clean] || SURAH_NAMES[clean.replace(/\s+/g, '-')] || null;
 }
 

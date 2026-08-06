@@ -1,4 +1,4 @@
-// AL FURQAN — script.js
+// BACA — script.js (homepage: explorer, reader, gamification)
 // DATA SOURCES (all static CDN, zero live API servers):
 //   Surah list + verses + transliteration:
 //     cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/…
@@ -947,8 +947,7 @@ function initDailyAyahActions() {
         safeLucide();
 
         try {
-            const CDN_TAFSIR = `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${dailyAyahData.surah}/${dailyAyahData.ayah}.json`;
-            const res = await fetch(CDN_TAFSIR);
+            const res = await fetch(CDN.tafsir(dailyAyahData.surah, dailyAyahData.ayah));
             const data = await res.json();
             const text = data.text || data.tafsir || "No tafsir available for this verse.";
             tafsirPanel.innerHTML = `
@@ -1107,12 +1106,10 @@ function applyFontSizes() {
     document.querySelectorAll(".verse-transliteration").forEach(el =>
         el.style.fontSize = (translationFontSize * 0.92) + "rem"
     );
-    // Also affect tafsir panels
+    // Also affect tafsir panels and the mini settings drawer
     document.querySelectorAll(".tafsir-body, .tafsir-body p").forEach(el =>
         el.style.fontSize = translationFontSize + "rem"
     );
-    // Mini settings drawer font changes
-    document.querySelectorAll(".verse-arabic").forEach(el => el.style.fontSize = arabicFontSize + "rem");
     document.querySelectorAll(".verse-reader-translation").forEach(el => el.style.fontSize = translationFontSize + "rem");
 }
 
@@ -1541,9 +1538,9 @@ document.addEventListener("change", e => {
         audioPlayer.load();
         if (wasPlaying) audioPlayer.play().catch(() => { });
     }
+    // Update the favourite-reciter heart after the dropdown settles
+    setTimeout(updateFavoriteReciterButton, 100);
 });
-
-// FAVOURITE RECITER
 
 // FAVOURITE RECITER — toggle heart icon, save to localStorage
 function isFavoriteReciter(reciterId) {
@@ -1575,13 +1572,6 @@ document.getElementById("favorite-reciter")?.addEventListener("click", function 
         showToast("Reciter saved as favourite ✓");
     }
     updateFavoriteReciterButton();
-});
-
-// Update favorite button when reciter changes
-document.addEventListener("change", e => {
-    if (e.target.id === "reciter-select2") {
-        setTimeout(updateFavoriteReciterButton, 100);
-    }
 });
 
 // PER-AYAH PLAY (individual verse audio buttons)
@@ -1793,7 +1783,7 @@ ${trans}`;
     }
 });
 
-// SEARCH MODAL
+// SEARCH MODAL (open/close — the live search rendering lives in initSearchModal below)
 
 document.querySelector(".search-btn")?.addEventListener("click", () => {
     document.querySelector(".search-modal")?.classList.add("active");
@@ -1804,29 +1794,6 @@ document.querySelector(".close-search")?.addEventListener("click", () => {
 });
 document.querySelector(".search-overlay")?.addEventListener("click", () => {
     document.querySelector(".search-modal")?.classList.remove("active");
-});
-
-document.getElementById("searchInput")?.addEventListener("input", e => {
-    const val = e.target.value.trim().toLowerCase();
-    const results = document.querySelector(".search-results");
-    if (!results || !val) return;
-    const matches = SURAH_LIST.filter(s =>
-        s.transliteration.toLowerCase().includes(val) ||
-        s.translation.toLowerCase().includes(val) ||
-        String(s.id) === val
-    ).slice(0, 8);
-    results.innerHTML = matches.map(s => `
-    <div class="search-item" data-surah="${s.id}" style="cursor:pointer">
-      <i data-lucide="book-open"></i>
-      <span>${s.transliteration} <small style="opacity:.6">${s.translation}</small></span>
-    </div>`).join("") || `<div class="search-item"><i data-lucide="search"></i><span>No results for "${escapeHtml(val)}"</span></div>`;
-    safeLucide();
-    results.querySelectorAll(".search-item[data-surah]").forEach(item => {
-        item.addEventListener("click", () => {
-            document.querySelector(".search-modal")?.classList.remove("active");
-            openReader(Number(item.dataset.surah));
-        });
-    });
 });
 
 // Keyboard shortcuts
@@ -1872,7 +1839,7 @@ const RECITER_PROFILES = [
     { id: "muaiqly", name: "Maher Al-Muaiqly", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/maher.png" },
     { id: "shuraym", name: "Saud Al-Shuraim", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/shuraim.png" },
     { id: "hudhaify", name: "Ali Al-Hudhaify", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/al-hudaify.png" },
-    { id: "ajamy", name: "Ahmed Al-Ajamy", country: "Saudi Arabia", style: "Murattal", image: "images/reciters//al-ajmy.png" },
+    { id: "ajamy", name: "Ahmed Al-Ajamy", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/al-ajmy.png" },
     { id: "jibreel", name: "Muhammad Jibreel", country: "Egypt", style: "Murattal", image: "images/reciters/jibreel.png" },
     { id: "ayyoub", name: "Muhammad Ayyoub", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/ayyub.png" },
     { id: "ghamdi", name: "Saad Al-Ghamdi", country: "Saudi Arabia", style: "Murattal", image: "images/reciters/saad_al-ghamdi.png" },
@@ -1912,43 +1879,8 @@ function initRecitersGrid() {
       </a>`).join("");
 }
 
-// Reciter picker for Listen button
-const RECITER_PROFILES_FOR_PICKER = [
-    { id: "mishari", name: "Mishary Rashid Alafasy", country: "Kuwait", image: "images/reciters/mishari.jpg" },
-    { id: "sudais", name: "Abdul Rahman As-Sudais", country: "Saudi Arabia", image: "images/reciters/sudais.jpg" },
-    { id: "ali_jaber", name: "Ali Abdullah Jabir (رحمه الله)", country: "Saudi Arabia", image: "images/reciters/ali_jaber.jpg" },
-    { id: "abdulbasit", name: "Abdul Basit Abdul Samad (Murattal)", country: "Egypt", image: "images/reciters/abdulbasit.jpg" },
-    { id: "abdulbasit_mj", name: "Abdul Basit Abdul Samad (Mujawwad)", country: "Egypt", image: "images/reciters/abdulbasit.jpg" },
-    { id: "husary", name: "Mahmoud Khalil Al-Husary", country: "Egypt", image: "images/reciters/husary.jpg" },
-    { id: "husary_muj", name: "Al-Husary (Mujawwad)", country: "Egypt", image: "images/reciters/husary.jpg" },
-    { id: "minshawi", name: "Muhammad Siddiq Al-Minshawi", country: "Egypt", image: "images/reciters/minshawi.jpg" },
-    { id: "shaatree", name: "Abu Bakr Ash-Shaatree", country: "Saudi Arabia", image: "images/reciters/shaatree.jpg" },
-    { id: "muaiqly", name: "Maher Al-Muaiqly", country: "Saudi Arabia", image: "images/reciters/muaiqly.jpg" },
-    { id: "shuraym", name: "Saud Al-Shuraim", country: "Saudi Arabia", image: "images/reciters/shuraym.jpg" },
-    { id: "hudhaify", name: "Ali Al-Hudhaify", country: "Saudi Arabia", image: "images/reciters/hudhaify.jpg" },
-    { id: "ajamy", name: "Ahmed Ibn Ali Al-Ajamy", country: "Saudi Arabia", image: "images/reciters/ajamy.jpg" },
-    { id: "jibreel", name: "Muhammad Jibreel", country: "Egypt", image: "images/reciters/jibreel.jpg" },
-    { id: "ayyoub", name: "Muhammad Ayyoub", country: "Saudi Arabia", image: "images/reciters/ayyoub.jpg" },
-    { id: "ghamdi", name: "Saad Al-Ghamdi", country: "Saudi Arabia", image: "images/reciters/ghamdi.jpg" },
-    { id: "basfar", name: "Abdullah Basfar", country: "Saudi Arabia", image: "images/reciters/basfar.jpg" },
-    { id: "matroud", name: "Abdullah Matroud", country: "Saudi Arabia", image: "images/reciters/matroud.jpg" },
-    { id: "juhaynee", name: "Abdullah Al-Juhaynee", country: "Saudi Arabia", image: "images/reciters/juhaynee.jpg" },
-    { id: "johany", name: "Abdullah Al-Johany", country: "Saudi Arabia", image: "images/reciters/johany.jpg" },
-    { id: "tablawi", name: "Mohamed Al-Tablawi", country: "Egypt", image: "images/reciters/tablawi.jpg" },
-    { id: "rifai", name: "Hani Ar-Rifai", country: "Saudi Arabia", image: "images/reciters/rifai.jpg" },
-    { id: "qasim", name: "Abdul Muhsin Al-Qasim", country: "Saudi Arabia", image: "images/reciters/qasim.jpg" },
-    { id: "neana", name: "Ahmed Neana", country: "Egypt", image: "images/reciters/neana.jpg" },
-    { id: "ayman_swed", name: "Ayman Swed", country: "Syria", image: "images/reciters/ayman_swed.jpg" },
-    { id: "okasha", name: "Okasha Kameny", country: "Ghana", image: "images/reciters/okasha.png" },
-    { id: "yasser_dosari", name: "Yasser Al-Dosari", country: "Saudi Arabia", image: "images/reciters/yasser_dosari.png" },
-    { id: "mansour_salmi", name: "Mansour Al-Salmi", country: "Saudi Arabia", image: "images/reciters/mansour_salmi.png" },
-    { id: "husary_warsh", name: "Al-Husary (Warsh)", country: "Egypt", image: "images/reciters/al-husary.png" },
-    { id: "husary_qalun", name: "Al-Husary (Qalun)", country: "Egypt", image: "images/reciters/al-husary.png" },
-    { id: "abdulbasit_warsh", name: "Abdul Basit (Warsh)", country: "Egypt", image: "images/reciters/basit.png" },
-    { id: "ibrahim_dosari_warsh", name: "Ibrahim Al-Dosari (Warsh)", country: "Saudi Arabia", image: "images/reciters/ibrahim_dosari_warsh.png" },
-    { id: "huthaifi_qalun", name: "Ali Al-Hudhaify (Qalun)", country: "Saudi Arabia", image: "images/reciters/al-hudaify.png" },
-    { id: "airawy_warsh", name: "Mohammad Al-Airawy (Warsh)", country: "Egypt", image: "images/reciters/airawy_warsh.png" },
-];
+// Reciter picker for the Listen button uses RECITER_PROFILES above
+// (same reciters, valid .png image paths).
 
 function initReciterPicker() {
     const modal = document.getElementById("reciter-picker-modal");
@@ -1973,9 +1905,9 @@ function initReciterPicker() {
     function renderPickerList(query) {
         const q = query.toLowerCase();
         const filtered = q
-            ? RECITER_PROFILES_FOR_PICKER.filter(r =>
+            ? RECITER_PROFILES.filter(r =>
                 r.name.toLowerCase().includes(q) || r.country.toLowerCase().includes(q))
-            : RECITER_PROFILES_FOR_PICKER;
+            : RECITER_PROFILES;
 
         list.innerHTML = filtered.map(r => `
       <div class="picker-reciter-row" data-id="${r.id}">

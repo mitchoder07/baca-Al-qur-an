@@ -131,7 +131,11 @@ const state = {
     tajweedOn: localStorage.getItem("mushafTajweed") === "true",
     arabicFont: parseFloat(localStorage.getItem("mushafArabicFont")) || 2.2,
     translationFont: parseFloat(localStorage.getItem("mushafTranslationFont")) || 1.0,
-    bookmarks: JSON.parse(localStorage.getItem("mushafBookmarks") || "[]"),
+    bookmarks: (() => {
+        // Corrupted/hand-edited localStorage must never brick the reader
+        try { return JSON.parse(localStorage.getItem("mushafBookmarks") || "[]") || []; }
+        catch { return []; }
+    })(),
     tafsirSource: "ibnkathir",
     // Cached fetches
     surahCache: {},    // { surahNum: { uthmani, tajweed, translit, translations: {} } }
@@ -139,8 +143,6 @@ const state = {
     // Runtime
     currentAyahAudio: null,    // {surah, ayah}
     isPlaying: false,
-    audioQueue: [],            // list of {surah, ayah} to play in order
-    audioCursor: 0,
     wordModalContext: null,    // {surah, ayah, wordIndex, words:[]}
 };
 
@@ -214,8 +216,6 @@ const el = {
     // Note: mushaf-theme-btn and mushaf-search-btn were removed from toolbar.
     // Theme is controlled via Settings drawer's theme swatches.
     // Search is accessible via the "/" keyboard shortcut.
-    hamburgerBtn: document.getElementById("hamburger-btn"),
-    mobileNav: document.getElementById("mobile-nav"),
     tajweedTool: document.getElementById("tajweed-tool"),
     tajweedIndicator: document.getElementById("tajweed-indicator"),
     reciterTool: document.getElementById("reciter-tool"),
@@ -570,14 +570,6 @@ function parseTajweedSegments(text) {
     return segments.length ? segments : [{ text, rule: null }];
 }
 
-// Strip tajweed markup to get plain text
-function stripTajweedMarkup(text) {
-    if (!text) return "";
-    return text
-        .replace(/(?:\[([a-z])(?::(\d+))?\[|:(\d+)\[)([^\]]*)\]/g, "$3")
-        .replace(/[\[\]:]/g, "");
-}
-
 // Render Arabic text as clickable words with optional tajweed colors.
 // Returns HTML string.
 // When tajweedMarkup is true, the text contains alquran.cloud's bracket notation
@@ -884,9 +876,6 @@ function init() {
     // Render navigator
     renderNavList("surah");
 
-    // Wire events
-    wireEvents();
-
     // Start tracking actual time spent reading (this is where reading
     // really happens, unlike the homepage dashboard).
     startReadingTimeTracking();
@@ -1117,9 +1106,8 @@ async function renderPageView() {
     wireWordClicks(el.pageView);
     wireAyahMarkerClicks(el.pageView);
 
-    // Apply font sizes and reading mode
+    // Apply font sizes
     applyFontSizes();
-    applyReadingMode();
 
     if (window.lucide) lucide.createIcons();
 }
@@ -1137,26 +1125,6 @@ function applyFontSizes() {
     });
     document.querySelectorAll(".verse-translation-block").forEach(elx => {
         elx.style.fontSize = state.translationFont + "rem";
-    });
-}
-
-/* APPLY READING MODE — Both / Arabic only / Translation only */
-
-function applyReadingMode() {
-    const pageTextFlow = document.querySelector(".mushaf-page .ayah-text-flow");
-    if (pageTextFlow) {
-        if (state.displayMode === "translation") {
-            pageTextFlow.style.display = "none";
-        } else {
-            pageTextFlow.style.display = "";
-        }
-    }
-    // In surah view (if it existed), hide/show Arabic vs translation
-    document.querySelectorAll(".verse-arabic").forEach(elx => {
-        elx.style.display = state.displayMode === "translation" ? "none" : "";
-    });
-    document.querySelectorAll(".verse-translations").forEach(elx => {
-        elx.style.display = state.displayMode === "arabic" ? "none" : "";
     });
 }
 
@@ -2168,9 +2136,6 @@ el.navNext?.addEventListener("click", () => {
     }
 });
 
-el.pageSlider?.addEventListener("input", () => {
-    // Throttle by only changing on commit (change event)
-});
 el.pageSlider?.addEventListener("change", () => {
     state.page = parseInt(el.pageSlider.value);
     state.view = "page";
@@ -2538,7 +2503,7 @@ document.addEventListener("keydown", e => {
     }
     // Escape closes modals/drawers
     if (e.key === "Escape") {
-        if (!el.searchModal.classList.contains("open")) { } else { closeSearchModal(); return; }
+        if (el.searchModal.classList.contains("open")) { closeSearchModal(); return; }
         if (!el.wordModalOverlay.hidden) { el.wordModalOverlay.hidden = true; state.wordModalContext = null; return; }
         if (!el.ayahPopover.hidden) { el.ayahPopover.hidden = true; return; }
         closeAllDrawers();
@@ -2555,13 +2520,5 @@ document.addEventListener("keydown", e => {
         }
     }
 });
-
-/* WIRE EVENTS (called from init) */
-
-function wireEvents() {
-    // Most event handlers are wired above via direct addEventListener calls.
-    // This function exists for any post-render wiring that's needed.
-    // (No-op for now — handlers are attached at script load time.)
-}
 
 /* END */
