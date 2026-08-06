@@ -1,12 +1,4 @@
-/* ============================================================
-   BACA — Vercel Serverless Function for TTS (Text-to-Speech)
-   Lives at /api/tts.js — Vercel's file-based routing picks this
-   up automatically. Proxies Arabic text to Google Translate TTS
-   and returns the MP3 audio. This bypasses CORS restrictions
-   that prevent the browser from calling translate.google.com
-   directly.
-   ============================================================ */
-
+/* tts.js */
 module.exports = async (req, res) => {
     try {
         const { text } = req.query;

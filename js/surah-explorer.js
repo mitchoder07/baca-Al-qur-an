@@ -1,6 +1,4 @@
-// ============================================================
 // TOAST
-// ============================================================
 
 function showToast(msg) {
     const t = document.getElementById("toast");
@@ -9,9 +7,7 @@ function showToast(msg) {
     setTimeout(() => t.classList.remove("show"), 1800);
 }
 
-// ============================================================
 // ELEMENT REFS
-// ============================================================
 
 const grid = document.getElementById("surah-grid");
 const searchInput = document.getElementById("surah-search");
@@ -37,9 +33,7 @@ const floatingAyah = document.getElementById("floating-ayah");
 const ayahPlayer = document.getElementById("ayah-player");
 const quranAudio = document.getElementById("quran-audio");
 
-// ============================================================
 // STATE
-// ============================================================
 
 let allSurahs = [];
 let activeFilter = "all";
@@ -61,9 +55,7 @@ let dailyAyahData = null;
 window._juzSurahMap = {};
 window._hizbSurahMap = {};
 
-// ============================================================
 // READER THEMES
-// ============================================================
 
 const readerThemes = {
     dark: {
@@ -112,9 +104,7 @@ const readerThemes = {
     },
 };
 
-// ============================================================
 // HELPERS
-// ============================================================
 
 function formatTime(sec) {
     if (!sec || isNaN(sec)) return "0:00";
@@ -137,9 +127,7 @@ function syncMiniPlayIcon(playing) {
 
 function getActiveAudio() { return activeAudioMode === "surah" ? audioPlayer : ayahPlayer; }
 
-// ============================================================
 // RECITER HELPERS (quran.com numeric IDs)
-// ============================================================
 
 // NOTE: Reciters not available per-ayah on quran.com / alquran.cloud /
 // everyayah.com (e.g. Okasha Kameny) are intentionally excluded from
@@ -231,9 +219,7 @@ function toGlobalAyahNumber(surahNum, ayahInSurah) {
     return Number(ayahInSurah);
 }
 
-// ============================================================
 // POPULATE RECITER SELECTS (quran.com + Ali Jabir fallback)
-// ============================================================
 
 const FALLBACK_RECITERS = [
     { id: 2, reciter_name: "AbdulBaset AbdulSamad (Murattal)", translated_name: { name: "Abdul Basit Abdul Samad (Murattal)" } },
@@ -310,9 +296,7 @@ async function populateReciterSelects() {
     }
 }
 
-// ============================================================
 // VERSE SCROLL + HIGHLIGHT
-// ============================================================
 
 function scrollToActiveVerse(ayahNumber) {
     const readerContent = document.querySelector(".reader-content");
@@ -328,9 +312,7 @@ function scrollToActiveVerse(ayahNumber) {
     setTimeout(() => card.classList.remove("verse-active"), 1800);
 }
 
-// ============================================================
 // APPLY READER THEME
-// ============================================================
 
 function applyReaderTheme(key) {
     if (!readerThemes[key]) key = "dark";
@@ -389,9 +371,7 @@ function applyReaderTheme(key) {
     refreshBookmarkButtonStates();
 }
 
-// ============================================================
 // READER THEME PANEL
-// ============================================================
 
 function initReaderThemePanel() {
     const btn = document.getElementById("reader-theme-btn");
@@ -408,9 +388,7 @@ function initReaderThemePanel() {
     applyReaderTheme(readerThemeKey);
 }
 
-// ============================================================
 // FLOATING MINI SETTINGS DRAWER
-// ============================================================
 
 function initMiniSettingsDrawer() {
     const btn = document.getElementById("mini-settings-btn");
@@ -441,9 +419,7 @@ function initMiniSettingsDrawer() {
     });
 }
 
-// ============================================================
 // SITE-WIDE DARK / LIGHT MODE
-// ============================================================
 
 function initThemeToggle() {
     const themeBtn = document.querySelector(".theme-btn");
@@ -462,9 +438,7 @@ function initThemeToggle() {
     });
 }
 
-// ============================================================
 // ANIMATED SEARCH PLACEHOLDER
-// ============================================================
 
 function initAnimatedPlaceholder() {
     const hints = ["Search surah name…", "Search by number…", "e.g. 'Al-Baqarah' or '2'…", "Search surah name…"];
@@ -479,9 +453,7 @@ function initAnimatedPlaceholder() {
     }, 3200);
 }
 
-// ============================================================
 // FILTER BAR
-// ============================================================
 
 function initFilterBar() {
     const filterBtn = document.getElementById("explorer-filter-btn");
@@ -523,9 +495,7 @@ function initFilterBar() {
     });
 }
 
-// ============================================================
 // JUZ / HIZB META
-// ============================================================
 
 function compareAyahRef(a, b) { return a.surah !== b.surah ? a.surah - b.surah : a.ayah - b.ayah; }
 
@@ -582,9 +552,7 @@ async function loadJuzData() {
     }
 }
 
-// ============================================================
 // FILTER LOGIC
-// ============================================================
 
 function getFilteredSurahs() {
     const val = searchInput.value.trim().toLowerCase();
@@ -608,9 +576,7 @@ function getFilteredSurahs() {
 
 searchInput.addEventListener("input", () => renderSurahs(getFilteredSurahs()));
 
-// ============================================================
 // BOOKMARKS
-// ============================================================
 
 function getBookmarks() { try { return JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch { return []; } }
 function saveBookmarks(list) { localStorage.setItem("bookmarks", JSON.stringify(list)); }
@@ -695,9 +661,7 @@ function initBookmarks() {
     });
 }
 
-// ============================================================
 // DAILY AYAH — loads ONLY that specific ayah's audio
-// ============================================================
 
 async function loadDailyAyah() {
     try {
@@ -821,9 +785,7 @@ function wireHomepageAudioPlayer() {
     });
 }
 
-// ============================================================
 // REPEAT BUTTON
-// ============================================================
 
 function initRepeatButton() {
     const btn = document.getElementById("repeat-btn");
@@ -836,9 +798,7 @@ function initRepeatButton() {
     });
 }
 
-// ============================================================
 // FLOATING PLAYER ICONS
-// ============================================================
 
 function fixFloatingPlayerIcons() {
     miniPlay.innerHTML = `<i data-lucide="play"></i>`;
@@ -847,9 +807,7 @@ function fixFloatingPlayerIcons() {
     lucide.createIcons();
 }
 
-// ============================================================
 // READER MODE
-// ============================================================
 
 function updateReaderModeUI() {
     document.querySelectorAll(".verse-arabic").forEach(el => {
@@ -869,9 +827,7 @@ modeBoth.addEventListener("click", () => { readerMode = "both"; updateReaderMode
 modeArabic.addEventListener("click", () => { readerMode = "arabic"; updateReaderModeUI(); });
 modeTranslation.addEventListener("click", () => { readerMode = "translation"; updateReaderModeUI(); });
 
-// ============================================================
 // FONT SIZES
-// ============================================================
 
 function applyFontSizes() {
     document.querySelectorAll(".verse-arabic").forEach(el => el.style.fontSize = arabicFontSize + "rem");
@@ -882,9 +838,7 @@ document.getElementById("font-increase").addEventListener("click", () => { arabi
 document.getElementById("font-decrease").addEventListener("click", () => { arabicFontSize -= 0.2; translationFontSize -= 0.05; applyFontSizes(); });
 document.getElementById("font-reset").addEventListener("click", () => { arabicFontSize = 3; translationFontSize = 1.05; applyFontSizes(); });
 
-// ============================================================
 // CONTINUE READING
-// ============================================================
 
 function updateContinueReading() {
     const saved = JSON.parse(localStorage.getItem("lastRead"));
@@ -905,9 +859,7 @@ document.getElementById("resume-reading-btn").addEventListener("click", () => {
     setTimeout(() => scrollToActiveVerse(saved.ayah), 1200);
 });
 
-// ============================================================
 // FULL-SURAH AUDIO PLAYER (inside reader)
-// ============================================================
 
 async function loadSurahAudio({ autoplay = false } = {}) {
     if (!selectedSurah) return;
@@ -984,9 +936,7 @@ speedBtn?.addEventListener("click", () => {
 document.getElementById("next-surah-audio")?.addEventListener("click", () => { if (selectedSurah < 114) { selectedSurah++; readBtn.click(); } });
 document.getElementById("prev-surah-audio")?.addEventListener("click", () => { if (selectedSurah > 1) { selectedSurah--; readBtn.click(); } });
 
-// ============================================================
 // LOAD SURAHS
-// ============================================================
 
 async function loadSurahs() {
     try {
@@ -998,9 +948,7 @@ async function loadSurahs() {
     } catch (err) { console.error("Failed to load Surahs:", err); }
 }
 
-// ============================================================
 // RENDER SURAH GRID
-// ============================================================
 
 function renderSurahs(data) {
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -1051,9 +999,7 @@ function activateCards() {
 modalClose.addEventListener("click", () => surahModal.classList.remove("active"));
 document.querySelector(".surah-modal-overlay").addEventListener("click", () => surahModal.classList.remove("active"));
 
-// ============================================================
 // BISMILLAH CLEAN
-// ============================================================
 
 function cleanAyah(text, surahNumber, ayahNumber) {
     if (surahNumber === 9 || surahNumber === 1) return text;
@@ -1064,9 +1010,7 @@ function cleanAyah(text, surahNumber, ayahNumber) {
     return text;
 }
 
-// ============================================================
 // READ SURAH
-// ============================================================
 
 readBtn.addEventListener("click", async () => {
     if (!selectedSurah) return;
@@ -1132,9 +1076,7 @@ readBtn.addEventListener("click", async () => {
     } catch (err) { console.error("Failed to load Surah:", err); }
 });
 
-// ============================================================
 // READER CLOSE
-// ============================================================
 
 function closeReader() {
     readerModal.classList.remove("active");
@@ -1151,9 +1093,7 @@ function closeReader() {
 readerClose.addEventListener("click", closeReader);
 document.querySelector(".reader-overlay").addEventListener("click", closeReader);
 
-// ============================================================
 // SETTINGS / AUDIO DRAWER
-// ============================================================
 
 const settingsBtn = document.getElementById("reader-settings-btn");
 const audioBtn = document.getElementById("reader-audio-btn");
@@ -1163,9 +1103,7 @@ const audioDrawer = document.getElementById("audio-drawer");
 settingsBtn.addEventListener("click", () => { audioDrawer.classList.remove("active"); settingsDrawer.classList.toggle("active"); });
 audioBtn.addEventListener("click", () => { settingsDrawer.classList.remove("active"); audioDrawer.classList.toggle("active"); });
 
-// ============================================================
 // FAVOURITE RECITER
-// ============================================================
 
 document.getElementById("favorite-reciter")?.addEventListener("click", function () {
     localStorage.setItem("favoriteReciter", String(currentReciter));
@@ -1175,9 +1113,7 @@ document.getElementById("favorite-reciter")?.addEventListener("click", function 
     showToast("Reciter saved as favourite ✓");
 });
 
-// ============================================================
 // RECITER SWITCH (reader) — updates global state, reloads audio
-// ============================================================
 
 document.addEventListener("change", async e => {
     if (e.target.id !== "reciter-select2") return;
@@ -1199,9 +1135,7 @@ document.addEventListener("change", async e => {
     } catch (err) { console.error("Reciter switch failed:", err); }
 });
 
-// ============================================================
 // PER-AYAH PLAY — fetches individual ayah mp3, then auto-scrolls
-// ============================================================
 
 document.addEventListener("click", async e => {
     const playBtn = e.target.closest(".play-btn");
@@ -1257,9 +1191,7 @@ document.addEventListener("click", async e => {
     } catch (err) { console.error("Ayah play failed:", err); }
 });
 
-// ============================================================
 // FLOATING MINI PLAYER
-// ============================================================
 
 miniPlay.addEventListener("click", () => {
     const audio = getActiveAudio();
@@ -1296,9 +1228,7 @@ miniPrev.addEventListener("click", () => {
     }
 });
 
-// ============================================================
 // BOOKMARK VERSE (reader)
-// ============================================================
 
 document.addEventListener("click", e => {
     const btn = e.target.closest(".bookmark-btn"); if (!btn) return;
@@ -1311,9 +1241,7 @@ document.addEventListener("click", e => {
     });
 });
 
-// ============================================================
 // COPY
-// ============================================================
 
 document.addEventListener("click", async e => {
     const btn = e.target.closest(".copy-btn"); if (!btn) return;
@@ -1323,9 +1251,7 @@ document.addEventListener("click", async e => {
     catch { showToast("Copy failed"); }
 });
 
-// ============================================================
 // SHARE
-// ============================================================
 
 document.addEventListener("click", async e => {
     const btn = e.target.closest(".share-btn"); if (!btn) return;
@@ -1337,9 +1263,7 @@ document.addEventListener("click", async e => {
     } catch { showToast("Share cancelled"); }
 });
 
-// ============================================================
 // INIT
-// ============================================================
 
 populateReciterSelects();
 loadSurahs();

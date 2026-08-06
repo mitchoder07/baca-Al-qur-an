@@ -44,28 +44,7 @@
 
 <body data-mushaf-theme="dark">
 
-    <!-- ============================================================
-         BACA — MUSHAF READER PAGE (mushaf.html)
-         ============================================================
-         PAGE OUTLINE (in document order)
-         ------------------------------------------------------------
-         1.  Minimal top bar (Logo + Back button — replaces full navbar;
-             the shared hamburger from js/shared-nav.js is injected here)
-         2.  Mushaf toolbar (sticky, below navbar): page navigator,
-             tajweed/reciter/settings/bookmarks/share tool buttons
-         3.  Read area: loading skeleton, Page View (single page,
-             book-like layout), Surah View (hidden — page view is the
-             only active mode, kept so JS doesn't error on missing refs)
-         4.  Reciter drawer
-         5.  Settings drawer (theme swatches, font size, tajweed toggle)
-         6.  Bookmarks drawer
-         7.  Tafsir drawer (Ibn Kathir / Maarif-ul-Quran / Jalalayn)
-         8.  Word-by-word modal
-         9.  Search modal
-         10. Floating mini player
-         11. Ayah-action popover (mobile-friendly)
-         12. Toast + audio element + scripts
-         ============================================================ -->
+    <!-- Baca - Mushaf reader -->
 
     <!-- Pre-load: apply saved theme ASAP to avoid flash of wrong theme -->
     <script>
@@ -85,7 +64,7 @@
         })();
     </script>
 
-    <!-- ================= MINIMAL TOP BAR (Logo + Back button) ================= -->
+    <!-- MINIMAL TOP BAR (Logo + Back button) -->
 
     <header class="mushaf-topbar">
         <a href="index.html" class="topbar-logo" aria-label="Baca — Home">
@@ -130,7 +109,7 @@
         <!-- The shared hamburger button is injected here by js/shared-nav.js -->
     </header>
 
-    <!-- ================= MUSHAF TOOLBAR (sticky, below navbar) ================= -->
+    <!-- MUSHAF TOOLBAR (sticky, below navbar) -->
 
     <div class="mushaf-toolbar" id="mushaf-toolbar">
 
@@ -209,7 +188,7 @@
 
     </div>
 
-    <!-- ================= READ AREA ================= -->
+    <!-- READ AREA -->
 
     <main class="mushaf-read-area" id="mushaf-read-area">
 
@@ -246,7 +225,7 @@
 
     </main>
 
-    <!-- ================= RECITER DRAWER ================= -->
+    <!-- RECITER DRAWER -->
 
     <aside class="side-drawer" id="reciter-drawer" data-side="right">
         <div class="drawer-head">
@@ -259,7 +238,7 @@
         </div>
     </aside>
 
-    <!-- ================= SETTINGS DRAWER ================= -->
+    <!-- SETTINGS DRAWER -->
 
     <aside class="side-drawer" id="settings-drawer" data-side="right">
         <div class="drawer-head">
@@ -528,7 +507,7 @@
         </div>
     </aside>
 
-    <!-- ================= TAFSIR DRAWER ================= -->
+    <!-- TAFSIR DRAWER -->
 
     <aside class="side-drawer tafsir-drawer" id="tafsir-drawer" data-side="right">
         <div class="drawer-head">
@@ -547,7 +526,7 @@
         </div>
     </aside>
 
-    <!-- ================= WORD-BY-WORD MODAL ================= -->
+    <!-- WORD-BY-WORD MODAL -->
 
     <div class="word-modal-overlay" id="word-modal-overlay" hidden>
         <div class="word-modal" id="word-modal" role="dialog" aria-modal="true">
@@ -560,7 +539,7 @@
         </div>
     </div>
 
-    <!-- ================= SEARCH MODAL ================= -->
+    <!-- SEARCH MODAL -->
 
     <div class="search-modal" id="search-modal">
         <div class="search-modal-overlay" id="search-modal-overlay"></div>
@@ -577,7 +556,7 @@
         </div>
     </div>
 
-    <!-- ================= FLOATING MINI PLAYER ================= -->
+    <!-- FLOATING MINI PLAYER -->
 
     <div class="floating-player" id="floating-player" hidden>
         <div class="floating-player-top">
@@ -598,7 +577,7 @@
         </div>
     </div>
 
-    <!-- ================= AYAH-ACTION POPOVER (mobile-friendly) ================= -->
+    <!-- AYAH-ACTION POPOVER (mobile-friendly) -->
 
     <div class="ayah-popover" id="ayah-popover" hidden>
         <div class="ayah-popover-head">
@@ -608,15 +587,15 @@
         <div class="ayah-popover-body" id="ayah-popover-body"></div>
     </div>
 
-    <!-- ================= TOAST ================= -->
+    <!-- TOAST -->
 
     <div class="toast" id="toast"></div>
 
-    <!-- ================= AUDIO ELEMENTS ================= -->
+    <!-- AUDIO ELEMENTS -->
 
     <audio id="ayah-audio" preload="metadata"></audio>
 
-    <!-- ================= SCRIPTS ================= -->
+    <!-- SCRIPTS -->
 
     <script src="js/data.js"></script>
     <script src="js/mushaf.js"></script>

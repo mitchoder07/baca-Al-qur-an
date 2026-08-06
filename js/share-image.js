@@ -1,8 +1,6 @@
 (function () {
 
-    // ============================================================
     // CONFIG
-    // ============================================================
 
     const COLORS = {
         dark: {
@@ -36,9 +34,7 @@
     const TOP_CONTENT_START = 180;   // space reserved for top bar + ornament + surah badge
     const BOTTOM_CONTENT_SPACE = 150; // space reserved for divider-bottom-bar / reference / logo
 
-    // ============================================================
     // MAIN: Generate verse image
-    // ============================================================
 
     function generateVerseImage(data) {
         return new Promise((resolve) => {
@@ -232,9 +228,7 @@
         });
     }
 
-    // ============================================================
     // HELPERS
-    // ============================================================
 
     function wrapArabicText(text, maxChars) {
         const words = text.split(/\s+/);
@@ -302,9 +296,7 @@
         ctx.restore();
     }
 
-    // ============================================================
     // SHARE: Download or Web Share
-    // ============================================================
 
     async function shareVerseImage(data) {
         const blob = await generateVerseImage(data);
@@ -340,9 +332,7 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
-    // ============================================================
     // PREVIEW: Show image in a modal
-    // ============================================================
 
     async function previewVerseImage(data) {
         const blob = await generateVerseImage(data);
@@ -406,9 +396,7 @@
         });
     }
 
-    // ============================================================
     // EXPORT
-    // ============================================================
 
     window.BacaShare = {
         generateVerseImage,

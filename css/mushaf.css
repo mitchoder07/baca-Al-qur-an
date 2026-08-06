@@ -1,36 +1,4 @@
-/* ============================================================
-   BACA — MUSHAF READER PAGE (mushaf.html)
-   Theming here uses CSS custom properties (--mushaf-*) set per
-   body[data-mushaf-theme="..."] rather than scattered .light-mode
-   overrides — every component below should reference var(--mushaf-*)
-   so all 5 themes (dark/warm/olive/sapphire/light) stay in sync
-   automatically. Avoid hardcoding colors in new rules here.
-   ============================================================
-   TABLE OF CONTENTS
-   ------------------------------------------------------------
-   1.  Google Fonts + Reset
-   2.  Minimal top bar (back button only — replaces full navbar)
-   3.  Global — Arabic text rendering
-   4.  Toolbar (sticky, below navbar)
-   5.  Read area
-   6.  Loader
-   7.  Page view — single page at a time, book-like layout
-   8.  Surah view — continuous ayah-by-ayah
-   9.  Side drawers (right side)
-   10. Bookmarks (inside drawer)
-   11. Tafsir drawer
-   12. Reciter list (drawer)
-   13. Word-by-word modal
-   14. Search modal
-   15. Floating mini player
-   16. Ayah popover (mobile fallback for verse actions)
-   17. Toast (override of style.css's toast, scoped to this page)
-   18. Responsive
-   19. Scrollbar (subtle, theme-aware)
-   20. Animation — spin (local re-definition)
-   21. Popover translations (page view, ayah marker click)
-   ============================================================ */
-
+/* mushaf.css */
 /* Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
@@ -83,9 +51,7 @@ body.light-mode {
     display: none !important;
 }
 
-/* ============================================================
-   MINIMAL TOP BAR (Back button only — replaces full navbar)
-   ============================================================ */
+/* MINIMAL TOP BAR (Back button only — replaces full navbar) */
 
 .mushaf-topbar {
     position: fixed;
@@ -193,9 +159,7 @@ body[data-mushaf-theme="sapphire"] .baca-logo-icon {
     height: 16px;
 }
 
-/* ============================================================
-   GLOBAL — Arabic text rendering
-   ============================================================ */
+/* GLOBAL — Arabic text rendering */
 
 :root {
     --mushaf-accent: var(--primary);
@@ -348,9 +312,7 @@ body[data-mushaf-theme="light"] {
 /* When the reader theme is dark/warm/olive/sapphire we hide the cream-paper look
    and use the themed page background. Only the "light" theme keeps the cream paper. */
 
-/* ============================================================
-   TOOLBAR (sticky, below navbar)
-   ============================================================ */
+/* TOOLBAR (sticky, below navbar) */
 
 .mushaf-toolbar {
     position: fixed;
@@ -739,9 +701,7 @@ body.light-mode .nav-ayah-select option {
     color: #fff;
 }
 
-/* ============================================================
-   READ AREA
-   ============================================================ */
+/* READ AREA */
 
 .mushaf-read-area {
     margin-top: 56px;
@@ -751,9 +711,7 @@ body.light-mode .nav-ayah-select option {
     transition: background 0.3s, color 0.3s;
 }
 
-/* ============================================================
-   LOADER
-   ============================================================ */
+/* LOADER */
 
 .mushaf-loader {
     text-align: center;
@@ -778,9 +736,7 @@ body.light-mode .nav-ayah-select option {
     height: 24px;
 }
 
-/* ============================================================
-   PAGE VIEW — single page at a time, book-like layout
-   ============================================================ */
+/* PAGE VIEW — single page at a time, book-like layout */
 
 .page-view {
     max-width: 720px;
@@ -1105,9 +1061,7 @@ body.light-mode .nav-ayah-select option {
     accent-color: var(--mushaf-accent);
 }
 
-/* ============================================================
-   SURAH VIEW — continuous ayah-by-ayah
-   ============================================================ */
+/* SURAH VIEW — continuous ayah-by-ayah */
 
 .surah-view {
     max-width: 800px;
@@ -1431,9 +1385,7 @@ body.light-mode .tajweed-guide-item,
     color: inherit !important;
 }
 
-/* ============================================================
-   SIDE DRAWERS (right side)
-   ============================================================ */
+/* SIDE DRAWERS (right side) */
 
 .side-drawer {
     position: fixed;
@@ -1701,9 +1653,7 @@ body.light-mode .tajweed-guide-item,
     border: 3px solid #059669;
 }
 
-/* ============================================================
-   BOOKMARKS (inside drawer)
-   ============================================================ */
+/* BOOKMARKS (inside drawer) */
 
 .bookmarks-toolbar {
     display: flex;
@@ -1826,9 +1776,7 @@ body.light-mode .tajweed-guide-item,
     overflow: hidden;
 }
 
-/* ============================================================
-   TAFSIR DRAWER
-   ============================================================ */
+/* TAFSIR DRAWER */
 
 .tafsir-drawer {
     width: min(540px, 94vw);
@@ -1935,9 +1883,7 @@ body.light-mode .tajweed-guide-item,
     font-weight: 700;
 }
 
-/* ============================================================
-   RECITER LIST (drawer)
-   ============================================================ */
+/* RECITER LIST (drawer) */
 
 .drawer-search {
     width: 100%;
@@ -2019,9 +1965,7 @@ body.light-mode .tajweed-guide-item,
     opacity: 1;
 }
 
-/* ============================================================
-   WORD-BY-WORD MODAL
-   ============================================================ */
+/* WORD-BY-WORD MODAL */
 
 .word-modal-overlay {
     position: fixed;
@@ -2151,9 +2095,7 @@ body.light-mode .tajweed-guide-item,
     color: #fff;
 }
 
-/* ============================================================
-   SEARCH MODAL
-   ============================================================ */
+/* SEARCH MODAL */
 
 .search-modal {
     position: fixed;
@@ -2286,9 +2228,7 @@ body.light-mode .tajweed-guide-item,
     color: var(--mushaf-text);
 }
 
-/* ============================================================
-   FLOATING MINI PLAYER
-   ============================================================ */
+/* FLOATING MINI PLAYER */
 
 .floating-player {
     position: fixed;
@@ -2387,9 +2327,7 @@ body.light-mode .tajweed-guide-item,
     text-align: right;
 }
 
-/* ============================================================
-   AYAH POPOVER (mobile fallback for verse actions)
-   ============================================================ */
+/* AYAH POPOVER (mobile fallback for verse actions) */
 
 .ayah-popover {
     position: fixed;
@@ -2467,9 +2405,7 @@ body.light-mode .tajweed-guide-item,
     height: 18px;
 }
 
-/* ============================================================
-   TOAST (already in style.css, override here to be sure)
-   ============================================================ */
+/* TOAST (already in style.css, override here to be sure) */
 
 .toast {
     position: fixed;
@@ -2494,9 +2430,7 @@ body.light-mode .tajweed-guide-item,
     transform: translateX(-50%) translateY(0);
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
+/* RESPONSIVE */
 
 @media (max-width: 1119px) {
     .mushaf-toolbar {
@@ -2607,9 +2541,7 @@ body.light-mode .tajweed-guide-item,
     }
 }
 
-/* ============================================================
-   SCROLLBAR (subtle, theme-aware)
-   ============================================================ */
+/* SCROLLBAR (subtle, theme-aware) */
 
 .mushaf-read-area ::-webkit-scrollbar,
 .drawer-body::-webkit-scrollbar,
@@ -2638,9 +2570,7 @@ body.light-mode .tajweed-guide-item,
     background: var(--mushaf-accent);
 }
 
-/* ============================================================
-   ANIMATION — spin (already in style.css but re-defined locally)
-   ============================================================ */
+/* ANIMATION — spin (already in style.css but re-defined locally) */
 
 @keyframes spin {
     from {
@@ -2666,9 +2596,7 @@ body.light-mode .tajweed-guide-item,
     border-radius: 3px;
 }
 
-/* ============================================================
-   POPOVER TRANSLATIONS (shown in page view when ayah marker clicked)
-   ============================================================ */
+/* POPOVER TRANSLATIONS (shown in page view when ayah marker clicked) */
 
 .popover-translations {
     grid-column: 1 / -1;
@@ -2710,10 +2638,7 @@ body.light-mode .tajweed-guide-item,
     margin-bottom: 0.2rem;
 }
 
-/* ============================================================
-   GLOW BACKGROUND — removed (was causing visual noise).
-   Kept as hidden so any leftover refs don't break.
-   ============================================================ */
+/* GLOW BACKGROUND — removed (was causing visual noise). Kept as hidden so any leftover refs don't break. */
 
 .bg-glow {
     display: none !important;

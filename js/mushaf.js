@@ -1,60 +1,7 @@
-/* ============================================================
-   BACA — mushaf.js
-   Full-featured Mushaf reader with:
-   - Dual view (Mushaf page spread + continuous surah view)
-   - Uthmani Arabic text (alquran.cloud quran-uthmani edition)
-   - Word-by-word modal (quran.com API)
-   - Tajweed colors (parsed from quran-tajweed edition markup)
-   - Multi-language translations (quran.com API translations)
-   - Tafsir drawer (Ibn Kathir + Jalalayn from spa5k CDN)
-   - Bookmarks (localStorage)
-   - Audio (EveryAyah per-ayah, multi-reciter)
-   - Dark/light/warm/olive/sapphire themes
-   - Search (surah name + page number)
-   ============================================================
-   TABLE OF CONTENTS
-   ------------------------------------------------------------
-   Config — API endpoints
-   State
-   Element refs
-   Reading stats — writes straight into the same "bacaStats" record
-     used by index.html's gamification (streaks/achievements)
-   Utilities
-   Save state
-   Theme
-   Tajweed — parse quran-tajweed markup
-   Data fetchers
-   Init
-   Main render — dispatches to renderPageView or renderSurahView
-   Page view — Mushaf Madinah two-page spread
-   Apply font sizes — makes the A-/A/A+ buttons actually work
-   Apply reading mode — Both / Arabic only / Translation only
-   Surah view — continuous ayah-by-ayah cards
-   Wire word clicks (word-by-word modal)
-   Wire ayah marker clicks (page view)
-   Ayah popover (mobile-friendly actions)
-   Wire verse actions (surah view)
-   Bookmarks
-   Translations drawer
-   Reciter drawer
-   Tafsir drawer
-   Audio
-   Navigator (surah/juz/page dropdown)
-   Swipe navigation (touch gestures for page flipping)
-   Drawers open/close
-   Share tool button (toolbar)
-   Settings drawer interactions
-   Search modal
-   Theme (now controlled via Settings drawer's theme swatches)
-   Keyboard shortcuts
-   Wire events (called from init)
-   ============================================================ */
-
+/* mushaf.js */
 'use strict';
 
-/* ============================================================
-   CONFIG — API endpoints
-   ============================================================ */
+/* CONFIG — API endpoints */
 
 const API = {
     // Uthmani text + tajweed markup (alquran.cloud)
@@ -167,9 +114,7 @@ const TAJWEED_RULES = {
     "h": null,
 };
 
-/* ============================================================
-   STATE
-   ============================================================ */
+/* STATE */
 
 const state = {
     view: "page",   // Always page view — Surah view toggle removed per user request
@@ -199,9 +144,7 @@ const state = {
     wordModalContext: null,    // {surah, ayah, wordIndex, words:[]}
 };
 
-/* ============================================================
-   ELEMENT REFS
-   ============================================================ */
+/* ELEMENT REFS */
 
 const el = {
     readArea: document.getElementById("mushaf-read-area"),
@@ -279,13 +222,7 @@ const el = {
     settingsTool: document.getElementById("settings-tool"),
 };
 
-/* ============================================================
-   READING STATS — writes straight into the same "bacaStats" record
-   that the homepage (script.js) reads and displays. This is what
-   actually powers "Your Reading Journey", the daily challenge, and
-   achievement unlocks — previously this page never wrote to it at
-   all, so none of those could ever move.
-   ============================================================ */
+/* READING STATS — writes to the shared "bacaStats" record the homepage reads (powers Reading Journey, daily challenge, achievements). */
 
 const STATS_KEY = "bacaStats";
 
@@ -341,7 +278,7 @@ function bumpReadingStreak(stats) {
     stats.totalDays = (stats.totalDays || 0) + 1;
 }
 
-// Called every time a Mushaf page is actually rendered on screen (Page View).
+// Page read tracking (page view)
 function recordPageRead(pageNum, ayahsOnPage) {
     if (!ayahsOnPage || !ayahsOnPage.length) return;
     const stats = loadReadingStats();
@@ -379,7 +316,7 @@ function recordPageRead(pageNum, ayahsOnPage) {
     saveReadingStats(stats);
 }
 
-// Called every time a full surah is rendered on screen (Surah View).
+// Page read tracking (surah view)
 // NOTE: this used to also push into stats.completedSurahs unconditionally
 // right here — meaning simply opening a surah (even for a second, even by
 // mistake) instantly marked it "completed" in the Reading Journey and could
@@ -467,9 +404,7 @@ function startReadingTimeTracking() {
     }, 30000);
 }
 
-/* ============================================================
-   UTILITIES
-   ============================================================ */
+/* UTILITIES */
 
 function showToast(msg) {
     el.toast.textContent = msg;
@@ -541,9 +476,7 @@ async function fetchJSON(url, { timeout = 12000 } = {}) {
     }
 }
 
-/* ============================================================
-   SAVE STATE
-   ============================================================ */
+/* SAVE STATE */
 
 function persistState() {
     localStorage.setItem("mushafView", state.view);
@@ -557,9 +490,7 @@ function persistState() {
     localStorage.setItem("mushafBookmarks", JSON.stringify(state.bookmarks));
 }
 
-/* ============================================================
-   THEME
-   ============================================================ */
+/* THEME */
 
 function applyTheme(theme) {
     state.theme = theme;
@@ -602,12 +533,7 @@ function syncWithSiteTheme() {
     }
 }
 
-/* ============================================================
-   TAJWEED — parse quran-tajweed markup
-   alquran.cloud returns text like:
-     "إِنَّ <tajweed-rule=1>اللَّهَ</tajweed> ..."
-   or some versions use unicode markers. We handle both.
-   ============================================================ */
+/* TAJWEED — parse quran-tajweed markup (handles <tajweed-rule> tags and unicode markers). */
 
 // Parse tajweed markup from alquran.cloud's quran-tajweed edition.
 // Format:  [letter[text]  |  [letter:number[text]  |  :number[text]
@@ -787,9 +713,7 @@ function renderArabicWithWords(text, { tajweedMarkup = false } = {}) {
     return html;
 }
 
-/* ============================================================
-   DATA FETCHERS
-   ============================================================ */
+/* DATA FETCHERS */
 
 // Fetch full surah: Uthmani text + transliteration + tajweed markup
 async function fetchSurahData(surahNum) {
@@ -850,8 +774,6 @@ async function fetchSurahData(surahNum) {
     state.surahCache[surahNum] = cached;
     return cached;
 }
-
-
 
 // Fetch word-by-word analysis for a single ayah
 // Returns: [{ text_uthmani, transliteration, translation }] array of words
@@ -922,9 +844,7 @@ async function fetchTafsir(surahNum, ayahNum, source = "ibnkathir") {
     }
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
+/* INIT */
 
 function init() {
     // Apply reader theme (controls page background + text colors in read area)
@@ -946,7 +866,6 @@ function init() {
     document.getElementById("tajweed-off")?.classList.toggle("active", !state.tajweedOn);
 
     // Apply display mode (set active button)
-
 
     // Render reciter list
     renderReciterList("");
@@ -991,9 +910,7 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-/* ============================================================
-   MAIN RENDER — dispatches to renderPageView or renderSurahView
-   ============================================================ */
+/* MAIN RENDER — dispatches to renderPageView or renderSurahView */
 
 async function render() {
     // Show loader
@@ -1037,9 +954,7 @@ async function render() {
     if (window.lucide) lucide.createIcons();
 }
 
-/* ============================================================
-   PAGE VIEW — Mushaf Madinah two-page spread
-   ============================================================ */
+/* PAGE VIEW — Mushaf Madinah two-page spread */
 
 // Determine which ayahs belong on a given page (1-604)
 // We fetch surah data on demand and slice ayahs that fit on the page boundary.
@@ -1209,9 +1124,7 @@ async function renderPageView() {
     if (window.lucide) lucide.createIcons();
 }
 
-/* ============================================================
-   APPLY FONT SIZES — makes the A-/A/A+ buttons actually work
-   ============================================================ */
+/* APPLY FONT SIZES — makes the A-/A/A+ buttons actually work */
 
 function applyFontSizes() {
     // Apply to page view Arabic text
@@ -1227,10 +1140,7 @@ function applyFontSizes() {
     });
 }
 
-/* ============================================================
-   APPLY READING MODE — Both / Arabic only / Translation only
-   In page view, this hides/shows the ayah text flow.
-   ============================================================ */
+/* APPLY READING MODE — Both / Arabic only / Translation only */
 
 function applyReadingMode() {
     const pageTextFlow = document.querySelector(".mushaf-page .ayah-text-flow");
@@ -1250,9 +1160,7 @@ function applyReadingMode() {
     });
 }
 
-/* ============================================================
-   SURAH VIEW — continuous ayah-by-ayah cards
-   ============================================================ */
+/* SURAH VIEW — continuous ayah-by-ayah cards */
 
 async function renderSurahView() {
     const surahNum = state.surah;
@@ -1324,9 +1232,7 @@ async function renderSurahView() {
     if (window.lucide) lucide.createIcons();
 }
 
-/* ============================================================
-   WIRE WORD CLICKS (word-by-word modal)
-   ============================================================ */
+/* WIRE WORD CLICKS (word-by-word modal) */
 
 function wireWordClicks(rootEl) {
     rootEl.querySelectorAll(".word").forEach(w => {
@@ -1465,9 +1371,7 @@ el.wordModalOverlay?.addEventListener("click", (e) => {
     }
 });
 
-/* ============================================================
-   WIRE AYAH MARKER CLICKS (page view)
-   ============================================================ */
+/* WIRE AYAH MARKER CLICKS (page view) */
 
 function wireAyahMarkerClicks(rootEl) {
     rootEl.querySelectorAll(".ayah-marker").forEach(m => {
@@ -1480,9 +1384,7 @@ function wireAyahMarkerClicks(rootEl) {
     });
 }
 
-/* ============================================================
-   AYAH POPOVER (mobile-friendly actions)
-   ============================================================ */
+/* AYAH POPOVER (mobile-friendly actions) */
 
 function showAyahPopover(surah, ayah, anchorEl) {
     const meta = SURAH_LIST[surah - 1];
@@ -1526,9 +1428,7 @@ function showAyahPopover(surah, ayah, anchorEl) {
 
 el.ayahPopoverClose?.addEventListener("click", () => el.ayahPopover.hidden = true);
 
-/* ============================================================
-   WIRE VERSE ACTIONS (surah view)
-   ============================================================ */
+/* WIRE VERSE ACTIONS (surah view) */
 
 function wireVerseActions(rootEl) {
     rootEl.querySelectorAll(".verse-action").forEach(btn => {
@@ -1615,9 +1515,7 @@ async function handleVerseAction(btn, surah, ayah) {
     }
 }
 
-/* ============================================================
-   BOOKMARKS
-   ============================================================ */
+/* BOOKMARKS */
 
 function toggleBookmark(entry) {
     const idx = state.bookmarks.findIndex(b => b.surah === entry.surah && b.ayah === entry.ayah);
@@ -1708,14 +1606,9 @@ el.bookmarksClearBtn?.addEventListener("click", () => {
     showToast("All bookmarks cleared");
 });
 
-/* ============================================================
-   TRANSLATIONS DRAWER
-   ============================================================ */
+/* TRANSLATIONS DRAWER */
 
-
-/* ============================================================
-   RECITER DRAWER
-   ============================================================ */
+/* RECITER DRAWER */
 
 function renderReciterList(query) {
     const q = (query || "").toLowerCase();
@@ -1764,9 +1657,7 @@ function renderReciterList(query) {
 
 el.reciterSearch?.addEventListener("input", e => renderReciterList(e.target.value));
 
-/* ============================================================
-   TAFSIR DRAWER
-   ============================================================ */
+/* TAFSIR DRAWER */
 
 async function loadTafsirInDrawer(surah, ayah) {
     openDrawer("tafsir-drawer");
@@ -1829,9 +1720,7 @@ document.querySelectorAll(".tafsir-tab").forEach(tab => {
     });
 });
 
-/* ============================================================
-   AUDIO
-   ============================================================ */
+/* AUDIO */
 
 function playAyah(surah, ayah) {
     // If the SAME ayah is currently playing, toggle pause/resume
@@ -1979,9 +1868,7 @@ el.miniProgress?.addEventListener("input", () => {
     }
 });
 
-/* ============================================================
-   NAVIGATOR (surah/juz/page/ayah dropdown)
-   ============================================================ */
+/* NAVIGATOR (surah/juz/page/ayah dropdown) */
 
 let navTab = "surah";
 
@@ -2291,9 +2178,7 @@ el.pageSlider?.addEventListener("change", () => {
     render();
 });
 
-/* ============================================================
-   SWIPE NAVIGATION (touch gestures for page flipping)
-   ============================================================ */
+/* SWIPE NAVIGATION (touch gestures for page flipping) */
 
 let touchStartX = 0;
 let touchStartY = 0;
@@ -2354,15 +2239,9 @@ el.pageContainer?.addEventListener("click", e => {
     }
 });
 
-/* ============================================================
-   VIEW TOGGLE — removed per user request.
-   Page view is the only mode. Surah view HTML element is kept
-   hidden so existing JS refs don't error.
-   ============================================================ */
+/* VIEW TOGGLE — removed; page view is the only active mode, surah view kept hidden for JS refs. */
 
-/* ============================================================
-   DRAWERS OPEN/CLOSE
-   ============================================================ */
+/* DRAWERS OPEN/CLOSE */
 
 function openDrawer(id) {
     closeAllDrawers();
@@ -2406,7 +2285,6 @@ document.addEventListener("keydown", e => {
     }
 });
 
-
 el.reciterTool?.addEventListener("click", () => {
     if (el.reciterDrawer.classList.contains("open")) {
         el.reciterDrawer.classList.remove("open");
@@ -2431,19 +2309,7 @@ el.bookmarksToolBtn?.addEventListener("click", () => {
     }
 });
 
-/* ============================================================
-   SHARE TOOL BUTTON (toolbar)
-   Shares the first ayah on the current page as a beautiful image,
-   using the same BacaShare.previewVerseImage() used by the daily
-   ayah and the reading modal on index.html. Falls back to a plain
-   text share if BacaShare is not loaded.
-
-   NOTE: fetchSurahData() only fetches Arabic text + tajweed +
-   transliteration — it does NOT fetch translations. So we fetch
-   an English translation separately here before generating the
-   image. Without this, the translation field would be undefined
-   and the generated image would be blank.
-   ============================================================ */
+/* SHARE TOOL — share first ayah on page as image via BacaShare.previewVerseImage(); fetch English translation separately since fetchSurahData() omits it. */
 
 // Helper: fetch a single ayah's English translation from alquran.cloud
 async function fetchAyahTranslation(surah, ayah) {
@@ -2514,9 +2380,7 @@ el.tajweedTool?.addEventListener("click", () => {
     showToast(`Tajweed ${state.tajweedOn ? "on" : "off"}`);
 });
 
-/* ============================================================
-   SETTINGS DRAWER interactions
-   ============================================================ */
+/* SETTINGS DRAWER interactions */
 
 document.querySelectorAll(".theme-swatch").forEach(s => {
     s.addEventListener("click", () => applyTheme(s.dataset.theme));
@@ -2564,10 +2428,7 @@ document.getElementById("tajweed-off")?.addEventListener("click", () => {
     render();
 });
 
-
-/* ============================================================
-   SEARCH MODAL
-   ============================================================ */
+/* SEARCH MODAL */
 
 function openSearchModal() {
     el.searchModal.classList.add("open");
@@ -2651,10 +2512,7 @@ el.searchModalInput?.addEventListener("input", e => {
     });
 });
 
-/* ============================================================
-   THEME — Theme is now controlled via Settings drawer's theme swatches.
-   No toggle button in toolbar (removed per user request).
-   ============================================================ */
+/* THEME — Theme is now controlled via Settings drawer's theme swatches. No toggle button in toolbar (removed per user request). */
 
 // Listen for siteTheme changes from index.html (e.g. if user changes theme
 // in another tab on the home page)
@@ -2668,13 +2526,9 @@ window.addEventListener("storage", e => {
     }
 });
 
-/* ============================================================
-   HAMBURGER / MOBILE NAV — removed (navbar replaced with Back button)
-   ============================================================ */
+/* HAMBURGER / MOBILE NAV — removed (navbar replaced with Back button) */
 
-/* ============================================================
-   KEYBOARD SHORTCUTS
-   ============================================================ */
+/* KEYBOARD SHORTCUTS */
 
 document.addEventListener("keydown", e => {
     // "/" opens search (unless typing in an input)
@@ -2702,9 +2556,7 @@ document.addEventListener("keydown", e => {
     }
 });
 
-/* ============================================================
-   WIRE EVENTS (called from init)
-   ============================================================ */
+/* WIRE EVENTS (called from init) */
 
 function wireEvents() {
     // Most event handlers are wired above via direct addEventListener calls.
@@ -2712,6 +2564,4 @@ function wireEvents() {
     // (No-op for now — handlers are attached at script load time.)
 }
 
-/* ============================================================
-   END
-   ============================================================ */
+/* END */
