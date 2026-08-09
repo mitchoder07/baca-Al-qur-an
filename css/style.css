@@ -2259,6 +2259,10 @@ body.light-mode .reciters-see-all-btn:hover {
   transform: translateY(-2px);
 }
 
+#mini-close:hover {
+  background: #ef4444;
+}
+
 #mini-play {
   width: 52px;
   height: 52px;
@@ -4501,6 +4505,11 @@ body.light-mode .surah-rev-order {
   color: #fff !important;
   transform: translateY(-2px) !important;
   border-color: var(--reader-accent) !important;
+}
+
+#mini-close:hover {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
 }
 
 #mini-play {

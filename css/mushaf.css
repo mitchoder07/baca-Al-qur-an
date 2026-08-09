@@ -2296,6 +2296,11 @@ body.light-mode .tajweed-guide-item,
     color: #fff;
 }
 
+#mini-close:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
 #mini-play {
     width: 46px;
     height: 46px;
