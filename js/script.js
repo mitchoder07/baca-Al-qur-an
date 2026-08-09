@@ -2319,6 +2319,14 @@ function initGamification() {
         document.querySelector(".theme-btn")?.click();
     });
 
+    // Footer replay tour
+    document.getElementById("footer-replay-tour")?.addEventListener("click", e => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.BacaOnboarding?.reset();
+        setTimeout(() => window.BacaOnboarding?.start(), 400);
+    });
+
     // Footer reset progress
     document.getElementById("footer-reset-progress")?.addEventListener("click", e => {
         e.preventDefault();
