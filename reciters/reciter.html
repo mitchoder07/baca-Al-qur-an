@@ -388,6 +388,10 @@
             color: #fff;
         }
 
+        .sp-btn#sp-close:hover {
+            background: #ef4444;
+        }
+
         .sp-progress-wrap {
             flex: 1;
             display: flex;
@@ -1004,6 +1008,7 @@
             <button class="sp-btn sp-play" id="sp-play"><i class="fa-solid fa-play" id="sp-play-icon"></i></button>
             <button class="sp-btn" id="sp-next"><i class="fa-solid fa-forward-step"></i></button>
             <button class="sp-btn" id="sp-repeat" title="Repeat off"><i class="fa-solid fa-repeat"></i></button>
+            <button class="sp-btn" id="sp-close" title="Close player"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="sp-info">
             <div class="sp-surah" id="sp-surah-name">—</div>
@@ -1516,6 +1521,24 @@
         });
         document.getElementById("sp-next").addEventListener("click", () => {
             if (currentSurahId < 114) playSurahFromStart(currentSurahId + 1);
+        });
+
+        document.getElementById("sp-close").addEventListener("click", () => {
+            audio.onended = null; // prevent auto-advance firing after we clear the source
+            audio.pause();
+            audio.removeAttribute("src");
+            audio.load();
+            if (currentSurahId) {
+                document.getElementById(`row-${currentSurahId}`)?.classList.remove("playing");
+            }
+            currentSurahId = null;
+            window.currentSurahId = null;
+            setPlaying(false);
+            document.getElementById("sticky-player").classList.remove("visible");
+            // Clear cross-page saved state (see floating-player-bar.js's
+            // STORAGE_KEY) so the homepage bar doesn't offer to "resume"
+            // something the user just explicitly closed here.
+            try { localStorage.removeItem("bacaFloatingPlayer"); } catch (e) { }
         });
 
         // REPEAT BUTTON
