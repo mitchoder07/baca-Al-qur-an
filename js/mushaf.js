@@ -205,6 +205,7 @@ const el = {
     miniPrev: document.getElementById("mini-prev"),
     miniNext: document.getElementById("mini-next"),
     miniRepeat: document.getElementById("mini-repeat"),
+    miniClose: document.getElementById("mini-close"),
     miniProgress: document.getElementById("mini-progress"),
     miniTime: document.getElementById("mini-time"),
     ayahAudio: document.getElementById("ayah-audio"),
@@ -1759,6 +1760,20 @@ el.miniRepeat?.addEventListener("click", () => {
     el.miniRepeat.style.background = mushafRepeatOn ? "var(--mushaf-accent)" : "";
     el.miniRepeat.style.color = mushafRepeatOn ? "#fff" : "";
     showToast(mushafRepeatOn ? "Repeat: On" : "Repeat: Off");
+});
+
+el.miniClose?.addEventListener("click", () => {
+    el.ayahAudio.pause();
+    el.ayahAudio.removeAttribute("src");
+    el.ayahAudio.load();
+    state.isPlaying = false;
+    if (state.currentAyahAudio) {
+        const { surah, ayah } = state.currentAyahAudio;
+        updatePlayButtonIcon(surah, ayah, false);
+    }
+    state.currentAyahAudio = null;
+    document.querySelectorAll(".verse-card").forEach(c => c.classList.remove("active-ayah"));
+    el.floatingPlayer.hidden = true;
 });
 
 el.miniProgress?.addEventListener("input", () => {

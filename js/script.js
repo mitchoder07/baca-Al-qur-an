@@ -280,6 +280,7 @@ const durationTimeEl = document.getElementById("duration-time");
 const miniPlay = document.getElementById("mini-play");
 const miniNext = document.getElementById("mini-next");
 const miniPrev = document.getElementById("mini-prev");
+const miniClose = document.getElementById("mini-close");
 const floatingPlayer = document.getElementById("floating-player");
 const floatingSurah = document.getElementById("floating-surah");
 const floatingAyah = document.getElementById("floating-ayah");
@@ -1687,6 +1688,21 @@ miniPrev?.addEventListener("click", () => {
         selectedSurah--;
         openReader(selectedSurah).then(() => playSurahFromAyah(1));
     }
+});
+
+miniClose?.addEventListener("click", () => {
+    const audio = getActiveAudio();
+    audio.pause();
+    if (activePlayButton) {
+        activePlayButton.innerHTML = `<i data-lucide="play"></i>`;
+        activePlayButton = null;
+    }
+    if (activeAudioMode === "surah" && playButton) {
+        playButton.innerHTML = `<i data-lucide="play"></i>`;
+    }
+    syncMiniPlayIcon(false);
+    hideFloatingPlayer();
+    safeLucide();
 });
 
 // Play a single ayah without needing a verse card button (for mini player next/prev)
