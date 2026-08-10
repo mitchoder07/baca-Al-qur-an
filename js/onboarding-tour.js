@@ -61,12 +61,12 @@
             text: 'Structured multi-day reading paths — like Finding Peace or Strengthening Salah.'
         },
         {
-            target: '#bookmarks',
+            target: '#bookmarks .section-header',
             title: 'Your Bookmarks',
             text: 'Every verse you save from the reader shows up here for quick access later.'
         },
         {
-            target: '#featured-reciters',
+            target: '#reciters-preview',
             title: 'Reciters',
             text: 'Listen to 25+ world-renowned reciters, with full-surah audio in the reading modal.'
         },
@@ -260,7 +260,11 @@
             if (currentStep === STEPS.length - 1) endTour();
             else goToStep(currentStep + 1);
         });
-        overlay.addEventListener('click', endTour);
+        // Deliberately NOT closing on overlay/backdrop click — the spotlight
+        // area covers real page elements, and an accidental tap near them
+        // (very easy to do since it's the visually inviting part of the
+        // screen) used to kill the whole tour instantly. Skip button and
+        // Escape key remain as the explicit ways out.
 
         document.addEventListener('keydown', onKeydown);
         window.addEventListener('resize', () => positionForStep(STEPS[currentStep], true));
@@ -280,8 +284,9 @@
             // no spotlight, so the tour still delivers the info instead of
             // breaking outright.
             spotlight.classList.add('hidden');
-            const cw = 340, ch = 200;
-            card.style.left = `${(window.innerWidth - Math.min(cw, window.innerWidth - 32)) / 2}px`;
+            const cw = Math.min(340, window.innerWidth - 32);
+            const ch = card.offsetHeight || 200;
+            card.style.left = `${(window.innerWidth - cw) / 2}px`;
             card.style.top = `${Math.max(20, (window.innerHeight - ch) / 2)}px`;
             return;
         }
@@ -297,13 +302,20 @@
 
         // Prefer placing the card below the target; flip above if there's
         // not enough room; clamp horizontally so it never runs off-screen.
+        // Uses the card's REAL rendered height (it already has this step's
+        // text in it by the time this runs) rather than a fixed guess —
+        // text length varies per step, so a fixed estimate was off by a
+        // few pixels on longer steps and could push the card off-screen.
         const cardWidth = Math.min(340, window.innerWidth - 32);
-        const cardHeightEstimate = 180;
+        const cardHeight = card.offsetHeight || 180;
         let top = rect.bottom + pad + 12;
-        if (top + cardHeightEstimate > window.innerHeight) {
-            top = rect.top - pad - 12 - cardHeightEstimate;
-            if (top < 12) top = Math.max(12, window.innerHeight - cardHeightEstimate - 12);
+        if (top + cardHeight > window.innerHeight) {
+            top = rect.top - pad - 12 - cardHeight;
         }
+        // Unconditional safety net: whatever the above produced, never let
+        // the card render above or below the actual viewport.
+        top = Math.max(12, Math.min(top, window.innerHeight - cardHeight - 12));
+
         let left = rect.left + rect.width / 2 - cardWidth / 2;
         left = Math.max(16, Math.min(left, window.innerWidth - cardWidth - 16));
 
@@ -326,9 +338,12 @@
 
         const target = step.target ? document.querySelector(step.target) : null;
         if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // Wait for the smooth scroll to settle before measuring position.
-            setTimeout(() => positionForStep(step), 380);
+            // Instant, not smooth — a smooth scroll over a long distance can
+            // still be mid-animation after a fixed delay, which was causing
+            // position to be measured before the page actually finished
+            // moving (this is what sent the card off-screen on step 3).
+            target.scrollIntoView({ behavior: 'instant', block: 'center' });
+            requestAnimationFrame(() => requestAnimationFrame(() => positionForStep(step)));
         } else {
             positionForStep(step);
         }
