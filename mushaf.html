@@ -483,6 +483,13 @@
                 </div>
             </div>
 
+            <div class="drawer-section">
+                <label class="drawer-label">Help</label>
+                <div class="drawer-buttons">
+                    <button id="replay-tour-btn"><i data-lucide="sparkles"></i> Replay Tour</button>
+                </div>
+            </div>
+
         </div>
     </aside>
 
@@ -601,7 +608,7 @@
     <script src="js/data.js"></script>
     <script src="js/mushaf.js"></script>
     <script>
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     </script>
 
     <!-- AI Chat Widget -->
@@ -613,6 +620,8 @@
     <!-- Shared hamburger menu (floating button + slide-in drawer) -->
     <script src="js/shared-nav.js"></script>
     <script src="js/jumuah.js"></script>
+    <script src="js/onboarding-tour-steps-mushaf.js"></script>
+    <script src="js/onboarding-tour.js"></script>
 
 </body>
 
