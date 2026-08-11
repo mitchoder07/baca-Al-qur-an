@@ -1523,6 +1523,17 @@ body.light-mode .tajweed-guide-item,
     color: #fff;
 }
 
+#replay-tour-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#replay-tour-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
 /* Translation list inside drawer */
 
 .translation-list {
