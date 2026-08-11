@@ -1,96 +1,45 @@
 /* ============================================================
-   BACA — First-Time Onboarding Tour
+   BACA — Onboarding Tour Engine
    Spotlights key features with step-by-step tooltips on a user's
    first visit (Next / Back / Skip), then never shows again unless
    explicitly replayed. Self-contained: injects its own <style>,
    no dependencies, matches the pattern used by chat-widget.js and
    floating-player-bar.js.
+
+   This file is the shared engine only, reused across pages. Each
+   page loads its own steps config first (e.g.
+   js/onboarding-tour-steps-home.js or
+   js/onboarding-tour-steps-mushaf.js), which sets:
+     window.BACA_ONBOARDING_STEPS         (array of step objects)
+     window.BACA_ONBOARDING_STORAGE_KEY   (string, unique per page)
+   before this engine script runs.
    ============================================================
    TABLE OF CONTENTS
    ------------------------------------------------------------
-   1. Config — steps for this page + storage key
+   1. Config — read from the page's steps file, with a safe
+      fallback if one wasn't loaded
    2. Injected <style>
    3. DOM construction (overlay, spotlight, tooltip)
    4. Positioning — spotlight + tooltip placement per step
    5. Step navigation (next / back / skip / finish)
    6. Init — auto-starts for first-time visitors, exposes
       window.BacaOnboarding = { start, reset } for a manual
-      "Replay Tour" trigger and for other pages to reuse
+      "Replay Tour" trigger
    ============================================================ */
 
 (function () {
     'use strict';
 
-    const STORAGE_KEY = 'bacaOnboardingComplete';
-
     // ============================================================
-    // 1. STEPS — each targets a real element on index.html by
-    // selector. If a target isn't found when its turn comes (e.g.
-    // page structure changes later), the step still shows as a
-    // centered card instead of silently breaking the whole tour.
+    // 1. CONFIG — provided by a page-specific steps file that must
+    // load before this one. Falls back to a minimal single-step
+    // tour if a page forgets to include a steps file, rather than
+    // silently doing nothing or throwing.
     // ============================================================
-    const STEPS = [
-        {
-            target: null,
-            title: 'Welcome to Baca 👋',
-            text: "Let's take a quick look around — a beautiful way to read, understand, and reflect on the Qur'an. This takes about 30 seconds."
-        },
-        {
-            target: '.search-btn',
-            title: 'Quick Search',
-            text: 'Tap here anytime to jump straight to a surah by name or number.'
-        },
-        {
-            target: '#surah-explorer .explorer-search',
-            title: 'Explore Surahs',
-            text: 'Search and filter all 114 surahs — by Makkan/Medinan, revelation order, Juz, or Hizb.'
-        },
-        {
-            target: '#daily-ayah .ayah-card',
-            title: 'Daily Ayah',
-            text: 'A fresh verse every day. Bookmark it, copy it, share it as an image, or open its tafsir.'
-        },
-        {
-            target: '#topics .topics-grid',
-            title: 'Browse by Topic',
-            text: 'Looking for verses about Mercy, Prayer, or Patience? Filter the Qur\u2019an by theme.'
-        },
-        {
-            target: '#journeys .journey-grid',
-            title: 'Guided Journeys',
-            text: 'Structured multi-day reading paths — like Finding Peace or Strengthening Salah.'
-        },
-        {
-            target: '#bookmarks .section-header',
-            title: 'Your Bookmarks',
-            text: 'Every verse you save from the reader shows up here for quick access later.'
-        },
-        {
-            target: '#reciters-preview',
-            title: 'Reciters',
-            text: 'Listen to 25+ world-renowned reciters, with full-surah audio in the reading modal.'
-        },
-        {
-            target: '#reading-progress .progress-grid',
-            title: 'Your Reading Journey',
-            text: 'Track your streak, pages read, and progress as you go — real stats, not fake ones.'
-        },
-        {
-            target: '.theme-btn',
-            title: 'Light / Dark Mode',
-            text: 'Prefer a lighter look? Toggle the theme here anytime.'
-        },
-        {
-            target: '.baca-chat-fab',
-            title: 'Ask Baca AI',
-            text: "Stuck on something? Ask in plain language — Baca AI can point you to the right surah or ayah."
-        },
-        {
-            target: '.baca-nav-toggle',
-            title: 'More Pages',
-            text: 'Open the menu for the Salah guide, Adhkar, the word game, and everything else Baca offers.'
-        }
-    ];
+    const STORAGE_KEY = window.BACA_ONBOARDING_STORAGE_KEY || 'bacaOnboardingComplete';
+    const STEPS = (window.BACA_ONBOARDING_STEPS && window.BACA_ONBOARDING_STEPS.length)
+        ? window.BACA_ONBOARDING_STEPS
+        : [{ target: null, title: 'Welcome to Baca', text: 'Enjoy exploring the app.' }];
 
     // ============================================================
     // 2. INJECTED STYLE
@@ -295,7 +244,7 @@
         const pad = 8;
 
         spotlight.classList.remove('hidden');
-        spotlight.style.top = `${rect.top - pad}px`;
+        spotlight.style.top = `${Math.max(0, rect.top - pad)}px`;
         spotlight.style.left = `${rect.left - pad}px`;
         spotlight.style.width = `${rect.width + pad * 2}px`;
         spotlight.style.height = `${rect.height + pad * 2}px`;

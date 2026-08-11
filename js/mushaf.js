@@ -2297,6 +2297,12 @@ document.querySelectorAll(".theme-swatch").forEach(s => {
     s.addEventListener("click", () => applyTheme(s.dataset.theme));
 });
 
+document.getElementById("replay-tour-btn")?.addEventListener("click", () => {
+    closeAllDrawers();
+    window.BacaOnboarding?.reset();
+    setTimeout(() => window.BacaOnboarding?.start(), 350);
+});
+
 document.getElementById("font-increase")?.addEventListener("click", () => {
     state.arabicFont = Math.min(4.5, state.arabicFont + 0.2);
     state.translationFont = Math.min(1.6, state.translationFont + 0.05);
