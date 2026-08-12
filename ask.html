@@ -240,6 +240,15 @@
             font-size: 0.85rem;
         }
 
+        .msg-bubble ul, .msg-bubble ol {
+            margin: 0.4rem 0;
+            padding-left: 1.3rem;
+        }
+
+        .msg-bubble li {
+            margin-bottom: 0.25rem;
+        }
+
         .typing-indicator {
             display: flex;
             gap: 4px;
@@ -557,6 +566,44 @@
         let chatHistory = [];
         let isWaiting = false;
 
+        // ============================================================
+        // formatBacaMarkdown() — same logic as js/chat-widget.js's copy
+        // of this function; keep both in sync if you change one.
+        // Single asterisks render as bold (not italic) to match how the
+        // model actually uses them, same convention as WhatsApp/Slack.
+        // ============================================================
+        function formatBacaMarkdown(text) {
+            text = text
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<strong>$1</strong>')
+                .replace(/`(.+?)`/g, '<code>$1</code>');
+
+            const lines = text.split('\n');
+            let html = '';
+            let inList = null;
+
+            for (const line of lines) {
+                const bullet = line.match(/^\s*[-*]\s+(.+)/);
+                const numbered = line.match(/^\s*\d+[.)]\s+(.+)/);
+
+                if (bullet) {
+                    if (inList && inList !== 'ul') { html += `</${inList}>`; inList = null; }
+                    if (!inList) { html += '<ul>'; inList = 'ul'; }
+                    html += `<li>${bullet[1]}</li>`;
+                } else if (numbered) {
+                    if (inList && inList !== 'ol') { html += `</${inList}>`; inList = null; }
+                    if (!inList) { html += '<ol>'; inList = 'ol'; }
+                    html += `<li>${numbered[1]}</li>`;
+                } else {
+                    if (inList) { html += `</${inList}>`; inList = null; }
+                    html += line.trim() === '' ? '<br>' : line + '<br>';
+                }
+            }
+            if (inList) html += `</${inList}>`;
+            return html;
+        }
+
         // Load saved theme + handle toggle
         (function () {
             const themeBtn = document.getElementById('askThemeBtn');
@@ -632,12 +679,7 @@
                 typingEl.remove();
 
                 if (data.reply) {
-                    // Format reply: convert markdown-style links to HTML
-                    const formattedReply = data.reply
-                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/`(.+?)`/g, '<code>$1</code>')
-                        .replace(/\n/g, '<br>');
+                    const formattedReply = formatBacaMarkdown(data.reply);
                     addMessage('ai', formattedReply, true);
 
                     // Save to history
