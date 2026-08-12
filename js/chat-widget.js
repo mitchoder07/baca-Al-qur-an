@@ -2,6 +2,55 @@
 (function () {
     if (window.location.pathname.includes('ask.html')) return;
 
+    // ============================================================
+    // formatBacaMarkdown() — converts the AI's lightweight markdown
+    // into safe HTML for the chat bubble. Handles:
+    //   [text](url)  -> link
+    //   **text**     -> bold
+    //   *text*       -> ALSO bold (not italic) — the model sometimes
+    //                    uses single asterisks the same way chat apps
+    //                    like WhatsApp do, so we match that expectation
+    //                    rather than strict Markdown, which would have
+    //                    rendered these as unstyled literal asterisks.
+    //   `text`       -> inline code
+    //   - item       -> bullet list (consecutive lines grouped into
+    //   1. item         one <ul>/<ol>, not one per line)
+    //   blank line   -> paragraph break
+    // Shared logic with ask.html's own copy of this function; keep
+    // both in sync if you change one.
+    // ============================================================
+    function formatBacaMarkdown(text) {
+        text = text
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<strong>$1</strong>')
+            .replace(/`(.+?)`/g, '<code>$1</code>');
+
+        const lines = text.split('\n');
+        let html = '';
+        let inList = null; // null | 'ul' | 'ol'
+
+        for (const line of lines) {
+            const bullet = line.match(/^\s*[-*]\s+(.+)/);
+            const numbered = line.match(/^\s*\d+[.)]\s+(.+)/);
+
+            if (bullet) {
+                if (inList && inList !== 'ul') { html += `</${inList}>`; inList = null; }
+                if (!inList) { html += '<ul>'; inList = 'ul'; }
+                html += `<li>${bullet[1]}</li>`;
+            } else if (numbered) {
+                if (inList && inList !== 'ol') { html += `</${inList}>`; inList = null; }
+                if (!inList) { html += '<ol>'; inList = 'ol'; }
+                html += `<li>${numbered[1]}</li>`;
+            } else {
+                if (inList) { html += `</${inList}>`; inList = null; }
+                html += line.trim() === '' ? '<br>' : line + '<br>';
+            }
+        }
+        if (inList) html += `</${inList}>`;
+        return html;
+    }
+
     // Create styles
     const style = document.createElement('style');
     style.textContent = `
@@ -163,6 +212,10 @@
             background: rgba(0,0,0,0.2); padding: 0.1rem 0.3rem;
             border-radius: 3px; font-size: 0.78rem;
         }
+        .baca-chat-msg-bubble ul, .baca-chat-msg-bubble ol {
+            margin: 0.3rem 0; padding-left: 1.2rem;
+        }
+        .baca-chat-msg-bubble li { margin-bottom: 0.2rem; }
         .baca-chat-msg-bubble strong { font-weight: 700; }
 
         @keyframes bacaFadeIn {
@@ -309,11 +362,7 @@
             typing.remove();
 
             if (data.reply) {
-                const formatted = data.reply
-                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/`(.+?)`/g, '<code>$1</code>')
-                    .replace(/\n/g, '<br>');
+                const formatted = formatBacaMarkdown(data.reply);
                 addMsg('ai', formatted, true);
                 chatHistory.push({ role: 'user', content: message });
                 chatHistory.push({ role: 'assistant', content: data.reply });

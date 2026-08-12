@@ -20,6 +20,11 @@ window.BACA_ONBOARDING_STEPS = [
         text: 'Tap here to go straight to any surah, page, juz, or ayah.'
     },
     {
+        target: '.ayah-marker',
+        title: 'Tap Any Ayah',
+        text: 'Tap the small number at the end of any verse to play its audio, bookmark it, read its tafsir, see word-by-word meanings, copy it, or share it.'
+    },
+    {
         target: '#tajweed-tool',
         title: 'Tajweed Colors',
         text: 'Turn this on to see pronunciation rules highlighted in color as you read.'
