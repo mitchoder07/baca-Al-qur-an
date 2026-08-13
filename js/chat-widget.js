@@ -302,6 +302,7 @@
                 <p>I'm Baca AI. Ask me about any surah, verse, or Baca feature.</p>
                 <div class="baca-chat-suggestions">
                     <span class="chip" onclick="bacaChatSend('Which surah is Ayat al-Kursi in?')">Ayat al-Kursi?</span>
+                    <span class="chip" onclick="bacaChatSend('What does the name Baca mean?')">What does "Baca" mean?</span>
                     <span class="chip" onclick="bacaChatSend('Who made Baca?')">Who made Baca?</span>
                     <span class="chip" onclick="bacaChatSend('Surah for anxiety?')">Surah for anxiety?</span>
                 </div>
