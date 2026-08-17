@@ -223,13 +223,22 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .baca-chat-typing { display: flex; gap: 3px; padding: 0.3rem 0; }
-        .baca-chat-typing span {
-            width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;
-            animation: bacaBounce 1s infinite;
+        .baca-chat-typing { display: flex; align-items: center; gap: 6px; padding: 0.3rem 0; min-height: 24px; }
+        .baca-chat-typing-dots { display: flex; gap: 3px; }
+        .baca-chat-typing-dots span {
+            width: 5px; height: 5px; border-radius: 50%; background: #10b981;
+            animation: bacaBounce 1.2s infinite ease-in-out;
         }
-        .baca-chat-typing span:nth-child(2) { animation-delay: 0.15s; }
-        .baca-chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        .baca-chat-typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .baca-chat-typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+        .baca-chat-typing-text {
+            font-size: 0.78rem; color: #94a3b8; font-style: italic;
+            animation: bacaTypingFade 0.4s ease;
+        }
+        @keyframes bacaTypingFade {
+            from { opacity: 0; transform: translateY(3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         @keyframes bacaBounce {
             0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
             30% { transform: translateY(-4px); opacity: 1; }
@@ -357,12 +366,37 @@
         addMsg('user', message);
         input.value = '';
 
-        // Typing indicator
+        // Typing indicator — jovial rotating Islamic messages instead of plain dots
         const typing = document.createElement('div');
         typing.className = 'baca-chat-msg ai';
-        typing.innerHTML = '<div class="baca-chat-msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="baca-chat-msg-bubble"><div class="baca-chat-typing"><span></span><span></span><span></span></div></div>';
+        typing.innerHTML = '<div class="baca-chat-msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="baca-chat-msg-bubble"><div class="baca-chat-typing"><div class="baca-chat-typing-dots"><span></span><span></span><span></span></div><span class="baca-chat-typing-text">Bismillah…</span></div></div>';
         messagesEl.appendChild(typing);
         messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        // Rotate through jovial/Islamic thinking messages every 2.5s
+        const thinkingMessages = [
+            'Bismillah…',
+            'Thinking…',
+            'Reflecting on that…',
+            'Consulting the verses…',
+            'Almost there…',
+            'Just a sec…',
+            'Pondering your question…',
+            'Seeking the right answer…',
+            'A moment, in shaa Allah…',
+            'Gathering thoughts…',
+        ];
+        let msgIdx = 0;
+        const typingTextEl = typing.querySelector('.baca-chat-typing-text');
+        const typingInterval = setInterval(() => {
+            msgIdx = (msgIdx + 1) % thinkingMessages.length;
+            if (typingTextEl) {
+                typingTextEl.style.animation = 'none';
+                typingTextEl.offsetHeight; // trigger reflow
+                typingTextEl.textContent = thinkingMessages[msgIdx];
+                typingTextEl.style.animation = 'bacaTypingFade 0.4s ease';
+            }
+        }, 2500);
 
         try {
             const res = await fetch('/api/chat', {
@@ -371,6 +405,7 @@
                 body: JSON.stringify({ message, history: chatHistory })
             });
             const data = await res.json();
+            clearInterval(typingInterval);
             typing.remove();
 
             if (data.reply) {
@@ -383,6 +418,7 @@
                 addMsg('ai', errMsg);
             }
         } catch (err) {
+            clearInterval(typingInterval);
             typing.remove();
             addMsg('ai', 'I cannot connect to the AI server. If you are viewing this as a static file, please run <code>node server.js</code> and open <code>http://localhost:3000</code>. <br><br>Or <a href="ask.html">open the full chat page</a>.', true);
         } finally {
