@@ -514,12 +514,20 @@
         window.addEventListener('scroll', handleScroll, { passive: true });
     }
 
-    // === Main: drawer always; tab bar ONLY in standalone mode ===
+    // === Main: drawer on desktop+mobile browser; tab bar + NO drawer in standalone ===
     function init() {
-        integrate(); // hamburger drawer (works everywhere — desktop + mobile browser + standalone)
-        // Tab bar: ONLY when running as an installed PWA (standalone mode)
         if (isStandaloneMode()) {
+            // Installed app: tab bar only, hide the hamburger button
             integrateTabBar();
+            // Still build the drawer (so "More" sheet links work) but hide the toggle button
+            integrate();
+            // Hide the hamburger button in standalone mode — the tab bar replaces it
+            var style = document.createElement('style');
+            style.textContent = '.baca-nav-toggle { display: none !important; }';
+            document.head.appendChild(style);
+        } else {
+            // Desktop / mobile browser: hamburger drawer only, no tab bar
+            integrate();
         }
     }
 

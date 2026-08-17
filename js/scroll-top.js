@@ -198,17 +198,20 @@
           color: #059669;
         }
 
-        /* Mobile — sit above the tab bar (only shows in standalone mode) */
+        /* Mobile — smaller button, sit above the tab bar (standalone) or bottom-left (browser) */
         @media (max-width: 768px) {
           .baca-scroll-top {
-            bottom: calc(72px + env(safe-area-inset-bottom, 0px));
-            left: 1rem;
-            width: 44px;
-            height: 44px;
+            bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+            left: 0.75rem;
+            width: 38px;
+            height: 38px;
           }
           .baca-scroll-top-icon {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
+          }
+          .baca-scroll-top-glow {
+            inset: -6px;
           }
         }
 
