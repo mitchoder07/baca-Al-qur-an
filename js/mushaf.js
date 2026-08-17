@@ -677,19 +677,41 @@ async function fetchSurahData(surahNum) {
     // 5. Remove Bismillah prefix from ayah 1 of surahs (except Surah 1 where it IS ayah 1,
     //    and Surah 9 which has no Bismillah).
     //    The Bismillah is always exactly 4 words: بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-    //    We use a simple word-count approach: if the first word is "بِسْمِ", strip the first 4 words.
-    //    This is much more robust than regex matching which fails on Unicode variations.
+    //
+    //    Some surahs from the API (e.g. Surah At-Tin #95, Surah Al-Qadr #97) use slightly
+    //    different Unicode encodings for the bismillah — different diacritics, wasla marks,
+    //    or superscript alef. A literal startsWith("بِسْمِ") check fails on these.
+    //
+    //    Fix: strip ALL Arabic diacritics first, then check if the normalized text starts
+    //    with the base letters "بسم" (B-S-M). If yes, strip the first 4 words from BOTH
+    //    the plain text AND the tajweed text so they stay in sync.
     if (surahNum !== 1 && surahNum !== 9 && verses[0]) {
         const v0 = verses[0];
         // Strip BOM if present
         v0.text = v0.text.replace(/^\uFEFF/, "");
         v0.tajweedText = (v0.tajweedText || "").replace(/^\uFEFF/, "");
-        // Check if text starts with "بِسْمِ" (the first word of Bismillah)
-        // Use startsWith with just the base letters to handle diacritic variations
-        if (v0.text.startsWith("بِسْمِ")) {
+
+        // Strip Arabic diacritics (tashkeel) for a robust base-letter check
+        // Diacritics range: \u0610-\u061A, \u064B-\u065F, \u0670, \u06D6-\u06ED, \u0640 (kashida)
+        // Also remove \u0653 (madda above), \u0654 (hamza above), \u0655 (hamza below)
+        const stripDiacritics = (s) => s.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640\u0653-\u0655\u08D4-\u08FF]/g, '');
+        const normalizedText = stripDiacritics(v0.text).trim();
+
+        // Check if normalized text starts with "بسم" (the base letters of Bismillah's first word)
+        if (normalizedText.startsWith("بسم")) {
+            // Strip first 4 words from plain text
             const words = v0.text.split(/\s+/);
             if (words.length > 4) {
                 v0.text = words.slice(4).join(" ");
+            }
+            // Also strip first 4 words from tajweed text so they stay in sync.
+            // The tajweed text has [rule[text]] markup, but the Bismillah portion
+            // is still space-separated at the top level, so split(/\s+/) works.
+            if (v0.tajweedText) {
+                const tajWords = v0.tajweedText.split(/\s+/);
+                if (tajWords.length > 4) {
+                    v0.tajweedText = tajWords.slice(4).join(" ");
+                }
             }
         }
     }

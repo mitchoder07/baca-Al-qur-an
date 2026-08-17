@@ -82,23 +82,106 @@
         'x': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
     };
 
-    // Baca logo SVG
-    var LOGO_SVG = '<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-        '<path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" fill="url(#bacaNavLogoGrad)" opacity="0.18"/>' +
-        '<path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z" stroke="url(#bacaNavLogoGrad)" stroke-width="1.8" stroke-linejoin="round"/>' +
-        '<line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaNavLogoGrad)" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z" fill="url(#bacaNavLogoGrad)" opacity="0.9"/>' +
-        '<defs><linearGradient id="bacaNavLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">' +
-        '<stop offset="0" stop-color="#10b981"/><stop offset="0.5" stop-color="#06b6d4"/><stop offset="1" stop-color="#6366f1"/>' +
-        '</linearGradient></defs></svg>';
+    // Baca logo — new calligraphic logo image (replaces old SVG book)
+    var LOGO_SVG = '<img class="baca-logo-icon" src="' + R('images/baca-logo.webp') + '" alt="Baca logo" width="32" height="32" loading="eager">';
 
-    // Inject CSS link if not already present
+    // Inject CSS links if not already present
     var cssHref = R('css/shared-nav.css');
     if (!document.querySelector('link[href*="shared-nav.css"]')) {
         var link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = cssHref;
         document.head.appendChild(link);
+    }
+    // Inject baca-logo.css (new logo + Reem Kufi font + green gradient)
+    var logoCssHref = R('css/baca-logo.css');
+    if (!document.querySelector('link[href*="baca-logo.css"]')) {
+        var logoLink = document.createElement('link');
+        logoLink.rel = 'stylesheet';
+        logoLink.href = logoCssHref;
+        document.head.appendChild(logoLink);
+    }
+    // Inject tab bar CSS (only applies in standalone mode via the media query)
+    if (!document.getElementById('baca-tab-bar-css')) {
+        var tabCss = document.createElement('style');
+        tabCss.id = 'baca-tab-bar-css';
+        tabCss.textContent = `
+            .baca-tab-bar { display: none; }
+            .baca-more-sheet { display: none; }
+            .baca-more-backdrop { display: none; }
+            /* Tab bar ONLY shows in standalone mode (installed PWA) */
+            @media (display-mode: standalone) {
+                .baca-tab-bar {
+                    display: flex !important;
+                    position: fixed; bottom: 0; left: 0; right: 0;
+                    height: calc(60px + env(safe-area-inset-bottom, 0px));
+                    padding-bottom: env(safe-area-inset-bottom, 0px);
+                    background: rgba(15, 23, 42, 0.95);
+                    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                    border-top: 1px solid rgba(255, 255, 255, 0.08);
+                    z-index: 99998; align-items: stretch; justify-content: space-around;
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    -webkit-tap-highlight-color: transparent;
+                }
+                body.baca-has-tab-bar { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
+                body.baca-has-tab-bar .baca-tab-bar.hidden { transform: translateY(100%); }
+                .baca-tab-item {
+                    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    gap: 2px; padding: 8px 4px 6px; background: none; border: none; color: #64748b;
+                    cursor: pointer; text-decoration: none; font-family: 'Poppins', sans-serif;
+                    font-size: 0.65rem; font-weight: 500; line-height: 1;
+                    transition: color 0.18s ease, transform 0.12s ease;
+                    -webkit-tap-highlight-color: transparent; min-width: 0; position: relative;
+                }
+                .baca-tab-item:active { transform: scale(0.92); }
+                .baca-tab-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; transition: transform 0.2s ease; }
+                .baca-tab-icon svg { width: 22px; height: 22px; display: block; }
+                .baca-tab-label { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+                .baca-tab-item.active { color: #10b981; }
+                .baca-tab-item.active .baca-tab-icon svg { stroke-width: 2.4; }
+                .baca-tab-item.active::before {
+                    content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+                    width: 5px; height: 5px; border-radius: 50%;
+                    background: linear-gradient(135deg, #10b981, #06b6d4);
+                    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+                }
+                body.light-mode .baca-tab-bar { background: rgba(255, 255, 255, 0.95); border-top-color: rgba(0, 0, 0, 0.08); }
+                body.light-mode .baca-tab-item { color: #94a3b8; }
+                body.light-mode .baca-tab-item.active { color: #059669; }
+                .baca-more-sheet {
+                    display: block; position: fixed; bottom: 0; left: 0; right: 0;
+                    background: #1e293b; border-radius: 20px 20px 0 0;
+                    padding: 8px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+                    z-index: 100000; transform: translateY(100%);
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3); max-height: 70vh; overflow-y: auto;
+                }
+                .baca-more-sheet.open { transform: translateY(0); }
+                .baca-more-sheet-handle { width: 40px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; margin: 0 auto 12px; }
+                .baca-more-sheet-title { font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; }
+                .baca-more-sheet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding-bottom: 8px; }
+                .baca-more-sheet-item {
+                    display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px;
+                    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.06);
+                    border-radius: 14px; text-decoration: none; color: #cbd5e1;
+                    font-family: 'Poppins', sans-serif; font-size: 0.75rem; font-weight: 500;
+                    transition: background 0.18s, transform 0.12s, border-color 0.18s;
+                    -webkit-tap-highlight-color: transparent;
+                }
+                .baca-more-sheet-item:active { transform: scale(0.94); }
+                .baca-more-sheet-item.active { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #10b981; }
+                .baca-more-sheet-item-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+                .baca-more-sheet-item-icon svg { width: 26px; height: 26px; }
+                body.light-mode .baca-more-sheet { background: #f8fafc; box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1); }
+                body.light-mode .baca-more-sheet-handle { background: rgba(0, 0, 0, 0.15); }
+                body.light-mode .baca-more-sheet-title { color: #64748b; }
+                body.light-mode .baca-more-sheet-item { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.06); color: #475569; }
+                body.light-mode .baca-more-sheet-item.active { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.4); color: #059669; }
+                .baca-more-backdrop { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 99999; opacity: 0; transition: opacity 0.3s; }
+                .baca-more-backdrop.open { display: block; opacity: 1; }
+            }
+        `;
+        document.head.appendChild(tabCss);
     }
 
     // Remove old hamburger buttons and mobile-nav divs
@@ -307,9 +390,142 @@
         };
     }
 
+    // ========================================================================
+    // MOBILE BOTTOM TAB BAR — ONLY IN STANDALONE (INSTALLED APP) MODE
+    // Mobile browser users get the hamburger drawer (above) instead.
+    // Installed app users get the native-style bottom tab bar because:
+    //   1. It's thumb-reachable (better UX for one-handed use)
+    //   2. It replaces the browser chrome that's no longer there
+    //   3. It's the standard mobile-app navigation pattern
+    // ========================================================================
+
+    function isStandaloneMode() {
+        return window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true ||
+            document.referrer.includes('android-app://');
+    }
+
+    var PRIMARY_TABS = [
+        { label: 'Home', icon: 'home', href: R('index.html'), page: 'index.html' },
+        { label: 'Read', icon: 'book-open', href: R('mushaf.html'), page: 'mushaf.html' },
+        { label: 'Adhkar', icon: 'sparkles', href: R('adhkar.html'), page: 'adhkar.html' },
+        { label: 'Pray', icon: 'compass', href: R('salah.html'), page: 'salah.html' },
+        { label: 'Ask', icon: 'message-circle', href: R('ask.html'), page: 'ask.html' },
+    ];
+
+    var SECONDARY_ITEMS = [
+        { label: 'Reciters', icon: 'mic', href: R('reciters/index.html'), page: 'reciters/index.html', subdir: 'reciters/' },
+        { label: 'Word Game', icon: 'gamepad-2', href: R('game.html'), page: 'game.html' },
+    ];
+
+    var TAB_ICONS = {
+        'home': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+        'book-open': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+        'sparkles': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>',
+        'compass': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+        'message-circle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+        'grid': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
+        'mic': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>',
+        'gamepad-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.152A4 4 0 0 0 17.32 5z"/></svg>',
+    };
+
+    function buildTabBar() {
+        var bar = document.createElement('nav');
+        bar.className = 'baca-tab-bar';
+        bar.id = 'baca-tab-bar';
+        bar.setAttribute('aria-label', 'Primary navigation');
+        PRIMARY_TABS.forEach(function (tab) {
+            var a = document.createElement('a');
+            a.className = 'baca-tab-item' + (isActive(tab) ? ' active' : '');
+            a.href = tab.href;
+            a.setAttribute('aria-label', tab.label);
+            a.innerHTML = '<span class="baca-tab-icon">' + (TAB_ICONS[tab.icon] || '') + '</span><span class="baca-tab-label">' + tab.label + '</span>';
+            bar.appendChild(a);
+        });
+        var moreBtn = document.createElement('button');
+        moreBtn.className = 'baca-tab-item baca-tab-more';
+        moreBtn.type = 'button';
+        moreBtn.setAttribute('aria-label', 'More options');
+        moreBtn.innerHTML = '<span class="baca-tab-icon">' + (TAB_ICONS['grid'] || '') + '</span><span class="baca-tab-label">More</span>';
+        bar.appendChild(moreBtn);
+        return bar;
+    }
+
+    function buildMoreSheet() {
+        var sheet = document.createElement('div');
+        sheet.className = 'baca-more-sheet';
+        sheet.id = 'baca-more-sheet';
+        sheet.setAttribute('role', 'dialog');
+        sheet.setAttribute('aria-modal', 'true');
+        sheet.setAttribute('aria-label', 'More options');
+        sheet.innerHTML = '<div class="baca-more-sheet-handle"></div><div class="baca-more-sheet-title">More</div>';
+        var grid = document.createElement('div');
+        grid.className = 'baca-more-sheet-grid';
+        SECONDARY_ITEMS.forEach(function (item) {
+            var a = document.createElement('a');
+            a.className = 'baca-more-sheet-item' + (isActive(item) ? ' active' : '');
+            a.href = item.href;
+            a.innerHTML = '<span class="baca-more-sheet-item-icon">' + (TAB_ICONS[item.icon] || '') + '</span><span class="baca-more-sheet-item-label">' + item.label + '</span>';
+            grid.appendChild(a);
+        });
+        sheet.appendChild(grid);
+        return sheet;
+    }
+
+    var lastScrollY = 0;
+    var tabBarHidden = false;
+
+    function handleScroll() {
+        var bar = document.getElementById('baca-tab-bar');
+        if (!bar) return;
+        var currentY = window.scrollY;
+        var delta = currentY - lastScrollY;
+        if (currentY < 50) { bar.classList.remove('hidden'); tabBarHidden = false; lastScrollY = currentY; return; }
+        if (Math.abs(delta) < 10) return;
+        if (delta > 0 && !tabBarHidden) { bar.classList.add('hidden'); tabBarHidden = true; }
+        else if (delta < 0 && tabBarHidden) { bar.classList.remove('hidden'); tabBarHidden = false; }
+        lastScrollY = currentY;
+    }
+
+    function integrateTabBar() {
+        if (document.getElementById('baca-tab-bar')) return;
+        var bar = buildTabBar();
+        var sheet = buildMoreSheet();
+        var backdrop = document.createElement('div');
+        backdrop.className = 'baca-more-backdrop';
+        backdrop.id = 'baca-more-backdrop';
+        document.body.appendChild(bar);
+        document.body.appendChild(backdrop);
+        document.body.appendChild(sheet);
+        document.body.classList.add('baca-has-tab-bar');
+        function openMoreSheet() { sheet.classList.add('open'); backdrop.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeMoreSheet() { sheet.classList.remove('open'); backdrop.classList.remove('open'); document.body.style.overflow = ''; }
+        bar.querySelector('.baca-tab-more').addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (sheet.classList.contains('open')) closeMoreSheet(); else openMoreSheet();
+        });
+        backdrop.addEventListener('click', closeMoreSheet);
+        sheet.querySelectorAll('.baca-more-sheet-item').forEach(function (a) {
+            a.addEventListener('click', function () { setTimeout(closeMoreSheet, 150); });
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && sheet.classList.contains('open')) closeMoreSheet();
+        });
+        window.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    // === Main: drawer always; tab bar ONLY in standalone mode ===
+    function init() {
+        integrate(); // hamburger drawer (works everywhere — desktop + mobile browser + standalone)
+        // Tab bar: ONLY when running as an installed PWA (standalone mode)
+        if (isStandaloneMode()) {
+            integrateTabBar();
+        }
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', integrate);
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        integrate();
+        init();
     }
 })();

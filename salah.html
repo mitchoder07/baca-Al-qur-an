@@ -5,6 +5,18 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- PWA -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Read the Qur'an with 604-page Uthmani mushaf, 34+ reciters, daily adhkar, prayer guide, and AI assistant.">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Baca">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- New logo styles + Reem Kufi font + green gradient -->
+    <link rel="stylesheet" href="/css/baca-logo.css">
     <title>How to Pray Salah | Baca</title>
     <meta name="description"
         content="A complete step-by-step visual guide to performing Salah (the Islamic prayer), including the five daily prayers, every position, the du'as recited, common mistakes and tips for khushūʿ (concentration).">
@@ -1251,36 +1263,7 @@
     <!-- NAVBAR -->
     <header class="navbar">
         <a href="index.html" class="logo">
-            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true">
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                    fill="url(#bacaLogoGrad)" opacity="0.18" />
-                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
-                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
-                    stroke-linecap="round" />
-                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
-                    fill="url(#bacaLogoGrad)" opacity="0.9" />
-                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
-                    stroke-linecap="round" />
-                <defs>
-                    <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stop-color="#10b981" />
-                        <stop offset="0.5" stop-color="#06b6d4" />
-                        <stop offset="1" stop-color="#6366f1" />
-                    </linearGradient>
-                </defs>
-            </svg>
+            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
             <span class="logo-text">Baca</span>
         </a>
 
@@ -1445,45 +1428,12 @@
     </div>
 
     <!-- BACK TO TOP -->
-    <button class="salah-back-top" id="backTopBtn" title="Back to top" aria-label="Back to top">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
-
     <!-- FOOTER -->
     <footer class="baca-footer">
         <div class="footer-content">
             <div class="footer-col footer-brand">
                 <div class="footer-logo">
-                    <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                            fill="url(#footerLogoGrad)" opacity="0.18" />
-                        <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
-                            stroke="url(#footerLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
-                        <line x1="24" y1="14" x2="24" y2="38" stroke="url(#footerLogoGrad)" stroke-width="1.5"
-                            stroke-linecap="round" />
-                        <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
-                            fill="url(#footerLogoGrad)" opacity="0.9" />
-                        <line x1="12" y1="18" x2="20" y2="17" stroke="url(#footerLogoGrad)" stroke-width="1"
-                            opacity="0.5" stroke-linecap="round" />
-                        <line x1="12" y1="22" x2="20" y2="21" stroke="url(#footerLogoGrad)" stroke-width="1"
-                            opacity="0.5" stroke-linecap="round" />
-                        <line x1="12" y1="26" x2="20" y2="25" stroke="url(#footerLogoGrad)" stroke-width="1"
-                            opacity="0.5" stroke-linecap="round" />
-                        <line x1="28" y1="17" x2="36" y2="18" stroke="url(#footerLogoGrad)" stroke-width="1"
-                            opacity="0.5" stroke-linecap="round" />
-                        <line x1="28" y1="21" x2="36" y2="22" stroke="url(#footerLogoGrad)" stroke-width="1"
-                            opacity="0.5" stroke-linecap="round" />
-                        <line x1="28" y1="25" x2="36" y2="26" stroke="url(#footerLogoGrad)" stroke-width="1"
-                            opacity="0.5" stroke-linecap="round" />
-                        <defs>
-                            <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="48" y2="48"
-                                gradientUnits="userSpaceOnUse">
-                                <stop offset="0" stop-color="#10b981" />
-                                <stop offset="0.5" stop-color="#06b6d4" />
-                                <stop offset="1" stop-color="#6366f1" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
                     <span class="footer-logo-text">Baca</span>
                 </div>
                 <p class="footer-tagline">Read • Reflect • Pray</p>
@@ -1512,6 +1462,7 @@
                 <h4>Resources</h4>
                 <a href="index.html#bookmarks">Bookmarks</a>
                 <a href="#" id="footer-theme-toggle">Toggle Theme</a>
+                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
                 <a href="#top" id="footer-top">Back to Top</a>
             </div>
 
@@ -2160,16 +2111,9 @@
                 stepEls.forEach(el => spy.observe(el));
             }
 
-            /* BACK TO TOP */
+            /* BACK TO TOP — now handled by scroll-top.js */
             function initBackTop() {
-                const btn = document.getElementById('backTopBtn');
                 const footerTop = document.getElementById('footer-top');
-                window.addEventListener('scroll', () => {
-                    btn.classList.toggle('show', window.scrollY > 600);
-                }, { passive: true });
-                btn.addEventListener('click', () => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
                 if (footerTop) {
                     footerTop.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -2252,6 +2196,10 @@
     <script src="js/shared-nav.js"></script>
     <script src="js/jumuah.js"></script>
 
+    <!-- PWA: Service Worker + install prompt -->
+    <script src="/js/pwa-register.js"></script>
+    <!-- Professional scroll-to-top -->
+    <script src="/js/scroll-top.js"></script>
 </body>
 
 </html>

@@ -273,6 +273,12 @@
     document.head.appendChild(style);
 
     // Create FAB button
+    // HIDDEN in standalone (installed app) mode — installed users have the
+    // "Ask" tab in the bottom tab bar, which is easier to reach than a FAB.
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes('android-app://');
+
     const fab = document.createElement('button');
     fab.className = 'baca-chat-fab';
     fab.innerHTML = '<i class="fa-solid fa-comments"></i>';
@@ -283,7 +289,12 @@
             setTimeout(() => input.focus(), 200);
         }
     };
-    document.body.appendChild(fab);
+
+    // Only append the FAB if NOT in standalone (installed app) mode.
+    // Installed users access Ask via the bottom tab bar instead.
+    if (!isStandalone) {
+        document.body.appendChild(fab);
+    }
 
     // Create chat panel
     const panel = document.createElement('div');
