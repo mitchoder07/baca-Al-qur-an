@@ -516,18 +516,22 @@
 
     // === Main: drawer on desktop+mobile browser; tab bar + NO drawer in standalone ===
     function init() {
+        // Inject the standalone-mode CSS FIRST (before any DOM building) so the
+        // hamburger button is hidden immediately — no flash of the button in the app.
         if (isStandaloneMode()) {
-            // Installed app: tab bar only, hide the hamburger button
-            integrateTabBar();
-            // Still build the drawer (so "More" sheet links work) but hide the toggle button
-            integrate();
-            // Hide the hamburger button in standalone mode — the tab bar replaces it
             var style = document.createElement('style');
+            style.id = 'baca-standalone-hide-toggle';
             style.textContent = '.baca-nav-toggle { display: none !important; }';
             document.head.appendChild(style);
-        } else {
-            // Desktop / mobile browser: hamburger drawer only, no tab bar
-            integrate();
+        }
+
+        // Build the drawer (needed for "More" sheet links in standalone, and for
+        // the main navigation on desktop/mobile browser)
+        integrate();
+
+        // In standalone mode, also build the tab bar
+        if (isStandaloneMode()) {
+            integrateTabBar();
         }
     }
 
