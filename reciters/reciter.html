@@ -1061,7 +1061,7 @@
     </section>
 
     <audio id="reciter-audio"></audio>
-    <button class="back-top" id="back-top"><i class="fa-solid fa-chevron-up"></i></button>
+    <!-- Old back-top button removed — now handled by /js/scroll-top.js -->
 
     <script>
 
@@ -1611,10 +1611,8 @@
                 : [...SURAH_LIST]);
         });
 
-        // BACK TO TOP
-        const backTop = document.getElementById("back-top");
-        window.addEventListener("scroll", () => backTop.classList.toggle("show", window.scrollY > 400));
-        backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+        // BACK TO TOP — now handled by /js/scroll-top.js (professional version)
+        // (old back-top button + JS removed to avoid duplicate)
 
         // INIT
         populateHero();
