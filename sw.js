@@ -1,7 +1,7 @@
 /* sw.js — Baca Qur'an Service Worker
  * Caching: HTML=network-first, assets=cache-first, API=network-only, CDN=stale-while-revalidate
  */
-const CACHE_VERSION = 'baca-v2';
+const CACHE_VERSION = 'baca-v3';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
