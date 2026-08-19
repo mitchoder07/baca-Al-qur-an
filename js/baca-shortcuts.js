@@ -1,0 +1,259 @@
+/* baca-shortcuts.js — Floating section navigator for the Baca home page
+ *
+ * Shows a set of quick-jump shortcut pills on the right side of the screen
+ * (desktop) or a horizontal scrollable bar (mobile) that let users jump
+ * directly to any section of the long home page.
+ *
+ * The shortcuts detect the page's section IDs and build pills automatically.
+ * Active section is highlighted based on scroll position (IntersectionObserver).
+ */
+(function () {
+  'use strict';
+
+  // Only run on index.html
+  if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {
+    // Also match root path
+    if (window.location.pathname !== '/' && window.location.pathname !== '') return;
+  }
+
+  // Section definitions — id + label + icon
+  var SECTIONS = [
+    { id: 'hero', label: 'Home', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
+    { id: 'surah-explorer', label: 'Qur\'an', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' },
+    { id: 'daily-ayah', label: 'Daily Ayah', icon: 'M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z' },
+    { id: 'topics', label: 'Topics', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+    { id: 'journeys', label: 'Journeys', icon: 'M3 12h18M3 6h18M3 18h18' },
+    { id: 'reading-progress', label: 'Progress', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+    { id: 'daily-challenge', label: 'Challenge', icon: 'M12 2l3.09 6.26L22 9l-5 4.74L18.18 21L12 17.27L5.82 21L7 13.74L2 9l6.91-0.74L12 2z' },
+    { id: 'achievements', label: 'Awards', icon: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z' },
+    { id: 'bookmarks', label: 'Bookmarks', icon: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
+  ];
+
+  var nav = null;
+  var activeId = null;
+
+  function buildNav() {
+    // Check which sections actually exist on the page
+    var available = SECTIONS.filter(function (s) {
+      return document.getElementById(s.id);
+    });
+
+    if (available.length === 0) return;
+
+    nav = document.createElement('nav');
+    nav.className = 'baca-shortcuts-nav';
+    nav.setAttribute('aria-label', 'Page sections');
+
+    available.forEach(function (section) {
+      var btn = document.createElement('button');
+      btn.className = 'baca-shortcut-pill';
+      btn.type = 'button';
+      btn.dataset.target = section.id;
+      btn.setAttribute('aria-label', section.label);
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="' + section.icon + '"/>' +
+        '</svg>' +
+        '<span class="baca-shortcut-label">' + section.label + '</span>';
+
+      btn.addEventListener('click', function () {
+        var el = document.getElementById(section.id);
+        if (el) {
+          var offset = 80; // navbar height
+          var top = el.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      });
+
+      nav.appendChild(btn);
+    });
+
+    document.body.appendChild(nav);
+
+    // Inject CSS
+    if (!document.getElementById('baca-shortcuts-css')) {
+      var css = document.createElement('style');
+      css.id = 'baca-shortcuts-css';
+      css.textContent = `
+        .baca-shortcuts-nav {
+          position: fixed;
+          right: 1.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 9997;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 8px;
+          background: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-radius: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease;
+        }
+        .baca-shortcuts-nav.visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .baca-shortcut-pill {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 12px;
+          background: none;
+          border: none;
+          border-radius: 10px;
+          color: #64748b;
+          cursor: pointer;
+          font-family: 'Poppins', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 500;
+          white-space: nowrap;
+          transition: all 0.2s ease;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .baca-shortcut-pill svg {
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
+        }
+        .baca-shortcut-pill:hover {
+          background: rgba(16, 185, 129, 0.1);
+          color: #34d399;
+        }
+        .baca-shortcut-pill.active {
+          background: rgba(16, 185, 129, 0.15);
+          color: #10b981;
+        }
+        .baca-shortcut-label {
+          max-width: 0;
+          overflow: hidden;
+          transition: max-width 0.25s ease;
+        }
+        .baca-shortcut-pill:hover .baca-shortcut-label,
+        .baca-shortcut-pill.active .baca-shortcut-label {
+          max-width: 120px;
+        }
+
+        /* Light mode */
+        body.light-mode .baca-shortcuts-nav {
+          background: rgba(255, 255, 255, 0.7);
+          border-color: rgba(0, 0, 0, 0.06);
+        }
+        body.light-mode .baca-shortcut-pill {
+          color: #94a3b8;
+        }
+        body.light-mode .baca-shortcut-pill:hover {
+          background: rgba(16, 185, 129, 0.1);
+          color: #059669;
+        }
+        body.light-mode .baca-shortcut-pill.active {
+          background: rgba(16, 185, 129, 0.12);
+          color: #059669;
+        }
+
+        /* Mobile — horizontal bar at the top */
+        @media (max-width: 768px) {
+          .baca-shortcuts-nav {
+            position: fixed;
+            right: auto;
+            left: 50%;
+            top: calc(60px + env(safe-area-inset-top, 0px));
+            transform: translateX(-50%);
+            flex-direction: row;
+            gap: 4px;
+            padding: 6px;
+            border-radius: 14px;
+            max-width: calc(100vw - 2rem);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          .baca-shortcuts-nav::-webkit-scrollbar { display: none; }
+          .baca-shortcut-pill {
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            gap: 5px;
+          }
+          .baca-shortcut-pill svg { width: 14px; height: 14px; }
+          .baca-shortcut-label {
+            max-width: 100px; /* always show label on mobile */
+          }
+          .baca-shortcut-pill:hover .baca-shortcut-label,
+          .baca-shortcut-pill.active .baca-shortcut-label {
+            max-width: 100px;
+          }
+        }
+
+        /* Standalone mode — adjust top offset for the navbar */
+        @media (display-mode: standalone) {
+          @media (max-width: 768px) {
+            .baca-shortcuts-nav {
+              top: calc(56px + env(safe-area-inset-top, 0px));
+            }
+          }
+        }
+      `;
+      document.head.appendChild(css);
+    }
+  }
+
+  // Track active section
+  function setupObserver() {
+    if (!nav) return;
+
+    var pills = nav.querySelectorAll('.baca-shortcut-pill');
+
+    // Show/hide the nav based on scroll position
+    function checkVisibility() {
+      if (window.scrollY > 300) {
+        nav.classList.add('visible');
+      } else {
+        nav.classList.remove('visible');
+      }
+    }
+
+    // Use IntersectionObserver to detect active section
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.id;
+          pills.forEach(function (pill) {
+            if (pill.dataset.target === id) {
+              pill.classList.add('active');
+            } else {
+              pill.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, {
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0,
+    });
+
+    // Observe each section
+    SECTIONS.forEach(function (s) {
+      var el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+
+    window.addEventListener('scroll', checkVisibility, { passive: true });
+    checkVisibility();
+  }
+
+  function init() {
+    buildNav();
+    setupObserver();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

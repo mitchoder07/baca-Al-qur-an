@@ -71,7 +71,7 @@
     installBanner.innerHTML =
       '<div class="baca-install-banner-inner">' +
         '<div class="baca-install-banner-icon">' +
-          '<img src="/images/baca-logo-small.png" alt="Baca" style="width:28px;height:28px;border-radius:7px">' +
+          '<img src="/images/baca-logo.webp" alt="Baca" style="width:32px;height:32px">' +
         '</div>' +
         '<div class="baca-install-banner-text">' +
           '<strong>Install Baca</strong>' +
@@ -109,7 +109,7 @@
       '<div class="baca-install-modal-overlay"></div>' +
       '<div class="baca-install-modal-card">' +
         '<button class="baca-install-modal-close" aria-label="Close">&times;</button>' +
-        '<img src="/images/baca-logo.png" alt="Baca" style="width:64px;height:64px;border-radius:14px;margin:0 auto 12px;display:block">' +
+        '<img src="/images/baca-logo.webp" alt="Baca" style="width:72px;height:72px;margin:0 auto 12px;display:block">' +
         '<h3>Install Baca</h3>' +
         (isIOS ?
           '<p>Add Baca to your home screen for a full-screen, app-like experience:</p>' +
@@ -178,7 +178,7 @@
     }
     #baca-install-banner.baca-install-banner-visible { transform: translateY(0); }
     .baca-install-banner-inner { max-width: 600px; margin: 0 auto; display: flex; align-items: center; gap: 0.75rem; }
-    .baca-install-banner-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #06b6d4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .baca-install-banner-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .baca-install-banner-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
     .baca-install-banner-text strong { color: #f1f5f9; font-size: 0.9rem; font-weight: 600; font-family: 'Poppins', sans-serif; }
     .baca-install-banner-text span { color: #94a3b8; font-size: 0.78rem; font-family: 'Poppins', sans-serif; }
