@@ -1,8 +1,13 @@
 /* baca-shortcuts.js — Floating section navigator for the Baca home page
  *
- * Shows a set of quick-jump shortcut pills on the right side of the screen
+ * Shows a set of quick-jump shortcut pills on the LEFT side of the screen
  * (desktop) or a horizontal scrollable bar (mobile) that let users jump
  * directly to any section of the long home page.
+ *
+ * Positioned on the LEFT (vertically centered) so it doesn't block the
+ * chat FAB on the bottom-right. The scroll-to-top/scroll-to-bottom buttons
+ * are at the bottom-left, but the shortcuts are vertically centered —
+ * no overlap.
  *
  * The shortcuts detect the page's section IDs and build pills automatically.
  * Active section is highlighted based on scroll position (IntersectionObserver).
@@ -52,7 +57,7 @@
       btn.setAttribute('aria-label', section.label);
       btn.innerHTML =
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-          '<path d="' + section.icon + '"/>' +
+        '<path d="' + section.icon + '"/>' +
         '</svg>' +
         '<span class="baca-shortcut-label">' + section.label + '</span>';
 
@@ -68,6 +73,32 @@
       nav.appendChild(btn);
     });
 
+    // --- NEW: Minimize / Expand Toggle Button ---
+    var toggleBtn = document.createElement('button');
+    toggleBtn.className = 'baca-shortcut-pill baca-shortcut-toggle';
+    toggleBtn.type = 'button';
+    toggleBtn.setAttribute('aria-label', 'Minimize shortcuts');
+    // X icon to minimize, List icon to expand
+    toggleBtn.innerHTML =
+      '<svg class="icon-minimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M18 6L6 18M6 6l12 12"/>' +
+      '</svg>' +
+      '<svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M3 12h18M3 6h18M3 18h18"/>' +
+      '</svg>';
+
+    toggleBtn.addEventListener('click', function () {
+      nav.classList.toggle('minimized');
+      if (nav.classList.contains('minimized')) {
+        toggleBtn.setAttribute('aria-label', 'Expand shortcuts');
+      } else {
+        toggleBtn.setAttribute('aria-label', 'Minimize shortcuts');
+      }
+    });
+
+    nav.appendChild(toggleBtn);
+    // ---------------------------------------------
+
     document.body.appendChild(nav);
 
     // Inject CSS
@@ -77,8 +108,8 @@
       css.textContent = `
         .baca-shortcuts-nav {
           position: fixed;
-          right: 1.5rem;
-          top: 50%;
+          left: 1.5rem;
+          top: calc(50% - 30px);
           transform: translateY(-50%);
           z-index: 9997;
           display: flex;
@@ -93,8 +124,13 @@
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
           opacity: 0;
           pointer-events: none;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.3s ease, border-radius 0.3s ease, padding 0.3s ease, transform 0.3s ease;
+          max-height: calc(100vh - 160px);
+          overflow-y: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
+        .baca-shortcuts-nav::-webkit-scrollbar { display: none; }
         .baca-shortcuts-nav.visible {
           opacity: 1;
           pointer-events: auto;
@@ -129,15 +165,44 @@
           background: rgba(16, 185, 129, 0.15);
           color: #10b981;
         }
+        /* The label expands to the RIGHT (since the nav is on the left side) */
         .baca-shortcut-label {
           max-width: 0;
           overflow: hidden;
           transition: max-width 0.25s ease;
+          white-space: nowrap;
         }
         .baca-shortcut-pill:hover .baca-shortcut-label,
         .baca-shortcut-pill.active .baca-shortcut-label {
           max-width: 120px;
         }
+
+        /* --- Toggle Button & Minimized State --- */
+        .baca-shortcut-toggle {
+          margin-top: 6px;
+          padding-top: 8px;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          justify-content: center;
+        }
+        .baca-shortcut-toggle .icon-expand { display: none; }
+        .baca-shortcut-toggle .icon-minimize { display: block; }
+        
+        .baca-shortcuts-nav.minimized {
+          padding: 6px;
+          border-radius: 50%; /* Shrinks into a bubble */
+        }
+        .baca-shortcuts-nav.minimized .baca-shortcut-pill:not(.baca-shortcut-toggle) {
+          display: none; /* Hide all section pills */
+        }
+        .baca-shortcuts-nav.minimized .baca-shortcut-toggle {
+          border-top: none;
+          margin-top: 0;
+          padding-top: 0;
+          padding: 8px;
+        }
+        .baca-shortcuts-nav.minimized .baca-shortcut-toggle .icon-minimize { display: none; }
+        .baca-shortcuts-nav.minimized .baca-shortcut-toggle .icon-expand { display: block; }
+        /* --------------------------------------- */
 
         /* Light mode */
         body.light-mode .baca-shortcuts-nav {
@@ -155,12 +220,14 @@
           background: rgba(16, 185, 129, 0.12);
           color: #059669;
         }
+        body.light-mode .baca-shortcut-toggle {
+          border-top-color: rgba(0, 0, 0, 0.06);
+        }
 
-        /* Mobile — horizontal bar at the top */
+        /* Mobile — horizontal bar at the top (centered, not blocking anything) */
         @media (max-width: 768px) {
           .baca-shortcuts-nav {
             position: fixed;
-            right: auto;
             left: 50%;
             top: calc(60px + env(safe-area-inset-top, 0px));
             transform: translateX(-50%);
@@ -170,8 +237,7 @@
             border-radius: 14px;
             max-width: calc(100vw - 2rem);
             overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            max-height: none;
           }
           .baca-shortcuts-nav::-webkit-scrollbar { display: none; }
           .baca-shortcut-pill {
@@ -186,6 +252,13 @@
           .baca-shortcut-pill:hover .baca-shortcut-label,
           .baca-shortcut-pill.active .baca-shortcut-label {
             max-width: 100px;
+          }
+          /* Hide minimize button on mobile */
+          .baca-shortcut-toggle { display: none !important; }
+          /* Reset minimized shape on mobile just in case */
+          .baca-shortcuts-nav.minimized {
+            border-radius: 14px;
+            padding: 6px;
           }
         }
 
@@ -206,7 +279,7 @@
   function setupObserver() {
     if (!nav) return;
 
-    var pills = nav.querySelectorAll('.baca-shortcut-pill');
+    var pills = nav.querySelectorAll('.baca-shortcut-pill:not(.baca-shortcut-toggle)');
 
     // Show/hide the nav based on scroll position
     function checkVisibility() {
