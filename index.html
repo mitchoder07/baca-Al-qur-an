@@ -1240,9 +1240,12 @@
                 <!-- AYAH QUICK JUMP -->
                 <div class="setting-group">
                     <label>Jump to Ayah</label>
-                    <div style="display:flex;gap:0.5rem;align-items:center;">
-                        <input type="number" id="reader-ayah-jump-input" class="reader-select" min="1" placeholder="Ayah #" style="flex:1;padding:8px 12px;text-align:center;">
-                        <button id="reader-ayah-jump-btn" class="toggle-btn active" style="white-space:nowrap;padding:8px 16px;">Go</button>
+                    <div class="drawer-buttons ayah-jump-row">
+                        <input type="number" id="reader-ayah-jump-input" class="reader-ayah-input" min="1" placeholder="Enter ayah number">
+                        <button id="reader-ayah-jump-btn" class="toggle-btn active ayah-jump-go-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:0.35rem;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            Jump
+                        </button>
                     </div>
                 </div>
 
@@ -1430,9 +1433,12 @@
 
                 <div class="mini-drawer-section">
                     <span class="mini-drawer-label">Jump to Ayah</span>
-                    <div class="mini-drawer-row">
-                        <input type="number" id="mini-ayah-jump-input" min="1" placeholder="#" style="flex:1;width:60px;padding:6px 10px;text-align:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:inherit;font-size:0.85rem;">
-                        <button id="mini-ayah-jump-btn" class="mini-mode-btn active" style="white-space:nowrap;">Go</button>
+                    <div class="mini-drawer-row ayah-jump-mini-row">
+                        <input type="number" id="mini-ayah-jump-input" class="reader-ayah-input" min="1" placeholder="Ayah #">
+                        <button id="mini-ayah-jump-btn" class="mini-mode-btn active">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:0.25rem;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            Jump
+                        </button>
                     </div>
                 </div>
 
