@@ -2687,3 +2687,69 @@ body.light-mode .tajweed-guide-item,
     width: 16px;
     height: 16px;
 }
+/* === AYAH QUICK JUMP (in surah banner) === */
+.ayah-quick-jump {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1rem;
+    justify-content: center;
+}
+.ayah-jump-input {
+    width: 120px;
+    padding: 8px 12px;
+    border: 1px solid var(--mushaf-card-border, rgba(255,255,255,0.1));
+    border-radius: 10px;
+    background: var(--mushaf-drawer-bg, rgba(15,23,42,0.6));
+    color: var(--mushaf-text, #f0f5f0);
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ayah-jump-input::placeholder { color: var(--mushaf-text-muted, #64748b); }
+.ayah-jump-input:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+.ayah-jump-input::-webkit-inner-spin-button,
+.ayah-jump-input::-webkit-outer-spin-button {
+    -webkit-appearance: none; margin: 0;
+}
+.ayah-jump-btn {
+    width: 38px; height: 38px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+.ayah-jump-btn:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
+.ayah-jump-btn:active { transform: scale(0.95); }
+.ayah-jump-btn svg, .ayah-jump-btn i { width: 18px; height: 18px; }
+body.light-mode .ayah-jump-input {
+    background: rgba(0,0,0,0.04);
+    color: #0f172a;
+    border-color: rgba(0,0,0,0.1);
+}
+body.light-mode .ayah-jump-input::placeholder { color: #94a3b8; }
+[data-mushaf-theme="light"] .ayah-jump-input {
+    background: rgba(0,0,0,0.04);
+    color: #0f172a;
+    border-color: rgba(0,0,0,0.1);
+}
+[data-mushaf-theme="light"] .ayah-jump-input::placeholder { color: #94a3b8; }
+
+/* Highlight animation when jumping to an ayah */
+@keyframes ayahJumpHighlight {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.2); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+.verse-card.active-ayah, .ayah-marker.active-ayah {
+    animation: ayahJumpHighlight 2s ease;
+}
