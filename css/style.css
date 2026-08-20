@@ -4869,3 +4869,89 @@ body.light-mode .mobile-nav a {
 body.light-mode .mobile-nav a:hover {
   color: var(--primary);
 }
+/* === AYAH QUICK JUMP — matches the existing setting-group / drawer-buttons design === */
+
+/* The input field: same styling as .reader-select but without the dropdown arrow */
+.reader-ayah-input {
+  flex: 1;
+  width: 100%;
+  background: #1e293b;
+  color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1.2rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-top: 0.5rem;
+  -moz-appearance: textfield;
+}
+.reader-ayah-input::placeholder {
+  color: var(--reader-subtext, #64748b);
+  opacity: 0.7;
+}
+.reader-ayah-input::-webkit-inner-spin-button,
+.reader-ayah-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.reader-ayah-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+/* The "Jump" button: same padding/radius as .drawer-buttons button, with the green active style */
+.ayah-jump-go-btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* The row container: uses .drawer-buttons (already flex+gap) — just ensure it doesn't wrap */
+.ayah-jump-row {
+  flex-wrap: nowrap !important;
+  align-items: flex-start;
+}
+
+/* === MINI FLOATING BAR variant === */
+.ayah-jump-mini-row {
+  align-items: center;
+  gap: 0.4rem;
+}
+.ayah-jump-mini-row .reader-ayah-input {
+  flex: 1;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 10px;
+  margin-top: 0;
+  background: var(--reader-tool-bg, rgba(255,255,255,0.08));
+  border-color: var(--reader-card-border, rgba(255,255,255,0.12));
+  color: var(--reader-text, #f0f5f0);
+}
+.ayah-jump-mini-row .reader-ayah-input::placeholder {
+  color: var(--reader-subtext, #64748b);
+  font-size: 0.78rem;
+}
+.ayah-jump-mini-row .reader-ayah-input:focus {
+  border-color: var(--reader-accent, #10b981);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+.ayah-jump-mini-row .mini-mode-btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+}
+
+/* Light mode sync */
+body.light-mode .reader-ayah-input {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+body.light-mode .reader-ayah-input::placeholder {
+  color: #94a3b8;
+}
