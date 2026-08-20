@@ -26,6 +26,7 @@
         { label: 'Adhkar', icon: 'sparkles', href: R('adhkar.html'), page: 'adhkar.html' },
         { label: 'How to Pray', icon: 'compass', href: R('salah.html'), page: 'salah.html' },
         { label: 'Word Game', icon: 'gamepad-2', href: R('game.html'), page: 'game.html' },
+        { label: 'Blog', icon: 'newspaper', href: R('blog.html'), page: 'blog.html', webOnly: true },
         { label: 'Ask (AI)', icon: 'message-circle', href: R('ask.html'), page: 'ask.html' },
     ];
 
@@ -297,6 +298,8 @@
         body.appendChild(label);
 
         NAV_LINKS.forEach(function (link) {
+            // Hide web-only links in standalone (installed app) mode
+            if (link.webOnly && isStandaloneMode()) return;
             var a = document.createElement('a');
             a.className = 'baca-nav-drawer-link' + (isActive(link) ? ' active' : '');
             a.href = link.href;

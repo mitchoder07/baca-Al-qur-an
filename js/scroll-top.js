@@ -98,7 +98,7 @@
           transition: opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                       transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                       box-shadow 0.3s ease, background 0.3s ease;
-          z-index: 9998;
+          z-index: 3000;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
                       0 0 0 1px rgba(52, 211, 153, 0.15) inset,
                       0 0 20px rgba(16, 185, 129, 0.15);
@@ -146,7 +146,7 @@
           transition: opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                       transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                       box-shadow 0.3s ease, background 0.3s ease;
-          z-index: 9998;
+          z-index: 3000;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
                       0 0 0 1px rgba(6, 182, 212, 0.15) inset,
                       0 0 20px rgba(6, 182, 212, 0.15);
@@ -245,6 +245,35 @@
       ticking = true;
     }
   }, { passive: true });
+
+  // === Hide when a modal is open ===
+  // The word-modal (z-index 5000) and search-modal (z-index 4000) are above
+  // the scroll buttons (z-index 3000). But we also hide them visually so
+  // they don't peek through the backdrop blur.
+  function checkModalOpen() {
+    var wordModal = document.getElementById('word-modal-overlay');
+    var searchModal = document.getElementById('search-modal');
+    var modalOpen = false;
+    if (wordModal && !wordModal.hidden) modalOpen = true;
+    if (searchModal && searchModal.classList.contains('open')) modalOpen = true;
+    // Also check for any element with [aria-modal="true"] that's visible
+    document.querySelectorAll('[aria-modal="true"]').forEach(function (el) {
+      if (el.offsetParent !== null || getComputedStyle(el).display !== 'none') {
+        if (!el.hasAttribute('hidden')) modalOpen = true;
+      }
+    });
+    if (modalOpen) {
+      if (upBtn) upBtn.style.display = 'none';
+      if (downBtn) downBtn.style.display = 'none';
+    } else {
+      if (upBtn) upBtn.style.display = '';
+      if (downBtn) downBtn.style.display = '';
+    }
+  }
+
+  // Check on scroll and also periodically (for modal open/close)
+  window.addEventListener('scroll', checkModalOpen, { passive: true });
+  setInterval(checkModalOpen, 500);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', update);

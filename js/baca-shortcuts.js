@@ -111,7 +111,7 @@
           left: 1.5rem;
           top: calc(50% - 30px);
           transform: translateY(-50%);
-          z-index: 9997;
+          z-index: 2999;
           display: flex;
           flex-direction: column;
           gap: 6px;
@@ -317,6 +317,21 @@
 
     window.addEventListener('scroll', checkVisibility, { passive: true });
     checkVisibility();
+
+    // === Hide when a modal is open ===
+    function checkModalOpen() {
+      var wordModal = document.getElementById('word-modal-overlay');
+      var searchModal = document.getElementById('search-modal');
+      var modalOpen = false;
+      if (wordModal && !wordModal.hidden) modalOpen = true;
+      if (searchModal && searchModal.classList.contains('open')) modalOpen = true;
+      document.querySelectorAll('[aria-modal="true"]').forEach(function (el) {
+        if (!el.hasAttribute('hidden') && el.offsetParent !== null) modalOpen = true;
+      });
+      if (nav) nav.style.display = modalOpen ? 'none' : '';
+    }
+    window.addEventListener('scroll', checkModalOpen, { passive: true });
+    setInterval(checkModalOpen, 500);
   }
 
   function init() {

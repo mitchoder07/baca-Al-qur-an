@@ -2045,6 +2045,54 @@ el.navAyahNum?.addEventListener("keydown", e => {
     }
 });
 
+// === QUICK AYAH JUMP (in surah banner) ===
+// Lets users type an ayah number and jump directly to it while reading a surah.
+// Works in both page view and surah view.
+function quickJumpToAyah() {
+    const input = document.getElementById('ayah-jump-input');
+    if (!input) return;
+    const ayah = parseInt(input.value);
+    if (!ayah || ayah < 1) return;
+
+    const surah = state.surah;
+    const meta = SURAH_LIST[surah - 1];
+    const maxVerses = meta ? meta.total_verses : 286;
+    const targetAyah = Math.min(ayah, maxVerses);
+
+    if (state.view === 'page') {
+        // In page view, find the page containing this ayah, render it, then scroll
+        state.page = findPageNumber(surah, targetAyah);
+        persistState();
+        render().then(() => {
+            setTimeout(() => {
+                const marker = document.querySelector(`.ayah-marker[data-surah="${surah}"][data-ayah="${targetAyah}"]`);
+                if (marker) {
+                    marker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    marker.classList.add('active-ayah');
+                    setTimeout(() => marker.classList.remove('active-ayah'), 2000);
+                }
+            }, 400);
+        });
+    } else {
+        // In surah view, scroll to the verse card
+        const card = document.querySelector(`.verse-card[data-surah="${surah}"][data-ayah="${targetAyah}"]`);
+        if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('active-ayah');
+            setTimeout(() => card.classList.remove('active-ayah'), 2000);
+        }
+    }
+    input.value = '';
+}
+
+document.getElementById('ayah-jump-btn')?.addEventListener('click', quickJumpToAyah);
+document.getElementById('ayah-jump-input')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        quickJumpToAyah();
+    }
+});
+
 el.navSelectorBtn?.addEventListener("click", e => {
     e.stopPropagation();
     el.navDropdown.hidden = !el.navDropdown.hidden;
