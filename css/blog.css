@@ -3,7 +3,7 @@
 .blog-page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
+    padding: 5rem 1.5rem 4rem;
 }
 
 .blog-container {
@@ -14,7 +14,7 @@
 /* === HERO === */
 .blog-hero {
     text-align: center;
-    padding: 3rem 1rem 2rem;
+    padding: 2rem 1rem 1rem;
     position: relative;
 }
 
