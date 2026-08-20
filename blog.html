@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca — Blog & Reflections</title>
+    <meta name="description" content="Daily reflections, sabab nuzul, hadith of the day, fasting reminders, and features from Baca — your Qur'an companion.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reader-themes.css">
+    <link rel="stylesheet" href="/css/reader-additions.css">
+    <link rel="stylesheet" href="/css/shared-nav.css">
+    <link rel="stylesheet" href="/css/baca-logo.css">
+    <link rel="stylesheet" href="/css/blog.css">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Baca">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/blog.html">
+    <meta property="og:title" content="Baca — Blog & Reflections">
+    <meta property="og:description" content="Daily reflections, sabab nuzul, hadith of the day, fasting reminders, and features from Baca.">
+    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/blog.html">
+    <meta name="twitter:title" content="Baca — Blog & Reflections">
+    <meta name="twitter:description" content="Daily reflections, sabab nuzul, hadith of the day, fasting reminders, and features from Baca.">
+    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <span class="logo-text">Baca</span>
+        </a>
+        <div class="nav-actions">
+            <button class="theme-btn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main class="blog-page">
+        <div class="blog-container">
+            <!-- HERO -->
+            <section class="blog-hero">
+                <div class="hero-pattern"></div>
+                <span class="blog-hero-badge"><i class="fa-solid fa-book-open"></i> Reflections & Insights</span>
+                <h1>Daily Reflections</h1>
+                <p class="blog-hero-subtitle">Sabab nuzul, hadith of the day, fasting reminders, and features — to grow your Iman, one post at a time.</p>
+            </section>
+
+            <!-- BLOG GRID -->
+            <section class="blog-grid" id="blog-grid">
+                <div class="blog-loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Loading reflections…</p>
+                </div>
+            </section>
+
+            <!-- EMPTY STATE (hidden by default) -->
+            <div class="blog-empty" id="blog-empty" hidden>
+                <i class="fa-solid fa-feather-pointed"></i>
+                <h3>No posts yet</h3>
+                <p>Check back soon for daily reflections, hadith, and insights.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="baca-footer">
+        <div class="footer-content">
+            <div class="footer-col footer-brand">
+                <div class="footer-logo">
+                    <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
+                    <span class="footer-logo-text">Baca</span>
+                </div>
+                <p class="footer-tagline">Read • Reflect • Grow</p>
+                <p class="footer-desc">A beautiful way to read, understand, and reflect upon the words of Allah.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <a href="mushaf.html">Mushaf Reader</a>
+                <a href="adhkar.html">Adhkar</a>
+                <a href="salah.html">How to Pray</a>
+                <a href="reciters/index.html">Reciters</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#" id="footer-theme-toggle">Toggle Theme</a>
+                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/script.js"></script>
+    <script>if (window.lucide) lucide.createIcons();</script>
+    <script src="/js/chat-widget.js"></script>
+    <script src="/js/shared-nav.js"></script>
+    <script src="/js/pwa-register.js"></script>
+    <script src="/js/blog.js"></script>
+</body>
+</html>
