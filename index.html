@@ -1237,6 +1237,15 @@
                     </select>
                 </div>
 
+                <!-- AYAH QUICK JUMP -->
+                <div class="setting-group">
+                    <label>Jump to Ayah</label>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <input type="number" id="reader-ayah-jump-input" class="reader-select" min="1" placeholder="Ayah #" style="flex:1;padding:8px 12px;text-align:center;">
+                        <button id="reader-ayah-jump-btn" class="toggle-btn active" style="white-space:nowrap;padding:8px 16px;">Go</button>
+                    </div>
+                </div>
+
             </div>
 
             <div id="bismillah-container">
@@ -1416,6 +1425,14 @@
                         <button class="mini-mode-btn active" data-mode="both">Both</button>
                         <button class="mini-mode-btn" data-mode="arabic">Arabic</button>
                         <button class="mini-mode-btn" data-mode="translation">Translation</button>
+                    </div>
+                </div>
+
+                <div class="mini-drawer-section">
+                    <span class="mini-drawer-label">Jump to Ayah</span>
+                    <div class="mini-drawer-row">
+                        <input type="number" id="mini-ayah-jump-input" min="1" placeholder="#" style="flex:1;width:60px;padding:6px 10px;text-align:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:inherit;font-size:0.85rem;">
+                        <button id="mini-ayah-jump-btn" class="mini-mode-btn active" style="white-space:nowrap;">Go</button>
                     </div>
                 </div>
 

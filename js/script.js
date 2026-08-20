@@ -1401,6 +1401,52 @@ document.getElementById("reader-audio-btn")?.addEventListener("click", () => {
     document.getElementById("audio-drawer")?.classList.toggle("active");
 });
 
+// === AYAH QUICK JUMP (in reader settings drawer + mini floating bar) ===
+// Lets users type an ayah number and jump to it while reading a surah in the
+// index.html reader modal. Works with the currently open surah (selectedSurah).
+function readerAyahJump(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const ayah = parseInt(input.value);
+    if (!ayah || ayah < 1) return;
+
+    // Clamp to the surah's total verses
+    const maxVerses = currentSurahVerses.length || 286;
+    const targetAyah = Math.min(ayah, maxVerses);
+
+    // Close the settings drawer
+    document.getElementById("settings-drawer")?.classList.remove("active");
+    document.getElementById("mini-settings-drawer")?.classList.remove("open");
+
+    // Scroll to the verse card
+    const card = document.querySelector(`.verse-card[data-ayah="${targetAyah}"]`);
+    if (card) {
+        const readerContent = document.querySelector(".reader-content");
+        if (readerContent) {
+            const target = card.offsetTop - readerContent.clientHeight / 2 + card.clientHeight / 2;
+            readerContent.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+        }
+        // Highlight animation
+        card.classList.remove("verse-active");
+        void card.offsetWidth;
+        card.classList.add("verse-active");
+        setTimeout(() => card.classList.remove("verse-active"), 2000);
+    }
+    input.value = '';
+}
+
+// Settings drawer ayah jump
+document.getElementById("reader-ayah-jump-btn")?.addEventListener("click", () => readerAyahJump("reader-ayah-jump-input"));
+document.getElementById("reader-ayah-jump-input")?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); readerAyahJump("reader-ayah-jump-input"); }
+});
+
+// Mini floating bar ayah jump
+document.getElementById("mini-ayah-jump-btn")?.addEventListener("click", () => readerAyahJump("mini-ayah-jump-input"));
+document.getElementById("mini-ayah-jump-input")?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); readerAyahJump("mini-ayah-jump-input"); }
+});
+
 // FULL-SURAH AUDIO (EveryAyah — full surah mp3 not available,
 // so we stream ayah-by-ayah auto-advancing as full-surah mode)
 
