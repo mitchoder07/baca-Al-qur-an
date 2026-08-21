@@ -623,6 +623,32 @@
             text-align: right
         }
 
+        /* OFFLINE BADGE — green check shown on surahs cached for offline */
+        .row-offline-badge {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* INFO BANNER — tells users about offline playback */
+        .offline-info-banner {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1rem;
+            margin-bottom: 1rem;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 12px;
+            font-size: 0.78rem;
+            color: var(--subtext);
+            line-height: 1.4;
+        }
+        .offline-info-banner i { color: #10b981; flex-shrink: 0; }
+
         /* WAVE */
         .wave-bars {
             display: none;
@@ -1071,6 +1097,10 @@
             <input type="text" class="surah-search-input" id="surah-search"
                 placeholder="Search by name, number or meaning…">
         </div>
+        <div class="offline-info-banner">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Play any surah once to save it for offline listening. Surahs with a <i class="fa-solid fa-circle-check" style="font-size:.65rem;color:#10b981;"></i> are ready offline.</span>
+        </div>
         <div class="surah-list" id="surah-list">
             <div class="no-results"><i class="fa-solid fa-spinner fa-spin"></i>
                 <p>Loading…</p>
@@ -1358,15 +1388,48 @@
       </div>
       <div class="row-arabic">${s.name}</div>
       <div class="row-duration" id="dur-${s.id}">—</div>
+      <div class="row-offline-badge" id="offline-${s.id}" title="Available offline" style="display:none;"><i class="fa-solid fa-circle-check" style="font-size:.65rem;color:#10b981;"></i></div>
     </div>`).join("");
 
             el.querySelectorAll(".surah-row").forEach(row => {
                 row.addEventListener("click", () => toggleSurah(Number(row.dataset.id)));
                 row.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") toggleSurah(Number(row.dataset.id)); });
             });
+
+            // Check which surahs are already cached for offline playback
+            checkCachedSurahs();
         }
 
-        // PLAY LOGIC
+        // === OFFLINE AUDIO CACHE CHECK ===
+        // Asks the service worker which audio files are cached, then shows
+        // a green check badge on surah rows that are available offline.
+        function checkCachedSurahs() {
+            if (!navigator.serviceWorker || !navigator.serviceWorker.controller) return;
+
+            const messageChannel = new MessageChannel();
+            messageChannel.port1.onmessage = function(event) {
+                if (event.data && event.data.type === 'AUDIO_CACHE_INFO') {
+                    const cachedUrls = event.data.urls || [];
+                    // Check each surah's audio URL against the cached list
+                    SURAH_LIST.forEach(s => {
+                        const audioUrl = hasFullSurahAudio(reciterId)
+                            ? getFullSurahAudioUrl(s.id, reciterId)
+                            : audioUrl(s.id);
+                        const isCached = cachedUrls.some(u => u.includes(audioUrl) || audioUrl.includes(u));
+                        const badge = document.getElementById('offline-' + s.id);
+                        if (badge) badge.style.display = isCached ? 'flex' : 'none';
+                    });
+                }
+            };
+            navigator.serviceWorker.controller.postMessage('GET_AUDIO_CACHE_INFO', [messageChannel.port2]);
+        }
+
+        // === SHOW OFFLINE BADGE AFTER PLAYING ===
+        // When a surah is played, the SW caches the audio. Show the badge.
+        function showOfflineBadge(surahId) {
+            const badge = document.getElementById('offline-' + surahId);
+            if (badge) badge.style.display = 'flex';
+        }
         // BUG FIX (full-surah audio): previously this played the surah
         // ayah-by-ayah via everyayah.com (each ayah = separate mp3), which
         // meant the progress bar reset every few seconds and users couldn't
@@ -1441,7 +1504,11 @@
                 // Full-surah MP3 — progress bar will span the whole surah
                 audio.src = getFullSurahAudioUrl(id, reciterId);
                 audio.load();
-                audio.play().then(() => { setPlaying(true); }).catch(() => { setPlaying(false); });
+                audio.play().then(() => {
+                    setPlaying(true);
+                    // The SW caches the audio on this fetch. Show the offline badge.
+                    showOfflineBadge(id);
+                }).catch(() => { setPlaying(false); });
                 audio.onended = () => {
                     // Repeat one: replay same surah
                     if (repeatMode === 'one') {
