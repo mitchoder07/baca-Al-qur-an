@@ -1277,6 +1277,16 @@ async function loadTafsir(surahNum, ayahNum) {
 
 async function openReader(surahNum, scrollToAyah = null) {
     if (!surahNum) return;
+    // The reader modal only exists on index.html. If openReader is called
+    // from another page (bookmarks.html, journeys.html), bounce to the home
+    // page with a deep link so the reader can open there.
+    if (!document.querySelector(".reader-modal")) {
+        const q = new URLSearchParams();
+        q.set("surah", String(surahNum));
+        if (scrollToAyah) q.set("ayah", String(scrollToAyah));
+        window.location.href = "index.html?" + q.toString();
+        return;
+    }
     selectedSurah = surahNum;
     const meta = SURAH_LIST[surahNum - 1];
 
@@ -2875,6 +2885,22 @@ setTimeout(() => {
     initTopics();
     initJourneys();
     initSearchModal();
+
+    // Deep link from topics.html: ?topic=mercy opens the topic results in the
+    // search modal straight away. Only fires when a valid topic key is present.
+    const topicParam = new URLSearchParams(location.search).get("topic");
+    if (topicParam && TOPIC_VERSES[topicParam]) {
+        // Wait a beat so initSearchModal has fully wired the modal first.
+        setTimeout(() => showTopicResults(topicParam), 250);
+    }
+
+    // Deep link from bookmarks.html / journeys.html: ?surah=2&ayah=255 opens
+    // the reader straight to that verse on the home page.
+    const surahParam = new URLSearchParams(location.search).get("surah");
+    if (surahParam) {
+        const ayahParam = new URLSearchParams(location.search).get("ayah");
+        setTimeout(() => openReader(Number(surahParam), ayahParam ? Number(ayahParam) : null), 350);
+    }
 }, 600);
 
 // READER TRANSLATION & TAFSIR SELECTION

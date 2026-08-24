@@ -21,16 +21,15 @@
     if (window.location.pathname !== '/' && window.location.pathname !== '') return;
   }
 
-  // Section definitions — id + label + icon
-  // (Topics, Journeys, Daily Challenge, and Achievements have been moved into
-  //  the mobile app's "More" sheet as their own destinations. The home page
-  //  now keeps compact summary cards for Bookmarks and Reading Progress.)
+  // Section definitions: id + label + icon
+  // (Bookmarks and Reading Progress now live on their own dedicated pages
+  //  at /bookmarks.html and /progress.html, reachable from the "More" sheet.
+  //  The home page keeps compact summary cards for them, but they are no
+  //  longer in-page jump targets, so they are dropped from the shortcut pills.)
   var SECTIONS = [
     { id: 'hero', label: 'Home', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
     { id: 'surah-explorer', label: 'Qur\'an', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' },
     { id: 'daily-ayah', label: 'Daily Ayah', icon: 'M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z' },
-    { id: 'reading-progress', label: 'Progress', icon: 'M22 7 13.5 15.5 8.5 10.5 2 17 M16 7 22 7 22 13' },
-    { id: 'bookmarks', label: 'Bookmarks', icon: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
   ];
 
   var nav = null;

@@ -423,10 +423,10 @@
     var SECONDARY_ITEMS = [
         { label: 'Reciters', icon: 'mic', href: R('reciters/index.html'), page: 'reciters/index.html', subdir: 'reciters/' },
         { label: 'Word Game', icon: 'gamepad-2', href: R('game.html'), page: 'game.html' },
-        { label: 'Topics', icon: 'compass', href: R('index.html#topics'), page: 'index.html#topics' },
-        { label: 'Journeys', icon: 'map', href: R('index.html#journeys'), page: 'index.html#journeys' },
-        { label: 'Progress', icon: 'trending-up', href: R('index.html#reading-progress'), page: 'index.html#reading-progress' },
-        { label: 'Bookmarks', icon: 'bookmark', href: R('index.html#bookmarks'), page: 'index.html#bookmarks' },
+        { label: 'Topics', icon: 'compass', href: R('topics.html'), page: 'topics.html' },
+        { label: 'Journeys', icon: 'map', href: R('journeys.html'), page: 'journeys.html' },
+        { label: 'Progress', icon: 'trending-up', href: R('progress.html'), page: 'progress.html' },
+        { label: 'Bookmarks', icon: 'bookmark', href: R('bookmarks.html'), page: 'bookmarks.html' },
         { label: 'Blog', icon: 'newspaper', href: R('blog.html'), page: 'blog.html' },
     ];
 
