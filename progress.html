@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca — Your Progress</title>
+    <meta name="description" content="Track your reading streak, today's challenge, and every achievement you have unlocked on Baca, your Qur'an companion.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reader-themes.css">
+    <link rel="stylesheet" href="/css/reader-additions.css">
+    <link rel="stylesheet" href="/css/shared-nav.css">
+    <link rel="stylesheet" href="/css/baca-logo.css">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Baca">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/progress.html">
+    <meta property="og:title" content="Baca — Your Progress">
+    <meta property="og:description" content="Track your reading streak, today's challenge, and every achievement you have unlocked.">
+    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/progress.html">
+    <meta name="twitter:title" content="Baca — Your Progress">
+    <meta name="twitter:description" content="Track your reading streak, today's challenge, and every achievement you have unlocked.">
+    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <style>
+        .progress-page-header {
+            text-align: center;
+            padding: 1.5rem 0 2.5rem;
+        }
+        .progress-page-header .progress-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+        .progress-page-header h1 {
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 0.7rem;
+            line-height: 1.2;
+        }
+        .progress-page-header p {
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .progress-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+            transition: color 0.2s;
+        }
+        .progress-back-link:hover { color: var(--primary); }
+
+        .progress-section {
+            margin-top: 2.5rem;
+        }
+        .progress-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--white);
+        }
+        .progress-section-title i { color: var(--primary); }
+
+        .progress-hero-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .progress-hero-card {
+            background: var(--dark-light);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: border-color 0.25s, transform 0.25s;
+        }
+        .progress-hero-card:hover { border-color: rgba(16, 185, 129, 0.35); transform: translateY(-2px); }
+        .progress-hero-card .ph-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; flex-shrink: 0;
+        }
+        .progress-hero-card .ph-value {
+            font-size: 1.6rem; font-weight: 800; line-height: 1.1;
+            background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .progress-hero-card .ph-label {
+            font-size: 0.78rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 0.15rem;
+        }
+
+        .daily-goal-card {
+            background: var(--dark-light);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.4rem 1.5rem;
+        }
+        .daily-goal-top {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 0.8rem; gap: 1rem;
+        }
+        .daily-goal-top .dg-label {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-weight: 700; color: var(--white);
+        }
+        .daily-goal-top .dg-label i { color: var(--primary); }
+        .daily-goal-top .dg-text { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+        .daily-goal-bar {
+            height: 10px; border-radius: 99px;
+            background: rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+        body.light-mode .daily-goal-bar { background: rgba(0, 0, 0, 0.06); }
+        .daily-goal-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--primary), #06b6d4);
+            border-radius: 99px; transition: width 0.6s ease;
+        }
+
+        .challenge-card { margin: 0; max-width: none; width: 100%; }
+
+        @media (max-width: 640px) {
+            .challenge-card { flex-direction: column; align-items: flex-start; }
+            .challenge-right { align-self: flex-end; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <span class="logo-text">Baca</span>
+        </a>
+        <div class="nav-actions">
+            <button class="theme-btn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main style="max-width:900px;margin:0 auto;padding:5rem 1.5rem 4rem;">
+        <a href="index.html" class="progress-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+
+        <section class="progress-page-header">
+            <span class="progress-badge"><i class="fa-solid fa-chart-line"></i> Your reading journey</span>
+            <h1>Progress</h1>
+            <p>Streaks, time spent, today's challenge, and the badges you have earned along the way. All stored privately on this device.</p>
+        </section>
+
+        <!-- READING PROGRESS -->
+        <section class="progress-section" id="reading-progress-full">
+            <h2 class="progress-section-title"><i class="fa-solid fa-fire"></i> Reading Progress</h2>
+
+            <div class="progress-hero-grid">
+                <div class="progress-hero-card">
+                    <div class="ph-icon"><i class="fa-solid fa-fire"></i></div>
+                    <div>
+                        <div class="ph-value" id="streak-count">0</div>
+                        <div class="ph-label">Day streak</div>
+                    </div>
+                </div>
+                <div class="progress-hero-card">
+                    <div class="ph-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div>
+                        <div class="ph-value" id="reading-time">0m</div>
+                        <div class="ph-label">Time reading</div>
+                    </div>
+                </div>
+                <div class="progress-hero-card">
+                    <div class="ph-icon"><i class="fa-solid fa-book-check"></i></div>
+                    <div>
+                        <div class="ph-value" id="completed-surahs">0</div>
+                        <div class="ph-label">Surahs completed</div>
+                    </div>
+                </div>
+                <div class="progress-hero-card">
+                    <div class="ph-icon"><i class="fa-solid fa-bullseye"></i></div>
+                    <div>
+                        <div class="ph-value" id="daily-goal-text">0 / 5</div>
+                        <div class="ph-label">Daily goal (pages)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="daily-goal-card">
+                <div class="daily-goal-top">
+                    <span class="dg-label"><i class="fa-solid fa-flag"></i> Today's page goal</span>
+                    <span class="dg-text" id="daily-goal-text-2">0 / 5 pages</span>
+                </div>
+                <div class="daily-goal-bar"><div class="daily-goal-fill" id="daily-goal-fill"></div></div>
+            </div>
+
+            <div class="stats-grid" style="margin-top:1.5rem;">
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-verses">0</span>
+                    <span class="stat-label">Verses read</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-pages">0</span>
+                    <span class="stat-label">Pages read</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-juz">0</span>
+                    <span class="stat-label">Juz explored</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-days">0</span>
+                    <span class="stat-label">Total days</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DAILY CHALLENGE -->
+        <section class="progress-section">
+            <h2 class="progress-section-title"><i class="fa-solid fa-bullseye"></i> Daily Challenge</h2>
+            <div class="challenge-card" id="challenge-card">
+                <div class="challenge-left">
+                    <div class="challenge-badge"><i data-lucide="target"></i></div>
+                    <div class="challenge-info">
+                        <h3 id="challenge-title">Loading today's challenge…</h3>
+                        <p id="challenge-desc">Hang tight.</p>
+                        <div class="challenge-progress"><div class="challenge-progress-fill" id="challenge-progress-fill"></div></div>
+                        <span class="challenge-status" id="challenge-status">0 / 0</span>
+                    </div>
+                </div>
+                <div class="challenge-right">
+                    <span class="challenge-xp">+0 XP</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACHIEVEMENTS -->
+        <section class="progress-section">
+            <h2 class="progress-section-title"><i class="fa-solid fa-trophy"></i> Achievements</h2>
+            <div class="achievements-grid" id="achievements-grid"></div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="baca-footer">
+        <div class="footer-content">
+            <div class="footer-col footer-brand">
+                <div class="footer-logo">
+                    <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
+                    <span class="footer-logo-text">Baca</span>
+                </div>
+                <p class="footer-tagline">Read • Reflect • Grow</p>
+                <p class="footer-desc">A beautiful way to read, understand, and reflect upon the words of Allah.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <a href="mushaf.html">Mushaf Reader</a>
+                <a href="adhkar.html">Adhkar</a>
+                <a href="salah.html">How to Pray</a>
+                <a href="reciters/index.html">Reciters</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#" id="footer-theme-toggle">Toggle Theme</a>
+                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/script.js"></script>
+    <script>if (window.lucide) lucide.createIcons();</script>
+    <script src="/js/chat-widget.js"></script>
+    <script src="/js/shared-nav.js"></script>
+    <script src="/js/pwa-register.js"></script>
+    <script>
+        // Keep the secondary "Today's page goal" line in sync with the main daily-goal-text value.
+        (function () {
+            var primary = document.getElementById('daily-goal-text');
+            var secondary = document.getElementById('daily-goal-text-2');
+            if (!primary || !secondary) return;
+            var sync = function () { secondary.textContent = (primary.textContent || '0 / 5') + ' pages'; };
+            sync();
+            // observe changes from updateStatsUI()
+            if (window.MutationObserver) {
+                new MutationObserver(sync).observe(primary, { childList: true, characterData: true, subtree: true });
+            } else {
+                setInterval(sync, 800);
+            }
+        })();
+    </script>
+</body>
+</html>

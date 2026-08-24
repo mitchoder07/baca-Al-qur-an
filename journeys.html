@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca — Guided Journeys</title>
+    <meta name="description" content="Step-by-step reading journeys through the Qur'an. Each day opens one verse and tracks your progress, all the way to completion.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reader-themes.css">
+    <link rel="stylesheet" href="/css/reader-additions.css">
+    <link rel="stylesheet" href="/css/shared-nav.css">
+    <link rel="stylesheet" href="/css/baca-logo.css">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Baca">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/journeys.html">
+    <meta property="og:title" content="Baca — Guided Journeys">
+    <meta property="og:description" content="Step-by-step reading journeys through the Qur'an. Each day opens one verse and tracks your progress.">
+    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/journeys.html">
+    <meta name="twitter:title" content="Baca — Guided Journeys">
+    <meta name="twitter:description" content="Step-by-step reading journeys through the Qur'an. Each day opens one verse and tracks your progress.">
+    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <style>
+        .journeys-page-header {
+            text-align: center;
+            padding: 2rem 0 2.5rem;
+        }
+        .journeys-page-header .journeys-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+        .journeys-page-header h1 {
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 0.7rem;
+            line-height: 1.2;
+        }
+        .journeys-page-header p {
+            color: var(--text);
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .journeys-grid-full {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .journeys-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+            transition: color 0.2s;
+        }
+        .journeys-back-link:hover { color: var(--primary); }
+        .journey-card { cursor: default; }
+        .journey-card .journey-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <span class="logo-text">Baca</span>
+        </a>
+        <div class="nav-actions">
+            <button class="theme-btn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main style="max-width:1080px;margin:0 auto;padding:5rem 1.5rem 4rem;">
+        <a href="index.html" class="journeys-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+
+        <section class="journeys-page-header">
+            <span class="journeys-badge"><i class="fa-solid fa-map"></i> One verse a day</span>
+            <h1>Guided Journeys</h1>
+            <p>Pick a path and read one verse a day. Your place is saved automatically, and each new day you visit unlocks the next ayah, plus a little XP to keep you going.</p>
+        </section>
+
+        <div class="journeys-grid-full">
+
+            <!-- 30 Juz in 30 Days -->
+            <article class="journey-card"
+                data-journey="30-juz-30-days"
+                data-start="2:142"
+                data-verses="2:142,2:253,3:93,4:24,4:148,5:82,6:111,7:88,8:41,9:93,11:6,12:53,15:1,17:1,18:75,21:1,23:1,25:21,27:56,29:46,33:31,36:28,39:32,41:47,46:21,51:31,58:14,67:1,78:1,112:1">
+                <div class="journey-icon"><i class="fa-solid fa-book-quran"></i></div>
+                <span class="journey-badge">30 Days</span>
+                <h3>30 Juz in 30 Days</h3>
+                <p>A single verse from each juz of the Qur'an. Walk the whole book in a month, one ayah at a time.</p>
+                <div class="journey-progress" hidden><div class="journey-progress-fill"></div></div>
+                <button type="button">Start Journey</button>
+            </article>
+
+            <!-- Stories of the Prophets -->
+            <article class="journey-card"
+                data-journey="stories-of-prophets"
+                data-start="2:35"
+                data-verses="2:35,11:45,21:51,20:10,3:45,12:4,33:40">
+                <div class="journey-icon"><i class="fa-solid fa-scroll"></i></div>
+                <span class="journey-badge">7 Days</span>
+                <h3>Stories of the Prophets</h3>
+                <p>From Adam to Muhammad (peace be upon them all). One verse a day tracing the lives Allah chose to tell.</p>
+                <div class="journey-progress" hidden><div class="journey-progress-fill"></div></div>
+                <button type="button">Start Journey</button>
+            </article>
+
+            <!-- Characteristics of the Believers -->
+            <article class="journey-card"
+                data-journey="traits-of-believers"
+                data-start="2:3"
+                data-verses="2:3,2:177,8:2,13:28,23:1,25:63,49:15">
+                <div class="journey-icon"><i class="fa-solid fa-heart"></i></div>
+                <span class="journey-badge">7 Days</span>
+                <h3>Characteristics of the Believers</h3>
+                <p>What does a believer look like? Seven verses that paint the picture, one trait at a time.</p>
+                <div class="journey-progress" hidden><div class="journey-progress-fill"></div></div>
+                <button type="button">Start Journey</button>
+            </article>
+
+            <!-- Paradise and Hell -->
+            <article class="journey-card"
+                data-journey="paradise-and-hell"
+                data-start="2:25"
+                data-verses="2:25,3:133,3:185,4:14,4:56,57:21,78:21">
+                <div class="journey-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <span class="journey-badge">7 Days</span>
+                <h3>Paradise and Hell</h3>
+                <p>The two destinations, described in His own words. A week of verses to soften the heart and steady the steps.</p>
+                <div class="journey-progress" hidden><div class="journey-progress-fill"></div></div>
+                <button type="button">Start Journey</button>
+            </article>
+
+            <!-- The Last Ten Surahs -->
+            <article class="journey-card"
+                data-journey="last-ten-surahs"
+                data-start="105:1"
+                data-verses="105:1,106:1,107:1,108:1,109:1,110:1,111:1,112:1,113:1,114:1">
+                <div class="journey-icon"><i class="fa-solid fa-star-and-crescent"></i></div>
+                <span class="journey-badge">10 Days</span>
+                <h3>The Last Ten Surahs</h3>
+                <p>The short surahs at the end of the Qur'an. Memorised by many, loved by all. Read one each day for ten days.</p>
+                <div class="journey-progress" hidden><div class="journey-progress-fill"></div></div>
+                <button type="button">Start Journey</button>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="baca-footer">
+        <div class="footer-content">
+            <div class="footer-col footer-brand">
+                <div class="footer-logo">
+                    <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
+                    <span class="footer-logo-text">Baca</span>
+                </div>
+                <p class="footer-tagline">Read • Reflect • Grow</p>
+                <p class="footer-desc">A beautiful way to read, understand, and reflect upon the words of Allah.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <a href="mushaf.html">Mushaf Reader</a>
+                <a href="adhkar.html">Adhkar</a>
+                <a href="salah.html">How to Pray</a>
+                <a href="reciters/index.html">Reciters</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#" id="footer-theme-toggle">Toggle Theme</a>
+                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/script.js"></script>
+    <script>if (window.lucide) lucide.createIcons();</script>
+    <script src="/js/chat-widget.js"></script>
+    <script src="/js/shared-nav.js"></script>
+    <script src="/js/pwa-register.js"></script>
+</body>
+</html>

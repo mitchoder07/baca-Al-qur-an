@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca — Bookmarks</title>
+    <meta name="description" content="Every verse you have saved for later, in one place. Open any bookmark straight back into the reader, or clear them all.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reader-themes.css">
+    <link rel="stylesheet" href="/css/reader-additions.css">
+    <link rel="stylesheet" href="/css/shared-nav.css">
+    <link rel="stylesheet" href="/css/baca-logo.css">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Baca">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/bookmarks.html">
+    <meta property="og:title" content="Baca — Bookmarks">
+    <meta property="og:description" content="Every verse you have saved for later, in one place. Open any bookmark straight back into the reader.">
+    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/bookmarks.html">
+    <meta name="twitter:title" content="Baca — Bookmarks">
+    <meta name="twitter:description" content="Every verse you have saved for later, in one place. Open any bookmark straight back into the reader.">
+    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <style>
+        .bookmarks-page-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.2rem;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .bookmarks-page-header .bp-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .bookmarks-page-header .bp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            width: fit-content;
+        }
+        .bookmarks-page-header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 800;
+            line-height: 1.15;
+        }
+        .bookmarks-page-header .bp-count {
+            color: var(--text);
+            font-size: 0.92rem;
+        }
+        .bookmarks-clear-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .bookmarks-clear-btn:hover {
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.06);
+        }
+        .bookmarks-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+            transition: color 0.2s;
+        }
+        .bookmarks-back-link:hover { color: var(--primary); }
+        .bookmarks-list { margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <span class="logo-text">Baca</span>
+        </a>
+        <div class="nav-actions">
+            <button class="theme-btn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main style="max-width:860px;margin:0 auto;padding:5rem 1.5rem 4rem;">
+        <a href="index.html" class="bookmarks-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+
+        <div class="bookmarks-page-header">
+            <div class="bp-left">
+                <span class="bp-badge"><i class="fa-solid fa-bookmark"></i> Saved verses</span>
+                <h1>Bookmarks</h1>
+                <span class="bp-count" id="bookmarks-count">0 saved</span>
+            </div>
+            <button type="button" class="bookmarks-clear-btn" id="bookmarks-clear-btn" title="Remove every saved bookmark">
+                <i class="fa-solid fa-trash-can"></i> Clear all
+            </button>
+        </div>
+
+        <div class="bookmarks-list" id="bookmarks-list">
+            <div class="bookmarks-empty">
+                <i data-lucide="bookmark"></i>
+                <p>No bookmarks yet. Save verses from the reader and they will appear here.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="baca-footer">
+        <div class="footer-content">
+            <div class="footer-col footer-brand">
+                <div class="footer-logo">
+                    <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
+                    <span class="footer-logo-text">Baca</span>
+                </div>
+                <p class="footer-tagline">Read • Reflect • Grow</p>
+                <p class="footer-desc">A beautiful way to read, understand, and reflect upon the words of Allah.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <a href="mushaf.html">Mushaf Reader</a>
+                <a href="adhkar.html">Adhkar</a>
+                <a href="salah.html">How to Pray</a>
+                <a href="reciters/index.html">Reciters</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#" id="footer-theme-toggle">Toggle Theme</a>
+                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/script.js"></script>
+    <script>if (window.lucide) lucide.createIcons();</script>
+    <script src="/js/chat-widget.js"></script>
+    <script src="/js/shared-nav.js"></script>
+    <script src="/js/pwa-register.js"></script>
+</body>
+</html>

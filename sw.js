@@ -1,4 +1,4 @@
-/* sw.js — Baca Qur'an Service Worker (v5)
+/* sw.js - Baca Qur'an Service Worker (v6)
  *
  * Caching strategy:
  * - HTML pages: network-first (fresh when online, cached when offline)
@@ -9,13 +9,14 @@
  *   available offline on subsequent plays. This enables offline Qur'an
  *   recitation on the reciter page.
  */
-const CACHE_VERSION = 'baca-v5';
+const CACHE_VERSION = 'baca-v6';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 const AUDIO_CACHE = `${CACHE_VERSION}-audio`;
 
 const PRECACHE_URLS = [
   '/', '/index.html', '/mushaf.html', '/adhkar.html', '/ask.html', '/salah.html', '/game.html', '/blog.html',
+  '/topics.html', '/journeys.html', '/progress.html', '/bookmarks.html',
   '/css/style.css', '/css/shared-nav.css', '/css/reader-themes.css', '/css/reader-additions.css',
   '/css/mushaf.css', '/css/floating-player-bar.css', '/css/scroll-top.css', '/css/blog.css', '/css/baca-logo.css',
   '/js/shared-nav.js', '/js/script.js', '/js/mushaf.js', '/js/data.js', '/js/chat.js',

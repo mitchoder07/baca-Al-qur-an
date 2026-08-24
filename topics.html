@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca — Topics</title>
+    <meta name="description" content="Explore the Qur'an by theme. Twelve curated topics, each linking straight to a hand-picked set of verses on the home page.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reader-themes.css">
+    <link rel="stylesheet" href="/css/reader-additions.css">
+    <link rel="stylesheet" href="/css/shared-nav.css">
+    <link rel="stylesheet" href="/css/baca-logo.css">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Baca">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/topics.html">
+    <meta property="og:title" content="Baca — Topics">
+    <meta property="og:description" content="Explore the Qur'an by theme. Twelve curated topics, each linking straight to a hand-picked set of verses.">
+    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/topics.html">
+    <meta name="twitter:title" content="Baca — Topics">
+    <meta name="twitter:description" content="Explore the Qur'an by theme. Twelve curated topics, each linking straight to a hand-picked set of verses.">
+    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
+    <style>
+        .topics-page-header {
+            text-align: center;
+            padding: 2rem 0 2.5rem;
+        }
+        .topics-page-header .topics-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+        .topics-page-header h1 {
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 0.7rem;
+            line-height: 1.2;
+        }
+        .topics-page-header p {
+            color: var(--text);
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .topics-grid-full {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.4rem;
+            margin-top: 1rem;
+        }
+        .topics-grid-full .topic-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .topics-grid-full .topic-card .topic-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .topics-grid-full .topic-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.35rem;
+        }
+        .topics-grid-full .topic-card .topic-count {
+            font-size: 0.78rem;
+            color: var(--text);
+            opacity: 0.85;
+        }
+        .topics-grid-full .topic-card .topic-go {
+            margin-top: 0.9rem;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .topics-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+            transition: color 0.2s;
+        }
+        .topics-back-link:hover { color: var(--primary); }
+        @media (max-width: 768px) {
+            .topics-grid-full .topic-card .topic-card-icon {
+                width: 44px; height: 44px; font-size: 1.2rem; margin-bottom: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <span class="logo-text">Baca</span>
+        </a>
+        <div class="nav-actions">
+            <button class="theme-btn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main style="max-width:1000px;margin:0 auto;padding:5rem 1.5rem 4rem;">
+        <a href="index.html" class="topics-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+
+        <section class="topics-page-header">
+            <span class="topics-badge"><i class="fa-solid fa-compass"></i> Read by theme</span>
+            <h1>Topics in the Qur'an</h1>
+            <p>Twelve themes drawn straight from the verses. Pick one to open a hand-picked reading list on the home page, where you can read, listen, and reflect on each ayah.</p>
+        </section>
+
+        <div class="topics-grid-full" id="topics-grid-full"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="baca-footer">
+        <div class="footer-content">
+            <div class="footer-col footer-brand">
+                <div class="footer-logo">
+                    <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
+                    <span class="footer-logo-text">Baca</span>
+                </div>
+                <p class="footer-tagline">Read • Reflect • Grow</p>
+                <p class="footer-desc">A beautiful way to read, understand, and reflect upon the words of Allah.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <a href="mushaf.html">Mushaf Reader</a>
+                <a href="adhkar.html">Adhkar</a>
+                <a href="salah.html">How to Pray</a>
+                <a href="reciters/index.html">Reciters</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#" id="footer-theme-toggle">Toggle Theme</a>
+                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/script.js"></script>
+    <script>if (window.lucide) lucide.createIcons();</script>
+    <script src="/js/chat-widget.js"></script>
+    <script src="/js/shared-nav.js"></script>
+    <script src="/js/pwa-register.js"></script>
+
+    <!-- Self-contained topic data + card renderer -->
+    <script>
+    (function () {
+        var TOPIC_VERSES = {
+            mercy: [
+                { surah: 1, ayah: 1, ref: "Al-Fatihah 1:1", note: "Opens every surah invoking Allah's mercy" },
+                { surah: 1, ayah: 3, ref: "Al-Fatihah 1:3", note: "Names mercy as Allah's defining attribute" },
+                { surah: 7, ayah: 156, ref: "Al-A'raf 7:156", note: "Allah's mercy described as all-encompassing" },
+                { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "A direct promise of forgiveness, whatever the sin" },
+                { surah: 55, ayah: 1, ref: "Ar-Rahman 55:1", note: "Surah Ar-Rahman opens by naming His mercy" }
+            ],
+            prayer: [
+                { surah: 2, ayah: 3, ref: "Al-Baqarah 2:3", note: "Prayer named among the first signs of belief" },
+                { surah: 2, ayah: 45, ref: "Al-Baqarah 2:45", note: "Patience and prayer paired as a source of strength" },
+                { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Allah is with those who stay patient in prayer" },
+                { surah: 4, ayah: 103, ref: "An-Nisa 4:103", note: "Establishes prayer as a timed, structured duty" },
+                { surah: 17, ayah: 78, ref: "Al-Isra 17:78", note: "Names the daily prayer windows, Fajr included" },
+                { surah: 20, ayah: 14, ref: "Ta-Ha 20:14", note: "Prayer given as the very purpose of remembrance" },
+                { surah: 29, ayah: 45, ref: "Al-Ankabut 29:45", note: "Prayer described as a guard against wrongdoing" }
+            ],
+            knowledge: [
+                { surah: 2, ayah: 269, ref: "Al-Baqarah 2:269", note: "Wisdom described as a great, granted gift" },
+                { surah: 3, ayah: 7, ref: "Ali 'Imran 3:7", note: "Praises those firmly grounded in true knowledge" },
+                { surah: 20, ayah: 114, ref: "Ta-Ha 20:114", note: "A short daily dua for increased knowledge" },
+                { surah: 39, ayah: 9, ref: "Az-Zumar 39:9", note: "Knowledge distinguished as a mark of understanding" },
+                { surah: 58, ayah: 11, ref: "Al-Mujadila 58:11", note: "Knowledge paired with faith as a path to honor" },
+                { surah: 96, ayah: 1, ref: "Al-Alaq 96:1", note: "The Qur'an's first revealed word: 'Read'" }
+            ],
+            protection: [
+                { surah: 1, ayah: 5, ref: "Al-Fatihah 1:5", note: "A daily plea for Allah's help alone" },
+                { surah: 2, ayah: 201, ref: "Al-Baqarah 2:201", note: "A widely recited dua for protection in both worlds" },
+                { surah: 3, ayah: 173, ref: "Ali 'Imran 3:173", note: "'Allah is sufficient for us' and trust in the face of fear" },
+                { surah: 7, ayah: 200, ref: "Al-A'raf 7:200", note: "Seeking refuge from whispers of doubt or evil" },
+                { surah: 16, ayah: 98, ref: "An-Nahl 16:98", note: "The instruction to seek refuge before reciting" },
+                { surah: 113, ayah: 1, ref: "Al-Falaq 113:1", note: "Surah Al-Falaq, recited for protection each day" },
+                { surah: 114, ayah: 1, ref: "An-Nas 114:1", note: "Surah An-Nas, protection from whispers of harm" }
+            ],
+            charity: [
+                { surah: 2, ayah: 43, ref: "Al-Baqarah 2:43", note: "Charity paired with prayer as a core obligation" },
+                { surah: 2, ayah: 177, ref: "Al-Baqarah 2:177", note: "Defines true righteousness through generosity" },
+                { surah: 2, ayah: 261, ref: "Al-Baqarah 2:261", note: "The parable of a gift multiplied seven-hundredfold" },
+                { surah: 2, ayah: 274, ref: "Al-Baqarah 2:274", note: "A promise of reward for quiet, regular giving" },
+                { surah: 9, ayah: 103, ref: "At-Tawbah 9:103", note: "Charity described as purifying wealth and the soul" },
+                { surah: 107, ayah: 1, ref: "Al-Ma'un 107:1", note: "Warns against neglecting the orphan and the needy" }
+            ],
+            hope: [
+                { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Patience in hardship framed as a form of hope" },
+                { surah: 3, ayah: 139, ref: "Ali 'Imran 3:139", note: "A reminder not to lose heart in adversity" },
+                { surah: 13, ayah: 28, ref: "Ar-Ra'd 13:28", note: "Hearts find rest in the remembrance of Allah" },
+                { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "A call to never despair of Allah's mercy" },
+                { surah: 65, ayah: 3, ref: "At-Talaq 65:3", note: "Trust in Allah described as true sufficiency" },
+                { surah: 94, ayah: 5, ref: "Ash-Sharh 94:5", note: "The famous promise: with hardship comes ease" },
+                { surah: 94, ayah: 6, ref: "Ash-Sharh 94:6", note: "Repeated for emphasis, ease truly follows hardship" }
+            ],
+            patience: [
+                { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Patience and prayer named as sources of help" },
+                { surah: 2, ayah: 155, ref: "Al-Baqarah 2:155", note: "Names the tests of life met with patience" },
+                { surah: 3, ayah: 200, ref: "Ali 'Imran 3:200", note: "A direct command to endure and stay steadfast" },
+                { surah: 11, ayah: 115, ref: "Hud 11:115", note: "Patience linked to a reward that is never lost" },
+                { surah: 39, ayah: 10, ref: "Az-Zumar 39:10", note: "The patient rewarded without limit or measure" },
+                { surah: 103, ayah: 3, ref: "Al-'Asr 103:3", note: "Patience named essential to a life not in loss" }
+            ],
+            gratitude: [
+                { surah: 2, ayah: 152, ref: "Al-Baqarah 2:152", note: "Gratitude tied directly to Allah's remembrance of us" },
+                { surah: 14, ayah: 7, ref: "Ibrahim 14:7", note: "A direct promise: gratitude leads to increase" },
+                { surah: 16, ayah: 18, ref: "An-Nahl 16:18", note: "A reminder of the sheer scale of Allah's favors" },
+                { surah: 27, ayah: 19, ref: "An-Naml 27:19", note: "Prophet Sulayman's own dua for gratitude" },
+                { surah: 31, ayah: 12, ref: "Luqman 31:12", note: "Luqman's wisdom: gratitude benefits oneself" }
+            ],
+            forgiveness: [
+                { surah: 3, ayah: 134, ref: "Ali 'Imran 3:134", note: "Restraining anger named among the righteous" },
+                { surah: 7, ayah: 199, ref: "Al-A'raf 7:199", note: "A practical guide to responding with patience" },
+                { surah: 24, ayah: 22, ref: "An-Nur 24:22", note: "Forgiving others tied to Allah forgiving us" },
+                { surah: 42, ayah: 40, ref: "Ash-Shuraa 42:40", note: "Pardoning described as more rewarding than revenge" },
+                { surah: 64, ayah: 14, ref: "At-Taghabun 64:14", note: "Forgiving even those closest to us who wrong us" }
+            ],
+            family: [
+                { surah: 17, ayah: 24, ref: "Al-Isra 17:24", note: "The well-known dua asking mercy for one's parents" },
+                { surah: 25, ayah: 74, ref: "Al-Furqan 25:74", note: "A dua for a family that brings genuine comfort" },
+                { surah: 30, ayah: 21, ref: "Ar-Rum 30:21", note: "Marriage described as a source of tranquility and love" },
+                { surah: 31, ayah: 14, ref: "Luqman 31:14", note: "Kindness to parents linked with gratitude to Allah" },
+                { surah: 46, ayah: 15, ref: "Al-Ahqaf 46:15", note: "A dua thanking Allah while honoring one's parents" }
+            ],
+            repentance: [
+                { surah: 2, ayah: 222, ref: "Al-Baqarah 2:222", note: "Repentance named among what Allah loves most" },
+                { surah: 4, ayah: 110, ref: "An-Nisa 4:110", note: "A simple promise: ask sincerely, and He forgives" },
+                { surah: 25, ayah: 70, ref: "Al-Furqan 25:70", note: "Sincere repentance can turn past wrongs into good" },
+                { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "Allah's forgiveness open regardless of past sin" },
+                { surah: 66, ayah: 8, ref: "At-Tahrim 66:8", note: "The call toward sincere, lasting repentance" }
+            ],
+            hereafter: [
+                { surah: 2, ayah: 281, ref: "Al-Baqarah 2:281", note: "A call to live mindful of the final Day" },
+                { surah: 3, ayah: 185, ref: "Ali 'Imran 3:185", note: "A direct reminder: every soul will taste death" },
+                { surah: 21, ayah: 35, ref: "Al-Anbiya 21:35", note: "Life's trials framed as tests before the return" },
+                { surah: 29, ayah: 57, ref: "Al-Ankabut 29:57", note: "Reinforces that all return to Allah after death" },
+                { surah: 99, ayah: 7, ref: "Az-Zalzalah 99:7", note: "Even the smallest good will be seen and weighed" }
+            ]
+        };
+
+        var TOPIC_NAMES = {
+            mercy: "Mercy",
+            prayer: "Prayer",
+            knowledge: "Knowledge",
+            protection: "Protection",
+            charity: "Charity",
+            hope: "Hope",
+            patience: "Patience",
+            gratitude: "Gratitude",
+            forgiveness: "Forgiveness",
+            family: "Family",
+            repentance: "Repentance",
+            hereafter: "The Hereafter"
+        };
+
+        var TOPIC_ICONS = {
+            mercy: "fa-solid fa-hands-holding-heart",
+            prayer: "fa-solid fa-hands-praying",
+            knowledge: "fa-solid fa-book-open",
+            protection: "fa-solid fa-shield-halved",
+            charity: "fa-solid fa-hand-holding-heart",
+            hope: "fa-solid fa-seedling",
+            patience: "fa-solid fa-hourglass-half",
+            gratitude: "fa-solid fa-heart-circle-check",
+            forgiveness: "fa-solid fa-dove",
+            family: "fa-solid fa-people-roof",
+            repentance: "fa-solid fa-rotate-right",
+            hereafter: "fa-solid fa-star-and-crescent"
+        };
+
+        var grid = document.getElementById("topics-grid-full");
+        if (!grid) return;
+
+        var html = "";
+        Object.keys(TOPIC_NAMES).forEach(function (key) {
+            var name = TOPIC_NAMES[key];
+            var count = (TOPIC_VERSES[key] || []).length;
+            var icon = TOPIC_ICONS[key] || "fa-solid fa-bookmark";
+            var verseWord = count === 1 ? "verse" : "verses";
+            html += '' +
+                '<a href="index.html?topic=' + encodeURIComponent(key) + '" class="topic-card" data-topic="' + key + '">' +
+                    '<span class="topic-card-icon"><i class="' + icon + '"></i></span>' +
+                    '<h3>' + name + '</h3>' +
+                    '<span class="topic-count">' + count + ' ' + verseWord + '</span>' +
+                    '<span class="topic-go">Open readings <i class="fa-solid fa-arrow-right"></i></span>' +
+                '</a>';
+        });
+        grid.innerHTML = html;
+    })();
+    </script>
+</body>
+</html>
