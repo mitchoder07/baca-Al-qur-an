@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baca — Guided Journeys</title>
+    <title>Baca - Guided Journeys</title>
     <meta name="description" content="Step-by-step reading journeys through the Qur'an. Each day opens one verse and tracks your progress, all the way to completion.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="/css/reader-additions.css">
     <link rel="stylesheet" href="/css/shared-nav.css">
     <link rel="stylesheet" href="/css/baca-logo.css">
+    <style>
+      @media (display-mode: standalone) {
+        .baca-footer { display: none !important; }
+      }
+    </style>
     <meta name="theme-color" content="#0f172a">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
@@ -21,15 +26,15 @@
     <meta name="apple-mobile-web-app-title" content="Baca">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://baca-al-qur-an.vercel.app/journeys.html">
-    <meta property="og:title" content="Baca — Guided Journeys">
+    <meta property="og:title" content="Baca - Guided Journeys">
     <meta property="og:description" content="Step-by-step reading journeys through the Qur'an. Each day opens one verse and tracks your progress.">
     <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta property="og:site_name" content="Baca - Read the Qur'an">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/journeys.html">
-    <meta name="twitter:title" content="Baca — Guided Journeys">
+    <meta name="twitter:title" content="Baca - Guided Journeys">
     <meta name="twitter:description" content="Step-by-step reading journeys through the Qur'an. Each day opens one verse and tracks your progress.">
     <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <style>
@@ -68,17 +73,6 @@
             gap: 1.5rem;
             margin-top: 1rem;
         }
-        .journeys-back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.85rem;
-            margin-bottom: 1.2rem;
-            transition: color 0.2s;
-        }
-        .journeys-back-link:hover { color: var(--primary); }
         .journey-card { cursor: default; }
         .journey-card .journey-icon {
             display: inline-flex;
@@ -110,8 +104,6 @@
     </header>
 
     <main style="max-width:1080px;margin:0 auto;padding:5rem 1.5rem 4rem;">
-        <a href="index.html" class="journeys-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
-
         <section class="journeys-page-header">
             <span class="journeys-badge"><i class="fa-solid fa-map"></i> One verse a day</span>
             <h1>Guided Journeys</h1>
@@ -218,8 +210,55 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/script.js"></script>
     <script>if (window.lucide) lucide.createIcons();</script>
-    <script src="/js/chat-widget.js"></script>
     <script src="/js/shared-nav.js"></script>
     <script src="/js/pwa-register.js"></script>
+    <!-- Override openReader so journey buttons navigate to index.html
+         (the reader modal only lives on index.html). script.js's
+         initJourneys() still saves the journey state, then calls our
+         overridden openReader, which redirects. -->
+    <script>
+    (function () {
+        window.openReader = function (surah, ayah) {
+            var url = 'index.html?surah=' + encodeURIComponent(surah);
+            if (ayah != null && ayah !== '') {
+                url += '&ayah=' + encodeURIComponent(ayah);
+            }
+            window.location.href = url;
+        };
+
+        // Fallback: if script.js never wires up the journey buttons
+        // (e.g. it failed to load), make each "Start Journey" button
+        // navigate to the first verse of its journey using data-start.
+        function wireFallback() {
+            document.querySelectorAll('.journey-card').forEach(function (card) {
+                var btn = card.querySelector('button');
+                if (!btn || btn.dataset.bacaFallbackWired) return;
+                btn.dataset.bacaFallbackWired = '1';
+                btn.addEventListener('click', function (e) {
+                    // If script.js already wired this button, its own
+                    // handler will call our overridden openReader. We
+                    // only step in when the button still has its
+                    // initial "Start Journey" label AND no progress
+                    // has been saved, which means script.js likely
+                    // didn't run.
+                    var journeys = {};
+                    try { journeys = JSON.parse(localStorage.getItem('bacaJourneys') || '{}'); } catch (err) {}
+                    var hasProgress = !!(journeys[card.dataset.journey]);
+                    if (hasProgress) return; // let script.js handle it
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var ref = (card.dataset.verses || card.dataset.start || '').split(',')[0];
+                    var parts = ref.split(':');
+                    var surah = parts[0];
+                    var ayah = parts[1];
+                    var url = 'index.html?surah=' + encodeURIComponent(surah);
+                    if (ayah) url += '&ayah=' + encodeURIComponent(ayah);
+                    window.location.href = url;
+                });
+            });
+        }
+        setTimeout(wireFallback, 1500);
+    })();
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baca — Your Progress</title>
+    <title>Baca - Your Progress</title>
     <meta name="description" content="Track your reading streak, today's challenge, and every achievement you have unlocked on Baca, your Qur'an companion.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="/css/reader-additions.css">
     <link rel="stylesheet" href="/css/shared-nav.css">
     <link rel="stylesheet" href="/css/baca-logo.css">
+    <style>
+      @media (display-mode: standalone) {
+        .baca-footer { display: none !important; }
+      }
+    </style>
     <meta name="theme-color" content="#0f172a">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
@@ -21,21 +26,22 @@
     <meta name="apple-mobile-web-app-title" content="Baca">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://baca-al-qur-an.vercel.app/progress.html">
-    <meta property="og:title" content="Baca — Your Progress">
+    <meta property="og:title" content="Baca - Your Progress">
     <meta property="og:description" content="Track your reading streak, today's challenge, and every achievement you have unlocked.">
     <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta property="og:site_name" content="Baca - Read the Qur'an">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/progress.html">
-    <meta name="twitter:title" content="Baca — Your Progress">
+    <meta name="twitter:title" content="Baca - Your Progress">
     <meta name="twitter:description" content="Track your reading streak, today's challenge, and every achievement you have unlocked.">
     <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <style>
+        /* PAGE HEADER */
         .progress-page-header {
             text-align: center;
-            padding: 1.5rem 0 2.5rem;
+            padding: 0.5rem 0 2.5rem;
         }
         .progress-page-header .progress-badge {
             display: inline-flex;
@@ -54,6 +60,10 @@
             font-weight: 800;
             margin-bottom: 0.7rem;
             line-height: 1.2;
+            background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .progress-page-header p {
             color: var(--text);
@@ -61,81 +71,98 @@
             margin: 0 auto;
             line-height: 1.7;
         }
-        .progress-back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.85rem;
-            margin-bottom: 1.2rem;
-            transition: color 0.2s;
-        }
-        .progress-back-link:hover { color: var(--primary); }
 
-        .progress-section {
-            margin-top: 2.5rem;
-        }
+        /* SECTION TITLES */
+        .progress-section { margin-top: 2.75rem; }
         .progress-section-title {
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.3rem;
             color: var(--white);
         }
-        .progress-section-title i { color: var(--primary); }
+        .progress-section-title i {
+            color: var(--primary);
+            width: 22px;
+            text-align: center;
+        }
+        body.light-mode .progress-section-title { color: #0f172a; }
 
+        /* HERO STAT CARDS */
         .progress-hero-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        @media (min-width: 720px) {
+            .progress-hero-grid { grid-template-columns: repeat(4, 1fr); }
         }
         .progress-hero-card {
             background: var(--dark-light);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 1.4rem;
+            border-radius: 18px;
+            padding: 1.3rem 1.1rem;
             display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: border-color 0.25s, transform 0.25s;
+            flex-direction: column;
+            gap: 0.85rem;
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+            position: relative;
+            overflow: hidden;
         }
-        .progress-hero-card:hover { border-color: rgba(16, 185, 129, 0.35); transform: translateY(-2px); }
+        .progress-hero-card::after {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 90px; height: 90px;
+            background: radial-gradient(circle, rgba(16,185,129,0.08), transparent 70%);
+            pointer-events: none;
+        }
+        .progress-hero-card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+        }
         .progress-hero-card .ph-icon {
-            width: 48px; height: 48px; border-radius: 14px;
-            background: rgba(16, 185, 129, 0.12);
+            width: 44px; height: 44px; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(6, 182, 212, 0.12));
             color: var(--primary);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; flex-shrink: 0;
+            font-size: 1.1rem; flex-shrink: 0;
         }
         .progress-hero-card .ph-value {
-            font-size: 1.6rem; font-weight: 800; line-height: 1.1;
+            font-size: 1.7rem; font-weight: 800; line-height: 1.1;
             background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .progress-hero-card .ph-label {
-            font-size: 0.78rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 0.15rem;
+            font-size: 0.72rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem;
         }
 
+        /* DAILY GOAL CARD */
         .daily-goal-card {
-            background: var(--dark-light);
+            background: linear-gradient(135deg, var(--dark-light), rgba(16, 185, 129, 0.04));
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 1.4rem 1.5rem;
+            border-radius: 18px;
+            padding: 1.3rem 1.5rem;
         }
         .daily-goal-top {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 0.8rem; gap: 1rem;
+            margin-bottom: 0.9rem; gap: 1rem; flex-wrap: wrap;
         }
         .daily-goal-top .dg-label {
             display: flex; align-items: center; gap: 0.5rem;
-            font-weight: 700; color: var(--white);
+            font-weight: 700; color: var(--white); font-size: 0.95rem;
         }
+        body.light-mode .daily-goal-top .dg-label { color: #0f172a; }
         .daily-goal-top .dg-label i { color: var(--primary); }
-        .daily-goal-top .dg-text { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+        .daily-goal-top .dg-text {
+            color: var(--primary); font-size: 0.9rem; font-weight: 700;
+            background: rgba(16, 185, 129, 0.12);
+            padding: 0.3rem 0.8rem; border-radius: 999px;
+        }
         .daily-goal-bar {
             height: 10px; border-radius: 99px;
             background: rgba(255, 255, 255, 0.06);
@@ -148,11 +175,26 @@
             border-radius: 99px; transition: width 0.6s ease;
         }
 
-        .challenge-card { margin: 0; max-width: none; width: 100%; }
+        /* STATS GRID (lifetime) */
+        .stats-grid { margin-top: 1.25rem; }
+
+        /* CHALLENGE CARD (full width, more prominent) */
+        .challenge-card {
+            margin: 0; max-width: none; width: 100%;
+            border-radius: 22px;
+            padding: 1.8rem;
+        }
+        .challenge-card .challenge-badge {
+            width: 64px; height: 64px; border-radius: 18px;
+        }
+        .challenge-card .challenge-badge svg { width: 30px; height: 30px; }
+        .challenge-card .challenge-info h3 { font-size: 1.2rem; }
+        .challenge-card .challenge-progress { max-width: none; }
 
         @media (max-width: 640px) {
-            .challenge-card { flex-direction: column; align-items: flex-start; }
-            .challenge-right { align-self: flex-end; }
+            .challenge-card { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+            .challenge-right { align-self: stretch; text-align: left; }
+            .challenge-xp { display: inline-block; }
         }
     </style>
 </head>
@@ -171,9 +213,7 @@
         </div>
     </header>
 
-    <main style="max-width:900px;margin:0 auto;padding:5rem 1.5rem 4rem;">
-        <a href="index.html" class="progress-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
-
+    <main style="max-width:980px;margin:0 auto;padding:5rem 1.5rem 4rem;">
         <section class="progress-page-header">
             <span class="progress-badge"><i class="fa-solid fa-chart-line"></i> Your reading journey</span>
             <h1>Progress</h1>
@@ -200,7 +240,7 @@
                     </div>
                 </div>
                 <div class="progress-hero-card">
-                    <div class="ph-icon"><i class="fa-solid fa-book-check"></i></div>
+                    <div class="ph-icon"><i class="fa-solid fa-book-bookmark"></i></div>
                     <div>
                         <div class="ph-value" id="completed-surahs">0</div>
                         <div class="ph-label">Surahs completed</div>
@@ -223,7 +263,7 @@
                 <div class="daily-goal-bar"><div class="daily-goal-fill" id="daily-goal-fill"></div></div>
             </div>
 
-            <div class="stats-grid" style="margin-top:1.5rem;">
+            <div class="stats-grid">
                 <div class="stat-item">
                     <span class="stat-number" id="stat-verses">0</span>
                     <span class="stat-label">Verses read</span>
@@ -299,7 +339,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/script.js"></script>
     <script>if (window.lucide) lucide.createIcons();</script>
-    <script src="/js/chat-widget.js"></script>
     <script src="/js/shared-nav.js"></script>
     <script src="/js/pwa-register.js"></script>
     <script>
@@ -310,13 +349,33 @@
             if (!primary || !secondary) return;
             var sync = function () { secondary.textContent = (primary.textContent || '0 / 5') + ' pages'; };
             sync();
-            // observe changes from updateStatsUI()
             if (window.MutationObserver) {
                 new MutationObserver(sync).observe(primary, { childList: true, characterData: true, subtree: true });
             } else {
                 setInterval(sync, 800);
             }
         })();
+
+        // Fallback: if script.js didn't fire initGamification() (e.g. it threw
+        // somewhere before reaching its own setTimeout), call it ourselves.
+        // script.js schedules initGamification() at +500ms; we wait until
+        // +900ms and only call it if the achievements grid is still empty
+        // (a clear sign script.js never ran the renderer).
+        setTimeout(function () {
+            try {
+                if (window._bacaGamificationInited) return;
+                var grid = document.getElementById('achievements-grid');
+                var alreadyPopulated = grid && grid.children && grid.children.length > 0;
+                if (alreadyPopulated) {
+                    window._bacaGamificationInited = true;
+                    return;
+                }
+                if (typeof window.initGamification === 'function') {
+                    window._bacaGamificationInited = true;
+                    window.initGamification();
+                }
+            } catch (e) { /* no-op */ }
+        }, 900);
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baca — Bookmarks</title>
+    <title>Baca - Bookmarks</title>
     <meta name="description" content="Every verse you have saved for later, in one place. Open any bookmark straight back into the reader, or clear them all.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="/css/reader-additions.css">
     <link rel="stylesheet" href="/css/shared-nav.css">
     <link rel="stylesheet" href="/css/baca-logo.css">
+    <style>
+      @media (display-mode: standalone) {
+        .baca-footer { display: none !important; }
+      }
+    </style>
     <meta name="theme-color" content="#0f172a">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
@@ -21,15 +26,15 @@
     <meta name="apple-mobile-web-app-title" content="Baca">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://baca-al-qur-an.vercel.app/bookmarks.html">
-    <meta property="og:title" content="Baca — Bookmarks">
+    <meta property="og:title" content="Baca - Bookmarks">
     <meta property="og:description" content="Every verse you have saved for later, in one place. Open any bookmark straight back into the reader.">
     <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Baca — Read the Qur'an">
+    <meta property="og:site_name" content="Baca - Read the Qur'an">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/bookmarks.html">
-    <meta name="twitter:title" content="Baca — Bookmarks">
+    <meta name="twitter:title" content="Baca - Bookmarks">
     <meta name="twitter:description" content="Every verse you have saved for later, in one place. Open any bookmark straight back into the reader.">
     <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <style>
@@ -88,17 +93,6 @@
             color: #ef4444;
             background: rgba(239, 68, 68, 0.06);
         }
-        .bookmarks-back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.85rem;
-            margin-bottom: 1.2rem;
-            transition: color 0.2s;
-        }
-        .bookmarks-back-link:hover { color: var(--primary); }
         .bookmarks-list { margin-top: 0.5rem; }
     </style>
 </head>
@@ -118,8 +112,6 @@
     </header>
 
     <main style="max-width:860px;margin:0 auto;padding:5rem 1.5rem 4rem;">
-        <a href="index.html" class="bookmarks-back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
-
         <div class="bookmarks-page-header">
             <div class="bp-left">
                 <span class="bp-badge"><i class="fa-solid fa-bookmark"></i> Saved verses</span>
@@ -169,8 +161,117 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/script.js"></script>
     <script>if (window.lucide) lucide.createIcons();</script>
-    <script src="/js/chat-widget.js"></script>
     <script src="/js/shared-nav.js"></script>
     <script src="/js/pwa-register.js"></script>
+    <!-- Fallback: always render bookmarks from localStorage and redirect
+         "Open in reader" to index.html (the reader modal only lives there). -->
+    <script>
+    (function () {
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        function getBookmarks() {
+            try { return JSON.parse(localStorage.getItem('bookmarks') || '[]'); }
+            catch (e) { return []; }
+        }
+        function saveBookmarks(list) {
+            try { localStorage.setItem('bookmarks', JSON.stringify(list || [])); } catch (e) {}
+        }
+        function safeLucide() {
+            if (window.lucide) { try { lucide.createIcons(); } catch (e) {} }
+        }
+
+        function renderBookmarksFallback() {
+            var list = document.getElementById('bookmarks-list');
+            var count = document.getElementById('bookmarks-count');
+            if (!list) return;
+            var bks = getBookmarks();
+            if (count) count.textContent = bks.length + ' saved';
+            if (!bks.length) {
+                list.innerHTML = '<div class="bookmarks-empty"><i data-lucide="bookmark"></i><p>No bookmarks yet. Save verses from the reader and they will appear here.</p></div>';
+                safeLucide();
+                return;
+            }
+            list.innerHTML = bks.map(function (b) {
+                var dateStr = b.savedAt
+                    ? new Date(b.savedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                    : '';
+                return '' +
+                    '<article class="bookmark-card">' +
+                      '<div class="bookmark-card-main">' +
+                        '<div class="bookmark-card-meta">' +
+                          '<span class="bookmark-tag">' + escapeHtml(b.surahName) + ' &middot; Ayah ' + escapeHtml(b.ayah) + '</span>' +
+                          '<span class="bookmark-date">' + escapeHtml(dateStr) + '</span>' +
+                        '</div>' +
+                        '<div class="bookmark-arabic">' + escapeHtml(b.arabic) + '</div>' +
+                        '<div class="bookmark-translation">' + escapeHtml(b.translation) + '</div>' +
+                      '</div>' +
+                      '<div class="bookmark-actions">' +
+                        '<button type="button" class="open-bookmark" data-surah="' + escapeHtml(b.surah) + '" data-ayah="' + escapeHtml(b.ayah) + '" title="Open in reader"><i data-lucide="book-open"></i></button>' +
+                        '<button type="button" class="remove-bookmark" data-surah="' + escapeHtml(b.surah) + '" data-ayah="' + escapeHtml(b.ayah) + '" title="Remove"><i data-lucide="trash-2"></i></button>' +
+                      '</div>' +
+                    '</article>';
+            }).join('');
+            safeLucide();
+        }
+
+        function init() {
+            renderBookmarksFallback();
+
+            var list = document.getElementById('bookmarks-list');
+            if (list) {
+                list.addEventListener('click', function (e) {
+                    var openBtn = e.target.closest('.open-bookmark');
+                    if (openBtn) {
+                        e.preventDefault();
+                        var surah = openBtn.getAttribute('data-surah');
+                        var ayah = openBtn.getAttribute('data-ayah');
+                        if (surah) {
+                            var url = 'index.html?surah=' + encodeURIComponent(surah);
+                            if (ayah) url += '&ayah=' + encodeURIComponent(ayah);
+                            window.location.href = url;
+                        }
+                        return;
+                    }
+                    var removeBtn = e.target.closest('.remove-bookmark');
+                    if (removeBtn) {
+                        var s = Number(removeBtn.getAttribute('data-surah'));
+                        var a = Number(removeBtn.getAttribute('data-ayah'));
+                        saveBookmarks(getBookmarks().filter(function (b) {
+                            return !(b.surah === s && b.ayah === a);
+                        }));
+                        renderBookmarksFallback();
+                        return;
+                    }
+                });
+            }
+
+            // Re-wire the clear button: clone to drop any listeners that
+            // script.js may have attached, then add our own.
+            var clearBtn = document.getElementById('bookmarks-clear-btn');
+            if (clearBtn && clearBtn.parentNode) {
+                var clone = clearBtn.cloneNode(true);
+                clearBtn.parentNode.replaceChild(clone, clearBtn);
+                clone.addEventListener('click', function () {
+                    if (!getBookmarks().length) return;
+                    if (!confirm('Remove all bookmarks?')) return;
+                    saveBookmarks([]);
+                    renderBookmarksFallback();
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 300); });
+        } else {
+            setTimeout(init, 300);
+        }
+    })();
+    </script>
 </body>
 </html>
