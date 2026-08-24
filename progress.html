@@ -255,32 +255,6 @@
                 </div>
             </div>
 
-            <div class="daily-goal-card">
-                <div class="daily-goal-top">
-                    <span class="dg-label"><i class="fa-solid fa-flag"></i> Today's page goal</span>
-                    <span class="dg-text" id="daily-goal-text-2">0 / 5 pages</span>
-                </div>
-                <div class="daily-goal-bar"><div class="daily-goal-fill" id="daily-goal-fill"></div></div>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-number" id="stat-verses">0</span>
-                    <span class="stat-label">Verses read</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="stat-pages">0</span>
-                    <span class="stat-label">Pages read</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="stat-juz">0</span>
-                    <span class="stat-label">Juz explored</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="stat-days">0</span>
-                    <span class="stat-label">Total days</span>
-                </div>
-            </div>
         </section>
 
         <!-- DAILY CHALLENGE -->
@@ -342,40 +316,34 @@
     <script src="/js/shared-nav.js"></script>
     <script src="/js/pwa-register.js"></script>
     <script>
-        // Keep the secondary "Today's page goal" line in sync with the main daily-goal-text value.
-        (function () {
-            var primary = document.getElementById('daily-goal-text');
-            var secondary = document.getElementById('daily-goal-text-2');
-            if (!primary || !secondary) return;
-            var sync = function () { secondary.textContent = (primary.textContent || '0 / 5') + ' pages'; };
-            sync();
-            if (window.MutationObserver) {
-                new MutationObserver(sync).observe(primary, { childList: true, characterData: true, subtree: true });
-            } else {
-                setInterval(sync, 800);
+        // Force init gamification on this page
+        setTimeout(function() {
+            if (typeof initGamification === 'function') {
+                initGamification();
             }
-        })();
-
-        // Fallback: if script.js didn't fire initGamification() (e.g. it threw
-        // somewhere before reaching its own setTimeout), call it ourselves.
-        // script.js schedules initGamification() at +500ms; we wait until
-        // +900ms and only call it if the achievements grid is still empty
-        // (a clear sign script.js never ran the renderer).
-        setTimeout(function () {
-            try {
-                if (window._bacaGamificationInited) return;
-                var grid = document.getElementById('achievements-grid');
-                var alreadyPopulated = grid && grid.children && grid.children.length > 0;
-                if (alreadyPopulated) {
-                    window._bacaGamificationInited = true;
-                    return;
-                }
-                if (typeof window.initGamification === 'function') {
-                    window._bacaGamificationInited = true;
-                    window.initGamification();
-                }
-            } catch (e) { /* no-op */ }
-        }, 900);
+            if (typeof loadStats === 'function' && typeof updateStatsUI === 'function') {
+                var stats = loadStats();
+                updateStatsUI(stats);
+                if (typeof renderAchievements === 'function') renderAchievements(stats);
+                if (typeof renderChallenge === 'function') renderChallenge();
+                if (typeof updateChallengeProgress === 'function') updateChallengeProgress(stats);
+            }
+        }, 600);
     </script>
+    <script>
+// Theme toggle fallback for non-index pages
+document.querySelector('.theme-btn')?.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
+    const btn = document.querySelector('.theme-btn i');
+    if (btn) btn.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+});
+// Apply saved theme on load
+if (localStorage.getItem('siteTheme') === 'light') {
+    document.body.classList.add('light-mode');
+    const btn = document.querySelector('.theme-btn i');
+    if (btn) btn.className = 'fa-solid fa-sun';
+}
+</script>
 </body>
 </html>

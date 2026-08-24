@@ -260,5 +260,34 @@
         setTimeout(wireFallback, 1500);
     })();
     </script>
+<script>
+// Wire journey buttons directly
+document.querySelectorAll('.journey-card button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var card = btn.closest('.journey-card');
+        var start = card ? card.getAttribute('data-start') : null;
+        if (start) {
+            var parts = start.split(':');
+            var surah = parts[0];
+            window.location.href = 'index.html?surah=' + encodeURIComponent(surah);
+        }
+    });
+});
+</script>
+<script>
+// Theme toggle fallback for non-index pages
+document.querySelector('.theme-btn')?.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
+    const btn = document.querySelector('.theme-btn i');
+    if (btn) btn.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+});
+// Apply saved theme on load
+if (localStorage.getItem('siteTheme') === 'light') {
+    document.body.classList.add('light-mode');
+    const btn = document.querySelector('.theme-btn i');
+    if (btn) btn.className = 'fa-solid fa-sun';
+}
+</script>
 </body>
 </html>

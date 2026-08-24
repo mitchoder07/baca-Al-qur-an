@@ -332,15 +332,7 @@
             .replace(/'/g, '&#39;');
     }
 
-    function isStandalone() {
-        return window.matchMedia('(display-mode: standalone)').matches ||
-            window.navigator.standalone === true;
-    }
-
-    if (isStandalone()) {
-        window.location.href = '/index.html';
-        return;
-    }
+    // Blog is now visible in BOTH web and mobile app (no standalone redirect)
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', renderBlog);
