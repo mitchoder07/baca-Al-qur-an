@@ -17,6 +17,17 @@
     <meta name="mobile-web-app-capable" content="yes">
     <!-- New logo styles + Reem Kufi font + green gradient -->
     <link rel="stylesheet" href="/css/baca-logo.css">
+    <!-- MOBILE APP ONLY: Hide sections that have their own pages in the More sheet.
+         Web app shows everything. Mobile app hides topics, journeys, bookmarks,
+         featured-reciters, daily-reflection, reading-progress, daily-challenge,
+         achievements since they're accessible via the More sheet. -->
+    <style>
+      @media (display-mode: standalone) {
+        .topics, .journeys, .bookmarks-section, .featured-reciters,
+        .daily-reflection, .reading-progress-section, .daily-challenge-section,
+        .achievements-section { display: none !important; }
+      }
+    </style>
     <title>Baca — Experience the Qur'an Like Never Before</title>
 
     <!-- Font Awesome -->

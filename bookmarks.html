@@ -273,5 +273,50 @@
         }
     })();
     </script>
+<script>
+// Fallback: render bookmarks directly from localStorage
+setTimeout(function() {
+    if (typeof renderBookmarks === 'function') {
+        renderBookmarks();
+    } else {
+        // Manual render
+        var bookmarks = [];
+        try { bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]'); } catch(e) {}
+        var list = document.getElementById('bookmarks-list');
+        var count = document.getElementById('bookmarks-count');
+        if (count) count.textContent = bookmarks.length + ' saved';
+        if (!list) return;
+        if (!bookmarks.length) {
+            list.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text)"><i class="fa-solid fa-bookmark" style="font-size:2rem;opacity:0.3;margin-bottom:1rem"></i><p>No bookmarks yet. Save verses from the reader.</p></div>';
+            return;
+        }
+        list.innerHTML = bookmarks.map(function(b) {
+            return '<article class="bookmark-card" style="background:var(--dark-light);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:0.8rem;display:flex;gap:1rem;align-items:center">' +
+                '<div style="flex:1;min-width:0">' +
+                '<div style="font-size:0.75rem;color:var(--text);margin-bottom:0.3rem">' + (b.surahName || 'Surah ' + b.surah) + ' · Ayah ' + b.ayah + '</div>' +
+                '<div style="font-family:Amiri,serif;font-size:1.2rem;direction:rtl;margin-bottom:0.3rem">' + (b.arabic || '') + '</div>' +
+                '<div style="font-size:0.85rem;color:var(--text)">' + (b.translation || '') + '</div>' +
+                '</div>' +
+                '<a href="index.html?surah=' + b.surah + '&ayah=' + b.ayah + '" style="background:var(--primary);color:#fff;padding:0.5rem 1rem;border-radius:10px;text-decoration:none;font-size:0.8rem;white-space:nowrap">Open</a>' +
+                '</article>';
+        }).join('');
+    }
+}, 400);
+</script>
+<script>
+// Theme toggle fallback for non-index pages
+document.querySelector('.theme-btn')?.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
+    const btn = document.querySelector('.theme-btn i');
+    if (btn) btn.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+});
+// Apply saved theme on load
+if (localStorage.getItem('siteTheme') === 'light') {
+    document.body.classList.add('light-mode');
+    const btn = document.querySelector('.theme-btn i');
+    if (btn) btn.className = 'fa-solid fa-sun';
+}
+</script>
 </body>
 </html>
