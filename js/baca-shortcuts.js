@@ -21,15 +21,17 @@
     if (window.location.pathname !== '/' && window.location.pathname !== '') return;
   }
 
-  // Section definitions: id + label + icon
-  // (Bookmarks and Reading Progress now live on their own dedicated pages
-  //  at /bookmarks.html and /progress.html, reachable from the "More" sheet.
-  //  The home page keeps compact summary cards for them, but they are no
-  //  longer in-page jump targets, so they are dropped from the shortcut pills.)
+  // Section definitions — id + label + icon
   var SECTIONS = [
     { id: 'hero', label: 'Home', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
     { id: 'surah-explorer', label: 'Qur\'an', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' },
     { id: 'daily-ayah', label: 'Daily Ayah', icon: 'M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z' },
+    { id: 'topics', label: 'Topics', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+    { id: 'journeys', label: 'Journeys', icon: 'M3 12h18M3 6h18M3 18h18' },
+    { id: 'reading-progress', label: 'Progress', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+    { id: 'daily-challenge', label: 'Challenge', icon: 'M12 2l3.09 6.26L22 9l-5 4.74L18.18 21L12 17.27L5.82 21L7 13.74L2 9l6.91-0.74L12 2z' },
+    { id: 'achievements', label: 'Awards', icon: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z' },
+    { id: 'bookmarks', label: 'Bookmarks', icon: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
   ];
 
   var nav = null;

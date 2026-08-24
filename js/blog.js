@@ -2,6 +2,8 @@
  *
  * Renders blog posts from a static data array (no backend needed).
  * Categories: hadith, sabab-nuzul, fasting, features, reflection, dua
+ *
+ * The blog is WEB ONLY. Hidden in the installed mobile app (standalone mode).
  */
 
 (function () {
@@ -328,6 +330,16 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
+    }
+
+    function isStandalone() {
+        return window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true;
+    }
+
+    if (isStandalone()) {
+        window.location.href = '/index.html';
+        return;
     }
 
     if (document.readyState === 'loading') {
