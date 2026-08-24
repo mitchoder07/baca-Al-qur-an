@@ -2056,6 +2056,18 @@ function initContinueReadingHint() {
     }, 8000);
 }
 
+// REFLECT TOGGLE — shows/hides the reflection card under Daily Ayah
+document.getElementById('reflect-toggle-btn')?.addEventListener('click', () => {
+    const reflect = document.getElementById('daily-ayah-reflect');
+    if (reflect) {
+        reflect.hidden = !reflect.hidden;
+        const btn = document.getElementById('reflect-toggle-btn');
+        if (btn) {
+            btn.classList.toggle('active', !reflect.hidden);
+        }
+    }
+});
+
 // INIT
 
 populateReciterSelects();
