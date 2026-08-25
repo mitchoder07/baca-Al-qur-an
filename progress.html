@@ -38,91 +38,46 @@
     <meta name="twitter:description" content="Track your reading streak, today's challenge, and every achievement you have unlocked.">
     <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
     <style>
-        /* PAGE HEADER */
-        .progress-page-header {
-            text-align: center;
-            padding: 0.5rem 0 2.5rem;
-        }
+        .progress-page-header { text-align: center; padding: 0.5rem 0 2.5rem; }
         .progress-page-header .progress-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.45rem 1rem;
-            border-radius: 999px;
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--primary);
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1.2rem;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.45rem 1rem; border-radius: 999px;
+            background: rgba(16, 185, 129, 0.12); color: var(--primary);
+            font-size: 0.8rem; font-weight: 600; margin-bottom: 1.2rem;
         }
         .progress-page-header h1 {
-            font-size: clamp(1.9rem, 4vw, 2.8rem);
-            font-weight: 800;
-            margin-bottom: 0.7rem;
-            line-height: 1.2;
+            font-size: clamp(1.9rem, 4vw, 2.8rem); font-weight: 800;
+            margin-bottom: 0.7rem; line-height: 1.2;
             background: linear-gradient(120deg, #34d399, #10b981, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .progress-page-header p {
-            color: var(--text);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        /* SECTION TITLES */
+        .progress-page-header p { color: var(--text); max-width: 600px; margin: 0 auto; line-height: 1.7; }
         .progress-section { margin-top: 2.75rem; }
         .progress-section-title {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 1.3rem;
-            color: var(--white);
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 1.2rem; font-weight: 700; margin-bottom: 1.3rem; color: var(--white);
         }
-        .progress-section-title i {
-            color: var(--primary);
-            width: 22px;
-            text-align: center;
-        }
+        .progress-section-title i { color: var(--primary); width: 22px; text-align: center; }
         body.light-mode .progress-section-title { color: #0f172a; }
-
-        /* HERO STAT CARDS */
         .progress-hero-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.25rem;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.25rem;
         }
-        @media (min-width: 720px) {
-            .progress-hero-grid { grid-template-columns: repeat(4, 1fr); }
-        }
+        @media (min-width: 720px) { .progress-hero-grid { grid-template-columns: repeat(4, 1fr); } }
         .progress-hero-card {
-            background: var(--dark-light);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 1.3rem 1.1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
+            background: var(--dark-light); border: 1px solid var(--border);
+            border-radius: 18px; padding: 1.3rem 1.1rem;
+            display: flex; flex-direction: column; gap: 0.85rem;
             transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
         .progress-hero-card::after {
-            content: '';
-            position: absolute;
-            top: -40px; right: -40px;
+            content: ''; position: absolute; top: -40px; right: -40px;
             width: 90px; height: 90px;
             background: radial-gradient(circle, rgba(16,185,129,0.08), transparent 70%);
             pointer-events: none;
         }
         .progress-hero-card:hover {
-            border-color: rgba(16, 185, 129, 0.4);
-            transform: translateY(-2px);
+            border-color: rgba(16, 185, 129, 0.4); transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
         }
         .progress-hero-card .ph-icon {
@@ -140,61 +95,40 @@
         .progress-hero-card .ph-label {
             font-size: 0.72rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem;
         }
-
-        /* DAILY GOAL CARD */
         .daily-goal-card {
             background: linear-gradient(135deg, var(--dark-light), rgba(16, 185, 129, 0.04));
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 1.3rem 1.5rem;
+            border: 1px solid var(--border); border-radius: 18px; padding: 1.3rem 1.5rem;
         }
-        .daily-goal-top {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 0.9rem; gap: 1rem; flex-wrap: wrap;
-        }
-        .daily-goal-top .dg-label {
-            display: flex; align-items: center; gap: 0.5rem;
-            font-weight: 700; color: var(--white); font-size: 0.95rem;
-        }
+        .daily-goal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; gap: 1rem; flex-wrap: wrap; }
+        .daily-goal-top .dg-label { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--white); font-size: 0.95rem; }
         body.light-mode .daily-goal-top .dg-label { color: #0f172a; }
         .daily-goal-top .dg-label i { color: var(--primary); }
-        .daily-goal-top .dg-text {
-            color: var(--primary); font-size: 0.9rem; font-weight: 700;
-            background: rgba(16, 185, 129, 0.12);
-            padding: 0.3rem 0.8rem; border-radius: 999px;
-        }
-        .daily-goal-bar {
-            height: 10px; border-radius: 99px;
-            background: rgba(255, 255, 255, 0.06);
-            overflow: hidden;
-        }
+        .daily-goal-top .dg-text { color: var(--primary); font-size: 0.9rem; font-weight: 700; background: rgba(16, 185, 129, 0.12); padding: 0.3rem 0.8rem; border-radius: 999px; }
+        .daily-goal-bar { height: 10px; border-radius: 99px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
         body.light-mode .daily-goal-bar { background: rgba(0, 0, 0, 0.06); }
-        .daily-goal-fill {
-            height: 100%; width: 0%;
-            background: linear-gradient(90deg, var(--primary), #06b6d4);
-            border-radius: 99px; transition: width 0.6s ease;
-        }
-
-        /* STATS GRID (lifetime) */
-        .stats-grid { margin-top: 1.25rem; }
-
-        /* CHALLENGE CARD (full width, more prominent) */
+        .daily-goal-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), #06b6d4); border-radius: 99px; transition: width 0.6s ease; }
         .challenge-card {
-            margin: 0; max-width: none; width: 100%;
-            border-radius: 22px;
-            padding: 1.8rem;
+            max-width: none; width: 100%; border-radius: 22px; padding: 1.8rem;
+            background: linear-gradient(135deg, var(--dark-light), rgba(16, 185, 129, 0.05));
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; gap: 2rem;
         }
-        .challenge-card .challenge-badge {
-            width: 64px; height: 64px; border-radius: 18px;
-        }
-        .challenge-card .challenge-badge svg { width: 30px; height: 30px; }
-        .challenge-card .challenge-info h3 { font-size: 1.2rem; }
-        .challenge-card .challenge-progress { max-width: none; }
-
+        .challenge-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .challenge-card.completed { border-color: var(--primary); background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.05)); }
+        .challenge-left { display: flex; align-items: center; gap: 1.5rem; }
+        .challenge-badge { width: 64px; height: 64px; border-radius: 18px; background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.12)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .challenge-info h3 { font-size: 1.2rem; margin-bottom: 0.3rem; color: var(--white); }
+        body.light-mode .challenge-info h3 { color: #0f172a; }
+        .challenge-info p { color: var(--text); font-size: 0.88rem; margin-bottom: 0.6rem; }
+        .challenge-progress { max-width: 300px; height: 8px; border-radius: 99px; background: rgba(255,255,255,0.06); overflow: hidden; margin-bottom: 0.3rem; }
+        body.light-mode .challenge-progress { background: rgba(0,0,0,0.06); }
+        .challenge-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), #06b6d4); border-radius: 99px; transition: width 0.5s ease; }
+        .challenge-status { font-size: 0.78rem; color: var(--text); }
+        .challenge-right { text-align: right; }
+        .challenge-xp { display: inline-block; background: rgba(16,185,129,0.15); color: var(--primary); padding: 0.4rem 1rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; }
         @media (max-width: 640px) {
             .challenge-card { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
             .challenge-right { align-self: stretch; text-align: left; }
-            .challenge-xp { display: inline-block; }
         }
     </style>
 </head>
@@ -221,83 +155,51 @@
         </section>
 
         <!-- READING PROGRESS -->
-        <section class="progress-section" id="reading-progress-full">
+        <section class="progress-section">
             <h2 class="progress-section-title"><i class="fa-solid fa-fire"></i> Reading Progress</h2>
-
             <div class="progress-hero-grid">
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-fire"></i></div>
-                    <div>
-                        <div class="ph-value" id="streak-count">0</div>
-                        <div class="ph-label">Day streak</div>
-                    </div>
+                    <div><div class="ph-value" id="streak-count">0</div><div class="ph-label">Day streak</div></div>
                 </div>
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-clock"></i></div>
-                    <div>
-                        <div class="ph-value" id="reading-time">0m</div>
-                        <div class="ph-label">Time reading</div>
-                    </div>
+                    <div><div class="ph-value" id="reading-time">0m</div><div class="ph-label">Time reading</div></div>
                 </div>
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-book-bookmark"></i></div>
-                    <div>
-                        <div class="ph-value" id="completed-surahs">0</div>
-                        <div class="ph-label">Surahs completed</div>
-                    </div>
+                    <div><div class="ph-value" id="completed-surahs">0</div><div class="ph-label">Surahs completed</div></div>
                 </div>
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-bullseye"></i></div>
-                    <div>
-                        <div class="ph-value" id="daily-goal-text">0 / 5</div>
-                        <div class="ph-label">Daily goal (pages)</div>
-                    </div>
+                    <div><div class="ph-value" id="daily-goal-text">0 / 5</div><div class="ph-label">Daily goal (pages)</div></div>
                 </div>
             </div>
-
-            <!-- Daily goal progress bar -->
             <div class="daily-goal-card" style="margin-top:1rem">
                 <div class="daily-goal-top">
                     <span class="dg-label"><i class="fa-solid fa-bullseye"></i> Today's Goal</span>
                     <span class="dg-text" id="daily-goal-text-2">0 / 5 pages</span>
                 </div>
-                <div class="daily-goal-bar">
-                    <div class="daily-goal-fill" id="daily-goal-fill"></div>
-                </div>
+                <div class="daily-goal-bar"><div class="daily-goal-fill" id="daily-goal-fill"></div></div>
             </div>
-
-            <!-- Lifetime stats -->
             <div class="progress-hero-grid" style="margin-top:1rem">
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-scroll"></i></div>
-                    <div>
-                        <div class="ph-value" id="stat-verses">0</div>
-                        <div class="ph-label">Verses read</div>
-                    </div>
+                    <div><div class="ph-value" id="stat-verses">0</div><div class="ph-label">Verses read</div></div>
                 </div>
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-file-lines"></i></div>
-                    <div>
-                        <div class="ph-value" id="stat-pages">0</div>
-                        <div class="ph-label">Pages read</div>
-                    </div>
+                    <div><div class="ph-value" id="stat-pages">0</div><div class="ph-label">Pages read</div></div>
                 </div>
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-layer-group"></i></div>
-                    <div>
-                        <div class="ph-value" id="stat-juz">0</div>
-                        <div class="ph-label">Juz explored</div>
-                    </div>
+                    <div><div class="ph-value" id="stat-juz">0</div><div class="ph-label">Juz explored</div></div>
                 </div>
                 <div class="progress-hero-card">
                     <div class="ph-icon"><i class="fa-solid fa-calendar-days"></i></div>
-                    <div>
-                        <div class="ph-value" id="stat-days">0</div>
-                        <div class="ph-label">Total days</div>
-                    </div>
+                    <div><div class="ph-value" id="stat-days">0</div><div class="ph-label">Total days</div></div>
                 </div>
             </div>
-
         </section>
 
         <!-- DAILY CHALLENGE -->
@@ -305,10 +207,10 @@
             <h2 class="progress-section-title"><i class="fa-solid fa-bullseye"></i> Daily Challenge</h2>
             <div class="challenge-card" id="challenge-card">
                 <div class="challenge-left">
-                    <div class="challenge-badge"><i data-lucide="target"></i></div>
+                    <div class="challenge-badge"><i class="fa-solid fa-bullseye" style="font-size:1.5rem;color:var(--primary);"></i></div>
                     <div class="challenge-info">
-                        <h3 id="challenge-title">Loading today's challenge…</h3>
-                        <p id="challenge-desc">Hang tight.</p>
+                        <h3 id="challenge-title">Loading today's challenge...</h3>
+                        <p id="challenge-desc">Please wait.</p>
                         <div class="challenge-progress"><div class="challenge-progress-fill" id="challenge-progress-fill"></div></div>
                         <span class="challenge-status" id="challenge-status">0 / 0</span>
                     </div>
@@ -322,9 +224,10 @@
         <!-- ACHIEVEMENTS -->
         <section class="progress-section">
             <h2 class="progress-section-title"><i class="fa-solid fa-trophy"></i> Achievements</h2>
-            <div class="achievements-grid" id="achievements-grid"></div>
+            <div class="achievements-grid" id="achievements-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.2rem;max-width:1000px;margin:0 auto;"></div>
         </section>
     </main>
+
     <div class="toast" id="toast"></div>
 
     <!-- FOOTER -->
@@ -335,7 +238,7 @@
                     <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="40" height="40" loading="lazy">
                     <span class="footer-logo-text">Baca</span>
                 </div>
-                <p class="footer-tagline">Read • Reflect • Grow</p>
+                <p class="footer-tagline">Read - Reflect - Grow</p>
                 <p class="footer-desc">A beautiful way to read, understand, and reflect upon the words of Allah.</p>
             </div>
             <div class="footer-col">
@@ -349,63 +252,196 @@
             <div class="footer-col">
                 <h4>Resources</h4>
                 <a href="#" id="footer-theme-toggle">Toggle Theme</a>
-                <a href="#" id="footer-install-app" class="baca-footer-install" style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-download" style="margin-right:0.4rem;font-size:0.8rem"></i>Install App</a>
             </div>
         </div>
     </footer>
 
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/js/script.js"></script>
-    <script>if (window.lucide) lucide.createIcons();</script>
     <script src="/js/shared-nav.js"></script>
     <script src="/js/pwa-register.js"></script>
+
+    <!-- SELF-CONTAINED GAMIFICATION: does NOT depend on script.js at all -->
     <script>
-        // Progress page gamification init
-        // script.js's own initGamification() at 500ms will ALSO run (and now
-        // has a guard that allows it on this page). This script is a backup
-        // that runs at 1000ms in case the 500ms one had any issues.
-        setTimeout(function() {
+    (function () {
+        'use strict';
+
+        // === STATS ===
+        function loadStats() {
             try {
-                if (typeof loadStats !== 'function') return;
-                var stats = loadStats();
-                if (!stats) return;
+                return JSON.parse(localStorage.getItem("bacaStats")) || defaultStats();
+            } catch { return defaultStats(); }
+        }
+        function defaultStats() {
+            return { streak:0, lastReadDate:null, readingTime:0, pagesRead:0, versesRead:0,
+                juzExplored:0, completedSurahs:[], totalDays:0, challengesCompleted:0,
+                todayPages:0, todayVerses:0, todayReadingSeconds:0, todaySurahs:0,
+                todayDate:null, xp:0, unlockedAchievements:[] };
+        }
+        function saveStats(s) { localStorage.setItem("bacaStats", JSON.stringify(s)); }
+        function getTodayStr() { return new Date().toISOString().split("T")[0]; }
 
-                var today = (typeof getTodayStr === 'function') ? getTodayStr() : new Date().toISOString().split('T')[0];
-                if (stats.todayDate !== today) {
-                    stats.todayDate = today;
-                    stats.todayPages = 0;
-                    stats.todayVerses = 0;
-                    stats.todayReadingSeconds = 0;
-                    stats.todaySurahs = 0;
-                    if (typeof saveStats === 'function') saveStats(stats);
-                }
+        // === GAMIFICATION DATA ===
+        var ACHIEVEMENTS = [
+            { id:"first-page", icon:"book-open", name:"First Steps", desc:"Read your first page", check:function(s){return s.pagesRead>=1;} },
+            { id:"first-surah", icon:"book-check", name:"Surah Complete", desc:"Complete your first surah", check:function(s){return (s.completedSurahs||[]).length>=1;} },
+            { id:"streak-3", icon:"flame", name:"On Fire", desc:"3-day reading streak", check:function(s){return s.streak>=3;} },
+            { id:"streak-7", icon:"zap", name:"Week Warrior", desc:"7-day reading streak", check:function(s){return s.streak>=7;} },
+            { id:"streak-30", icon:"award", name:"Monthly Master", desc:"30-day reading streak", check:function(s){return s.streak>=30;} },
+            { id:"pages-50", icon:"layers", name:"Half Century", desc:"Read 50 pages", check:function(s){return s.pagesRead>=50;} },
+            { id:"pages-100", icon:"library", name:"Century Club", desc:"Read 100 pages", check:function(s){return s.pagesRead>=100;} },
+            { id:"juz-1", icon:"bookmark", name:"Juz Explorer", desc:"Explore your first juz", check:function(s){return s.juzExplored>=1;} },
+            { id:"surahs-10", icon:"trophy", name:"Dedicated Reader", desc:"Complete 10 surahs", check:function(s){return (s.completedSurahs||[]).length>=10;} },
+            { id:"time-1h", icon:"clock", name:"Hour Power", desc:"Read for 1 hour total", check:function(s){return s.readingTime>=3600;} },
+            { id:"challenges-5", icon:"target", name:"Challenge Chaser", desc:"Complete 5 daily challenges", check:function(s){return s.challengesCompleted>=5;} },
+            { id:"verses-100", icon:"scroll", name:"Verse Voyager", desc:"Read 100 verses", check:function(s){return s.versesRead>=100;} },
+        ];
 
-                if (typeof checkAchievements === 'function') { try { checkAchievements(stats); } catch(e) {} }
-                if (typeof updateStatsUI === 'function') { try { updateStatsUI(stats); } catch(e) {} }
-                if (typeof renderAchievements === 'function') { try { renderAchievements(stats); } catch(e) {} }
-                if (typeof renderChallenge === 'function') { try { renderChallenge(); } catch(e) {} }
-                if (typeof updateChallengeProgress === 'function') { try { updateChallengeProgress(stats); } catch(e) {} }
+        var CHALLENGES = [
+            { title:"Read 3 pages of the Qur'an", desc:"Complete this challenge to earn 50 XP", target:3, unit:"pages", xp:50 },
+            { title:"Read 5 pages of the Qur'an", desc:"Complete this challenge to earn 80 XP", target:5, unit:"pages", xp:80 },
+            { title:"Complete a full surah", desc:"Complete this challenge to earn 100 XP", target:1, unit:"surah", xp:100 },
+            { title:"Read for 10 minutes", desc:"Complete this challenge to earn 60 XP", target:10, unit:"minutes", xp:60 },
+            { title:"Read 10 verses", desc:"Complete this challenge to earn 40 XP", target:10, unit:"verses", xp:40 },
+        ];
 
-                if (window.lucide) { setTimeout(function() { try { lucide.createIcons(); } catch(e) {} }, 200); }
-            } catch(err) {
-                console.error('Progress page init error:', err);
+        var DAILY_GOAL = 5;
+
+        function getTodayChallenge() {
+            var dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+            return CHALLENGES[dayOfYear % CHALLENGES.length];
+        }
+
+        function isJumuahToday() { return new Date().getDay() === 5; }
+        function xpMultiplier() { return isJumuahToday() ? 2 : 1; }
+
+        function formatReadingTime(seconds) {
+            if (seconds < 60) return seconds + "s";
+            var m = Math.floor(seconds / 60);
+            if (m < 60) return m + "m";
+            var h = Math.floor(m / 60);
+            return h + "h " + (m % 60) + "m";
+        }
+
+        function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+
+        // === RENDER FUNCTIONS ===
+        function updateStatsUI(stats) {
+            setText("streak-count", stats.streak || 0);
+            setText("reading-time", formatReadingTime(stats.readingTime || 0));
+            setText("completed-surahs", (stats.completedSurahs || []).length);
+            setText("daily-goal-text", (stats.todayPages || 0) + " / " + DAILY_GOAL);
+            setText("daily-goal-text-2", (stats.todayPages || 0) + " / " + DAILY_GOAL + " pages");
+            var fill = document.getElementById("daily-goal-fill");
+            if (fill) fill.style.width = Math.min(100, ((stats.todayPages || 0) / DAILY_GOAL) * 100) + "%";
+            setText("stat-verses", stats.versesRead || 0);
+            setText("stat-pages", stats.pagesRead || 0);
+            setText("stat-juz", stats.juzExplored || 0);
+            setText("stat-days", stats.totalDays || 0);
+        }
+
+        function renderAchievements(stats) {
+            var grid = document.getElementById("achievements-grid");
+            if (!grid) return;
+            grid.innerHTML = ACHIEVEMENTS.map(function(ach) {
+                var unlocked = (stats.unlockedAchievements || []).includes(ach.id);
+                return '<div class="achievement-badge ' + (unlocked ? "unlocked" : "locked") + '" style="background:var(--dark-light);border:1px solid var(--border);border-radius:20px;padding:1.5rem 1rem;text-align:center;transition:transform 0.3s,border-color 0.3s,opacity 0.3s;position:relative;overflow:hidden;' + (unlocked ? 'border-color:rgba(16,185,129,0.3);' : 'opacity:0.4;filter:grayscale(0.8);') + '">' +
+                    '<div style="width:56px;height:56px;margin:0 auto 0.8rem;border-radius:50%;background:' + (unlocked ? 'linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.1))' : 'rgba(255,255,255,0.05)') + ';display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:' + (unlocked ? 'var(--primary)' : 'var(--text)') + ';">' +
+                    '<i class="fa-solid fa-' + ach.icon + '"></i></div>' +
+                    '<div style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;color:var(--white);">' + ach.name + '</div>' +
+                    '<div style="font-size:0.75rem;color:var(--text);line-height:1.3;">' + ach.desc + '</div>' +
+                    '</div>';
+            }).join("");
+        }
+
+        function renderChallenge() {
+            var challenge = getTodayChallenge();
+            setText("challenge-title", challenge.title);
+            setText("challenge-desc", challenge.desc);
+            var xpEl = document.querySelector(".challenge-xp");
+            if (xpEl) xpEl.textContent = isJumuahToday() ? "+" + (challenge.xp * 2) + " XP (2x)" : "+" + challenge.xp + " XP";
+            var card = document.getElementById("challenge-card");
+            if (card) card.classList.toggle("completed", false);
+        }
+
+        function updateChallengeProgress(stats) {
+            var challenge = getTodayChallenge();
+            var challengeKey = "challenge_" + getTodayStr();
+            var progress;
+            try { progress = JSON.parse(localStorage.getItem(challengeKey) || '{"count":0,"done":false}'); } catch { progress = {count:0,done:false}; }
+
+            if (challenge.unit === "pages") progress.count = stats.todayPages || 0;
+            else if (challenge.unit === "minutes") progress.count = Math.floor((stats.todayReadingSeconds || 0) / 60);
+            else if (challenge.unit === "verses") progress.count = stats.todayVerses || 0;
+            else if (challenge.unit === "surah") progress.count = stats.todaySurahs || 0;
+
+            if (progress.count >= challenge.target && !progress.done) {
+                progress.done = true;
+                stats.challengesCompleted = (stats.challengesCompleted || 0) + 1;
+                stats.xp = (stats.xp || 0) + challenge.xp * xpMultiplier();
+                saveStats(stats);
             }
-        }, 1000);
+            localStorage.setItem(challengeKey, JSON.stringify(progress));
+
+            var fill = document.getElementById("challenge-progress-fill");
+            var status = document.getElementById("challenge-status");
+            var card = document.getElementById("challenge-card");
+            if (fill) fill.style.width = Math.min(100, (progress.count / challenge.target) * 100) + "%";
+            if (status) status.textContent = progress.count + " / " + challenge.target + " " + challenge.unit;
+            if (card && progress.done) card.classList.add("completed");
+        }
+
+        function checkAchievements(stats) {
+            if (!stats.unlockedAchievements) stats.unlockedAchievements = [];
+            ACHIEVEMENTS.forEach(function(ach) {
+                if (!stats.unlockedAchievements.includes(ach.id) && ach.check(stats)) {
+                    stats.unlockedAchievements.push(ach.id);
+                    stats.xp = (stats.xp || 0) + 20 * xpMultiplier();
+                }
+            });
+            saveStats(stats);
+        }
+
+        // === INIT ===
+        function init() {
+            var stats = loadStats();
+            var today = getTodayStr();
+            if (stats.todayDate !== today) {
+                stats.todayDate = today;
+                stats.todayPages = 0;
+                stats.todayVerses = 0;
+                stats.todayReadingSeconds = 0;
+                stats.todaySurahs = 0;
+                saveStats(stats);
+            }
+            checkAchievements(stats);
+            updateStatsUI(stats);
+            renderAchievements(stats);
+            renderChallenge();
+            updateChallengeProgress(stats);
+        }
+
+        // Run after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
     </script>
+
+    <!-- Theme toggle -->
     <script>
-// Theme toggle fallback for non-index pages
-document.querySelector('.theme-btn')?.addEventListener('click', () => {
-    const isLight = document.body.classList.toggle('light-mode');
-    localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
-    const btn = document.querySelector('.theme-btn i');
-    if (btn) btn.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-});
-// Apply saved theme on load
-if (localStorage.getItem('siteTheme') === 'light') {
-    document.body.classList.add('light-mode');
-    const btn = document.querySelector('.theme-btn i');
-    if (btn) btn.className = 'fa-solid fa-sun';
-}
-</script>
+    document.querySelector('.theme-btn')?.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('light-mode');
+        localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
+        const btn = document.querySelector('.theme-btn i');
+        if (btn) btn.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    });
+    if (localStorage.getItem('siteTheme') === 'light') {
+        document.body.classList.add('light-mode');
+        const btn = document.querySelector('.theme-btn i');
+        if (btn) btn.className = 'fa-solid fa-sun';
+    }
+    </script>
 </body>
 </html>
