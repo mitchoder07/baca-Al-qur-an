@@ -2863,6 +2863,38 @@ setTimeout(() => {
     initTopics();
     initJourneys();
     initSearchModal();
+
+    // === URL PARAM HANDLING ===
+    // Read ?topic=, ?surah=, ?ayah= from the URL (used by topics.html,
+    // journeys.html, and bookmarks.html which redirect here).
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // ?topic=mercy -> open the search modal with topic results
+    const topicParam = urlParams.get('topic');
+    if (topicParam && typeof showTopicResults === 'function') {
+        // Wait for the search modal to be ready
+        setTimeout(() => {
+            const searchModal = document.querySelector('.search-modal');
+            if (searchModal) {
+                searchModal.classList.add('active');
+            }
+            showTopicResults(topicParam);
+        }, 800);
+    }
+
+    // ?surah=2&ayah=255 -> open the reader modal at that surah/ayah
+    const surahParam = urlParams.get('surah');
+    if (surahParam) {
+        const surahNum = parseInt(surahParam);
+        const ayahParam = urlParams.get('ayah');
+        const ayahNum = ayahParam ? parseInt(ayahParam) : 1;
+        if (surahNum >= 1 && surahNum <= 114) {
+            selectedSurah = surahNum;
+            setTimeout(() => {
+                openReader(surahNum, ayahNum);
+            }, 800);
+        }
+    }
 }, 600);
 
 // READER TRANSLATION & TAFSIR SELECTION

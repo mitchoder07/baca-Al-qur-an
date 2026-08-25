@@ -360,18 +360,52 @@
     <script src="/js/pwa-register.js"></script>
     <script>
         // Force init gamification on this page
+        // We call each function individually with try/catch because
+        // initGamification() tries to wire up footer elements that don't
+        // exist on this page, which would throw and stop execution.
         setTimeout(function() {
-            if (typeof initGamification === 'function') {
-                initGamification();
+            try {
+                var stats = (typeof loadStats === 'function') ? loadStats() : null;
+                if (!stats) return;
+
+                // Reset daily counters if new day
+                var today = (typeof getTodayStr === 'function') ? getTodayStr() : new Date().toISOString().split('T')[0];
+                if (stats.todayDate !== today) {
+                    stats.todayDate = today;
+                    stats.todayPages = 0;
+                    stats.todayVerses = 0;
+                    stats.todayReadingSeconds = 0;
+                    stats.todaySurahs = 0;
+                    if (typeof saveStats === 'function') saveStats(stats);
+                }
+
+                // Check achievements
+                if (typeof checkAchievements === 'function') {
+                    try { checkAchievements(stats); } catch(e) { console.warn('checkAchievements:', e); }
+                }
+
+                // Update UI
+                if (typeof updateStatsUI === 'function') {
+                    try { updateStatsUI(stats); } catch(e) { console.warn('updateStatsUI:', e); }
+                }
+                if (typeof renderAchievements === 'function') {
+                    try { renderAchievements(stats); } catch(e) { console.warn('renderAchievements:', e); }
+                }
+                if (typeof renderChallenge === 'function') {
+                    try { renderChallenge(); } catch(e) { console.warn('renderChallenge:', e); }
+                }
+                if (typeof updateChallengeProgress === 'function') {
+                    try { updateChallengeProgress(stats); } catch(e) { console.warn('updateChallengeProgress:', e); }
+                }
+
+                // Re-run lucide icons after achievements grid is populated
+                if (window.lucide) {
+                    setTimeout(function() { try { lucide.createIcons(); } catch(e) {} }, 200);
+                }
+            } catch(err) {
+                console.error('Gamification init error:', err);
             }
-            if (typeof loadStats === 'function' && typeof updateStatsUI === 'function') {
-                var stats = loadStats();
-                updateStatsUI(stats);
-                if (typeof renderAchievements === 'function') renderAchievements(stats);
-                if (typeof renderChallenge === 'function') renderChallenge();
-                if (typeof updateChallengeProgress === 'function') updateChallengeProgress(stats);
-            }
-        }, 600);
+        }, 800);
     </script>
     <script>
 // Theme toggle fallback for non-index pages

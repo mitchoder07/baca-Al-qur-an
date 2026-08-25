@@ -1530,7 +1530,16 @@
     <!-- Professional scroll-to-top -->
     <script src="/js/scroll-top.js"></script>
     <!-- Page section shortcuts (quick jump to sections) -->
-    <script src="/js/baca-shortcuts.js"></script>
+    <!-- Page section shortcuts (hidden in mobile app) -->
+    <script>
+      // Only load baca-shortcuts.js on the web app, not the mobile app
+      if (!window.matchMedia('(display-mode: standalone)').matches &&
+          !window.navigator.standalone) {
+        var s = document.createElement('script');
+        s.src = '/js/baca-shortcuts.js';
+        document.body.appendChild(s);
+      }
+    </script>
 </body>
 
 </html>
