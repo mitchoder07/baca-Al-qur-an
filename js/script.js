@@ -2331,6 +2331,14 @@ function renderChallenge() {
 
 // Initialize gamification
 function initGamification() {
+    // Guard: if this page doesn't have gamification elements, skip entirely.
+    // This prevents errors when script.js is loaded on non-index pages
+    // (progress.html, topics.html, etc.)
+    if (!document.getElementById("achievements-grid") && !document.getElementById("streak-count")) {
+        // But if we're on progress.html which HAS these elements, continue
+        if (!document.getElementById("challenge-card")) return;
+    }
+
     const stats = loadStats();
 
     // Reset daily counters if new day

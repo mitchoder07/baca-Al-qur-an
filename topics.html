@@ -202,6 +202,7 @@
 
         <div class="topics-grid-full" id="topics-grid-full"></div>
     </main>
+    <div class="toast" id="toast"></div>
 
     <!-- FOOTER -->
     <footer class="baca-footer">
@@ -378,14 +379,24 @@
                 var icon = TOPIC_ICONS[key] || "fa-solid fa-bookmark";
                 var verseWord = count === 1 ? "verse" : "verses";
                 html += '' +
-                    '<a href="index.html?topic=' + encodeURIComponent(key) + '" class="topic-card" data-topic="' + key + '">' +
+                    '<div class="topic-card" data-topic="' + key + '" style="cursor:pointer;">' +
                     '<span class="topic-card-icon"><i class="' + icon + '"></i></span>' +
                     '<h3>' + name + '</h3>' +
                     '<span class="topic-count">' + count + ' ' + verseWord + '</span>' +
                     '<span class="topic-go">View verses <i class="fa-solid fa-arrow-right"></i></span>' +
-                    '</a>';
+                    '</div>';
             });
             grid.innerHTML = html;
+
+            // Wire click handlers — redirect to index.html?topic=X
+            grid.querySelectorAll('.topic-card').forEach(function (card) {
+                card.addEventListener('click', function () {
+                    var topic = card.getAttribute('data-topic');
+                    if (topic) {
+                        window.location.href = 'index.html?topic=' + encodeURIComponent(topic);
+                    }
+                });
+            });
         })();
     </script>
     <script>
