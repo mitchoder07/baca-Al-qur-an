@@ -325,6 +325,7 @@
             <div class="achievements-grid" id="achievements-grid"></div>
         </section>
     </main>
+    <div class="toast" id="toast"></div>
 
     <!-- FOOTER -->
     <footer class="baca-footer">
@@ -359,16 +360,16 @@
     <script src="/js/shared-nav.js"></script>
     <script src="/js/pwa-register.js"></script>
     <script>
-        // Force init gamification on this page
-        // We call each function individually with try/catch because
-        // initGamification() tries to wire up footer elements that don't
-        // exist on this page, which would throw and stop execution.
+        // Progress page gamification init
+        // script.js's own initGamification() at 500ms will ALSO run (and now
+        // has a guard that allows it on this page). This script is a backup
+        // that runs at 1000ms in case the 500ms one had any issues.
         setTimeout(function() {
             try {
-                var stats = (typeof loadStats === 'function') ? loadStats() : null;
+                if (typeof loadStats !== 'function') return;
+                var stats = loadStats();
                 if (!stats) return;
 
-                // Reset daily counters if new day
                 var today = (typeof getTodayStr === 'function') ? getTodayStr() : new Date().toISOString().split('T')[0];
                 if (stats.todayDate !== today) {
                     stats.todayDate = today;
@@ -379,33 +380,17 @@
                     if (typeof saveStats === 'function') saveStats(stats);
                 }
 
-                // Check achievements
-                if (typeof checkAchievements === 'function') {
-                    try { checkAchievements(stats); } catch(e) { console.warn('checkAchievements:', e); }
-                }
+                if (typeof checkAchievements === 'function') { try { checkAchievements(stats); } catch(e) {} }
+                if (typeof updateStatsUI === 'function') { try { updateStatsUI(stats); } catch(e) {} }
+                if (typeof renderAchievements === 'function') { try { renderAchievements(stats); } catch(e) {} }
+                if (typeof renderChallenge === 'function') { try { renderChallenge(); } catch(e) {} }
+                if (typeof updateChallengeProgress === 'function') { try { updateChallengeProgress(stats); } catch(e) {} }
 
-                // Update UI
-                if (typeof updateStatsUI === 'function') {
-                    try { updateStatsUI(stats); } catch(e) { console.warn('updateStatsUI:', e); }
-                }
-                if (typeof renderAchievements === 'function') {
-                    try { renderAchievements(stats); } catch(e) { console.warn('renderAchievements:', e); }
-                }
-                if (typeof renderChallenge === 'function') {
-                    try { renderChallenge(); } catch(e) { console.warn('renderChallenge:', e); }
-                }
-                if (typeof updateChallengeProgress === 'function') {
-                    try { updateChallengeProgress(stats); } catch(e) { console.warn('updateChallengeProgress:', e); }
-                }
-
-                // Re-run lucide icons after achievements grid is populated
-                if (window.lucide) {
-                    setTimeout(function() { try { lucide.createIcons(); } catch(e) {} }, 200);
-                }
+                if (window.lucide) { setTimeout(function() { try { lucide.createIcons(); } catch(e) {} }, 200); }
             } catch(err) {
-                console.error('Gamification init error:', err);
+                console.error('Progress page init error:', err);
             }
-        }, 800);
+        }, 1000);
     </script>
     <script>
 // Theme toggle fallback for non-index pages
