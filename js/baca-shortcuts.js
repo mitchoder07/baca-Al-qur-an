@@ -109,7 +109,7 @@
         .baca-shortcuts-nav {
           position: fixed;
           left: 1.5rem;
-          top: calc(50% - 30px);
+          top: 60%;
           transform: translateY(-50%);
           z-index: 2999;
           display: flex;
