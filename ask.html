@@ -132,7 +132,7 @@
             height: 70px;
             margin: 0 auto 1rem;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
+            background: #10b981;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -143,7 +143,7 @@
         .chat-welcome h1 {
             font-size: 1.8rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
+            background: #10b981;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -203,7 +203,7 @@
         }
 
         .msg.ai .msg-avatar {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
+            background: #10b981;
             color: #fff;
         }
 
@@ -361,9 +361,7 @@
             height: 46px;
             border: none;
             border-radius: 14px;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            color: #fff;
-            cursor: pointer;
+            background: #10b981;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -723,6 +721,60 @@
 
     <!-- PWA: Service Worker + install prompt -->
     <script src="/js/pwa-register.js"></script>
+
+    <!-- Professional scroll-to-top -->
+    <script>
+    (function () {
+        'use strict';
+        var btn = null;
+        var visible = false;
+        var SHOW_AFTER = 300;
+
+        function createBtn() {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.setAttribute('aria-label', 'Scroll to top');
+            btn.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;border:none;background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#10b981;cursor:pointer;display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(16px) scale(0.7);transition:opacity 0.3s cubic-bezier(0.34,1.56,0.64,1),transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;z-index:3000;box-shadow:0 4px 16px rgba(0,0,0,0.3),0 0 0 1px rgba(52,211,153,0.15) inset,0 0 20px rgba(16,185,129,0.15);-webkit-tap-highlight-color:transparent;';
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;display:block;"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+            document.body.appendChild(btn);
+
+            btn.addEventListener('click', function () {
+                var startY = window.scrollY;
+                if (startY === 0) return;
+                var startTime = performance.now();
+                var duration = Math.min(500, Math.max(300, startY / 3));
+                function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+                function step(now) {
+                    var progress = Math.min((now - startTime) / duration, 1);
+                    window.scrollTo(0, startY * (1 - ease(progress)));
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        function update() {
+            var scrollY = window.scrollY;
+            if (!btn) createBtn();
+            if (scrollY > SHOW_AFTER && !visible) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                btn.style.transform = 'translateY(0) scale(1)';
+                visible = true;
+            } else if (scrollY <= SHOW_AFTER && visible) {
+                btn.style.opacity = '0';
+                btn.style.pointerEvents = 'none';
+                btn.style.transform = 'translateY(16px) scale(0.7)';
+                visible = false;
+            }
+        }
+
+        window.addEventListener('scroll', function () {
+            requestAnimationFrame(update);
+        }, { passive: true });
+        update();
+    })();
+    </script>
 </body>
 
 </html>
