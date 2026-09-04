@@ -283,7 +283,7 @@
         // === GAMIFICATION DATA ===
         var ACHIEVEMENTS = [
             { id:"first-page", icon:"book-open", name:"First Steps", desc:"Read your first page", check:function(s){return s.pagesRead>=1;} },
-            { id:"first-surah", icon:"circle-check", name:"Surah Complete", desc:"Complete your first surah", check:function(s){return (s.completedSurahs||[]).length>=1;} },
+            { id:"first-surah", icon:"book-check", name:"Surah Complete", desc:"Complete your first surah", check:function(s){return (s.completedSurahs||[]).length>=1;} },
             { id:"streak-3", icon:"flame", name:"On Fire", desc:"3-day reading streak", check:function(s){return s.streak>=3;} },
             { id:"streak-7", icon:"zap", name:"Week Warrior", desc:"7-day reading streak", check:function(s){return s.streak>=7;} },
             { id:"streak-30", icon:"award", name:"Monthly Master", desc:"30-day reading streak", check:function(s){return s.streak>=30;} },
@@ -292,7 +292,7 @@
             { id:"juz-1", icon:"bookmark", name:"Juz Explorer", desc:"Explore your first juz", check:function(s){return s.juzExplored>=1;} },
             { id:"surahs-10", icon:"trophy", name:"Dedicated Reader", desc:"Complete 10 surahs", check:function(s){return (s.completedSurahs||[]).length>=10;} },
             { id:"time-1h", icon:"clock", name:"Hour Power", desc:"Read for 1 hour total", check:function(s){return s.readingTime>=3600;} },
-            { id:"challenges-5", icon:"bullseye", name:"Challenge Chaser", desc:"Complete 5 daily challenges", check:function(s){return s.challengesCompleted>=5;} },
+            { id:"challenges-5", icon:"target", name:"Challenge Chaser", desc:"Complete 5 daily challenges", check:function(s){return s.challengesCompleted>=5;} },
             { id:"verses-100", icon:"scroll", name:"Verse Voyager", desc:"Read 100 verses", check:function(s){return s.versesRead>=100;} },
         ];
 
@@ -346,7 +346,7 @@
                 var unlocked = (stats.unlockedAchievements || []).includes(ach.id);
                 return '<div class="achievement-badge ' + (unlocked ? "unlocked" : "locked") + '" style="background:var(--dark-light);border:1px solid var(--border);border-radius:20px;padding:1.5rem 1rem;text-align:center;transition:transform 0.3s,border-color 0.3s,opacity 0.3s;position:relative;overflow:hidden;' + (unlocked ? 'border-color:rgba(16,185,129,0.3);' : 'opacity:0.4;filter:grayscale(0.8);') + '">' +
                     '<div style="width:56px;height:56px;margin:0 auto 0.8rem;border-radius:50%;background:' + (unlocked ? 'linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.1))' : 'rgba(255,255,255,0.05)') + ';display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:' + (unlocked ? 'var(--primary)' : 'var(--text)') + ';">' +
-                    '<i class="fa-solid fa-' + ach.icon + '"></i></div>' +
+                    '<i data-lucide="' + ach.icon + '"></i></div>' +
                     '<div style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;color:var(--white);">' + ach.name + '</div>' +
                     '<div style="font-size:0.75rem;color:var(--text);line-height:1.3;">' + ach.desc + '</div>' +
                     '</div>';
@@ -418,6 +418,12 @@
             renderAchievements(stats);
             renderChallenge();
             updateChallengeProgress(stats);
+
+            // Render Lucide icons after achievements grid is populated
+            if (window.lucide) {
+                try { lucide.createIcons(); } catch(e) {}
+                setTimeout(function() { try { lucide.createIcons(); } catch(e) {} }, 200);
+            }
         }
 
         // Run after DOM is ready
