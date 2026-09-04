@@ -659,12 +659,37 @@
             addMessage('user', message);
             chatInput.value = '';
 
-            // Add typing indicator
+            // Add typing indicator with jovial rotating messages
             const typingEl = document.createElement('div');
             typingEl.className = 'msg ai';
-            typingEl.innerHTML = '<div class="msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>';
+            typingEl.innerHTML = '<div class="msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div><span class="typing-text" style="font-size:0.78rem;color:#94a3b8;font-style:italic;margin-left:0.5rem;">Bismillah\u2026</span></div>';
             chatContainer.appendChild(typingEl);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Rotate through jovial/Islamic thinking messages
+            const thinkingMessages = [
+                'Bismillah\u2026',
+                'Thinking\u2026',
+                'Reflecting on that\u2026',
+                'Consulting the verses\u2026',
+                'Almost there\u2026',
+                'Just a sec\u2026',
+                'Pondering your question\u2026',
+                'Seeking the right answer\u2026',
+                'A moment, in shaa Allah\u2026',
+                'Gathering thoughts\u2026',
+            ];
+            let msgIdx = 0;
+            const typingTextEl = typingEl.querySelector('.typing-text');
+            const typingInterval = setInterval(() => {
+                msgIdx = (msgIdx + 1) % thinkingMessages.length;
+                if (typingTextEl) {
+                    typingTextEl.style.animation = 'none';
+                    typingTextEl.offsetHeight;
+                    typingTextEl.textContent = thinkingMessages[msgIdx];
+                    typingTextEl.style.animation = 'fadeIn 0.4s ease';
+                }
+            }, 2500);
 
             try {
                 const response = await fetch('/api/chat', {
@@ -676,6 +701,7 @@
                 const data = await response.json();
 
                 // Remove typing indicator
+                clearInterval(typingInterval);
                 typingEl.remove();
 
                 if (data.reply) {
@@ -690,6 +716,7 @@
                     addMessage('ai', errMsg);
                 }
             } catch (error) {
+                clearInterval(typingInterval);
                 typingEl.remove();
                 addMessage('ai', 'Connection error. Make sure the Baca server is running. <br><br>If you are viewing this as a static file, the AI chat requires the Node.js server. Run <code>node server.js</code> in the baca folder and open <code>http://localhost:3000/ask</code>.', true);
             } finally {

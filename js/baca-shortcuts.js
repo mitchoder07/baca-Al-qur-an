@@ -108,8 +108,8 @@
       css.textContent = `
         .baca-shortcuts-nav {
           position: fixed;
-          right: 1.5rem;
-          top: 50%;
+          left: 1.5rem;
+          top: 60%;
           transform: translateY(-50%);
           z-index: 2999;
           display: flex;
@@ -171,13 +171,12 @@
           overflow: hidden;
           transition: max-width 0.25s ease;
           white-space: nowrap;
+          text-align: right;
         }
         .baca-shortcut-pill:hover .baca-shortcut-label,
         .baca-shortcut-pill.active .baca-shortcut-label {
           max-width: 120px;
         }
-        /* Reverse the label direction since nav is on the right */
-        .baca-shortcut-pill { flex-direction: row-reverse; }
 
         /* --- Toggle Button & Minimized State --- */
         .baca-shortcut-toggle {
