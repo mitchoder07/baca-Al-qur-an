@@ -61,7 +61,7 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
+            background: #10b981;
             border: none;
             cursor: pointer;
             z-index: 9000;
@@ -118,7 +118,7 @@
 
         .baca-chat-header {
             padding: 0.8rem 1rem;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
+            background: #10b981;
             color: #fff;
             display: flex;
             align-items: center;
@@ -157,7 +157,7 @@
         .baca-chat-welcome .wa-icon {
             width: 50px; height: 50px; margin: 0 auto 0.8rem;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
+            background: #10b981;
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-size: 1.3rem;
         }
@@ -185,7 +185,7 @@
             display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
         }
         .baca-chat-msg.ai .baca-chat-msg-avatar {
-            background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff;
+            background: #10b981; color: #fff;
         }
         .baca-chat-msg.user .baca-chat-msg-avatar {
             background: #1e293b; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.08);
@@ -260,7 +260,7 @@
         .baca-chat-input:focus { border-color: #10b981; }
         .baca-chat-send {
             width: 38px; height: 38px; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff;
+            background: #10b981; color: #fff;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 0.9rem; transition: transform 0.15s;
         }
