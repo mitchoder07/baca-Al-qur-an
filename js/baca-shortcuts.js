@@ -108,8 +108,8 @@
       css.textContent = `
         .baca-shortcuts-nav {
           position: fixed;
-          left: 1.5rem;
-          top: 60%;
+          right: 1.5rem;
+          top: 50%;
           transform: translateY(-50%);
           z-index: 2999;
           display: flex;
@@ -165,7 +165,7 @@
           background: rgba(16, 185, 129, 0.15);
           color: #10b981;
         }
-        /* The label expands to the RIGHT (since the nav is on the left side) */
+        /* The label expands to the LEFT (since the nav is on the right side) */
         .baca-shortcut-label {
           max-width: 0;
           overflow: hidden;
@@ -176,6 +176,8 @@
         .baca-shortcut-pill.active .baca-shortcut-label {
           max-width: 120px;
         }
+        /* Reverse the label direction since nav is on the right */
+        .baca-shortcut-pill { flex-direction: row-reverse; }
 
         /* --- Toggle Button & Minimized State --- */
         .baca-shortcut-toggle {

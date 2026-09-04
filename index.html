@@ -20,12 +20,25 @@
     <!-- MOBILE APP ONLY: Hide sections that have their own pages in the More sheet.
          Web app shows everything. Mobile app hides topics, journeys, bookmarks,
          featured-reciters, daily-reflection, reading-progress, daily-challenge,
-         achievements since they're accessible via the More sheet. -->
+         achievements since they're accessible via the More sheet.
+         Also hide the full footer in mobile app, but keep the feedback section. -->
     <style>
       @media (display-mode: standalone) {
         .topics, .journeys, .bookmarks-section, .featured-reciters,
         .daily-reflection, .reading-progress-section, .daily-challenge-section,
         .achievements-section { display: none !important; }
+        /* Hide the full footer in mobile app */
+        .baca-footer { display: none !important; }
+      }
+      /* Feedback section: visible on web (inside footer), visible on mobile (outside footer) */
+      @media (display-mode: standalone) {
+        .footer-feedback {
+          display: block !important;
+          position: relative;
+          max-width: 600px;
+          margin: 2rem auto;
+          padding: 0 1.5rem;
+        }
       }
     </style>
     <title>Baca — Experience the Qur'an Like Never Before</title>
@@ -957,21 +970,21 @@
             </div>
         </div>
 
-        <!-- Feedback section -->
+        <!-- Feedback section (inside footer for web app) -->
         <div class="footer-feedback">
             <div class="feedback-card">
                 <h4><i class="fa-solid fa-comment-dots"></i> Send Feedback</h4>
                 <p>Found a bug? Have an idea? Want something removed? Let me know, your feedback improves Baca
                     &#128525;.</p>
-                <form id="feedback-form">
-                    <input type="text" id="feedback-name" placeholder="Your name (optional)" maxlength="50">
-                    <select id="feedback-type">
+                <form id="feedback-form-web">
+                    <input type="text" id="feedback-name-web" placeholder="Your name (optional)" maxlength="50">
+                    <select id="feedback-type-web">
                         <option value="improvement">💡 Suggest an improvement</option>
                         <option value="bug">🐛 Report a bug</option>
                         <option value="remove">🗑️ Something to remove</option>
                         <option value="praise">💚 Just saying Jazak Allah Khayr</option>
                     </select>
-                    <textarea id="feedback-message"
+                    <textarea id="feedback-message-web"
                         placeholder="Tell me what to improve, what's broken, or what's unnecessary…" rows="3"
                         maxlength="500" required></textarea>
                     <button type="submit" class="feedback-submit-btn">
@@ -988,6 +1001,41 @@
             </p>
         </div>
     </footer>
+
+    <!-- Feedback section (outside footer so it shows in mobile app too) -->
+    <div class="footer-feedback" id="mobile-feedback" style="display:none;">
+        <div class="feedback-card">
+            <h4><i class="fa-solid fa-comment-dots"></i> Send Feedback</h4>
+            <p>Found a bug? Have an idea? Want something removed? Let me know, your feedback improves Baca
+                &#128525;.</p>
+            <form id="feedback-form">
+                <input type="text" id="feedback-name" placeholder="Your name (optional)" maxlength="50">
+                <select id="feedback-type">
+                    <option value="improvement">💡 Suggest an improvement</option>
+                    <option value="bug">🐛 Report a bug</option>
+                    <option value="remove">🗑️ Something to remove</option>
+                    <option value="praise">💚 Just saying Jazak Allah Khayr</option>
+                </select>
+                <textarea id="feedback-message"
+                    placeholder="Tell me what to improve, what's broken, or what's unnecessary…" rows="3"
+                    maxlength="500" required></textarea>
+                <button type="submit" class="feedback-submit-btn">
+                    <i class="fa-solid fa-paper-plane"></i> Send Feedback
+                </button>
+            </form>
+        </div>
+    </div>
+    <style>
+      /* Show feedback on mobile app (hidden by default since it's outside footer) */
+      @media (display-mode: standalone) {
+        #mobile-feedback { display: block !important; max-width: 600px; margin: 2rem auto; padding: 0 1.5rem; }
+      }
+      /* Show feedback inside footer on web app */
+      @media not all and (display-mode: standalone) {
+        #mobile-feedback { display: none !important; }
+        .baca-footer .footer-feedback { display: block !important; }
+      }
+    </style>
 
     <!-- SURAH MODAL -->
 
