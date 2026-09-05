@@ -40,6 +40,129 @@
           padding: 0 1.5rem;
         }
       }
+
+      /* === Repeat panel (Fix 1) — ayah ×N + range play === */
+      .repeat-panel {
+        margin-top: 10px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease, opacity 0.2s ease;
+        opacity: 0;
+      }
+      .repeat-panel.open {
+        max-height: 320px;
+        opacity: 1;
+      }
+      .repeat-section {
+        display: none;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .repeat-panel[data-mode="ayah"] .repeat-section[data-show-when="ayah"] { display: block; }
+      .repeat-panel[data-mode="range"] .repeat-section[data-show-when="range"] { display: block; }
+      .repeat-section-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--reader-subtext, #94a3b8);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .repeat-count-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 6px;
+      }
+      .repeat-count-row button,
+      .play-range-btn {
+        flex: 1 1 0;
+        min-width: 44px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--reader-text, #e2e8f0);
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .repeat-count-row button:hover,
+      .play-range-btn:hover {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.4);
+      }
+      .repeat-count-row button.active {
+        background: rgba(16, 185, 129, 0.22);
+        border-color: rgba(16, 185, 129, 0.6);
+        color: #10b981;
+      }
+      .repeat-range-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 4px 0 10px;
+      }
+      .repeat-range-row input {
+        flex: 1;
+        min-width: 0;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--reader-text, #e2e8f0);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-align: center;
+      }
+      .repeat-range-row input:focus {
+        outline: none;
+        border-color: rgba(16, 185, 129, 0.5);
+      }
+      .repeat-range-arrow { color: var(--reader-subtext, #94a3b8); font-size: 0.9rem; }
+      .repeat-section-hint {
+        margin: 6px 0 0;
+        font-size: 0.72rem;
+        color: var(--reader-subtext, #94a3b8);
+        line-height: 1.45;
+      }
+      .play-range-btn {
+        margin-top: 10px;
+        background: rgba(16, 185, 129, 0.18) !important;
+        border-color: rgba(16, 185, 129, 0.5) !important;
+        color: #10b981 !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        flex: 0 0 100%;
+      }
+      .play-range-btn:hover {
+        background: rgba(16, 185, 129, 0.28) !important;
+      }
+      .play-range-btn i { width: 14px; height: 14px; }
+
+      /* Light mode */
+      body.light-mode .repeat-section {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.06);
+      }
+      body.light-mode .repeat-count-row button,
+      body.light-mode .play-range-btn,
+      body.light-mode .repeat-range-row input {
+        background: rgba(0, 0, 0, 0.03);
+        color: #1e293b;
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+      body.light-mode .repeat-section-label,
+      body.light-mode .repeat-section-hint,
+      body.light-mode .repeat-range-arrow {
+        color: #64748b;
+      }
     </style>
     <title>Baca — Experience the Qur'an Like Never Before</title>
 
@@ -1438,6 +1561,45 @@
                     <button id="speed-btn">1x</button>
                     <button id="next-surah-audio">Next <i data-lucide="skip-forward"></i></button>
                     <button id="repeat-btn" title="Repeat mode"><i data-lucide="repeat"></i> Off</button>
+                </div>
+
+                <!-- Repeat panel: expands when repeat mode = "ayah" or "range" -->
+                <div id="repeat-panel" class="repeat-panel">
+                    <!-- Ayah repeat section (visible when mode=ayah) -->
+                    <div class="repeat-section" data-show-when="ayah">
+                        <span class="repeat-section-label">Repeat each ayah</span>
+                        <div class="repeat-count-row">
+                            <button class="ayah-repeat-count-btn" data-count="1">1×</button>
+                            <button class="ayah-repeat-count-btn active" data-count="2">2×</button>
+                            <button class="ayah-repeat-count-btn" data-count="3">3×</button>
+                            <button class="ayah-repeat-count-btn" data-count="5">5×</button>
+                            <button class="ayah-repeat-count-btn" data-count="10">10×</button>
+                            <button class="ayah-repeat-count-btn" data-count="inf">∞</button>
+                        </div>
+                        <p class="repeat-section-hint">Tap any verse play button. It will repeat the count you chose, then stop.</p>
+                    </div>
+
+                    <!-- Range section (visible when mode=range) -->
+                    <div class="repeat-section" data-show-when="range">
+                        <span class="repeat-section-label">Ayah range</span>
+                        <div class="repeat-range-row">
+                            <input type="number" id="range-start-input" min="1" value="1" placeholder="From">
+                            <span class="repeat-range-arrow">→</span>
+                            <input type="number" id="range-end-input" min="1" value="7" placeholder="To">
+                        </div>
+                        <span class="repeat-section-label">Repeat range</span>
+                        <div class="repeat-count-row">
+                            <button class="range-repeat-count-btn active" data-count="1">1×</button>
+                            <button class="range-repeat-count-btn" data-count="2">2×</button>
+                            <button class="range-repeat-count-btn" data-count="3">3×</button>
+                            <button class="range-repeat-count-btn" data-count="5">5×</button>
+                            <button class="range-repeat-count-btn" data-count="10">10×</button>
+                            <button class="range-repeat-count-btn" data-count="inf">∞</button>
+                        </div>
+                        <button id="play-range-btn" class="play-range-btn">
+                            <i data-lucide="play"></i> Play range
+                        </button>
+                    </div>
                 </div>
 
             </div>
