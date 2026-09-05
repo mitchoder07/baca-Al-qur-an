@@ -300,7 +300,21 @@ let activePlayButton = null;
 let currentAyahPlaying = 1;
 let totalAyahsInSurah = 0;
 let activeAudioMode = "surah";
-let repeatMode = "off";
+let repeatMode = "off";   // "off" | "surah" | "quran" | "ayah" | "range"
+
+// --- Ayah-repeat + Range-play state (Fix 1) ---
+// ayahRepeat: when user clicks a per-ayah play button, repeat that single
+// ayah N times before stopping. 1 = play once, Infinity = loop forever.
+let ayahRepeatCount = 1;            // configured count (1, 2, 3, 5, 10, or Infinity)
+let ayahRepeatRemaining = 1;        // counts down as each play finishes
+
+// rangePlay: play from `rangeStartAyah` to `rangeEndAyah`, optionally loop the
+// whole range `rangeRepeatCount` times. Used by the full-surah audio player.
+let rangeStartAyah = 1;
+let rangeEndAyah = 7;
+let rangeRepeatCount = 1;           // 1, 2, 3, 5, 10, or Infinity
+let rangeRepeatRemaining = 1;
+let isRangePlaying = false;
 let siteTheme = "dark";
 let readerThemeKey = localStorage.getItem("readerTheme") || "dark";
 let dailyAyahData = null;
@@ -1068,11 +1082,110 @@ function initRepeatButton() {
     const btn = document.getElementById("repeat-btn");
     if (!btn) return;
     btn.addEventListener("click", () => {
-        if (repeatMode === "off") { repeatMode = "surah"; btn.innerHTML = `<i data-lucide="repeat-1"></i> Surah`; showToast("Repeat: Surah"); }
-        else if (repeatMode === "surah") { repeatMode = "quran"; btn.innerHTML = `<i data-lucide="repeat"></i> Qur'an`; showToast("Repeat: Qur'an"); }
-        else { repeatMode = "off"; btn.innerHTML = `<i data-lucide="repeat"></i> Off`; showToast("Repeat: off"); }
+        // Cycle: off -> surah -> quran -> ayah -> range -> off
+        if (repeatMode === "off") {
+            repeatMode = "surah";
+            btn.innerHTML = `<i data-lucide="repeat-1"></i> Surah`;
+            showToast("Repeat: Surah");
+        } else if (repeatMode === "surah") {
+            repeatMode = "quran";
+            btn.innerHTML = `<i data-lucide="repeat"></i> Qur'an`;
+            showToast("Repeat: Whole Qur'an");
+        } else if (repeatMode === "quran") {
+            repeatMode = "ayah";
+            btn.innerHTML = `<i data-lucide="repeat-1"></i> Ayah ×${formatRepeatCount(ayahRepeatCount)}`;
+            showToast(`Repeat: single ayah ×${formatRepeatCount(ayahRepeatCount)} (set count in panel below)`);
+        } else if (repeatMode === "ayah") {
+            repeatMode = "range";
+            btn.innerHTML = `<i data-lucide="repeat"></i> Range`;
+            showToast("Repeat: range (set start/end below)");
+        } else {
+            repeatMode = "off";
+            btn.innerHTML = `<i data-lucide="repeat"></i> Off`;
+            showToast("Repeat: off");
+            // Reset range state when turning off
+            isRangePlaying = false;
+            rangeRepeatRemaining = 1;
+        }
         safeLucide();
+        syncRepeatPanelState();
     });
+
+    // If the panel exists, wire its controls now.
+    wireRepeatPanel();
+}
+
+function formatRepeatCount(n) {
+    return n === Infinity ? '∞' : String(n);
+}
+
+// Wire up the optional ayah-count / range panel (if present in the DOM).
+function wireRepeatPanel() {
+    // Ayah repeat count buttons
+    document.querySelectorAll('.ayah-repeat-count-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const val = btn.dataset.count;
+            ayahRepeatCount = val === 'inf' ? Infinity : Number(val);
+            ayahRepeatRemaining = ayahRepeatCount;
+            document.querySelectorAll('.ayah-repeat-count-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Update the repeat button label if currently in ayah mode
+            if (repeatMode === 'ayah') {
+                const rbtn = document.getElementById('repeat-btn');
+                if (rbtn) rbtn.innerHTML = `<i data-lucide="repeat-1"></i> Ayah ×${formatRepeatCount(ayahRepeatCount)}`;
+                safeLucide();
+            }
+            showToast(`Ayah repeat: ×${formatRepeatCount(ayahRepeatCount)}`);
+        });
+    });
+
+    // Range inputs
+    const rs = document.getElementById('range-start-input');
+    const re = document.getElementById('range-end-input');
+    if (rs) rs.addEventListener('input', () => { rangeStartAyah = Math.max(1, Number(rs.value) || 1); });
+    if (re) re.addEventListener('input', () => { rangeEndAyah = Math.max(1, Number(re.value) || 1); });
+
+    // Range repeat count buttons
+    document.querySelectorAll('.range-repeat-count-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const val = btn.dataset.count;
+            rangeRepeatCount = val === 'inf' ? Infinity : Number(val);
+            rangeRepeatRemaining = rangeRepeatCount;
+            document.querySelectorAll('.range-repeat-count-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            showToast(`Range repeat: ×${formatRepeatCount(rangeRepeatCount)}`);
+        });
+    });
+
+    // "Play range" button
+    const playRangeBtn = document.getElementById('play-range-btn');
+    if (playRangeBtn) {
+        playRangeBtn.addEventListener('click', () => {
+            if (!selectedSurah) { showToast('Open a surah first'); return; }
+            const start = Math.min(rangeStartAyah, rangeEndAyah);
+            const end = Math.max(rangeStartAyah, rangeEndAyah);
+            if (end > totalAyahsInSurah) { showToast(`Surah only has ${totalAyahsInSurah} ayahs`); return; }
+            rangeStartAyah = start;
+            rangeEndAyah = end;
+            rangeRepeatRemaining = rangeRepeatCount;
+            isRangePlaying = true;
+            repeatMode = 'range';
+            const rbtn = document.getElementById('repeat-btn');
+            if (rbtn) rbtn.innerHTML = `<i data-lucide="repeat"></i> Range`;
+            safeLucide();
+            syncRepeatPanelState();
+            playSurahFromAyah(start);
+            showToast(`Playing ayah ${start} → ${end} ×${formatRepeatCount(rangeRepeatCount)}`);
+        });
+    }
+}
+
+// Visually show/hide the relevant panel section based on the current repeatMode.
+function syncRepeatPanelState() {
+    const panel = document.getElementById('repeat-panel');
+    if (!panel) return;
+    panel.classList.toggle('open', repeatMode === 'ayah' || repeatMode === 'range');
+    panel.dataset.mode = repeatMode;
 }
 
 // READER MODE
@@ -1523,6 +1636,43 @@ audioPlayer.addEventListener("timeupdate", () => {
 progressBar2?.addEventListener("input", () => { audioPlayer.currentTime = progressBar2.value; });
 
 audioPlayer.addEventListener("ended", () => {
+    // Range mode: confine auto-advance to [rangeStartAyah, rangeEndAyah] and
+    // optionally loop the whole range `rangeRepeatCount` times.
+    if (repeatMode === "range" && isRangePlaying) {
+        if (surahAyahCursor < rangeEndAyah) {
+            // Advance to next ayah within the range
+            const nextAyah = surahAyahCursor + 1;
+            surahAyahCursor = nextAyah;
+            audioPlayer.src = getAyahAudioUrl(selectedSurah, nextAyah, currentReciterId);
+            audioPlayer.load();
+            audioPlayer.play().catch(() => { });
+            showFloatingPlayer(SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah", `Ayah ${nextAyah}`);
+            scrollToActiveVerse(nextAyah);
+            return;
+        }
+        // Reached the last ayah of the range
+        if (rangeRepeatRemaining > 1 || rangeRepeatRemaining === Infinity) {
+            if (rangeRepeatRemaining !== Infinity) rangeRepeatRemaining--;
+            surahAyahCursor = rangeStartAyah;
+            audioPlayer.src = getAyahAudioUrl(selectedSurah, rangeStartAyah, currentReciterId);
+            audioPlayer.load();
+            audioPlayer.play().catch(() => { });
+            showFloatingPlayer(
+                SURAH_LIST[selectedSurah - 1]?.transliteration || "Surah",
+                `Ayah ${rangeStartAyah} (range loop)`
+            );
+            scrollToActiveVerse(rangeStartAyah);
+            return;
+        }
+        // Range finished — stop and reset
+        isRangePlaying = false;
+        rangeRepeatRemaining = rangeRepeatCount;
+        if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); }
+        syncMiniPlayIcon(false);
+        showToast("Range playback complete");
+        return;
+    }
+
     if (repeatMode === "surah") {
         audioPlayer.currentTime = 0; audioPlayer.play().catch(() => { });
         showToast("Repeating…"); return;
@@ -1663,7 +1813,17 @@ document.addEventListener("click", async e => {
         );
         syncMiniPlayIcon(true);
 
+        // Initialise the ayah-repeat counter each time a fresh ayah starts.
+        ayahRepeatRemaining = ayahRepeatCount;
+
         ayahPlayer.onended = () => {
+            // Ayah repeat mode: replay the same ayah until the counter runs out.
+            if (repeatMode === "ayah" && (ayahRepeatRemaining > 1 || ayahRepeatRemaining === Infinity)) {
+                if (ayahRepeatRemaining !== Infinity) ayahRepeatRemaining--;
+                ayahPlayer.currentTime = 0;
+                ayahPlayer.play().catch(() => { });
+                return;
+            }
             playBtn.innerHTML = `<i data-lucide="play"></i>`; safeLucide();
             activePlayButton = null;
             // Keep currentAyahPlaying set so mini player next/prev still works
