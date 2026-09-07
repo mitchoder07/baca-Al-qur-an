@@ -1,18 +1,19 @@
-/* sw.js — Baca Qur'an Service Worker
+/* sw.js - Baca Qur'an Service Worker
  * Caching: HTML=network-first, assets=cache-first, API=network-only, CDN=stale-while-revalidate
  */
-const CACHE_VERSION = 'baca-v16';
+const CACHE_VERSION = 'baca-v17';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
 const PRECACHE_URLS = [
-  '/', '/index.html', '/mushaf.html', '/adhkar.html', '/ask.html', '/salah.html', '/game.html', '/topics.html', '/journeys.html', '/progress.html', '/bookmarks.html', '/blog.html',
+  '/', '/index.html', '/mushaf.html', '/adhkar.html', '/ask.html', '/salah.html', '/game.html', '/topics.html', '/journeys.html', '/progress.html', '/bookmarks.html',
   '/css/style.css', '/css/shared-nav.css', '/css/reader-themes.css', '/css/reader-additions.css',
-  '/css/mushaf.css', '/css/floating-player-bar.css', '/css/scroll-top.css', '/css/blog.css',
+  '/css/mushaf.css', '/css/floating-player-bar.css', '/css/scroll-top.css',
   '/js/shared-nav.js', '/js/script.js', '/js/mushaf.js', '/js/data.js', '/js/chat.js',
   '/js/chat-widget.js', '/js/floating-player-bar.js', '/js/pwa-register.js', '/js/scroll-top.js',
   '/js/jumuah.js', '/js/onboarding-tour.js', '/js/onboarding-tour-steps-home.js',
-  '/js/onboarding-tour-steps-mushaf.js', '/js/share-image.js', '/js/logo-info-trigger.js', '/js/blog.js',
+  '/js/onboarding-tour-steps-mushaf.js', '/js/onboarding-tour-steps-mobile.js',
+  '/js/share-image.js', '/js/logo-info-trigger.js',
   '/manifest.json',
   '/images/baca-logo.webp', '/images/baca-logo.png', '/images/baca-logo-small.png',
   '/images/icons/icon-192.png', '/images/icons/icon-512.png', '/images/icons/apple-touch-icon.png',

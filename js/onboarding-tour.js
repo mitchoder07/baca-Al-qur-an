@@ -1,349 +1,437 @@
-/* ============================================================
-   BACA — Onboarding Tour Engine
-   Spotlights key features with step-by-step tooltips on a user's
-   first visit (Next / Back / Skip), then never shows again unless
-   explicitly replayed. Self-contained: injects its own <style>,
-   no dependencies, matches the pattern used by chat-widget.js and
-   floating-player-bar.js.
-
-   This file is the shared engine only, reused across pages. Each
-   page loads its own steps config first (e.g.
-   js/onboarding-tour-steps-home.js or
-   js/onboarding-tour-steps-mushaf.js), which sets:
-     window.BACA_ONBOARDING_STEPS         (array of step objects)
-     window.BACA_ONBOARDING_STORAGE_KEY   (string, unique per page)
-   before this engine script runs.
-   ============================================================
-   TABLE OF CONTENTS
-   ------------------------------------------------------------
-   1. Config — read from the page's steps file, with a safe
-      fallback if one wasn't loaded
-   2. Injected <style>
-   3. DOM construction (overlay, spotlight, tooltip)
-   4. Positioning — spotlight + tooltip placement per step
-   5. Step navigation (next / back / skip / finish)
-   6. Init — auto-starts for first-time visitors, exposes
-      window.BacaOnboarding = { start, reset } for a manual
-      "Replay Tour" trigger
-   ============================================================ */
+/* onboarding-tour.js - Tour engine for Baca
+ *
+ * v26 rewrite: supports both web app and mobile app. The engine:
+ *   1. Auto-detects standalone mode (mobile app) vs browser (web app)
+ *   2. Loads the correct step list (HOME_STEPS, MOBILE_STEPS, or MUSHAF_STEPS)
+ *      based on the current page
+ *   3. Builds an overlay with a darkened backdrop and a cutout highlight on
+ *      the current target
+ *   4. Renders a tooltip card with title, body, prev / next / skip buttons,
+ *      and a step counter (e.g. "Step 5 of 22")
+ *   5. Skips steps where the target is not in the DOM and skipIfMissing=true
+ *   6. Saves completion to localStorage so the tour does not auto-play again
+ *
+ * To start the tour manually (e.g. from the footer "Replay Tour" link):
+ *   BacaTour.start('home');   // web app home page tour
+ *   BacaTour.start('mobile'); // mobile app home page tour (auto-detected)
+ *   BacaTour.start('mushaf'); // mushaf page tour
+ *
+ * To reset the "seen" flag (so it auto-plays again next visit):
+ *   BacaTour.reset();
+ *
+ * The engine is page-agnostic. Pages load their own step files:
+ *   - index.html loads onboarding-tour-steps-home.js + onboarding-tour-steps-mobile.js
+ *   - mushaf.html loads onboarding-tour-steps-mushaf.js
+ * Both pages also load onboarding-tour.js (this file).
+ *
+ * Auto-play logic: on first load of index.html or mushaf.html, if the
+ * corresponding localStorage key is not set, the tour auto-plays after a
+ * 800ms delay (so the page settles first).
+ */
 
 (function () {
-    'use strict';
+  'use strict';
 
-    // ============================================================
-    // 1. CONFIG — provided by a page-specific steps file that must
-    // load before this one. Falls back to a minimal single-step
-    // tour if a page forgets to include a steps file, rather than
-    // silently doing nothing or throwing.
-    // ============================================================
-    const STORAGE_KEY = window.BACA_ONBOARDING_STORAGE_KEY || 'bacaOnboardingComplete';
-    const STEPS = (window.BACA_ONBOARDING_STEPS && window.BACA_ONBOARDING_STEPS.length)
-        ? window.BACA_ONBOARDING_STEPS
-        : [{ target: null, title: 'Welcome to Baca', text: 'Enjoy exploring the app.' }];
+  var STORAGE_KEYS = {
+    home: 'baca:tour:home:seen',
+    mobile: 'baca:tour:mobile:seen',
+    mushaf: 'baca:tour:mushaf:seen',
+  };
 
-    // ============================================================
-    // 2. INJECTED STYLE
-    // ============================================================
-    function injectStyle() {
-        if (document.getElementById('baca-onboarding-style')) return;
-        const style = document.createElement('style');
-        style.id = 'baca-onboarding-style';
-        style.textContent = `
-            .baca-ob-overlay {
-                position: fixed;
-                inset: 0;
-                z-index: 999998;
-                background: rgba(2, 6, 23, 0.72);
-                backdrop-filter: blur(1px);
-                opacity: 0;
-                transition: opacity .25s ease;
-            }
-            .baca-ob-overlay.active { opacity: 1; }
+  var state = {
+    list: [],       // active step list
+    index: 0,       // current step index
+    name: null,     // 'home' | 'mobile' | 'mushaf'
+    overlayEl: null,
+    tooltipEl: null,
+    highlightEl: null,
+  };
 
-            .baca-ob-spotlight {
-                position: fixed;
-                z-index: 999999;
-                border-radius: 14px;
-                box-shadow: 0 0 0 4px var(--primary, #10b981), 0 0 0 9999px rgba(2, 6, 23, 0.72);
-                transition: top .35s ease, left .35s ease, width .35s ease, height .35s ease, opacity .25s ease;
-                pointer-events: none;
-                opacity: 0;
-            }
-            .baca-ob-spotlight.active { opacity: 1; }
-            .baca-ob-spotlight.hidden { display: none; }
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true
+      || document.referrer.indexOf('android-app://') === 0;
+  }
 
-            .baca-ob-card {
-                position: fixed;
-                z-index: 1000000;
-                width: min(340px, calc(100vw - 2rem));
-                background: var(--dark-light, #1e293b);
-                border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
-                border-radius: 16px;
-                padding: 1.4rem 1.5rem;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-                opacity: 0;
-                transform: translateY(8px);
-                transition: opacity .25s ease, transform .25s ease, top .35s ease, left .35s ease;
-                font-family: "Poppins", sans-serif;
-            }
-            .baca-ob-card.active { opacity: 1; transform: translateY(0); }
+  function isMushafPage() {
+    return /mushaf\.html/.test(window.location.pathname)
+      || document.body.hasAttribute('data-mushaf-theme');
+  }
 
-            .baca-ob-step-count {
-                font-size: .75rem;
-                font-weight: 600;
-                letter-spacing: .04em;
-                text-transform: uppercase;
-                color: var(--primary, #10b981);
-                margin-bottom: .5rem;
-            }
+  function pickTourName() {
+    if (isMushafPage()) return 'mushaf';
+    return isStandalone() ? 'mobile' : 'home';
+  }
 
-            .baca-ob-title {
-                font-size: 1.15rem;
-                font-weight: 700;
-                color: var(--white, #fff);
-                margin-bottom: .5rem;
-            }
+  function getSteps(name) {
+    if (name === 'mushaf') return (window.BacaTour && window.BacaTour.MUSHAF_STEPS) || [];
+    if (name === 'mobile') return (window.BacaTour && window.BacaTour.MOBILE_STEPS) || [];
+    return (window.BacaTour && window.BacaTour.HOME_STEPS) || [];
+  }
 
-            .baca-ob-text {
-                font-size: .92rem;
-                line-height: 1.55;
-                color: var(--text, #cbd5e1);
-                margin-bottom: 1.2rem;
-            }
+  // Inject the CSS once
+  function injectCSS() {
+    if (document.getElementById('baca-tour-css')) return;
+    var css = document.createElement('style');
+    css.id = 'baca-tour-css';
+    css.textContent = [
+      '.baca-tour-overlay {',
+      '  position: fixed; inset: 0; z-index: 99998;',
+      '  background: rgba(0, 0, 0, 0.55);',
+      '  backdrop-filter: blur(2px);',
+      '  -webkit-backdrop-filter: blur(2px);',
+      '  opacity: 0; transition: opacity 0.2s ease;',
+      '}',
+      '.baca-tour-overlay.open { opacity: 1; }',
+      '.baca-tour-highlight {',
+      '  position: absolute; border: 2px solid #10b981; border-radius: 8px;',
+      '  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);',
+      '  pointer-events: none; transition: all 0.25s ease;',
+      '  z-index: 99999;',
+      '}',
+      '.baca-tour-tooltip {',
+      '  position: absolute; z-index: 100000;',
+      '  max-width: 360px; min-width: 260px;',
+      '  background: #0f172a; color: #f1f5f9;',
+      '  border: 1px solid rgba(16, 185, 129, 0.4);',
+      '  border-radius: 14px; padding: 1rem 1.1rem 0.9rem;',
+      '  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);',
+      '  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;',
+      '  transition: all 0.25s ease;',
+      '}',
+      '.baca-tour-tooltip h3 {',
+      '  font-size: 1rem; font-weight: 700; color: #34d399;',
+      '  margin: 0 0 0.45rem; line-height: 1.3;',
+      '}',
+      '.baca-tour-tooltip p {',
+      '  font-size: 0.85rem; line-height: 1.55; color: #cbd5e1;',
+      '  margin: 0 0 0.9rem;',
+      '}',
+      '.baca-tour-tooltip-actions {',
+      '  display: flex; align-items: center; justify-content: space-between;',
+      '  gap: 0.5rem; flex-wrap: wrap;',
+      '}',
+      '.baca-tour-tooltip-counter {',
+      '  font-size: 0.75rem; color: #64748b; font-weight: 600;',
+      '}',
+      '.baca-tour-tooltip-buttons { display: flex; gap: 0.4rem; }',
+      '.baca-tour-tooltip button {',
+      '  font-family: inherit; font-size: 0.8rem; font-weight: 600;',
+      '  padding: 6px 12px; border-radius: 8px; cursor: pointer;',
+      '  border: 1px solid rgba(255, 255, 255, 0.12);',
+      '  background: rgba(255, 255, 255, 0.04); color: #e2e8f0;',
+      '  transition: all 0.15s ease;',
+      '}',
+      '.baca-tour-tooltip button:hover {',
+      '  background: rgba(16, 185, 129, 0.15);',
+      '  border-color: rgba(16, 185, 129, 0.5);',
+      '}',
+      '.baca-tour-tooltip button.primary {',
+      '  background: rgba(16, 185, 129, 0.25); color: #10b981;',
+      '  border-color: rgba(16, 185, 129, 0.5);',
+      '}',
+      '.baca-tour-tooltip button.primary:hover {',
+      '  background: rgba(16, 185, 129, 0.4);',
+      '}',
+      '.baca-tour-tooltip.skip-btn { color: #94a3b8; }',
+      '@media (max-width: 480px) {',
+      '  .baca-tour-tooltip { max-width: calc(100vw - 2rem); }',
+      '}',
+    ].join('\n');
+    document.head.appendChild(css);
+  }
 
-            .baca-ob-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: .75rem;
-            }
+  function ensureDOM() {
+    if (state.overlayEl) return;
+    injectCSS();
 
-            .baca-ob-skip {
-                background: none;
-                border: none;
-                color: var(--text, #94a3b8);
-                font-size: .82rem;
-                cursor: pointer;
-                padding: .4rem 0;
-                text-decoration: underline;
-                text-underline-offset: 2px;
-            }
-            .baca-ob-skip:hover { color: var(--white, #fff); }
+    var overlay = document.createElement('div');
+    overlay.className = 'baca-tour-overlay';
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) {
+        // tap outside the tooltip = next step (gentler than dismissing)
+        next();
+      }
+    });
+    document.body.appendChild(overlay);
+    state.overlayEl = overlay;
 
-            .baca-ob-nav {
-                display: flex;
-                gap: .5rem;
-            }
+    var highlight = document.createElement('div');
+    highlight.className = 'baca-tour-highlight';
+    highlight.style.display = 'none';
+    document.body.appendChild(highlight);
+    state.highlightEl = highlight;
 
-            .baca-ob-btn {
-                border: none;
-                border-radius: 999px;
-                padding: .55rem 1.1rem;
-                font-size: .85rem;
-                font-weight: 600;
-                cursor: pointer;
-                font-family: inherit;
-                transition: transform .15s, opacity .15s;
-            }
-            .baca-ob-btn:active { transform: scale(0.96); }
+    var tooltip = document.createElement('div');
+    tooltip.className = 'baca-tour-tooltip';
+    tooltip.style.display = 'none';
+    document.body.appendChild(tooltip);
+    state.tooltipEl = tooltip;
+  }
 
-            .baca-ob-btn-back {
-                background: rgba(255, 255, 255, 0.08);
-                color: var(--white, #fff);
-            }
-            .baca-ob-btn-back:disabled {
-                opacity: .35;
-                cursor: default;
-            }
+  function scrollToTarget(el) {
+    if (!el || el === document.body) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    var rect = el.getBoundingClientRect();
+    var viewportH = window.innerHeight;
+    // If element is not fully visible, scroll it gently into the centre
+    if (rect.top < 60 || rect.bottom > viewportH - 60) {
+      var targetY = window.scrollY + rect.top + rect.height / 2 - viewportH / 2;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: 'smooth',
+      });
+    }
+  }
 
-            .baca-ob-btn-next {
-                background: var(--primary, #10b981);
-                color: #fff;
-            }
+  function positionTooltip(targetRect, placement) {
+    var tip = state.tooltipEl;
+    var tipRect = tip.getBoundingClientRect();
+    var margin = 12;
+    var top, left;
 
-            @media (max-width: 480px) {
-                .baca-ob-card {
-                    left: 1rem !important;
-                    right: 1rem !important;
-                    width: auto !important;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+    // For 'center' placement, center the tooltip on the viewport
+    if (placement === 'center' || !targetRect || targetRect.width === 0) {
+      top = (window.innerHeight - tipRect.height) / 2;
+      left = (window.innerWidth - tipRect.width) / 2;
+      tip.style.top = Math.max(margin, top) + 'px';
+      tip.style.left = Math.max(margin, left) + 'px';
+      return;
     }
 
-    // ============================================================
-    // 3 & 4. DOM CONSTRUCTION + POSITIONING
-    // ============================================================
-    let overlay, spotlight, card, currentStep = 0;
-
-    function buildDom() {
-        overlay = document.createElement('div');
-        overlay.className = 'baca-ob-overlay';
-
-        spotlight = document.createElement('div');
-        spotlight.className = 'baca-ob-spotlight hidden';
-
-        card = document.createElement('div');
-        card.className = 'baca-ob-card';
-        card.innerHTML = `
-            <div class="baca-ob-step-count" id="baca-ob-count"></div>
-            <div class="baca-ob-title" id="baca-ob-title"></div>
-            <div class="baca-ob-text" id="baca-ob-text"></div>
-            <div class="baca-ob-actions">
-                <button class="baca-ob-skip" id="baca-ob-skip">Skip tour</button>
-                <div class="baca-ob-nav">
-                    <button class="baca-ob-btn baca-ob-btn-back" id="baca-ob-back">Back</button>
-                    <button class="baca-ob-btn baca-ob-btn-next" id="baca-ob-next">Next</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(overlay);
-        document.body.appendChild(spotlight);
-        document.body.appendChild(card);
-
-        card.querySelector('#baca-ob-skip').addEventListener('click', endTour);
-        card.querySelector('#baca-ob-back').addEventListener('click', () => goToStep(currentStep - 1));
-        card.querySelector('#baca-ob-next').addEventListener('click', () => {
-            if (currentStep === STEPS.length - 1) endTour();
-            else goToStep(currentStep + 1);
-        });
-        // Deliberately NOT closing on overlay/backdrop click — the spotlight
-        // area covers real page elements, and an accidental tap near them
-        // (very easy to do since it's the visually inviting part of the
-        // screen) used to kill the whole tour instantly. Skip button and
-        // Escape key remain as the explicit ways out.
-
-        document.addEventListener('keydown', onKeydown);
-        window.addEventListener('resize', () => positionForStep(STEPS[currentStep], true));
+    switch (placement) {
+      case 'top':
+        top = targetRect.top - tipRect.height - margin;
+        left = targetRect.left + targetRect.width / 2 - tipRect.width / 2;
+        break;
+      case 'bottom':
+        top = targetRect.bottom + margin;
+        left = targetRect.left + targetRect.width / 2 - tipRect.width / 2;
+        break;
+      case 'left':
+        top = targetRect.top + targetRect.height / 2 - tipRect.height / 2;
+        left = targetRect.left - tipRect.width - margin;
+        break;
+      case 'right':
+        top = targetRect.top + targetRect.height / 2 - tipRect.height / 2;
+        left = targetRect.right + margin;
+        break;
+      default:
+        top = targetRect.bottom + margin;
+        left = targetRect.left + targetRect.width / 2 - tipRect.width / 2;
     }
 
-    function onKeydown(e) {
-        if (e.key === 'Escape') endTour();
-        else if (e.key === 'ArrowRight') card.querySelector('#baca-ob-next').click();
-        else if (e.key === 'ArrowLeft') card.querySelector('#baca-ob-back').click();
+    // Clamp inside viewport
+    top = Math.max(margin, Math.min(top, window.innerHeight - tipRect.height - margin));
+    left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+
+    // Convert to absolute (page) coordinates since tooltip is position:absolute
+    tip.style.top = (top + window.scrollY) + 'px';
+    tip.style.left = (left + window.scrollX) + 'px';
+  }
+
+  function positionHighlight(targetRect) {
+    var hl = state.highlightEl;
+    if (!targetRect || targetRect.width === 0) {
+      hl.style.display = 'none';
+      return;
+    }
+    hl.style.display = 'block';
+    var pad = 4;
+    hl.style.top = (targetRect.top + window.scrollY - pad) + 'px';
+    hl.style.left = (targetRect.left + window.scrollX - pad) + 'px';
+    hl.style.width = (targetRect.width + pad * 2) + 'px';
+    hl.style.height = (targetRect.height + pad * 2) + 'px';
+  }
+
+  function renderStep() {
+    var step = state.list[state.index];
+    if (!step) return endTour();
+
+    var target = null;
+    if (step.target && step.target !== 'body') {
+      target = document.querySelector(step.target);
+    } else {
+      target = document.body;
     }
 
-    function positionForStep(step, immediate) {
-        const target = step.target ? document.querySelector(step.target) : null;
+    // Auto-skip if missing
+    if (!target && step.skipIfMissing) {
+      state.index++;
+      return renderStep();
+    }
+    if (!target) target = document.body; // safe fallback
 
-        if (!target) {
-            // No target (welcome step) or target missing — center the card,
-            // no spotlight, so the tour still delivers the info instead of
-            // breaking outright.
-            spotlight.classList.add('hidden');
-            const cw = Math.min(340, window.innerWidth - 32);
-            const ch = card.offsetHeight || 200;
-            card.style.left = `${(window.innerWidth - cw) / 2}px`;
-            card.style.top = `${Math.max(20, (window.innerHeight - ch) / 2)}px`;
-            return;
+    scrollToTarget(target);
+
+    // Need to wait one frame for the scroll to settle before measuring
+    requestAnimationFrame(function () {
+      var rect = target === document.body
+        ? { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight, bottom: window.innerHeight, right: window.innerWidth }
+        : target.getBoundingClientRect();
+
+      positionHighlight(rect === target.getBoundingClientRect() ? target.getBoundingClientRect() : rect);
+
+      var tip = state.tooltipEl;
+      tip.innerHTML =
+        '<h3>' + escapeHtml(step.title) + '</h3>' +
+        '<p>' + escapeHtml(step.body) + '</p>' +
+        '<div class="baca-tour-tooltip-actions">' +
+          '<span class="baca-tour-tooltip-counter">Step ' + (state.index + 1) + ' of ' + state.list.length + '</span>' +
+          '<div class="baca-tour-tooltip-buttons">' +
+            '<button class="skip-btn" data-action="skip">Skip</button>' +
+            (state.index > 0 ? '<button data-action="prev">Back</button>' : '') +
+            '<button class="primary" data-action="' + (state.index === state.list.length - 1 ? 'finish' : 'next') + '">' +
+              (state.index === state.list.length - 1 ? 'Finish' : 'Next') +
+            '</button>' +
+          '</div>' +
+        '</div>';
+      tip.style.display = 'block';
+
+      // Re-measure after content set
+      requestAnimationFrame(function () {
+        // Re-measure rect (in case scroll moved it)
+        if (target !== document.body) {
+          rect = target.getBoundingClientRect();
+          positionHighlight(rect);
         }
+        positionTooltip(rect, step.placement);
+      });
+    });
+  }
 
-        const rect = target.getBoundingClientRect();
-        const pad = 8;
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-        spotlight.classList.remove('hidden');
-        spotlight.style.top = `${Math.max(0, rect.top - pad)}px`;
-        spotlight.style.left = `${rect.left - pad}px`;
-        spotlight.style.width = `${rect.width + pad * 2}px`;
-        spotlight.style.height = `${rect.height + pad * 2}px`;
+  function next() {
+    state.index++;
+    if (state.index >= state.list.length) return endTour();
+    renderStep();
+  }
 
-        // Prefer placing the card below the target; flip above if there's
-        // not enough room; clamp horizontally so it never runs off-screen.
-        // Uses the card's REAL rendered height (it already has this step's
-        // text in it by the time this runs) rather than a fixed guess —
-        // text length varies per step, so a fixed estimate was off by a
-        // few pixels on longer steps and could push the card off-screen.
-        const cardWidth = Math.min(340, window.innerWidth - 32);
-        const cardHeight = card.offsetHeight || 180;
-        let top = rect.bottom + pad + 12;
-        if (top + cardHeight > window.innerHeight) {
-            top = rect.top - pad - 12 - cardHeight;
-        }
-        // Unconditional safety net: whatever the above produced, never let
-        // the card render above or below the actual viewport.
-        top = Math.max(12, Math.min(top, window.innerHeight - cardHeight - 12));
+  function prev() {
+    state.index--;
+    if (state.index < 0) state.index = 0;
+    renderStep();
+  }
 
-        let left = rect.left + rect.width / 2 - cardWidth / 2;
-        left = Math.max(16, Math.min(left, window.innerWidth - cardWidth - 16));
+  function skip() {
+    endTour();
+  }
 
-        card.style.top = `${top}px`;
-        card.style.left = `${left}px`;
+  function endTour() {
+    if (state.tooltipEl) state.tooltipEl.style.display = 'none';
+    if (state.highlightEl) state.highlightEl.style.display = 'none';
+    if (state.overlayEl) state.overlayEl.classList.remove('open');
+    // Mark as seen
+    if (state.name && STORAGE_KEYS[state.name]) {
+      try { localStorage.setItem(STORAGE_KEYS[state.name], '1'); } catch (e) {}
+    }
+  }
+
+  function start(name) {
+    var resolvedName = name || pickTourName();
+    var list = getSteps(resolvedName);
+    if (!list || !list.length) return;
+
+    state.name = resolvedName;
+    state.list = list;
+    state.index = 0;
+
+    ensureDOM();
+    state.overlayEl.classList.add('open');
+
+    // Wire button events once (delegate)
+    if (!state.tooltipEl.dataset.wired) {
+      state.tooltipEl.addEventListener('click', function (e) {
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        var action = btn.dataset.action;
+        if (action === 'next') next();
+        else if (action === 'prev') prev();
+        else if (action === 'skip') skip();
+        else if (action === 'finish') endTour();
+      });
+      state.tooltipEl.dataset.wired = '1';
     }
 
-    // ============================================================
-    // 5. STEP NAVIGATION
-    // ============================================================
-    function goToStep(index) {
-        currentStep = index;
-        const step = STEPS[index];
-
-        card.querySelector('#baca-ob-count').textContent = `Step ${index + 1} of ${STEPS.length}`;
-        card.querySelector('#baca-ob-title').textContent = step.title;
-        card.querySelector('#baca-ob-text').textContent = step.text;
-        card.querySelector('#baca-ob-back').disabled = index === 0;
-        card.querySelector('#baca-ob-next').textContent = index === STEPS.length - 1 ? 'Finish' : 'Next';
-
-        const target = step.target ? document.querySelector(step.target) : null;
-        if (target) {
-            // Instant, not smooth — a smooth scroll over a long distance can
-            // still be mid-animation after a fixed delay, which was causing
-            // position to be measured before the page actually finished
-            // moving (this is what sent the card off-screen on step 3).
-            target.scrollIntoView({ behavior: 'instant', block: 'center' });
-            requestAnimationFrame(() => requestAnimationFrame(() => positionForStep(step)));
-        } else {
-            positionForStep(step);
-        }
+    // Keyboard navigation
+    if (!state.keyboardWired) {
+      document.addEventListener('keydown', function (e) {
+        if (!state.overlayEl || !state.overlayEl.classList.contains('open')) return;
+        if (e.key === 'Escape') skip();
+        else if (e.key === 'ArrowRight' || e.key === 'Enter') next();
+        else if (e.key === 'ArrowLeft') prev();
+      });
+      state.keyboardWired = true;
     }
 
-    function startTour() {
-        injectStyle();
-        buildDom();
-        requestAnimationFrame(() => {
-            overlay.classList.add('active');
-            spotlight.classList.add('active');
-            card.classList.add('active');
-        });
-        goToStep(0);
+    // Recompute positions on scroll/resize
+    if (!state.resizeWired) {
+      window.addEventListener('resize', function () {
+        if (!state.overlayEl || !state.overlayEl.classList.contains('open')) return;
+        renderStep();
+      });
+      window.addEventListener('scroll', function () {
+        if (!state.overlayEl || !state.overlayEl.classList.contains('open')) return;
+        // Debounce with rAF
+        if (state._scrollRaf) cancelAnimationFrame(state._scrollRaf);
+        state._scrollRaf = requestAnimationFrame(renderStep);
+      }, { passive: true });
+      state.resizeWired = true;
     }
 
-    function endTour() {
-        try { localStorage.setItem(STORAGE_KEY, 'true'); } catch (e) { }
-        if (!overlay) return;
-        overlay.classList.remove('active');
-        spotlight.classList.remove('active');
-        card.classList.remove('active');
-        document.removeEventListener('keydown', onKeydown);
-        setTimeout(() => {
-            overlay?.remove();
-            spotlight?.remove();
-            card?.remove();
-            overlay = spotlight = card = null;
-        }, 250);
-    }
+    renderStep();
+  }
 
-    // ============================================================
-    // 6. INIT
-    // ============================================================
-    let alreadySeen;
-    try { alreadySeen = localStorage.getItem(STORAGE_KEY) === 'true'; }
-    catch (e) { alreadySeen = false; }
+  function reset() {
+    Object.keys(STORAGE_KEYS).forEach(function (k) {
+      try { localStorage.removeItem(STORAGE_KEYS[k]); } catch (e) {}
+    });
+  }
 
-    if (!alreadySeen) {
-        // Small delay so the page has fully settled (fonts, layout,
-        // any late-injected elements like the hamburger/chat FAB) before
-        // the tour starts measuring positions.
-        setTimeout(startTour, 900);
-    }
+  function maybeAutoStart() {
+    var name = pickTourName();
+    var key = STORAGE_KEYS[name];
+    if (!key) return;
+    var seen;
+    try { seen = localStorage.getItem(key); } catch (e) { seen = null; }
+    if (seen) return; // already played
 
-    // Exposed for a "Replay Tour" link/button, and reusable if other
-    // pages want their own step lists later.
-    window.BacaOnboarding = {
-        start: startTour,
-        reset: function () {
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
-        }
-    };
+    // Wait for the page to settle
+    setTimeout(function () { start(name); }, 800);
+  }
+
+  // Public API
+  window.BacaTour = window.BacaTour || {};
+  window.BacaTour.start = start;
+  window.BacaTour.reset = reset;
+  window.BacaTour.isStandalone = isStandalone;
+
+  // Wire the footer "Replay Tour" links (delegated, so they work whether
+  // the link exists at load time or is added later)
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('#footer-replay-tour, #replay-tour-btn, [data-action="replay-tour"]');
+    if (!t) return;
+    e.preventDefault();
+    // Reset the seen flag for the current page so the tour can replay
+    var name = pickTourName();
+    try { localStorage.removeItem(STORAGE_KEYS[name]); } catch (err) {}
+    start(name);
+  });
+
+  // Auto-start on first visit
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAutoStart);
+  } else {
+    maybeAutoStart();
+  }
 })();

@@ -21,6 +21,21 @@
             .baca-footer {
                 display: none !important;
             }
+            /* Fix 3 (v26): remove the stray horizontal line that appears
+               below the navbar on the mobile app's topics page. The navbar
+               has a border-bottom that, combined with the safe-area top
+               padding and the absence of the browser chrome, looks like
+               a useless divider. We hide it only in standalone mode. */
+            .navbar {
+                border-bottom: none !important;
+            }
+            /* Also hide any stray <hr> that may have been added in older
+               versions of this page, just in case. */
+            main > hr,
+            .topics-page-header + hr,
+            .topics-grid-full + hr {
+                display: none !important;
+            }
         }
     </style>
     <meta name="theme-color" content="#0f172a">
@@ -388,7 +403,7 @@
             });
             grid.innerHTML = html;
 
-            // Wire click handlers — redirect to index.html?topic=X
+            // Wire click handlers - redirect to index.html?topic=X
             grid.querySelectorAll('.topic-card').forEach(function (card) {
                 card.addEventListener('click', function () {
                     var topic = card.getAttribute('data-topic');

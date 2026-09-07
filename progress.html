@@ -130,6 +130,83 @@
             .challenge-card { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
             .challenge-right { align-self: stretch; text-align: left; }
         }
+
+        /* === Fix 2 (v26): "View Verse" + arrow alignment ===
+         * On the mobile app progress page, "View Verse" links have arrows
+         * beside them that render as superscripts because the parent uses
+         * inline layout and the icon's default vertical-align is baseline.
+         * Force any "view verse" link (and similar "read verse" / "view
+         * verses" patterns) to use inline-flex with center alignment and
+         * baseline/middle icons. Works for both Font Awesome and Lucide. */
+        .progress-section a[class*="verse"],
+        .progress-section button[class*="verse"],
+        .progress-section .view-verse,
+        .progress-section .view-verse-row,
+        .progress-section .verse-link,
+        .progress-section .open-bookmark,
+        .achievements-grid a[class*="verse"],
+        .achievements-grid button[class*="verse"] {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center;
+            gap: 0.4rem;
+            line-height: 1.2;
+            vertical-align: middle;
+            /* Reset any inherited superscript-like positioning */
+            position: relative;
+            top: auto;
+            bottom: auto;
+            transform: none;
+        }
+
+        /* Specifically target the arrow icons inside these links and ensure
+         * they align to the text baseline, not above it. */
+        .progress-section a[class*="verse"] i,
+        .progress-section button[class*="verse"] i,
+        .progress-section .view-verse i,
+        .progress-section .view-verse-row i,
+        .progress-section .verse-link i,
+        .progress-section .open-bookmark i,
+        .achievements-grid a[class*="verse"] i,
+        .achievements-grid button[class*="verse"] i,
+        .progress-section a[class*="verse"] svg,
+        .progress-section button[class*="verse"] svg,
+        .progress-section .view-verse svg,
+        .progress-section .verse-link svg,
+        .progress-section .open-bookmark svg {
+            display: inline-block;
+            vertical-align: middle !important;
+            position: static !important;
+            top: auto !important;
+            bottom: auto !important;
+            line-height: 1;
+            margin: 0;
+            font-size: 0.85em; /* matches text size */
+        }
+
+        /* Defensive: any element whose visible text starts with "View verse"
+         * or "View Verse" or "Read verse" - apply inline-flex to its parent
+         * if it contains an arrow icon. We use a class-based selector instead
+         * of :has() for max browser support. */
+        .progress-section .verse-row,
+        .progress-section .verse-action,
+        .progress-section [data-verse-action] {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.35rem;
+            vertical-align: middle;
+        }
+        .progress-section .verse-row i,
+        .progress-section .verse-action i,
+        .progress-section [data-verse-action] i,
+        .progress-section .verse-row svg,
+        .progress-section .verse-action svg,
+        .progress-section [data-verse-action] svg {
+            vertical-align: middle !important;
+            position: static !important;
+            top: auto !important;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
