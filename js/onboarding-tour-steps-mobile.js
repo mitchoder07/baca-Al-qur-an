@@ -1,9 +1,13 @@
 /* onboarding-tour-steps-mobile.js - Step definitions for the MOBILE APP tour
  *
+ * v27: removed the bottom tab bar steps. The tab bar is always visible at
+ *      the bottom of the screen so the user discovers it on their own; the
+ *      tour does not need to walk through each of the 5 tabs.
  * v26 NEW: a separate tour for the installed mobile app (standalone mode).
  *
  * The mobile app has a different UI from the web app:
  *   - Bottom tab bar with 5 tabs: Home, Qur'an, Ask, Progress, More
+ *     (always visible - not toured, just mentioned in the closing step)
  *   - No footer (footer is hidden in standalone mode)
  *   - Hamburger menu hidden in standalone mode (it's replaced by the More tab)
  *   - 8 sections hidden from the home page in standalone mode (topics,
@@ -14,9 +18,8 @@
  *   - The chat FAB is hidden on mobile (Ask tab replaces it)
  *
  * So a web-app tour does not match the mobile app. This file defines a
- * separate tour that walks the mobile user through the bottom tab bar,
- * the home page (with its reduced sections), and the More sheet's
- * destinations.
+ * separate tour that walks the mobile user through the home page (with
+ * its reduced sections) and explains where the hidden sections went.
  *
  * Each step is consumed by onboarding-tour.js. The engine auto-detects
  * whether the app is in standalone mode and chooses between HOME_STEPS
@@ -105,66 +108,12 @@
     {
       target: 'body',
       title: 'Hidden sections are in the More sheet',
-      body: 'The mobile home page hides eight sections that are visible on the web: Topics, Journeys, Bookmarks, Featured Reciters, Reflection of the Day, Reading Progress, Daily Challenge, and Achievements. They live in the More tab so the home page stays short. We will tour the More tab in a moment.',
+      body: 'The mobile home page hides eight sections that are visible on the web: Topics, Journeys, Bookmarks, Featured Reciters, Reflection of the Day, Reading Progress, Daily Challenge, and Achievements. They live in the More tab (the rightmost tab in the bottom bar) so the home page stays short. Tap More to open the sheet listing all eight sections, plus Replay Tour and Reset Progress.',
       placement: 'center',
       skipIfMissing: false,
     },
 
-    // ─── 10. Bottom tab bar (overview) ────────────────────────────────
-    {
-      target: '.baca-tab-bar',
-      title: 'Bottom tab bar',
-      body: 'Five tabs: Home (this page), Qur\'an (the full 604-page Mushaf), Ask (Baca AI chat), Progress (streaks, challenges, achievements), and More (the extra sections). Tap any tab to switch pages. The tab bar is always visible at the bottom of the screen.',
-      placement: 'top',
-      skipIfMissing: false,
-    },
-
-    // ─── 11. Home tab ─────────────────────────────────────────────────
-    {
-      target: '.baca-tab-bar__btn[data-tab="home"]',
-      title: 'Home tab',
-      body: 'Brings you back to this page from anywhere in the app.',
-      placement: 'top',
-      skipIfMissing: true,
-    },
-
-    // ─── 12. Qur'an tab ───────────────────────────────────────────────
-    {
-      target: '.baca-tab-bar__btn[data-tab="quran"]',
-      title: "Qur'an tab",
-      body: 'Opens the 604-page Uthmani Mushaf reader. The Mushaf page has its own tour the first time you open it - page navigator, tajweed, reciter, bookmarks, tafsir, and word-by-word analysis.',
-      placement: 'top',
-      skipIfMissing: true,
-    },
-
-    // ─── 13. Ask tab (replaces chat FAB) ──────────────────────────────
-    {
-      target: '.baca-tab-bar__btn[data-tab="ask"]',
-      title: 'Ask tab (Baca AI)',
-      body: 'Opens ask.html, the Baca AI chat page. Ask questions about the Qur\'an, hadith, and Islamic practice in natural language. The same AI as the green chat bubble on the web app, but as a full page on mobile. Please remember: AI answers are not religious rulings - verify with a qualified scholar for fatwa.',
-      placement: 'top',
-      skipIfMissing: true,
-    },
-
-    // ─── 14. Progress tab ─────────────────────────────────────────────
-    {
-      target: '.baca-tab-bar__btn[data-tab="progress"]',
-      title: 'Progress tab',
-      body: 'Opens progress.html with your reading stats, today\'s daily challenge, and the achievements grid. All numbers are stored locally on this device - never sent anywhere.',
-      placement: 'top',
-      skipIfMissing: true,
-    },
-
-    // ─── 15. More tab (sheet with all hidden sections) ───────────────
-    {
-      target: '.baca-tab-bar__btn[data-tab="more"]',
-      title: 'More tab',
-      body: 'Opens a sheet listing the eight sections hidden from the home page: Topics, Journeys, Bookmarks, Featured Reciters, Reflection, Reading Progress, Daily Challenge, Achievements. Tap any item in the sheet to open its page. The More sheet also has Replay Tour and Reset Progress.',
-      placement: 'top',
-      skipIfMissing: true,
-    },
-
-    // ─── 16. Feedback (mobile) ───────────────────────────────────────
+    // ─── 10. Feedback (mobile) ───────────────────────────────────────
     {
       target: '#mobile-feedback',
       title: 'Send feedback',
@@ -173,11 +122,11 @@
       skipIfMissing: true,
     },
 
-    // ─── 17. Closing ──────────────────────────────────────────────────
+    // ─── 11. Closing ──────────────────────────────────────────────────
     {
       target: 'body',
       title: 'You are ready',
-      body: 'That is the mobile app home screen plus the bottom tab bar. Open the Qur\'an tab to start the Mushaf tour. Jazak Allah Khayr for reading.',
+      body: 'That is the mobile home screen. The bottom tab bar is always visible - explore it at your own pace. Open the Qur\'an tab when you want to try the Mushaf reader (it has its own tour). Jazak Allah Khayr for reading.',
       placement: 'center',
       skipIfMissing: false,
     },

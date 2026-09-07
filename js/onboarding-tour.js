@@ -80,14 +80,21 @@
       '  background: rgba(0, 0, 0, 0.55);',
       '  backdrop-filter: blur(2px);',
       '  -webkit-backdrop-filter: blur(2px);',
-      '  opacity: 0; transition: opacity 0.2s ease;',
+      '  opacity: 0;',
+      '  pointer-events: none;',            /* CRITICAL: invisible overlay must not block clicks */
+      '  transition: opacity 0.2s ease;',
+      '  display: block;',
       '}',
-      '.baca-tour-overlay.open { opacity: 1; }',
+      '.baca-tour-overlay.open {',
+      '  opacity: 1;',
+      '  pointer-events: auto;',            /* only block clicks while tour is active */
+      '}',
       '.baca-tour-highlight {',
       '  position: absolute; border: 2px solid #10b981; border-radius: 8px;',
       '  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);',
       '  pointer-events: none; transition: all 0.25s ease;',
       '  z-index: 99999;',
+      '  display: none;',                   /* hidden by default; shown only when positioning */
       '}',
       '.baca-tour-tooltip {',
       '  position: absolute; z-index: 100000;',
@@ -98,14 +105,28 @@
       '  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);',
       '  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;',
       '  transition: all 0.25s ease;',
+      '  display: none;',                   /* hidden by default; engine shows it on renderStep */
       '}',
       '.baca-tour-tooltip h3 {',
       '  font-size: 1rem; font-weight: 700; color: #34d399;',
       '  margin: 0 0 0.45rem; line-height: 1.3;',
+      '  padding-right: 1.8rem;',                   /* leave room for the close X */
       '}',
       '.baca-tour-tooltip p {',
       '  font-size: 0.85rem; line-height: 1.55; color: #cbd5e1;',
       '  margin: 0 0 0.9rem;',
+      '}',
+      '.baca-tour-tooltip-close {',
+      '  position: absolute; top: 8px; right: 8px;',
+      '  width: 28px; height: 28px; border-radius: 50%;',
+      '  background: transparent; border: none; cursor: pointer;',
+      '  color: #94a3b8; font-size: 1.1rem; line-height: 1;',
+      '  display: inline-flex; align-items: center; justify-content: center;',
+      '  transition: all 0.15s ease; padding: 0;',
+      '}',
+      '.baca-tour-tooltip-close:hover {',
+      '  background: rgba(255, 255, 255, 0.08);',
+      '  color: #e2e8f0;',
       '}',
       '.baca-tour-tooltip-actions {',
       '  display: flex; align-items: center; justify-content: space-between;',
@@ -114,7 +135,7 @@
       '.baca-tour-tooltip-counter {',
       '  font-size: 0.75rem; color: #64748b; font-weight: 600;',
       '}',
-      '.baca-tour-tooltip-buttons { display: flex; gap: 0.4rem; }',
+      '.baca-tour-tooltip-buttons { display: flex; gap: 0.4rem; align-items: center; }',
       '.baca-tour-tooltip button {',
       '  font-family: inherit; font-size: 0.8rem; font-weight: 600;',
       '  padding: 6px 12px; border-radius: 8px; cursor: pointer;',
@@ -133,7 +154,17 @@
       '.baca-tour-tooltip button.primary:hover {',
       '  background: rgba(16, 185, 129, 0.4);',
       '}',
-      '.baca-tour-tooltip.skip-btn { color: #94a3b8; }',
+      '.baca-tour-tooltip button.skip-btn {',
+      '  color: #94a3b8;',
+      '  background: transparent;',
+      '  border-color: transparent;',
+      '  padding: 6px 8px;',
+      '}',
+      '.baca-tour-tooltip button.skip-btn:hover {',
+      '  color: #e2e8f0;',
+      '  background: rgba(255, 255, 255, 0.06);',
+      '  border-color: rgba(255, 255, 255, 0.08);',
+      '}',
       '@media (max-width: 480px) {',
       '  .baca-tour-tooltip { max-width: calc(100vw - 2rem); }',
       '}',
@@ -275,14 +306,16 @@
       positionHighlight(rect === target.getBoundingClientRect() ? target.getBoundingClientRect() : rect);
 
       var tip = state.tooltipEl;
+      // Close X button is always visible at top-right, in addition to the Skip text button
       tip.innerHTML =
+        '<button class="baca-tour-tooltip-close" data-action="skip" aria-label="Close tour" title="Close tour">&times;</button>' +
         '<h3>' + escapeHtml(step.title) + '</h3>' +
         '<p>' + escapeHtml(step.body) + '</p>' +
         '<div class="baca-tour-tooltip-actions">' +
           '<span class="baca-tour-tooltip-counter">Step ' + (state.index + 1) + ' of ' + state.list.length + '</span>' +
           '<div class="baca-tour-tooltip-buttons">' +
-            '<button class="skip-btn" data-action="skip">Skip</button>' +
             (state.index > 0 ? '<button data-action="prev">Back</button>' : '') +
+            '<button class="skip-btn" data-action="skip">Skip tour</button>' +
             '<button class="primary" data-action="' + (state.index === state.list.length - 1 ? 'finish' : 'next') + '">' +
               (state.index === state.list.length - 1 ? 'Finish' : 'Next') +
             '</button>' +
@@ -328,9 +361,21 @@
   }
 
   function endTour() {
-    if (state.tooltipEl) state.tooltipEl.style.display = 'none';
+    if (state.tooltipEl) {
+      state.tooltipEl.style.display = 'none';
+      state.tooltipEl.innerHTML = ''; // release listeners / dereference DOM
+    }
     if (state.highlightEl) state.highlightEl.style.display = 'none';
-    if (state.overlayEl) state.overlayEl.classList.remove('open');
+    if (state.overlayEl) {
+      state.overlayEl.classList.remove('open'); // CSS sets opacity:0 + pointer-events:none
+    }
+    // Defensive: clear any scroll/resize rAF that was scheduled mid-render
+    if (state._scrollRaf) {
+      cancelAnimationFrame(state._scrollRaf);
+      state._scrollRaf = null;
+    }
+    // Restore body scroll if we had locked it (we currently don't, but future-proof)
+    document.body.style.overflow = '';
     // Mark as seen
     if (state.name && STORAGE_KEYS[state.name]) {
       try { localStorage.setItem(STORAGE_KEYS[state.name], '1'); } catch (e) {}

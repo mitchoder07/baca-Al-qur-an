@@ -1,13 +1,20 @@
 /* onboarding-tour-steps-mushaf.js - Step definitions for the MUSHAF page tour
  *
- * v26 rewrite: thorough and precise. Walks a brand-new user through every
+ * v27: removed the tafsir-drawer and surah-search steps per user request.
+ * v26: rewritten, thorough and precise. Walks a brand-new user through every
  * visible element on mushaf.html, the 604-page Uthmani Mushaf reader.
  *
  * The mushaf page is a single-page reader: there is a topbar with logo and
  * hamburger, a sticky toolbar with navigator + tools, the read area showing
  * one page at a time, side drawers (reciter, settings, bookmarks, tafsir),
  * a floating mini-player for audio, a word-by-word modal, a search modal,
- * and an ayah-action popover.
+ * and an ayah-action popover (opened by tapping the ayah's number circle,
+ * not by long-pressing).
+ *
+ * The tafsir drawer and the surah search modal are NOT part of the tour -
+ * users discover them naturally through other steps (the ayah-action
+ * popover step mentions tafsir; the navigator step mentions jumping to a
+ * surah by name).
  *
  * Each step is consumed by onboarding-tour.js. Steps with `skipIfMissing: true`
  * are skipped (auto-advance) if the target element is not in the DOM at the
@@ -114,7 +121,7 @@
     {
       target: '.mushaf-read-area',
       title: 'Read area',
-      body: 'This is the page itself, rendered as the printed Madinah mushaf layout. Tap any word to open the word-by-word analysis modal (transliteration, translation, and root). Long-press any ayah to open the ayah-action popover (play, bookmark, tafsir, copy, share).',
+      body: 'This is the page itself, rendered as the printed Madinah mushaf layout. Tap any word to open the word-by-word analysis modal (transliteration, translation, and root). Tap the ayah number (the ornamental circle at the end of each verse) to open the ayah-action popover (play, bookmark, tafsir, copy, share).',
       placement: 'top',
       skipIfMissing: false,
     },
@@ -141,21 +148,12 @@
     {
       target: 'body',
       title: 'Ayah actions',
-      body: 'Long-press (or right-click on desktop) any ayah to open the action popover. From there you can play that ayah with the current reciter, bookmark it, open its tafsir in the tafsir drawer, copy the Arabic + translation, or share it as an image.',
+      body: 'Tap the ayah number at the end of any verse (the ornamental circle with the Arabic numeral) to open the action popover. From there you can play that ayah with the current reciter, bookmark it, open its tafsir, copy the Arabic + translation, or share it as an image.',
       placement: 'center',
       skipIfMissing: false,
     },
 
-    // ─── 15. Tafsir drawer ────────────────────────────────────────────
-    {
-      target: '#tafsir-drawer',
-      title: 'Tafsir drawer',
-      body: 'Three tafsir sources are available: Ibn Kathir (English), Maarif-ul-Quran (English), and Jalalayn (Arabic). Open it from the ayah-action popover; the commentary for the chosen verse loads into the drawer on the right side of the screen.',
-      placement: 'left',
-      skipIfMissing: true, // Drawer is hidden until opened
-    },
-
-    // ─── 16. Floating mini player ─────────────────────────────────────
+    // ─── 15. Floating mini player ─────────────────────────────────────
     {
       target: '#floating-player',
       title: 'Floating mini player',
@@ -164,16 +162,7 @@
       skipIfMissing: true, // Hidden until audio plays
     },
 
-    // ─── 17. Search modal ─────────────────────────────────────────────
-    {
-      target: 'body',
-      title: 'Surah search',
-      body: 'If you prefer typing over browsing, the search modal opens from the hamburger menu. Type a surah name, number, or even "page 100" to jump directly. The results list updates live as you type.',
-      placement: 'center',
-      skipIfMissing: false,
-    },
-
-    // ─── 18. Theme switching ──────────────────────────────────────────
+    // ─── 16. Theme switching ──────────────────────────────────────────
     {
       target: 'body',
       title: 'Five reader themes',
@@ -182,20 +171,20 @@
       skipIfMissing: false,
     },
 
-    // ─── 19. Riwayah support ──────────────────────────────────────────
+    // ─── 17. Riwayah support ──────────────────────────────────────────
     {
       target: 'body',
       title: 'Hafs, Warsh, and Qalun',
-      body: 'The Mushaf text you see is in the Hafs riwayah, the most widely used worldwide. To listen in Warsh (common in North and West Africa) or Qalun (Libya, Tunisia, parts of Egypt), pick a reciter labelled "(Warsh)" or "(Qalun)" in the reciter drawer. The Settings → Riwayah section explains the differences in detail.',
+      body: 'The Mushaf text you see is in the Hafs riwayah, the most widely used worldwide. To listen in Warsh (common in North and West Africa) or Qalun (Libya, Tunisia, parts of Egypt), pick a reciter labelled "(Warsh)" or "(Qalun)" in the reciter drawer. The Settings -> Riwayah section explains the differences in detail.',
       placement: 'center',
       skipIfMissing: false,
     },
 
-    // ─── 20. Closing ──────────────────────────────────────────────────
+    // ─── 18. Closing ──────────────────────────────────────────────────
     {
       target: 'body',
       title: 'That is the Mushaf',
-      body: 'You are ready to read. To replay this tour later, open Settings → Help → Replay Tour. May Allah make your reading easy and beneficial.',
+      body: 'You are ready to read. To replay this tour later, open Settings -> Help -> Replay Tour. May Allah make your reading easy and beneficial.',
       placement: 'center',
       skipIfMissing: false,
     },
