@@ -1,7 +1,7 @@
 /* mushaf.js */
 'use strict';
 
-/* CONFIG — API endpoints */
+/* CONFIG - API endpoints */
 
 const API = {
     // Uthmani text + tajweed markup (alquran.cloud)
@@ -13,14 +13,14 @@ const API = {
     wordByWord: (surah, ayah) =>
         `https://api.quran.com/api/v4/verses/by_key/${surah}:${ayah}?words=true&word_fields=text_uthmani,transliteration,text,audio_url&fields=text_uthmani`,
 
-    // Translations (quran.com — resource IDs)
+    // Translations (quran.com - resource IDs)
     translations: (resourceIds, surah) =>
         `https://api.quran.com/api/v4/quran/translations/${resourceIds}?verse_key=${surah}`,
 
-    // Tafsir (English) — spa5k CDN
+    // Tafsir (English) - spa5k CDN
     tafsirIbnKathir: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${s}/${a}.json`,
     tafsirMaarif: (s, a) => `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafsir-maarif-ul-quran/${s}/${a}.json`,
-    // Arabic Jalalayn — alquran.cloud (per-ayah endpoint)
+    // Arabic Jalalayn - alquran.cloud (per-ayah endpoint)
     tafsirJalalaynAr: (s, a) => `https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.jalalayn`,
 
     // Audio (EveryAyah per-ayah, with mp3quran.net full-surah fallback)
@@ -67,7 +67,7 @@ const TRANSLATIONS = [
 //
 // This maps each single-letter identifier to its rule, taken directly from
 // the identifier table used by the "quran-tajweed" edition's own reference
-// parser (islamic-network/alquran-tools, Tajweed.php — the library the
+// parser (islamic-network/alquran-tools, Tajweed.php - the library the
 // alquran.cloud edition was built to be parsed by):
 //
 //   h = Hamzat ul Wasl                                    → no color
@@ -88,25 +88,25 @@ const TRANSLATIONS = [
 //   i = Iqlab (nun/tanwin before ب, becomes a meem sound)   → IQLAB
 //   g = Ghunnah (meem/nun with shaddah مّ نّ)                → GHUNNAH
 const TAJWEED_RULES = {
-    // Madd (prolongation) — purple
+    // Madd (prolongation) - purple
     "n": "taj-madd",
     "m": "taj-madd",
     "o": "taj-madd",
     "p": "taj-madd",
-    // Qalqalah (echo) — red
+    // Qalqalah (echo) - red
     "q": "taj-qalqalah",
-    // Ghunnah (nasalization) — orange
+    // Ghunnah (nasalization) - orange
     "g": "taj-ghunnah",
-    // Ikhfa (hiding) — gray
+    // Ikhfa (hiding) - gray
     "f": "taj-ikhfa",
     "c": "taj-ikhfa",
-    // Idgham (merging) — yellow
+    // Idgham (merging) - yellow
     "w": "taj-idgham",
     "a": "taj-idgham",
     "u": "taj-idgham",
     "d": "taj-idgham",
     "b": "taj-idgham",
-    // Iqlab (nun/tanwin converted to meem before ب) — its own rule, blue
+    // Iqlab (nun/tanwin converted to meem before ب) - its own rule, blue
     "i": "taj-iqlab",
     // No color (silent letters)
     "s": null,
@@ -117,7 +117,7 @@ const TAJWEED_RULES = {
 /* STATE */
 
 const state = {
-    view: "page",   // Always page view — Surah view toggle removed per user request
+    view: "page",   // Always page view - Surah view toggle removed per user request
     page: parseInt(localStorage.getItem("mushafPage")) || 1,  // 1-604
     surah: parseInt(localStorage.getItem("mushafSurah")) || 1, // 1-114 (used for audio context)
     reciterId: localStorage.getItem("reciterId") || "mishari",
@@ -223,7 +223,7 @@ const el = {
     settingsTool: document.getElementById("settings-tool"),
 };
 
-/* READING STATS — writes to the shared "bacaStats" record the homepage reads (powers Reading Journey, daily challenge, achievements). */
+/* READING STATS - writes to the shared "bacaStats" record the homepage reads (powers Reading Journey, daily challenge, achievements). */
 
 const STATS_KEY = "bacaStats";
 
@@ -319,7 +319,7 @@ function recordPageRead(pageNum, ayahsOnPage) {
 
 // Page read tracking (surah view)
 // NOTE: this used to also push into stats.completedSurahs unconditionally
-// right here — meaning simply opening a surah (even for a second, even by
+// right here - meaning simply opening a surah (even for a second, even by
 // mistake) instantly marked it "completed" in the Reading Journey and could
 // unlock the "Surah Complete" achievement despite the user never actually
 // reading it. That's now handled separately by watchForSurahCompletion(),
@@ -339,7 +339,7 @@ function recordSurahRead(surahNum, totalVerses) {
     saveReadingStats(stats);
 }
 
-// Marks a surah as genuinely completed — only called once the reader has
+// Marks a surah as genuinely completed - only called once the reader has
 // actually scrolled to the last verse card in Surah View (see
 // watchForSurahCompletion). This is the counterpart to Page View's
 // completion check in recordPageRead(), which only marks a surah done when
@@ -367,7 +367,7 @@ function watchForSurahCompletion(surahNum, rootEl) {
     const lastCard = cards[cards.length - 1];
 
     if (!window.IntersectionObserver) {
-        // Very old browser fallback — no observer support, so just credit
+        // Very old browser fallback - no observer support, so just credit
         // completion on render rather than leaving it permanently unreachable.
         markSurahFullyRead(surahNum);
         return;
@@ -386,7 +386,7 @@ function watchForSurahCompletion(surahNum, rootEl) {
 }
 
 // Track actual time spent reading in the Mushaf itself (previously only
-// time spent on the homepage counted, which is backwards — the homepage
+// time spent on the homepage counted, which is backwards - the homepage
 // isn't where the reading happens).
 function startReadingTimeTracking() {
     let accumulator = 0;
@@ -500,7 +500,7 @@ function syncWithSiteTheme() {
     }
 }
 
-/* TAJWEED — parse quran-tajweed markup (handles <tajweed-rule> tags and unicode markers). */
+/* TAJWEED - parse quran-tajweed markup (handles <tajweed-rule> tags and unicode markers). */
 
 // Render Arabic text as clickable words with optional tajweed colors.
 // Returns HTML string.
@@ -569,7 +569,7 @@ function renderArabicWithWords(text, { tajweedMarkup = false } = {}) {
             let isFirst = true;
             for (const part of parts) {
                 if (/^\s+$/.test(part)) {
-                    // Space inside markup — word boundary
+                    // Space inside markup - word boundary
                     if (currentWord.length > 0) {
                         words.push(currentWord);
                         currentWord = [];
@@ -580,7 +580,7 @@ function renderArabicWithWords(text, { tajweedMarkup = false } = {}) {
                 }
             }
         } else {
-            // Text token — split by spaces
+            // Text token - split by spaces
             const parts = token.content.split(/(\s+)/);
             for (const part of parts) {
                 if (/^\s+$/.test(part)) {
@@ -639,7 +639,72 @@ function renderArabicWithWords(text, { tajweedMarkup = false } = {}) {
 
 /* DATA FETCHERS */
 
-// Fetch full surah: Uthmani text + transliteration + tajweed markup
+// v28: strip the 4-word Bismillah prefix from a tajweed-marked text.
+// The alquran.cloud quran-tajweed edition uses the markup format:
+//   [rule[content]      (rule = single letter, e.g. "[n[بِسْمِ]")
+//   [rule:number[content] (rule with sub-number, e.g. "[n:5[content]")
+//   :number[content]    (numeric-only rule, e.g. ":5[content]")
+// Brackets are asymmetric: opening is "[a-z[" (or ":number["), closing is "]".
+//
+// The Bismillah is always 4 Arabic words: بِسْمِ, ٱللَّهِ, ٱلرَّحْمَٰنِ, ٱلرَّحِيمِ.
+// Different surahs in the alquran.cloud quran-tajweed edition encode the
+// Bismillah differently:
+//   - Most surahs: 4 separate top-level markup tokens, one per word.
+//   - Surahs 57-67 (Hadid through Mulk): sometimes encoded as a SINGLE
+//     markup block spanning all 4 words with internal spaces, or with
+//     extra internal nested markup.
+//
+// The OLD code used `tajweedText.split(/\s+/).slice(4).join(" ")` which
+// works for the first case but CORRUPTS the markup in the second case
+// (over-splits the markup, breaking the first ayah's tajweed rendering
+// and dropping part of its content from the screen when Tajweed is on).
+//
+// The new approach: count actual ARABIC WORDS (a word is a maximal run
+// of Arabic letters and diacritics, bounded by spaces, ASCII brackets,
+// or other non-Arabic chars). This matches the renderer's notion of a
+// "word" and works correctly for ALL Bismillah encodings.
+//
+// Returns: the text with the 4-word Bismillah prefix removed (including
+// any trailing markup brackets and whitespace), or null if 4 Arabic
+// words were not found (caller should fall back to the original text).
+function stripBismillahFromTajweed(text) {
+    if (!text) return text;
+    const n = text.length;
+    let wordCount = 0;
+    let inWord = false;
+    let i = 0;
+    // Arabic letter + diacritics + superscript alef + extended Arabic
+    const isArabic = (ch) => /[\u0600-\u06FF\u08A0-\u08FF]/.test(ch);
+    while (i < n) {
+        const ch = text[i];
+        if (isArabic(ch)) {
+            if (!inWord) {
+                inWord = true;
+                wordCount++;
+            }
+        } else {
+            if (inWord) {
+                inWord = false;
+                if (wordCount === 4) {
+                    // The 4th word just ended at position i.
+                    // Skip any closing markup bracket(s) immediately following
+                    // (the Bismillah may be wrapped in a single [rule[...]] block).
+                    let endPos = i;
+                    while (endPos < n && text[endPos] === ']') endPos++;
+                    // Skip whitespace
+                    while (endPos < n && /\s/.test(text[endPos])) endPos++;
+                    return text.substring(endPos);
+                }
+            }
+        }
+        i++;
+    }
+    // Handle the case where the 4th word ends at the end of the string
+    if (inWord && wordCount === 4) return "";
+    // Not enough words found
+    return null;
+}
+
 async function fetchSurahData(surahNum) {
     if (state.surahCache[surahNum]) return state.surahCache[surahNum];
 
@@ -679,12 +744,28 @@ async function fetchSurahData(surahNum) {
     //    The Bismillah is always exactly 4 words: بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
     //
     //    Some surahs from the API (e.g. Surah At-Tin #95, Surah Al-Qadr #97) use slightly
-    //    different Unicode encodings for the bismillah — different diacritics, wasla marks,
+    //    different Unicode encodings for the bismillah - different diacritics, wasla marks,
     //    or superscript alef. A literal startsWith("بِسْمِ") check fails on these.
     //
     //    Fix: strip ALL Arabic diacritics first, then check if the normalized text starts
     //    with the base letters "بسم" (B-S-M). If yes, strip the first 4 words from BOTH
     //    the plain text AND the tajweed text so they stay in sync.
+    //
+    //    v28 FIX (surahs 57-67 Tajweed bug): the old code used `tajweedText.split(/\s+/).slice(4)`
+    //    to strip the Bismillah from the tajweed-marked text. That works only when the
+    //    Bismillah is encoded as exactly 4 space-separated top-level tokens. For some
+    //    surahs (notably 57 Hadid through 67 Mulk), the alquran.cloud quran-tajweed
+    //    edition encodes the Bismillah as a SINGLE markup block that spans all 4 words
+    //    with internal spaces, or with extra internal markup. Naive splitting over-splits
+    //    the markup, corrupting the first ayah's tajweed rendering and dropping part of
+    //    its content from the screen when Tajweed is toggled on.
+    //
+    //    The new approach: walk the tajweed text character-by-character, tracking
+    //    markup nesting depth, and strip the first 4 top-level words (a "top-level
+    //    word" = a maximal run of non-space characters at bracket depth 0, where the
+    //    markup opening "[a-z[:number[" increments depth and "]" decrements it).
+    //    This correctly handles single-block Bismillah markup, nested markup, and
+    //    multi-word markup content.
     if (surahNum !== 1 && surahNum !== 9 && verses[0]) {
         const v0 = verses[0];
         // Strip BOM if present
@@ -699,19 +780,20 @@ async function fetchSurahData(surahNum) {
 
         // Check if normalized text starts with "بسم" (the base letters of Bismillah's first word)
         if (normalizedText.startsWith("بسم")) {
-            // Strip first 4 words from plain text
+            // Strip first 4 words from plain text (simple whitespace split is fine here)
             const words = v0.text.split(/\s+/);
             if (words.length > 4) {
                 v0.text = words.slice(4).join(" ");
             }
-            // Also strip first 4 words from tajweed text so they stay in sync.
-            // The tajweed text has [rule[text]] markup, but the Bismillah portion
-            // is still space-separated at the top level, so split(/\s+/) works.
+            // Strip the 4-word Bismillah prefix from the tajweed text using a
+            // word-aware walker (counts actual Arabic words, not top-level
+            // markup tokens). This correctly handles surahs (e.g. 57-67)
+            // where the Bismillah is encoded as a single markup block spanning
+            // multiple words, or with nested markup, without corrupting the
+            // tajweed markup structure that the renderer relies on.
             if (v0.tajweedText) {
-                const tajWords = v0.tajweedText.split(/\s+/);
-                if (tajWords.length > 4) {
-                    v0.tajweedText = tajWords.slice(4).join(" ");
-                }
+                const stripped = stripBismillahFromTajweed(v0.tajweedText);
+                if (stripped !== null) v0.tajweedText = stripped;
             }
         }
     }
@@ -798,12 +880,12 @@ function init() {
     // Sync body chrome (navbar, toolbar, drawers) with siteTheme from index.html
     syncWithSiteTheme();
 
-    // Apply tajweed state — sync every piece of UI that reflects it
+    // Apply tajweed state - sync every piece of UI that reflects it
     // (toolbar button + indicator, and the settings drawer's On/Off
     // segmented control) to the actual state.tajweedOn value. Previously
     // this only handled the "off" case, so the drawer's On/Off buttons
     // kept whatever classes were hardcoded in the HTML regardless of the
-    // real state — showing "On" as selected while nothing was colored.
+    // real state - showing "On" as selected while nothing was colored.
     el.readArea.classList.toggle("tajweed-off", !state.tajweedOn);
     el.tajweedIndicator.textContent = state.tajweedOn ? "On" : "Off";
     el.tajweedIndicator.classList.toggle("active", state.tajweedOn);
@@ -853,7 +935,7 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-/* MAIN RENDER — dispatches to renderPageView or renderSurahView */
+/* MAIN RENDER - dispatches to renderPageView or renderSurahView */
 
 async function render() {
     // Show loader
@@ -897,7 +979,7 @@ async function render() {
     if (window.lucide) lucide.createIcons();
 }
 
-/* PAGE VIEW — Mushaf Madinah two-page spread */
+/* PAGE VIEW - Mushaf Madinah two-page spread */
 
 // Determine which ayahs belong on a given page (1-604)
 // We fetch surah data on demand and slice ayahs that fit on the page boundary.
@@ -1020,7 +1102,7 @@ async function renderPageView() {
             </div>`;
             html += `<div class="page-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
         } else if (!isFirstSurahOnPage) {
-            // New surah on the page but it's Surah 1 or 9 (no Bismillah) — just show separator
+            // New surah on the page but it's Surah 1 or 9 (no Bismillah) - just show separator
             html += `<div class="surah-separator">
                 <span class="sep-line"></span>
                 <span class="sep-arabic">${escapeHtml(meta.name)}</span>
@@ -1066,7 +1148,7 @@ async function renderPageView() {
     if (window.lucide) lucide.createIcons();
 }
 
-/* APPLY FONT SIZES — makes the A-/A/A+ buttons actually work */
+/* APPLY FONT SIZES - makes the A-/A/A+ buttons actually work */
 
 function applyFontSizes() {
     // Apply to page view Arabic text
@@ -1082,7 +1164,7 @@ function applyFontSizes() {
     });
 }
 
-/* SURAH VIEW — continuous ayah-by-ayah cards */
+/* SURAH VIEW - continuous ayah-by-ayah cards */
 
 async function renderSurahView() {
     const surahNum = state.surah;
@@ -1143,7 +1225,7 @@ async function renderSurahView() {
     el.surahVerses.innerHTML = versesHtml;
 
     // Only credit this surah as "completed" once the user actually scrolls
-    // to the last verse — not the instant the surah opens (see
+    // to the last verse - not the instant the surah opens (see
     // watchForSurahCompletion's comment for why that used to be wrong).
     watchForSurahCompletion(surahNum, el.surahView);
 
@@ -1175,7 +1257,7 @@ function wireWordClicks(rootEl) {
 
 async function openWordModal(surah, ayah, wordIdx) {
     el.wordModalOverlay.hidden = false;
-    // Loading state — use a CSS spinner (no dependency on lucide icons loading)
+    // Loading state - use a CSS spinner (no dependency on lucide icons loading)
     el.wordModalBody.innerHTML = `
         <div style="margin: 1.5rem auto 1rem; width: 40px; height: 40px; border: 3px solid rgba(var(--mushaf-accent-rgb), 0.2); border-top-color: var(--mushaf-accent); border-radius: 50%; animation: spin 0.9s linear infinite;"></div>
         <p style="color: var(--mushaf-subtext); font-size: 0.9rem; margin: 0;">Loading word…</p>`;
@@ -1185,7 +1267,7 @@ async function openWordModal(surah, ayah, wordIdx) {
         const words = await fetchWordByWord(surah, ayah);
         if (!words.length) {
             el.wordModalBody.innerHTML = `
-                <div class="wm-arabic" style="opacity:0.4">—</div>
+                <div class="wm-arabic" style="opacity:0.4">-</div>
                 <p class="wm-translation" style="color:#f87171">Word-by-word data not available for this ayah.</p>
                 <p style="color: var(--mushaf-subtext); font-size: 0.8rem; margin-top: 0.5rem;">
                     Surah ${surah} : ${ayah}
@@ -1194,7 +1276,7 @@ async function openWordModal(surah, ayah, wordIdx) {
             return;
         }
 
-        // Use the word index directly — both the rendered text and the API
+        // Use the word index directly - both the rendered text and the API
         // word array skip pause marks and end markers, so indices match.
         state.wordModalContext = { surah, ayah, words, wordIdx: Math.min(wordIdx, words.length - 1) };
         renderWordModalWord();
@@ -1202,7 +1284,7 @@ async function openWordModal(surah, ayah, wordIdx) {
     } catch (err) {
         console.error("openWordModal failed:", err);
         el.wordModalBody.innerHTML = `
-            <div class="wm-arabic" style="opacity:0.4">—</div>
+            <div class="wm-arabic" style="opacity:0.4">-</div>
             <p class="wm-translation" style="color:#f87171">Could not load word data.</p>
             <p style="color: var(--mushaf-subtext); font-size: 0.8rem; margin-top: 0.5rem;">
                 ${escapeHtml(err?.message || "Unknown error")}
@@ -1219,9 +1301,9 @@ function renderWordModalWord() {
 
     try {
         const meta = SURAH_LIST[ctx.surah - 1];
-        const arabicText = word.text || "—";
+        const arabicText = word.text || "-";
         const translitText = word.transliteration || "";
-        const translationText = word.translation || "—";
+        const translationText = word.translation || "-";
         // Construct audio URL using sequential word index (1-based).
         // The API's audio_url field uses internal position numbers that don't always
         // exist on the CDN (e.g., position 8 for word 6 of 2:2 returns 404).
@@ -1253,7 +1335,7 @@ function renderWordModalWord() {
     } catch (err) {
         console.error("renderWordModalWord failed:", err);
         el.wordModalBody.innerHTML = `
-            <div class="wm-arabic" style="opacity:0.4">—</div>
+            <div class="wm-arabic" style="opacity:0.4">-</div>
             <p class="wm-translation" style="color:#f87171">Error rendering word.</p>`;
     }
 }
@@ -1393,14 +1475,14 @@ async function handleVerseAction(btn, surah, ayah) {
         const arabic = card?.querySelector(".verse-arabic")?.innerText || "";
         const translit = card?.querySelector(".verse-translit")?.innerText || "";
         const trans = card?.querySelector(".verse-translation-block")?.innerText || "";
-        const text = `${arabic}\n${translit}\n\n${trans}\n\n— ${meta?.transliteration} ${ayah}`;
+        const text = `${arabic}\n${translit}\n\n${trans}\n\n- ${meta?.transliteration} ${ayah}`;
         try {
             await navigator.clipboard.writeText(text);
             showToast("Verse copied ✓");
         } catch { showToast("Copy failed"); }
     }
     else if (btn.classList.contains("share-btn")) {
-        // Get Arabic text from the cached verse data (clean — no ayah marker).
+        // Get Arabic text from the cached verse data (clean - no ayah marker).
         // We do NOT read from the DOM (.ayah-flow) because that element
         // includes the ayah marker (Arabic numeral) which would appear
         // in the shared image.
@@ -1423,7 +1505,7 @@ async function handleVerseAction(btn, surah, ayah) {
                 theme: theme
             });
         } else {
-            const text = `${arabic}\n\n${trans}\n\n— ${surahName} ${ayah}`;
+            const text = `${arabic}\n\n${trans}\n\n- ${surahName} ${ayah}`;
             try {
                 if (navigator.share) {
                     await navigator.share({ title: "Qur'an Verse", text });
@@ -1476,7 +1558,7 @@ function renderBookmarks() {
             const surah = parseInt(item.dataset.surah);
             const ayah = parseInt(item.dataset.ayah);
             // Jump to that ayah in whichever view the user is currently
-            // reading in — don't force a switch to Surah View. (This used
+            // reading in - don't force a switch to Surah View. (This used
             // to hardcode state.view = "surah" every time, which meant a
             // bookmark click while reading in Page View would unexpectedly
             // dump the user into a completely different layout.)
@@ -1554,7 +1636,7 @@ function renderReciterList(query) {
             state.reciterId = item.dataset.id;
             const reciter = RECITERS.find(r => r.id === state.reciterId);
             // Show full reciter name (not just first word) so users can distinguish them
-            el.reciterIndicator.textContent = reciter ? reciter.name : "—";
+            el.reciterIndicator.textContent = reciter ? reciter.name : "-";
             // Truncate if too long for the toolbar
             if (reciter && reciter.name.length > 20) {
                 el.reciterIndicator.textContent = reciter.name.substring(0, 18) + "…";
@@ -1661,7 +1743,7 @@ function playAyah(surah, ayah) {
         return;
     }
 
-    // Different ayah — stop current and start new one
+    // Different ayah - stop current and start new one
     state.currentAyahAudio = { surah, ayah };
     const url = API.ayahAudio(surah, ayah, state.reciterId);
     el.ayahAudio.src = url;
@@ -1684,7 +1766,7 @@ function playAyah(surah, ayah) {
 
 // Update the play/pause icon on a specific verse's play button
 function updatePlayButtonIcon(surah, ayah, isPlaying) {
-    // Update all play buttons — reset to play icon
+    // Update all play buttons - reset to play icon
     document.querySelectorAll(".verse-action.play-btn").forEach(btn => {
         const bSurah = parseInt(btn.dataset.surah);
         const bAyah = parseInt(btn.dataset.ayah);
@@ -1769,7 +1851,7 @@ el.miniNext?.addEventListener("click", () => {
     if (ayah < meta.total_verses) {
         playAyah(surah, ayah + 1);
     } else if (surah < 114) {
-        // Last ayah of surah — go to next surah ayah 1
+        // Last ayah of surah - go to next surah ayah 1
         playAyah(surah + 1, 1);
     }
 });
@@ -2184,7 +2266,7 @@ function handleSwipe() {
     if (Math.abs(deltaX) < 50 || Math.abs(deltaX) < Math.abs(deltaY)) return;
 
     if (deltaX > 0) {
-        // Swiped RIGHT → go to NEXT page (like opening the Quran — pages flip right-to-left)
+        // Swiped RIGHT → go to NEXT page (like opening the Quran - pages flip right-to-left)
         if (state.page < TOTAL_PAGES) {
             state.page++;
             persistState();
@@ -2220,7 +2302,7 @@ el.pageContainer?.addEventListener("click", e => {
     }
 });
 
-/* VIEW TOGGLE — removed; page view is the only active mode, surah view kept hidden for JS refs. */
+/* VIEW TOGGLE - removed; page view is the only active mode, surah view kept hidden for JS refs. */
 
 /* DRAWERS OPEN/CLOSE */
 
@@ -2290,7 +2372,7 @@ el.bookmarksToolBtn?.addEventListener("click", () => {
     }
 });
 
-/* SHARE TOOL — share first ayah on page as image via BacaShare.previewVerseImage(); fetch English translation separately since fetchSurahData() omits it. */
+/* SHARE TOOL - share first ayah on page as image via BacaShare.previewVerseImage(); fetch English translation separately since fetchSurahData() omits it. */
 
 // Helper: fetch a single ayah's English translation from alquran.cloud
 async function fetchAyahTranslation(surah, ayah) {
@@ -2332,7 +2414,7 @@ document.getElementById("share-tool")?.addEventListener("click", async () => {
             });
         } else {
             // Fallback: plain text share
-            const text = `${v.text || ""}\n\n${translation}\n\n— ${surahName} ${v.ayah}`;
+            const text = `${v.text || ""}\n\n${translation}\n\n- ${surahName} ${v.ayah}`;
             try {
                 if (navigator.share) {
                     await navigator.share({ title: "Qur'an Verse", text });
@@ -2481,7 +2563,7 @@ el.searchModalInput?.addEventListener("input", e => {
         <div class="search-result-item" data-surah="${s.id}">
             <div class="search-result-num">${s.id}</div>
             <div class="search-result-info">
-                <div class="search-result-name">${escapeHtml(s.transliteration)} <small style="opacity:0.6">— ${escapeHtml(s.translation)}</small></div>
+                <div class="search-result-name">${escapeHtml(s.transliteration)} <small style="opacity:0.6">- ${escapeHtml(s.translation)}</small></div>
                 <div class="search-result-meta">${s.total_verses} ayahs · ${capitalizeType(s.type)}</div>
             </div>
             <div class="search-result-arabic">${escapeHtml(s.name)}</div>
@@ -2499,7 +2581,7 @@ el.searchModalInput?.addEventListener("input", e => {
     });
 });
 
-/* THEME — Theme is now controlled via Settings drawer's theme swatches. No toggle button in toolbar (removed per user request). */
+/* THEME - Theme is now controlled via Settings drawer's theme swatches. No toggle button in toolbar (removed per user request). */
 
 // Listen for siteTheme changes from index.html (e.g. if user changes theme
 // in another tab on the home page)
@@ -2513,7 +2595,7 @@ window.addEventListener("storage", e => {
     }
 });
 
-/* HAMBURGER / MOBILE NAV — removed (navbar replaced with Back button) */
+/* HAMBURGER / MOBILE NAV - removed (navbar replaced with Back button) */
 
 /* KEYBOARD SHORTCUTS */
 

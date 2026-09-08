@@ -217,6 +217,23 @@
     }
   }
 
+  // v28: is the target element actually visible on the page?
+  // Returns true if it exists, has non-zero size, and is not hidden by
+  // display:none / visibility:hidden / opacity:0. Used by the tour engine
+  // to skip steps whose targets are hidden by CSS (e.g. .mushaf-topbar
+  // in standalone mode).
+  function isTargetVisible(el) {
+    if (!el) return false;
+    if (el === document.body) return true;
+    var rect = el.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return false;
+    var style = window.getComputedStyle(el);
+    if (style.display === 'none') return false;
+    if (style.visibility === 'hidden') return false;
+    if (parseFloat(style.opacity || '1') === 0) return false;
+    return true;
+  }
+
   function positionTooltip(targetRect, placement) {
     var tip = state.tooltipEl;
     var tipRect = tip.getBoundingClientRect();
@@ -288,8 +305,13 @@
       target = document.body;
     }
 
-    // Auto-skip if missing
-    if (!target && step.skipIfMissing) {
+    // Auto-skip if missing OR if the target is in the DOM but currently
+    // hidden (display:none, visibility:hidden, opacity:0, or zero-size).
+    // This handles cases like the Mushaf page's .mushaf-topbar which is
+    // hidden via CSS in standalone mode (mobile app) - the engine should
+    // skip the topbar step on mobile rather than pointing at an invisible
+    // element.
+    if (step.skipIfMissing && !isTargetVisible(target)) {
       state.index++;
       return renderStep();
     }

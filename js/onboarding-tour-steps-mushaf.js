@@ -36,13 +36,17 @@
       skipIfMissing: false,
     },
 
-    // ─── 2. Top bar (logo + back) ────────────────────────────────────────
+    // ─── 2. Top bar (logo + back) - WEB ONLY ───────────────────────────
+    // skipIfMissing: true so this step auto-advances on the mobile app
+    // (where the topbar is hidden in standalone mode via the v28 CSS
+    // patch in mushaf.html). The engine's isTargetVisible() check will
+    // detect that .mushaf-topbar is display:none and skip this step.
     {
       target: '.mushaf-topbar',
       title: 'Top bar',
       body: 'The Baca logo on the left takes you back to the home page. The hamburger button on the right (added by shared-nav.js) slides in the side menu: home, Adhkar, Salah, Reciters, Blog, Progress, Bookmarks, Topics, Journeys, Ask AI.',
       placement: 'bottom',
-      skipIfMissing: false,
+      skipIfMissing: true,
     },
 
     // ─── 3. Sticky toolbar (overview) ───────────────────────────────────
