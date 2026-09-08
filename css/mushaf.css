@@ -31,7 +31,7 @@ body {
     overflow: auto;
 }
 
-/* Light mode variable overrides — when body.light-mode is active,
+/* Light mode variable overrides - when body.light-mode is active,
    the whole page (including mushaf) switches to light theme */
 body.light-mode {
     --dark: #f8fafc;
@@ -51,7 +51,7 @@ body.light-mode {
     display: none !important;
 }
 
-/* MINIMAL TOP BAR (Back button only — replaces full navbar) */
+/* MINIMAL TOP BAR (Back button only - replaces full navbar) */
 
 .mushaf-topbar {
     position: fixed;
@@ -159,7 +159,7 @@ body[data-mushaf-theme="sapphire"] .baca-logo-icon {
     height: 16px;
 }
 
-/* GLOBAL — Arabic text rendering */
+/* GLOBAL - Arabic text rendering */
 
 :root {
     --mushaf-accent: var(--primary);
@@ -179,20 +179,20 @@ body[data-mushaf-theme="sapphire"] .baca-logo-icon {
     --mushaf-drawer-bg: #111827;
     --mushaf-overlay: rgba(0, 0, 0, 0.65);
 
-    /* Tajweed colors — distinct, accessible palette
+    /* Tajweed colors - distinct, accessible palette
        (chosen to be distinguishable from each other AND from accent green #10b981) */
     --taj-ghunnah: #E67E22;
-    /* orange  — nasal sound (meem/nun shaddah) */
+    /* orange  - nasal sound (meem/nun shaddah) */
     --taj-ikhfa: #95A5A6;
-    /* gray    — hidden sound (nun sakinah) */
+    /* gray    - hidden sound (nun sakinah) */
     --taj-idgham: #F1C40F;
-    /* yellow  — merged sound */
+    /* yellow  - merged sound */
     --taj-iqlab: #3498DB;
-    /* blue    — converted to meem */
+    /* blue    - converted to meem */
     --taj-qalqalah: #E74C3C;
-    /* red     — echo/bounce (qaf/ba/jeem/dal/ta) */
+    /* red     - echo/bounce (qaf/ba/jeem/dal/ta) */
     --taj-madd: #9B59B6;
-    /* purple  — prolongation */
+    /* purple  - prolongation */
 }
 
 body.light-mode {
@@ -736,7 +736,7 @@ body.light-mode .nav-ayah-select option {
     height: 24px;
 }
 
-/* PAGE VIEW — single page at a time, book-like layout */
+/* PAGE VIEW - single page at a time, book-like layout */
 
 .page-view {
     max-width: 720px;
@@ -779,7 +779,7 @@ body.light-mode .nav-ayah-select option {
     opacity: 0.5;
 }
 
-/* Decorative surah banner — shown when a surah starts (at top OR mid-page).
+/* Decorative surah banner - shown when a surah starts (at top OR mid-page).
    Centered surah name with ornamental lines on both sides, like quran.com. */
 .surah-banner-decorative {
     display: flex;
@@ -835,9 +835,9 @@ body.light-mode .nav-ayah-select option {
     background: var(--mushaf-page-border);
 }
 
-/* Bismillah — shown after the surah banner, clearly separated from ayah text.
+/* Bismillah - shown after the surah banner, clearly separated from ayah text.
    (Previously defined twice with overlapping properties that merged via
-   cascade order — consolidated here into one rule with the same final
+   cascade order - consolidated here into one rule with the same final
    computed values: font-size/margin from the later rule, padding/
    line-height from the earlier one, since neither overrode those.) */
 .page-bismillah {
@@ -869,7 +869,7 @@ body.light-mode .nav-ayah-select option {
     font-weight: 600;
 }
 
-/* Ayah text flow container — takes up remaining space, content flows naturally */
+/* Ayah text flow container - takes up remaining space, content flows naturally */
 .mushaf-page .ayah-text-flow {
     flex: 1;
     font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif;
@@ -884,7 +884,7 @@ body.light-mode .nav-ayah-select option {
     }
 }
 
-/* Short surah pages (≤ 15 ayahs) — center-align the text for a cleaner look,
+/* Short surah pages (≤ 15 ayahs) - center-align the text for a cleaner look,
    like quranwbw.com does for short surahs. Each ayah on its own line. */
 .mushaf-page.short-surah-page .ayah-text-flow {
     text-align: center;
@@ -964,7 +964,7 @@ body.light-mode .nav-ayah-select option {
     transition: background 0.15s;
 }
 
-/* Inner tajweed color spans should NOT intercept pointer events —
+/* Inner tajweed color spans should NOT intercept pointer events -
    clicks must pass through to the parent .word span */
 .mushaf-page .ayah-text-flow .word>span,
 .verse-arabic .word>span {
@@ -979,7 +979,7 @@ body.light-mode .nav-ayah-select option {
     filter: brightness(1.15);
 }
 
-/* Traditional Quran ayah marker — ornamental 8-pointed star/rosette design.
+/* Traditional Quran ayah marker - ornamental 8-pointed star/rosette design.
    Uses CSS to create a decorative flower-like shape with the number inside.
    Inspired by the markers in the Madinah Mushaf print. */
 .mushaf-page .ayah-text-flow .ayah-marker {
@@ -1024,7 +1024,7 @@ body.light-mode .nav-ayah-select option {
 }
 
 /* Brief highlight flash when jumping to a specific ayah in Page View
-   (e.g. from a bookmark) — same visual language as .verse-card.active-ayah
+   (e.g. from a bookmark) - same visual language as .verse-card.active-ayah
    in Surah View, adapted for the smaller inline marker glyph. */
 .mushaf-page .ayah-text-flow .ayah-marker.active-ayah {
     filter: brightness(1.4) saturate(1.6);
@@ -1061,7 +1061,7 @@ body.light-mode .nav-ayah-select option {
     accent-color: var(--mushaf-accent);
 }
 
-/* SURAH VIEW — continuous ayah-by-ayah */
+/* SURAH VIEW - continuous ayah-by-ayah */
 
 .surah-view {
     max-width: 800px;
@@ -1315,7 +1315,7 @@ body.light-mode .nav-ayah-select option {
     flex-shrink: 0;
 }
 
-/* Tajweed guide — detailed explanations in settings drawer */
+/* Tajweed guide - detailed explanations in settings drawer */
 .tajweed-guide {
     margin-top: 1rem;
     display: flex;
@@ -1396,7 +1396,7 @@ body.light-mode .tajweed-guide-item,
     background: var(--mushaf-drawer-bg);
     border-left: 1px solid var(--border);
     box-shadow: none;
-    /* No shadow when closed — prevents shadow bleed on right edge */
+    /* No shadow when closed - prevents shadow bleed on right edge */
     z-index: 2000;
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
@@ -1854,7 +1854,7 @@ body.light-mode .tajweed-guide-item,
 }
 
 .tafsir-content-english {
-    /* default — uses .tafsir-content styles */
+    /* default - uses .tafsir-content styles */
 }
 
 .tafsir-empty {
@@ -2586,7 +2586,7 @@ body.light-mode .tajweed-guide-item,
     background: var(--mushaf-accent);
 }
 
-/* ANIMATION — spin (already in style.css but re-defined locally) */
+/* ANIMATION - spin (already in style.css but re-defined locally) */
 
 @keyframes spin {
     from {
@@ -2654,7 +2654,7 @@ body.light-mode .tajweed-guide-item,
     margin-bottom: 0.2rem;
 }
 
-/* GLOW BACKGROUND — removed (was causing visual noise). Kept as hidden so any leftover refs don't break. */
+/* GLOW BACKGROUND - removed (was causing visual noise). Kept as hidden so any leftover refs don't break. */
 
 .bg-glow {
     display: none !important;
