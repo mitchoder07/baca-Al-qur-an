@@ -21,21 +21,6 @@
             .baca-footer {
                 display: none !important;
             }
-            /* Fix 3 (v26): remove the stray horizontal line that appears
-               below the navbar on the mobile app's topics page. The navbar
-               has a border-bottom that, combined with the safe-area top
-               padding and the absence of the browser chrome, looks like
-               a useless divider. We hide it only in standalone mode. */
-            .navbar {
-                border-bottom: none !important;
-            }
-            /* Also hide any stray <hr> that may have been added in older
-               versions of this page, just in case. */
-            main > hr,
-            .topics-page-header + hr,
-            .topics-grid-full + hr {
-                display: none !important;
-            }
         }
     </style>
     <meta name="theme-color" content="#0f172a">
@@ -162,22 +147,18 @@
             opacity: 0.85;
         }
 
-        /* FIX: Align arrow perfectly with "View verses" */
+        /* v29 Fix 3: "View verses" text only, no arrow icon. The arrow was
+           rendering as a superscript on mobile (the FA icon's default
+           vertical-align: baseline put it above the text baseline on
+           some inline parents). Removing the arrow entirely is the
+           cleanest fix - the text is sufficient. */
         .topics-grid-full .topic-card .topic-go {
             margin-top: 1rem;
             font-size: 0.8rem;
             color: var(--primary);
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            line-height: 1;
-        }
-
-        .topics-grid-full .topic-card .topic-go i {
             display: inline-block;
-            font-size: 0.7rem;
-            line-height: 1;
+            line-height: 1.2;
         }
 
         @media (max-width: 768px) {
@@ -398,7 +379,7 @@
                     '<span class="topic-card-icon"><i class="' + icon + '"></i></span>' +
                     '<h3>' + name + '</h3>' +
                     '<span class="topic-count">' + count + ' ' + verseWord + '</span>' +
-                    '<span class="topic-go">View verses <i class="fa-solid fa-arrow-right"></i></span>' +
+                    '<span class="topic-go">View verses</span>' +
                     '</div>';
             });
             grid.innerHTML = html;
