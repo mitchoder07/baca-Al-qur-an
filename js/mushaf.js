@@ -639,71 +639,15 @@ function renderArabicWithWords(text, { tajweedMarkup = false } = {}) {
 
 /* DATA FETCHERS */
 
-// v28: strip the 4-word Bismillah prefix from a tajweed-marked text.
-// The alquran.cloud quran-tajweed edition uses the markup format:
-//   [rule[content]      (rule = single letter, e.g. "[n[بِسْمِ]")
-//   [rule:number[content] (rule with sub-number, e.g. "[n:5[content]")
-//   :number[content]    (numeric-only rule, e.g. ":5[content]")
-// Brackets are asymmetric: opening is "[a-z[" (or ":number["), closing is "]".
-//
-// The Bismillah is always 4 Arabic words: بِسْمِ, ٱللَّهِ, ٱلرَّحْمَٰنِ, ٱلرَّحِيمِ.
-// Different surahs in the alquran.cloud quran-tajweed edition encode the
-// Bismillah differently:
-//   - Most surahs: 4 separate top-level markup tokens, one per word.
-//   - Surahs 57-67 (Hadid through Mulk): sometimes encoded as a SINGLE
-//     markup block spanning all 4 words with internal spaces, or with
-//     extra internal nested markup.
-//
-// The OLD code used `tajweedText.split(/\s+/).slice(4).join(" ")` which
-// works for the first case but CORRUPTS the markup in the second case
-// (over-splits the markup, breaking the first ayah's tajweed rendering
-// and dropping part of its content from the screen when Tajweed is on).
-//
-// The new approach: count actual ARABIC WORDS (a word is a maximal run
-// of Arabic letters and diacritics, bounded by spaces, ASCII brackets,
-// or other non-Arabic chars). This matches the renderer's notion of a
-// "word" and works correctly for ALL Bismillah encodings.
-//
-// Returns: the text with the 4-word Bismillah prefix removed (including
-// any trailing markup brackets and whitespace), or null if 4 Arabic
-// words were not found (caller should fall back to the original text).
-function stripBismillahFromTajweed(text) {
-    if (!text) return text;
-    const n = text.length;
-    let wordCount = 0;
-    let inWord = false;
-    let i = 0;
-    // Arabic letter + diacritics + superscript alef + extended Arabic
-    const isArabic = (ch) => /[\u0600-\u06FF\u08A0-\u08FF]/.test(ch);
-    while (i < n) {
-        const ch = text[i];
-        if (isArabic(ch)) {
-            if (!inWord) {
-                inWord = true;
-                wordCount++;
-            }
-        } else {
-            if (inWord) {
-                inWord = false;
-                if (wordCount === 4) {
-                    // The 4th word just ended at position i.
-                    // Skip any closing markup bracket(s) immediately following
-                    // (the Bismillah may be wrapped in a single [rule[...]] block).
-                    let endPos = i;
-                    while (endPos < n && text[endPos] === ']') endPos++;
-                    // Skip whitespace
-                    while (endPos < n && /\s/.test(text[endPos])) endPos++;
-                    return text.substring(endPos);
-                }
-            }
-        }
-        i++;
-    }
-    // Handle the case where the 4th word ends at the end of the string
-    if (inWord && wordCount === 4) return "";
-    // Not enough words found
-    return null;
-}
+// v29: the stripBismillahFromTajweed() helper that lived here in v28 has been
+// REMOVED. It was based on a wrong assumption (that the Tajweed edition
+// included the Bismillah prefix, just like the Uthmani edition does).
+// Empirical testing of the alquran.cloud quran-tajweed API across multiple
+// surahs (1, 9, 56, 57, 58, 67, 68, 95, 97, 100, 110, 114) showed that
+// only Surah 1 has the Bismillah in its Tajweed text - all other surahs
+// start directly with the ayah content. So no stripping is needed (or
+// safe) on the Tajweed text. The fetchSurahData function below only
+// strips the 4-word Bismillah from the Uthmani text now.
 
 async function fetchSurahData(surahNum) {
     if (state.surahCache[surahNum]) return state.surahCache[surahNum];
@@ -748,24 +692,24 @@ async function fetchSurahData(surahNum) {
     //    or superscript alef. A literal startsWith("بِسْمِ") check fails on these.
     //
     //    Fix: strip ALL Arabic diacritics first, then check if the normalized text starts
-    //    with the base letters "بسم" (B-S-M). If yes, strip the first 4 words from BOTH
-    //    the plain text AND the tajweed text so they stay in sync.
+    //    with the base letters "بسم" (B-S-M). If yes, strip the first 4 words from the
+    //    Uthmani (plain) text.
     //
-    //    v28 FIX (surahs 57-67 Tajweed bug): the old code used `tajweedText.split(/\s+/).slice(4)`
-    //    to strip the Bismillah from the tajweed-marked text. That works only when the
-    //    Bismillah is encoded as exactly 4 space-separated top-level tokens. For some
-    //    surahs (notably 57 Hadid through 67 Mulk), the alquran.cloud quran-tajweed
-    //    edition encodes the Bismillah as a SINGLE markup block that spans all 4 words
-    //    with internal spaces, or with extra internal markup. Naive splitting over-splits
-    //    the markup, corrupting the first ayah's tajweed rendering and dropping part of
-    //    its content from the screen when Tajweed is toggled on.
+    //    v29 FIX (the real Tajweed 57-67 bug):
+    //    The PREVIOUS code (v26 and v28) ALSO stripped 4 words from the Tajweed text,
+    //    assuming the Tajweed edition had the Bismillah prepended just like the Uthmani
+    //    edition. THIS WAS WRONG. The alquran.cloud quran-tajweed edition does NOT include
+    //    the Bismillah in ayah 1 of any surah except Surah 1 (verified across Surahs
+    //    1, 9, 56, 57, 58, 67, 68, 95, 97, 100, 110, 114 - only Surah 1 starts with
+    //    بِسْمِ in the Tajweed text; all others start directly with the ayah content).
     //
-    //    The new approach: walk the tajweed text character-by-character, tracking
-    //    markup nesting depth, and strip the first 4 top-level words (a "top-level
-    //    word" = a maximal run of non-space characters at bracket depth 0, where the
-    //    markup opening "[a-z[:number[" increments depth and "]" decrements it).
-    //    This correctly handles single-block Bismillah markup, nested markup, and
-    //    multi-word markup content.
+    //    So stripping 4 words from the Tajweed text was removing the FIRST 4 WORDS OF
+    //    THE ACTUAL AYAH, not the Bismillah. That's why for surahs 57-67 (and many
+    //    others) the first part of the ayah was missing when Tajweed was toggled on.
+    //
+    //    The fix: NEVER strip Bismillah from the Tajweed text. Only strip from the
+    //    Uthmani text. The Tajweed edition is already Bismillah-free for all surahs
+    //    except Surah 1.
     if (surahNum !== 1 && surahNum !== 9 && verses[0]) {
         const v0 = verses[0];
         // Strip BOM if present
@@ -780,21 +724,17 @@ async function fetchSurahData(surahNum) {
 
         // Check if normalized text starts with "بسم" (the base letters of Bismillah's first word)
         if (normalizedText.startsWith("بسم")) {
-            // Strip first 4 words from plain text (simple whitespace split is fine here)
+            // Strip first 4 words from plain Uthmani text (Bismillah prefix)
             const words = v0.text.split(/\s+/);
             if (words.length > 4) {
                 v0.text = words.slice(4).join(" ");
             }
-            // Strip the 4-word Bismillah prefix from the tajweed text using a
-            // word-aware walker (counts actual Arabic words, not top-level
-            // markup tokens). This correctly handles surahs (e.g. 57-67)
-            // where the Bismillah is encoded as a single markup block spanning
-            // multiple words, or with nested markup, without corrupting the
-            // tajweed markup structure that the renderer relies on.
-            if (v0.tajweedText) {
-                const stripped = stripBismillahFromTajweed(v0.tajweedText);
-                if (stripped !== null) v0.tajweedText = stripped;
-            }
+            // NOTE: Do NOT strip anything from v0.tajweedText. The alquran.cloud
+            // quran-tajweed edition already excludes the Bismillah from ayah 1 of
+            // every surah except Surah 1 (which is the only surah where Bismillah
+            // IS ayah 1, and we skip this entire block for Surah 1 anyway).
+            // Stripping 4 words from the Tajweed text was removing the first
+            // 4 words of the actual ayah, which was the v26/v28 bug.
         }
     }
 
