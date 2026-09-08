@@ -1,4 +1,4 @@
-// BACA — script.js (homepage: explorer, reader, gamification)
+// BACA - script.js (homepage: explorer, reader, gamification)
 // DATA SOURCES (all static CDN, zero live API servers):
 //   Surah list + verses + transliteration:
 //     cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/…
@@ -7,7 +7,7 @@
 //   Audio (EveryAyah):
 //     everyayah.com/data/{reciterFolder}/{padded3}.mp3
 
-// STATIC DATA — surah list (no fetch needed at all)
+// STATIC DATA - surah list (no fetch needed at all)
 // Generated from quran-json index. Includes: id, name (Arabic),
 // transliteration, translation (meaning), type, total_verses.
 
@@ -140,7 +140,7 @@ const SURAH_LIST = [
     { id: 114, revelationOrder: 21, name: "الناس", transliteration: "An-Nas", translation: "The Mankind", type: "meccan", total_verses: 6 }
 ];
 
-// HIZB STARTS — first ayah of each of the 60 Hizbs
+// HIZB STARTS - first ayah of each of the 60 Hizbs
 const HIZB_STARTS = [
     [1, 1], [2, 75], [2, 142], [2, 203], [2, 253], [3, 15], [3, 93], [3, 171], [4, 24], [4, 88],
     [4, 148], [5, 27], [5, 82], [6, 36], [6, 111], [7, 1], [7, 88], [7, 171], [8, 41], [9, 34],
@@ -150,17 +150,17 @@ const HIZB_STARTS = [
     [46, 1], [48, 18], [51, 31], [55, 1], [58, 1], [62, 1], [67, 1], [72, 1], [78, 1], [87, 1]
 ];
 
-// STATIC CDN ENDPOINTS (no live API — all jsDelivr / EveryAyah)
+// STATIC CDN ENDPOINTS (no live API - all jsDelivr / EveryAyah)
 
 const CDN = {
     // Full surah with Arabic text + transliteration + English translation
     surah: (n) => `https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/en/${n}.json`,
-    // Tafsir per ayah (Ibn Kathir — reliable, complete English tafsir)
+    // Tafsir per ayah (Ibn Kathir - reliable, complete English tafsir)
     tafsir: (surah, ayah) =>
         `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/en-tafisr-ibn-kathir/${surah}/${ayah}.json`,
 };
 
-// EVERYAYAH RECITERS — folder names on everyayah.com
+// EVERYAYAH RECITERS - folder names on everyayah.com
 // Audio URL: https://everyayah.com/data/{folder}/{surah_padded}{ayah_padded}.mp3
 
 const RECITERS = [
@@ -212,7 +212,7 @@ function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
     return `https://everyayah.com/data/${reciter.folder}/${s}${a}.mp3`;
 }
 
-// FULL SURAH AUDIO — plays the entire surah as one continuous track
+// FULL SURAH AUDIO - plays the entire surah as one continuous track
 // Uses mp3quran.net which provides full surah MP3 files
 
 const FULL_SURAH_SERVERS = {
@@ -251,13 +251,27 @@ function getFullSurahAudioUrl(surahNum, reciterId) {
 }
 
 // TOAST
+// v30: the toast now stays visible long enough for the user to actually read it.
+// Duration is computed from the message length:
+//   - Short messages (<= 20 chars, e.g. "Bookmark removed"):       2.4s
+//   - Medium messages (21-50 chars, e.g. "Repeat: range (set start/end below)"): 3.6s
+//   - Long messages (> 50 chars, e.g. multi-sentence confirmations): 5.0s
+// The previous 1.9s default was too short for the longer repeat / range
+// confirmation messages, especially "Range playback complete" which the
+// user wanted to actually see before the toast vanished.
 
 function showToast(msg) {
     const t = document.getElementById("toast");
     if (!t) return;
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 1900);
+    const len = (msg || "").length;
+    let duration;
+    if (len <= 20) duration = 2400;
+    else if (len <= 50) duration = 3600;
+    else duration = 5000;
+    clearTimeout(t._hideTimer);
+    t._hideTimer = setTimeout(() => t.classList.remove("show"), duration);
 }
 
 // ELEMENT REFS
@@ -321,7 +335,7 @@ let dailyAyahData = null;
 let currentSurahVerses = [];   // cached for the open surah
 let playbackRate = 1;
 
-// Juz boundary data (static — no fetch needed)
+// Juz boundary data (static - no fetch needed)
 // First ayah of each Juz [surah, ayah]
 const JUZ_STARTS = [
     [1, 1], [2, 142], [2, 253], [3, 92], [4, 24], [4, 147], [5, 82], [6, 111], [7, 87], [8, 41],
@@ -700,7 +714,7 @@ function initFilterBar() {
     if (hizbCon) hizbCon.innerHTML = Array.from({ length: 60 }, (_, i) => i + 1).map(n => `<button type="button" class="fpill" data-filter="hizb-${n}">Hizb ${n}</button>`).join("");
 }
 
-// JUZ / HIZB FILTER LOGIC (static — no API)
+// JUZ / HIZB FILTER LOGIC (static - no API)
 
 function surahInJuz(surahId, juzNum) {
     const juzIdx = juzNum - 1;
@@ -849,7 +863,7 @@ function initBookmarks() {
     });
 }
 
-// DAILY AYAH — picks a verse by date, uses static CDN
+// DAILY AYAH - picks a verse by date, uses static CDN
 
 async function loadDailyAyah() {
     try {
@@ -912,7 +926,7 @@ function initDailyAyahActions() {
     // COPY
     document.getElementById("daily-copy-btn")?.addEventListener("click", async () => {
         if (!dailyAyahData) return;
-        const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, Ayah ${dailyAyahData.ayah}`;
+        const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n- ${dailyAyahData.surahName}, Ayah ${dailyAyahData.ayah}`;
         try {
             await navigator.clipboard.writeText(text);
             showToast("Verse copied ✓");
@@ -934,9 +948,9 @@ function initDailyAyahActions() {
                 theme: siteTheme
             });
         } else {
-            const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n— ${dailyAyahData.surahName}, verse ${dailyAyahData.ayah}`;
+            const text = `${dailyAyahData.arabic}\n\n${dailyAyahData.translation}\n\n- ${dailyAyahData.surahName}, verse ${dailyAyahData.ayah}`;
             try {
-                if (navigator.share) { await navigator.share({ title: "Daily Ayah — Baca", text }); showToast("Shared ✓"); }
+                if (navigator.share) { await navigator.share({ title: "Daily Ayah - Baca", text }); showToast("Shared ✓"); }
                 else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
             } catch { showToast("Share cancelled"); }
         }
@@ -967,7 +981,7 @@ function initDailyAyahActions() {
             const text = data.text || data.tafsir || "No tafsir available for this verse.";
             tafsirPanel.innerHTML = `
         <div class="daily-tafsir-header">
-          <span class="daily-tafsir-badge">Ibn Kathir — ${dailyAyahData.surahName} · Ayah ${dailyAyahData.ayah}</span>
+          <span class="daily-tafsir-badge">Ibn Kathir - ${dailyAyahData.surahName} · Ayah ${dailyAyahData.ayah}</span>
           <button class="daily-tafsir-close" title="Close"><i data-lucide="x"></i></button>
         </div>
         <p class="daily-tafsir-body">${text}</p>`;
@@ -1253,7 +1267,7 @@ document.getElementById("resume-reading-btn")?.addEventListener("click", () => {
     openReader(Number(saved.surah), saved.ayah);
 });
 
-// LOAD SURAHS (from static SURAH_LIST — instant, no fetch)
+// LOAD SURAHS (from static SURAH_LIST - instant, no fetch)
 
 function loadSurahs() {
     allSurahs = SURAH_LIST.map(s => ({
@@ -1341,7 +1355,7 @@ function cleanAyah(text, surahNumber, ayahNumber) {
     return text;
 }
 
-// TAFSIR PANEL — loads on demand from static CDN
+// TAFSIR PANEL - loads on demand from static CDN
 
 async function loadTafsir(surahNum, ayahNum) {
     const panelId = `tafsir-panel-${surahNum}-${ayahNum}`;
@@ -1386,7 +1400,7 @@ async function loadTafsir(surahNum, ayahNum) {
     }
 }
 
-// OPEN READER — fetches surah from static CDN and renders
+// OPEN READER - fetches surah from static CDN and renders
 
 async function openReader(surahNum, scrollToAyah = null) {
     if (!surahNum) return;
@@ -1560,7 +1574,7 @@ document.getElementById("mini-ayah-jump-input")?.addEventListener("keydown", (e)
     if (e.key === "Enter") { e.preventDefault(); readerAyahJump("mini-ayah-jump-input"); }
 });
 
-// FULL-SURAH AUDIO (EveryAyah — full surah mp3 not available,
+// FULL-SURAH AUDIO (EveryAyah - full surah mp3 not available,
 // so we stream ayah-by-ayah auto-advancing as full-surah mode)
 
 function loadSurahAudio({ autoplay = false } = {}) {
@@ -1578,7 +1592,7 @@ let surahAyahCursor = 1;
 
 function playSurahFromAyah(ayahNum) {
     surahAyahCursor = ayahNum;
-    // Ayah-by-ayah audio — plays one ayah, auto-advances to next, scrolls to active verse
+    // Ayah-by-ayah audio - plays one ayah, auto-advances to next, scrolls to active verse
     const url = getAyahAudioUrl(selectedSurah, ayahNum, currentReciterId);
     audioPlayer.src = url;
     audioPlayer.load();
@@ -1605,7 +1619,7 @@ playButton?.addEventListener("click", () => {
         safeLucide();
         return;
     }
-    // Pause per-ayah player if running — the two modes must not play simultaneously
+    // Pause per-ayah player if running - the two modes must not play simultaneously
     if (!ayahPlayer.paused) {
         ayahPlayer.pause();
         if (activePlayButton) { activePlayButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); activePlayButton = null; }
@@ -1664,7 +1678,7 @@ audioPlayer.addEventListener("ended", () => {
             scrollToActiveVerse(rangeStartAyah);
             return;
         }
-        // Range finished — stop and reset
+        // Range finished - stop and reset
         isRangePlaying = false;
         rangeRepeatRemaining = rangeRepeatCount;
         if (playButton) { playButton.innerHTML = `<i data-lucide="play"></i>`; safeLucide(); }
@@ -1739,7 +1753,7 @@ document.addEventListener("change", e => {
     setTimeout(updateFavoriteReciterButton, 100);
 });
 
-// FAVOURITE RECITER — toggle heart icon, save to localStorage
+// FAVOURITE RECITER - toggle heart icon, save to localStorage
 function isFavoriteReciter(reciterId) {
     return localStorage.getItem("favoriteReciter") === reciterId;
 }
@@ -1828,7 +1842,7 @@ document.addEventListener("click", async e => {
             activePlayButton = null;
             // Keep currentAyahPlaying set so mini player next/prev still works
             syncMiniPlayIcon(false);
-            // NO auto-advance — only the clicked verse plays, then stops.
+            // NO auto-advance - only the clicked verse plays, then stops.
             // Users can click the next verse manually, or use the mini player
             // next/prev buttons, or use the audio drawer to play the whole surah.
         };
@@ -1867,11 +1881,11 @@ miniNext?.addEventListener("click", () => {
         if (nextBtn) {
             nextBtn.click();
         } else if (nextAyah <= totalAyahsInSurah) {
-            // Button not found but ayah exists — play it directly
+            // Button not found but ayah exists - play it directly
             playSingleAyah(selectedSurah, nextAyah);
         }
     } else if (activeAudioMode === "surah" && selectedSurah < 114) {
-        // Surah mode — go to next surah
+        // Surah mode - go to next surah
         selectedSurah++;
         openReader(selectedSurah).then(() => playSurahFromAyah(1));
     }
@@ -1890,7 +1904,7 @@ miniPrev?.addEventListener("click", () => {
             }
         }
     } else if (activeAudioMode === "surah" && selectedSurah > 1) {
-        // Surah mode — go to previous surah
+        // Surah mode - go to previous surah
         selectedSurah--;
         openReader(selectedSurah).then(() => playSurahFromAyah(1));
     }
@@ -2005,7 +2019,7 @@ ${trans}`;
     }
 });
 
-// SEARCH MODAL (open/close — the live search rendering lives in initSearchModal below)
+// SEARCH MODAL (open/close - the live search rendering lives in initSearchModal below)
 
 document.querySelector(".search-btn")?.addEventListener("click", () => {
     document.querySelector(".search-modal")?.classList.add("active");
@@ -2095,7 +2109,7 @@ function initRecitersGrid() {
     const previewList = RECITER_PROFILES.slice(0, 4);
     previewEl.innerHTML = previewList.map(r => `
       <a class="reciters-preview-avatar" href="reciters/reciter.html?r=${r.id}"
-         title="${r.name} — ${r.country}" data-name="${r.name}">
+         title="${r.name} - ${r.country}" data-name="${r.name}">
         <img src="${r.image}" alt="${r.name}"
           onerror="this.style.display='none';this.parentElement.style.background='rgba(16,185,129,0.15)'">
       </a>`).join("");
@@ -2234,7 +2248,7 @@ initRecitersGrid();
 fixFloatingPlayerIcons();
 updateContinueReading();
 initContinueReadingHint();
-// GAMIFICATION — Reading Stats, Streaks, Challenges, Achievements
+// GAMIFICATION - Reading Stats, Streaks, Challenges, Achievements
 
 const GAMIFICATION = {
     // Default daily goal (pages)
@@ -2280,9 +2294,9 @@ function loadStats() {
             totalDays: 0,
             challengesCompleted: 0,
             todayPages: 0,
-            todayVerses: 0,             // verses read TODAY — resets daily
-            todayReadingSeconds: 0,     // reading time TODAY — resets daily
-            todaySurahs: 0,             // surahs completed TODAY — resets daily
+            todayVerses: 0,             // verses read TODAY - resets daily
+            todayReadingSeconds: 0,     // reading time TODAY - resets daily
+            todaySurahs: 0,             // surahs completed TODAY - resets daily
             todayDate: null,
             xp: 0,
             unlockedAchievements: [],
@@ -2344,13 +2358,13 @@ function trackReadingTime(seconds) {
 }
 
 // Check and unlock achievements
-// Jumu'ah (Friday) bonus — every reading day counts, but Friday awards
+// Jumu'ah (Friday) bonus - every reading day counts, but Friday awards
 // double XP. getDay() === 5 is Friday in JavaScript's Date, in the
 // visitor's own local time, regardless of locale.
 //
 // Testing note: add ?jumuah=1 to any URL to preview Friday behaviour on
 // any day (e.g. index.html?jumuah=1), or ?jumuah=0 to force it off. This
-// only affects your own browser tab — nothing is written anywhere, so
+// only affects your own browser tab - nothing is written anywhere, so
 // there's no need to wait for an actual Friday to check this works.
 function isJumuahToday() {
     const override = new URLSearchParams(location.search).get('jumuah');
@@ -2555,13 +2569,13 @@ function initGamification() {
         }
     });
 
-    // Footer meet developer — opens portfolio in new tab
+    // Footer meet developer - opens portfolio in new tab
     document.getElementById("footer-meet-developer")?.addEventListener("click", e => {
         e.preventDefault();
         window.open("https://up1n-portfolio.vercel.app/", "_blank", "noopener");
     });
 
-    // Footer feedback form — opens email client with pre-filled message
+    // Footer feedback form - opens email client with pre-filled message
     document.getElementById("feedback-form")?.addEventListener("submit", e => {
         e.preventDefault();
         const name = document.getElementById("feedback-name")?.value.trim() || "Anonymous";
@@ -2577,7 +2591,7 @@ function initGamification() {
         };
 
         const subject = `[Baca Feedback] ${typeLabels[type] || "Feedback"}`;
-        const body = `Name: ${name}\nType: ${typeLabels[type] || type}\n\nMessage:\n${message}\n\n— Sent from Baca (al-qur-an.onrender.com)`;
+        const body = `Name: ${name}\nType: ${typeLabels[type] || type}\n\nMessage:\n${message}\n\n- Sent from Baca (al-qur-an.onrender.com)`;
 
         const mailtoUrl = `mailto:olaniyiaremu2003@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.location.href = mailtoUrl;
@@ -2585,7 +2599,7 @@ function initGamification() {
         setTimeout(() => { document.getElementById("feedback-form")?.reset(); }, 1500);
     });
 
-    // Track reading time — increment 30 seconds every 30 seconds while page is visible
+    // Track reading time - increment 30 seconds every 30 seconds while page is visible
     let timeAccumulator = 0;
     setInterval(() => {
         if (!document.hidden && document.hasFocus()) {
@@ -2600,7 +2614,7 @@ function initGamification() {
     // Live-refresh the dashboard if reading stats change in another tab
     // (e.g. the Mushaf reader open alongside the homepage). The Mushaf
     // writes reading progress directly into the shared "bacaStats" record
-    // itself, so here we only need to re-render — never re-increment.
+    // itself, so here we only need to re-render - never re-increment.
     window.addEventListener("storage", e => {
         if (e.key === "bacaStats") {
             const fresh = loadStats();
@@ -2626,7 +2640,7 @@ function initGamification() {
 // Call init at the end (after other initializers)
 setTimeout(initGamification, 500);
 
-// TOPICS — Click a topic card to find related verses
+// TOPICS - Click a topic card to find related verses
 
 const TOPIC_VERSES = {
     mercy: [
@@ -2656,7 +2670,7 @@ const TOPIC_VERSES = {
     protection: [
         { surah: 1, ayah: 5, ref: "Al-Fatihah 1:5", note: "A daily plea for Allah's help alone" },
         { surah: 2, ayah: 201, ref: "Al-Baqarah 2:201", note: "A widely recited dua for protection in both worlds" },
-        { surah: 3, ayah: 173, ref: "Ali 'Imran 3:173", note: "\u201cAllah is sufficient for us\u201d — trust in the face of fear" },
+        { surah: 3, ayah: 173, ref: "Ali 'Imran 3:173", note: "\u201cAllah is sufficient for us\u201d - trust in the face of fear" },
         { surah: 7, ayah: 200, ref: "Al-A'raf 7:200", note: "Seeking refuge from whispers of doubt or evil" },
         { surah: 16, ayah: 98, ref: "An-Nahl 16:98", note: "The instruction to seek refuge before reciting" },
         { surah: 113, ayah: 1, ref: "Al-Falaq 113:1", note: "Surah Al-Falaq, recited for protection each day" },
@@ -2677,7 +2691,7 @@ const TOPIC_VERSES = {
         { surah: 39, ayah: 53, ref: "Az-Zumar 39:53", note: "A call to never despair of Allah's mercy" },
         { surah: 65, ayah: 3, ref: "At-Talaq 65:3", note: "Trust in Allah described as true sufficiency" },
         { surah: 94, ayah: 5, ref: "Ash-Sharh 94:5", note: "The famous promise: with hardship comes ease" },
-        { surah: 94, ayah: 6, ref: "Ash-Sharh 94:6", note: "Repeated for emphasis — ease truly follows hardship" },
+        { surah: 94, ayah: 6, ref: "Ash-Sharh 94:6", note: "Repeated for emphasis - ease truly follows hardship" },
     ],
     patience: [
         { surah: 2, ayah: 153, ref: "Al-Baqarah 2:153", note: "Patience and prayer named as sources of help" },
@@ -2762,7 +2776,7 @@ function showTopicResults(topic) {
     // Build results HTML
     const header = `<div class="search-item" style="cursor:default;border-bottom:1px solid var(--border);margin-bottom:0.5rem;padding-bottom:0.8rem;">
         <i data-lucide="tag" style="color:var(--primary)"></i>
-        <span style="font-weight:700;color:var(--primary)">${TOPIC_NAMES[topic]} — ${verses.length} verses</span>
+        <span style="font-weight:700;color:var(--primary)">${TOPIC_NAMES[topic]} - ${verses.length} verses</span>
     </div>`;
 
     const items = verses.map(v => {
@@ -2792,11 +2806,11 @@ function showTopicResults(topic) {
     document.querySelector(".search-modal")?.classList.add("active");
 }
 
-// GUIDED JOURNEYS — one verse a day, tracked per calendar day
+// GUIDED JOURNEYS - one verse a day, tracked per calendar day
 //
 // Each journey's day list already exists 1:1 with its advertised day
 // count (data-verses has exactly 7 entries for a "7 Days" journey, 14
-// for "14 Days", etc.) — this was already true in the markup, it just
+// for "14 Days", etc.) - this was already true in the markup, it just
 // was never read back. Progress now persists in its own localStorage
 // key, advances at most once per real calendar day (so the "N Days"
 // label on each card is now actually true), and awards XP through the
@@ -2877,7 +2891,7 @@ function initJourneys() {
             const journeyTitle = card.querySelector("h3")?.textContent?.trim() || "Journey";
             const today = getTodayStr();
 
-            // Not started yet — begin at day 1.
+            // Not started yet - begin at day 1.
             if (!progress) {
                 journeys[id] = { day: 1, lastAdvanceDate: today, completed: false, startedAt: Date.now() };
                 saveJourneys(journeys);
@@ -2888,7 +2902,7 @@ function initJourneys() {
                 return;
             }
 
-            // Already completed — "Read Again" just reopens day 1 without
+            // Already completed - "Read Again" just reopens day 1 without
             // touching the saved completion.
             if (progress.completed) {
                 const [surah, ayah] = verses[0].split(":").map(Number);
@@ -2897,7 +2911,7 @@ function initJourneys() {
                 return;
             }
 
-            // Already advanced today — re-open today's verse, don't skip ahead.
+            // Already advanced today - re-open today's verse, don't skip ahead.
             if (progress.lastAdvanceDate === today) {
                 const [surah, ayah] = verses[progress.day - 1].split(":").map(Number);
                 showToast(`Day ${progress.day} of ${total} \u2014 ${journeyTitle}`);
@@ -2905,7 +2919,7 @@ function initJourneys() {
                 return;
             }
 
-            // A new calendar day has passed — advance one day.
+            // A new calendar day has passed - advance one day.
             const nextDay = progress.day + 1;
             const stats = loadStats();
             const earned = JOURNEY_DAY_XP * xpMultiplier();
@@ -2941,7 +2955,7 @@ function initJourneys() {
     });
 }
 
-// SEARCH MODAL — Make it actually search surahs, topics, and verses
+// SEARCH MODAL - Make it actually search surahs, topics, and verses
 
 function initSearchModal() {
     const searchInput = document.getElementById("searchInput");
@@ -2972,8 +2986,8 @@ function initSearchModal() {
             keywords: `topic ${name} ${key}`.toLowerCase(),
         })),
         // Notable verses
-        { type: "verse", icon: "bookmark", title: "Ayat al-Kursi", subtitle: "Al-Baqarah 2:255 — The Throne Verse", surah: 2, ayah: 255, keywords: "ayatul kursi throne verse 2:255" },
-        { type: "verse", icon: "bookmark", title: "Verse of Light", subtitle: "An-Nur 24:35 — Nur", surah: 24, ayah: 35, keywords: "light nur 24:35" },
+        { type: "verse", icon: "bookmark", title: "Ayat al-Kursi", subtitle: "Al-Baqarah 2:255 - The Throne Verse", surah: 2, ayah: 255, keywords: "ayatul kursi throne verse 2:255" },
+        { type: "verse", icon: "bookmark", title: "Verse of Light", subtitle: "An-Nur 24:35 - Nur", surah: 24, ayah: 35, keywords: "light nur 24:35" },
         { type: "verse", icon: "bookmark", title: "Bismillah", subtitle: "Al-Fatihah 1:1", surah: 1, ayah: 1, keywords: "bismillah opening 1:1" },
         { type: "verse", icon: "bookmark", title: "Last Verse", subtitle: "An-Nas 114:6", surah: 114, ayah: 6, keywords: "last verse 114:6 nas" },
     ];
@@ -3140,7 +3154,7 @@ function initReaderSelectors() {
             // Clear cache so new translation is fetched
             Object.keys(translationCache).forEach(k => delete translationCache[k]);
             // Inject the new translation into existing verse cards immediately
-            // (no re-render needed — just update the .verse-translation divs)
+            // (no re-render needed - just update the .verse-translation divs)
             await injectTranslationsAndTafsir();
             showToast(`Translation: ${trSelect.options[trSelect.selectedIndex].text}`);
         });
@@ -3173,7 +3187,7 @@ async function injectTranslationsAndTafsir() {
     const surahNum = selectedSurah;
 
     // If using the default quran-json translation (id "20" = Saheeh International, which
-    // is close to the built-in), keep the built-in v.translation text — no API call needed.
+    // is close to the built-in), keep the built-in v.translation text - no API call needed.
     // Only fetch from API if a different translation is selected.
     if (readerTranslationId === "20" || readerTranslationId === "none") {
         // Use built-in translation (already rendered in .verse-translation div)
@@ -3204,7 +3218,7 @@ async function injectTranslationsAndTafsir() {
     }
 }
 
-// REFLECTION OF THE DAY — functional with real Quranic reflections
+// REFLECTION OF THE DAY - functional with real Quranic reflections
 
 const DAILY_REFLECTIONS = [
     { text: "And whoever puts their trust in Allah, He is sufficient for them. Indeed, Allah will accomplish His purpose.", ref: "Surah At-Talaq 65:3" },
@@ -3258,7 +3272,7 @@ setTimeout(() => {
     initDailyReflection();
 }, 800);
 
-// ISLAMIC (HIJRI) DATE — calculated using the Umm al-Qura algorithm
+// ISLAMIC (HIJRI) DATE - calculated using the Umm al-Qura algorithm
 
 const HIJRI_MONTHS = [
     'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
@@ -3300,7 +3314,7 @@ async function getIslamicDateFromAPI() {
         if (day < 1) {
             monthNum--;
             if (monthNum < 1) { monthNum = 12; year--; }
-            day = 30; // approximate — previous month's last day
+            day = 30; // approximate - previous month's last day
         } else if (day > 30) {
             monthNum++;
             if (monthNum > 12) { monthNum = 1; year++; }
