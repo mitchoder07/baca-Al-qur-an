@@ -7,17 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- PWA -->
     <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Read the Qur'an in beautiful Uthmani script with tajweed colors, word-by-word audio, and 17+ translations. The most authentic digital mushaf experience.">
+    <meta name="description" content="Read the Qur'an with 604-page Uthmani mushaf, 34+ reciters, daily adhkar, prayer guide, and AI assistant.">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <link rel="icon" type="image/svg+xml" href="/images/icons/icon.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Baca">
     <meta name="mobile-web-app-capable" content="yes">
-    <!-- New logo styles + Reem Kufi font + green gradient -->
-    <link rel="stylesheet" href="/css/baca-logo.css">
-    <title>Baca — Read the 604-Page Uthmani Mushaf</title>
+    <title>Baca - Mushaf</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -36,7 +35,7 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Mushaf-specific styles (self-contained — no style.css dependency) -->
+    <!-- Mushaf-specific styles (self-contained - no style.css dependency) -->
     <link rel="stylesheet" href="css/mushaf.css">
     <link rel="stylesheet" href="css/shared-nav.css">
 
@@ -52,25 +51,34 @@
                 display: none !important;
             }
         }
-    </style>    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/mushaf.html">
-    <meta property="og:title" content="Baca — Read the 604-Page Uthmani Mushaf">
-    <meta property="og:description" content="Read the Qur'an in beautiful Uthmani script with tajweed colors, word-by-word audio, and 17+ translations. The most authentic digital mushaf experience.">
-    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Baca — Read the Qur'an">
-    <meta property="og:locale" content="en_US">
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/mushaf.html">
-    <meta name="twitter:title" content="Baca — Read the 604-Page Uthmani Mushaf">
-    <meta name="twitter:description" content="Read the Qur'an in beautiful Uthmani script with tajweed colors, word-by-word audio, and 17+ translations. The most authentic digital mushaf experience.">
-    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
-    <meta name="twitter:site" content="@m1tch0d3r">
-    <meta name="twitter:creator" content="@m1tch0d3r">
-</head>
+
+        /* v28 Fix 2: In the installed mobile app (standalone mode), the Baca
+           logo navbar (.mushaf-topbar) is unnecessary - the bottom tab bar already
+           has a Home tab, and the logo just duplicates branding the user has
+           already seen. Hiding it gives more vertical space for the Mushaf page
+           itself. The sticky mushaf-toolbar still has the page navigator and
+           tools, so the user can still get around.
+
+           We also add safe-area-inset-top to the sticky toolbar so it doesn't
+           get cut off by the iPhone notch when the topbar is gone. */
+        @media (display-mode: standalone) {
+            .mushaf-topbar {
+                display: none !important;
+            }
+            /* The toolbar was previously below the topbar; now it's the first
+               thing on the page. Push it down by the safe-area top inset so
+               it doesn't sit under the notch. */
+            .mushaf-toolbar {
+                top: env(safe-area-inset-top, 0px) !important;
+                padding-top: calc(0.5rem + env(safe-area-inset-top, 0px)) !important;
+            }
+            /* The read area was already accounting for the topbar height; now
+               that the topbar is gone, we want the read area to start higher
+               up. We can't easily measure the topbar's exact height in CSS,
+               so we just trust the toolbar's sticky positioning to push the
+               content down by the right amount. */
+        }
+    </style></head>
 
 <body data-mushaf-theme="dark">
 
@@ -97,8 +105,42 @@
     <!-- MINIMAL TOP BAR (Logo + Back button) -->
 
     <header class="mushaf-topbar">
-        <a href="index.html" class="topbar-logo" aria-label="Baca — Home">
-            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+        <a href="index.html" class="topbar-logo" aria-label="Baca - Home">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <!-- Open book (Quran) silhouette -->
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.18" />
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
+                <!-- Center spine -->
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
+                    stroke-linecap="round" />
+                <!-- Decorative star/crescent above book -->
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.9" />
+                <!-- Page lines (left) -->
+                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <!-- Page lines (right) -->
+                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <defs>
+                    <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#10b981" />
+                        <stop offset="0.5" stop-color="#06b6d4" />
+                        <stop offset="1" stop-color="#6366f1" />
+                    </linearGradient>
+                </defs>
+            </svg>
             <span class="topbar-logo-text">Baca</span>
         </a>
         <div class="topbar-spacer"></div>
@@ -215,13 +257,6 @@
                 <h2 class="surah-banner-title" id="surah-banner-title"></h2>
                 <p class="surah-banner-meta" id="surah-banner-meta"></p>
                 <div class="bismillah-header" id="surah-bismillah" hidden></div>
-                <!-- Quick Ayah Jump -->
-                <div class="ayah-quick-jump" id="ayah-quick-jump">
-                    <input type="number" id="ayah-jump-input" class="ayah-jump-input" min="1" placeholder="Go to ayah…" title="Enter ayah number and press Enter">
-                    <button type="button" id="ayah-jump-btn" class="ayah-jump-btn" title="Jump to ayah">
-                        <i data-lucide="arrow-right-circle"></i>
-                    </button>
-                </div>
             </header>
             <div class="surah-verses" id="surah-verses"></div>
         </section>
@@ -459,7 +494,7 @@
                         <span class="sign-icon" style="font-size:1rem;color:#10b981;">Hafs</span>
                         <div>
                             <strong>Hafs from Asim (Current)</strong>
-                            <p>The mushaf text on this page is in the Hafs riwayah — the most widely used worldwide. All default reciters use Hafs.</p>
+                            <p>The mushaf text on this page is in the Hafs riwayah - the most widely used worldwide. All default reciters use Hafs.</p>
                         </div>
                     </div>
                     <div class="tajweed-guide-item">
@@ -626,7 +661,7 @@
     <script src="js/onboarding-tour-steps-mushaf.js"></script>
     <script src="js/onboarding-tour.js"></script>
 
-    <!-- PWA: Service Worker + install prompt -->
+    <!-- PWA: Service Worker registration + install prompt -->
     <script src="/js/pwa-register.js"></script>
 </body>
 
