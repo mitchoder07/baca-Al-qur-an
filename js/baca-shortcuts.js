@@ -1,27 +1,17 @@
-/* baca-shortcuts.js — Floating section navigator for the Baca home page
+/* baca-shortcuts.js: Floating section navigator for the Baca home page
  *
- * Shows a set of quick-jump shortcut pills on the LEFT side of the screen
+ * Shows a set of quick-jump shortcut pills on the RIGHT side of the screen
  * (desktop) or a horizontal scrollable bar (mobile) that let users jump
  * directly to any section of the long home page.
- *
- * Positioned on the LEFT (vertically centered) so it doesn't block the
- * chat FAB on the bottom-right. The scroll-to-top/scroll-to-bottom buttons
- * are at the bottom-left, but the shortcuts are vertically centered —
- * no overlap.
- *
- * The shortcuts detect the page's section IDs and build pills automatically.
- * Active section is highlighted based on scroll position (IntersectionObserver).
+
  */
 (function () {
   'use strict';
 
-  // Only run on index.html
   if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {
-    // Also match root path
     if (window.location.pathname !== '/' && window.location.pathname !== '') return;
   }
 
-  // Section definitions — id + label + icon
   var SECTIONS = [
     { id: 'hero', label: 'Home', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
     { id: 'surah-explorer', label: 'Qur\'an', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' },
@@ -38,7 +28,6 @@
   var activeId = null;
 
   function buildNav() {
-    // Check which sections actually exist on the page
     var available = SECTIONS.filter(function (s) {
       return document.getElementById(s.id);
     });
@@ -64,7 +53,7 @@
       btn.addEventListener('click', function () {
         var el = document.getElementById(section.id);
         if (el) {
-          var offset = 80; // navbar height
+          var offset = 80;
           var top = el.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         }
@@ -73,12 +62,10 @@
       nav.appendChild(btn);
     });
 
-    // --- NEW: Minimize / Expand Toggle Button ---
     var toggleBtn = document.createElement('button');
     toggleBtn.className = 'baca-shortcut-pill baca-shortcut-toggle';
     toggleBtn.type = 'button';
     toggleBtn.setAttribute('aria-label', 'Minimize shortcuts');
-    // X icon to minimize, List icon to expand
     toggleBtn.innerHTML =
       '<svg class="icon-minimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
       '<path d="M18 6L6 18M6 6l12 12"/>' +
@@ -97,19 +84,17 @@
     });
 
     nav.appendChild(toggleBtn);
-    // ---------------------------------------------
 
     document.body.appendChild(nav);
 
-    // Inject CSS
     if (!document.getElementById('baca-shortcuts-css')) {
       var css = document.createElement('style');
       css.id = 'baca-shortcuts-css';
       css.textContent = `
         .baca-shortcuts-nav {
           position: fixed;
-          left: 1.5rem;
-          top: 60%;
+          right: 1.5rem;
+          top: 55%;
           transform: translateY(-50%);
           z-index: 2999;
           display: flex;
@@ -165,7 +150,6 @@
           background: rgba(16, 185, 129, 0.15);
           color: #10b981;
         }
-        /* The label expands to the LEFT (since the nav is on the right side) */
         .baca-shortcut-label {
           max-width: 0;
           overflow: hidden;
@@ -178,7 +162,6 @@
           max-width: 120px;
         }
 
-        /* --- Toggle Button & Minimized State --- */
         .baca-shortcut-toggle {
           margin-top: 6px;
           padding-top: 8px;
@@ -190,10 +173,10 @@
         
         .baca-shortcuts-nav.minimized {
           padding: 6px;
-          border-radius: 50%; /* Shrinks into a bubble */
+          border-radius: 50%;
         }
         .baca-shortcuts-nav.minimized .baca-shortcut-pill:not(.baca-shortcut-toggle) {
-          display: none; /* Hide all section pills */
+          display: none;
         }
         .baca-shortcuts-nav.minimized .baca-shortcut-toggle {
           border-top: none;
@@ -203,9 +186,7 @@
         }
         .baca-shortcuts-nav.minimized .baca-shortcut-toggle .icon-minimize { display: none; }
         .baca-shortcuts-nav.minimized .baca-shortcut-toggle .icon-expand { display: block; }
-        /* --------------------------------------- */
 
-        /* Light mode */
         body.light-mode .baca-shortcuts-nav {
           background: rgba(255, 255, 255, 0.7);
           border-color: rgba(0, 0, 0, 0.06);
@@ -225,12 +206,11 @@
           border-top-color: rgba(0, 0, 0, 0.06);
         }
 
-        /* Mobile — horizontal bar at the top (centered, not blocking anything) */
         @media (max-width: 768px) {
           .baca-shortcuts-nav {
             position: fixed;
             left: 50%;
-            top: calc(60px + env(safe-area-inset-top, 0px));
+            top: calc(120px + env(safe-area-inset-top, 0px));
             transform: translateX(-50%);
             flex-direction: row;
             gap: 4px;
@@ -248,26 +228,23 @@
           }
           .baca-shortcut-pill svg { width: 14px; height: 14px; }
           .baca-shortcut-label {
-            max-width: 100px; /* always show label on mobile */
+            max-width: 100px;
           }
           .baca-shortcut-pill:hover .baca-shortcut-label,
           .baca-shortcut-pill.active .baca-shortcut-label {
             max-width: 100px;
           }
-          /* Hide minimize button on mobile */
           .baca-shortcut-toggle { display: none !important; }
-          /* Reset minimized shape on mobile just in case */
           .baca-shortcuts-nav.minimized {
             border-radius: 14px;
             padding: 6px;
           }
         }
 
-        /* Standalone mode — adjust top offset for the navbar */
         @media (display-mode: standalone) {
           @media (max-width: 768px) {
             .baca-shortcuts-nav {
-              top: calc(56px + env(safe-area-inset-top, 0px));
+              top: calc(116px + env(safe-area-inset-top, 0px));
             }
           }
         }
@@ -276,13 +253,11 @@
     }
   }
 
-  // Track active section
   function setupObserver() {
     if (!nav) return;
 
     var pills = nav.querySelectorAll('.baca-shortcut-pill:not(.baca-shortcut-toggle)');
 
-    // Show/hide the nav based on scroll position
     function checkVisibility() {
       if (window.scrollY > 300) {
         nav.classList.add('visible');
@@ -291,7 +266,6 @@
       }
     }
 
-    // Use IntersectionObserver to detect active section
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -310,7 +284,6 @@
       threshold: 0,
     });
 
-    // Observe each section
     SECTIONS.forEach(function (s) {
       var el = document.getElementById(s.id);
       if (el) observer.observe(el);
@@ -319,7 +292,6 @@
     window.addEventListener('scroll', checkVisibility, { passive: true });
     checkVisibility();
 
-    // === Hide when a modal is open ===
     function checkModalOpen() {
       var wordModal = document.getElementById('word-modal-overlay');
       var searchModal = document.getElementById('search-modal');
