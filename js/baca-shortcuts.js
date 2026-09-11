@@ -94,7 +94,7 @@
         .baca-shortcuts-nav {
           position: fixed;
           right: 1.5rem;
-          top: 60%;
+          top: 55%;
           transform: translateY(-50%);
           z-index: 2999;
           display: flex;
