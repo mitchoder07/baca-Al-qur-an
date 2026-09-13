@@ -1,7 +1,7 @@
 /* sw.js - Baca Qur'an Service Worker
  * Caching: HTML=network-first, assets=cache-first, API=network-only, CDN=stale-while-revalidate
  */
-const CACHE_VERSION = 'baca-v21';
+const CACHE_VERSION = 'baca-v22';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
@@ -14,6 +14,7 @@ const PRECACHE_URLS = [
   '/js/jumuah.js', '/js/onboarding-tour.js', '/js/onboarding-tour-steps-home.js',
   '/js/onboarding-tour-steps-mushaf.js', '/js/onboarding-tour-steps-mobile.js',
   '/js/share-image.js', '/js/logo-info-trigger.js', '/js/blog.js',
+  '/js/ayah-downloader.js', '/js/video-share.js',
   '/manifest.json',
   '/images/baca-logo.webp', '/images/baca-logo.png', '/images/baca-logo-small.png',
   '/images/icons/icon-192.png', '/images/icons/icon-512.png', '/images/icons/apple-touch-icon.png',
