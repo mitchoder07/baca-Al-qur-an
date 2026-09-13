@@ -6,17 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- PWA -->
     <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Stream beautiful Qur'an recitations with synchronized mushaf text. Choose from 34+ reciters and follow along word by word.">
+    <meta name="description" content="Read the Qur'an with 604-page Uthmani mushaf, 34+ reciters, daily adhkar, prayer guide, and AI assistant.">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <link rel="icon" type="image/svg+xml" href="/images/icons/icon.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Baca">
     <meta name="mobile-web-app-capable" content="yes">
-    <!-- New logo styles + Reem Kufi font + green gradient -->
-    <link rel="stylesheet" href="/css/baca-logo.css">
-    <title>Baca — Listen to Qur'an Recitation</title>
+    <title>Reciter Profile - Baca</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -380,7 +379,7 @@
             background: var(--primary) !important
         }
 
-        /* Repeat button — highlight when active */
+        /* Repeat button - highlight when active */
         .sp-btn#sp-repeat {
             width: 34px;
             height: 34px;
@@ -623,31 +622,43 @@
             text-align: right
         }
 
-        /* OFFLINE BADGE — green check shown on surahs cached for offline */
-        .row-offline-badge {
-            display: none;
+        /* v31: Download button for each surah row */
+        .row-download-btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-        }
-
-        /* INFO BANNER — tells users about offline playback */
-        .offline-info-banner {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.7rem 1rem;
-            margin-bottom: 1rem;
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.15);
-            border-radius: 12px;
-            font-size: 0.78rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
             color: var(--subtext);
-            line-height: 1.4;
+            cursor: pointer;
+            font-size: .9rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-left: 0.5rem;
         }
-        .offline-info-banner i { color: #10b981; flex-shrink: 0; }
+        .row-download-btn:hover {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #10b981;
+        }
+        .row-download-btn:active {
+            transform: scale(0.95);
+        }
+        .row-download-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+        /* On mobile, make the download button slightly smaller */
+        @media (max-width: 640px) {
+            .row-download-btn {
+                width: 32px;
+                height: 32px;
+                font-size: .8rem;
+            }
+        }
 
         /* WAVE */
         .wave-bars {
@@ -994,25 +1005,7 @@
                 font-size: .72rem;
             }
         }
-    </style>    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/reciters/reciter.html">
-    <meta property="og:title" content="Baca — Listen to Qur'an Recitation">
-    <meta property="og:description" content="Stream beautiful Qur'an recitations with synchronized mushaf text. Choose from 34+ reciters and follow along word by word.">
-    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Baca — Read the Qur'an">
-    <meta property="og:locale" content="en_US">
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/reciters/reciter.html">
-    <meta name="twitter:title" content="Baca — Listen to Qur'an Recitation">
-    <meta name="twitter:description" content="Stream beautiful Qur'an recitations with synchronized mushaf text. Choose from 34+ reciters and follow along word by word.">
-    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
-    <meta name="twitter:site" content="@m1tch0d3r">
-    <meta name="twitter:creator" content="@m1tch0d3r">
-</head>
+    </style></head>
 
 <body>
 
@@ -1020,7 +1013,36 @@
 
     <header class="navbar">
         <a href="../index.html" class="logo">
-            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.18" />
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
+                    stroke-linecap="round" />
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.9" />
+                <line x1="12" y1="18" x2="20" y2="17" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="22" x2="20" y2="21" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="12" y1="26" x2="20" y2="25" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="17" x2="36" y2="18" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="21" x2="36" y2="22" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <line x1="28" y1="25" x2="36" y2="26" stroke="url(#bacaLogoGrad)" stroke-width="1" opacity="0.5"
+                    stroke-linecap="round" />
+                <defs>
+                    <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#10b981" />
+                        <stop offset="0.5" stop-color="#06b6d4" />
+                        <stop offset="1" stop-color="#6366f1" />
+                    </linearGradient>
+                </defs>
+            </svg>
             <span class="logo-text">Baca</span>
         </a>
         <div class="nav-actions" style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
@@ -1038,8 +1060,8 @@
             <button class="sp-btn" id="sp-close" title="Close player"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="sp-info">
-            <div class="sp-surah" id="sp-surah-name">—</div>
-            <div class="sp-reciter" id="sp-reciter-name">—</div>
+            <div class="sp-surah" id="sp-surah-name">-</div>
+            <div class="sp-reciter" id="sp-reciter-name">-</div>
         </div>
         <div class="sp-progress-wrap">
             <span class="sp-time" id="sp-current">0:00</span>
@@ -1097,10 +1119,6 @@
             <input type="text" class="surah-search-input" id="surah-search"
                 placeholder="Search by name, number or meaning…">
         </div>
-        <div class="offline-info-banner">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Play any surah once to save it for offline listening. Surahs with a <i class="fa-solid fa-circle-check" style="font-size:.65rem;color:#10b981;"></i> are ready offline.</span>
-        </div>
         <div class="surah-list" id="surah-list">
             <div class="no-results"><i class="fa-solid fa-spinner fa-spin"></i>
                 <p>Loading…</p>
@@ -1109,7 +1127,7 @@
     </section>
 
     <audio id="reciter-audio"></audio>
-    <!-- Old back-top button removed — now handled by /js/scroll-top.js -->
+    <button class="back-top" id="back-top"><i class="fa-solid fa-chevron-up"></i></button>
 
     <script>
 
@@ -1127,9 +1145,9 @@
             sudais: { name: "Abdul Rahman As-Sudais", arabic: "عبدالرحمن السديس", country: "Saudi Arabia", style: "Murattal", folder: "Abdurrahmaan_As-Sudais_192kbps", image: "/images/reciters/sudais.png", bio: "Sheikh Abdul Rahman As-Sudais is the Head of the Presidency for the Affairs of the Two Holy Mosques and Imam of Masjid Al-Haram in Makkah. Born in 1960, he memorized the Quran by age 12. His powerful voice and emotional recitation during the annual Hajj pilgrimage are broadcast worldwide, making him one of the most heard voices in history." },
             ali_jaber: { name: "Ali Abdullah Jabir", arabic: "علي عبدالله جابر", country: "Saudi Arabia", style: "Murattal", folder: "Ali_Jaber_64kbps", image: "/images/reciters/ali jabir.png", bio: "Sheikh Ali Abdullah Jabir (رحمه الله) was a Saudi Quran reciter who served as Imam of Masjid Al-Haram in Makkah during the 1980s. His voice was renowned for its golden, deeply emotional quality. His Tarawih recitations moved millions across the world. He passed away in 1994, but his recordings remain among the most beloved in Islam. Many scholars consider his voice one of the most beautiful ever to recite the Quran." },
             abdulbasit: { name: "Abdul Basit Abdul Samad", arabic: "عبدالباسط عبدالصمد", country: "Egypt", style: "Murattal", folder: "Abdul_Basit_Murattal_192kbps", image: "/images/reciters/basit.png", bio: "Sheikh Abdul Basit Muhammad Abdul Samad (1927–1988) is widely regarded as one of the greatest Quran reciters in history. He memorized the Quran at age 10 and won Egypt's State Award for Quranic recitation multiple times. His extraordinary vocal range and emotional power touched hearts across every continent. He served as the official reciter of Radio Cairo." },
-            abdulbasit_mj: { name: "Abdul Basit (Mujawwad)", arabic: "عبدالباسط — مجوّد", country: "Egypt", style: "Mujawwad", folder: "Abdul_Basit_Mujawwad_128kbps", image: "/images/reciters/basit.png", bio: "These Mujawwad recordings of Sheikh Abdul Basit Abdul Samad are considered masterworks of Quranic art. In this style, he employs the full range of Arabic maqamat (melodic modes) while maintaining perfect tajweed. These recordings are studied by reciters worldwide and represent the pinnacle of the Mujawwad tradition." },
+            abdulbasit_mj: { name: "Abdul Basit (Mujawwad)", arabic: "عبدالباسط - مجوّد", country: "Egypt", style: "Mujawwad", folder: "Abdul_Basit_Mujawwad_128kbps", image: "/images/reciters/basit.png", bio: "These Mujawwad recordings of Sheikh Abdul Basit Abdul Samad are considered masterworks of Quranic art. In this style, he employs the full range of Arabic maqamat (melodic modes) while maintaining perfect tajweed. These recordings are studied by reciters worldwide and represent the pinnacle of the Mujawwad tradition." },
             husary: { name: "Mahmoud Khalil Al-Husary", arabic: "محمود خليل الحصري", country: "Egypt", style: "Murattal", folder: "Husary_128kbps", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary (1917–1980) was Egypt's foremost Quran reciter and the first recipient of the Egyptian State Prize for recitation. Head of the Quran Reciters Union in Egypt and an advisor to Al-Azhar University, his precise tajweed and scholarly delivery make his recordings the gold standard for Quranic recitation education worldwide." },
-            husary_muj: { name: "Al-Husary (Mujawwad)", arabic: "الحصري — مجوّد", country: "Egypt", style: "Mujawwad", folder: "Husary_128kbps_Mujawwad", image: "../images/reciters/al-husary.png", bio: "This is the Mujawwad recording of Sheikh Mahmoud Khalil Al-Husary, featuring deliberate melodic patterns considered the more artistic form of recitation. His mastery of both Murattal and Mujawwad styles makes these recordings exceptional references for students of Quranic recitation." },
+            husary_muj: { name: "Al-Husary (Mujawwad)", arabic: "الحصري - مجوّد", country: "Egypt", style: "Mujawwad", folder: "Husary_128kbps_Mujawwad", image: "../images/reciters/al-husary.png", bio: "This is the Mujawwad recording of Sheikh Mahmoud Khalil Al-Husary, featuring deliberate melodic patterns considered the more artistic form of recitation. His mastery of both Murattal and Mujawwad styles makes these recordings exceptional references for students of Quranic recitation." },
             minshawi: { name: "Muhammad Siddiq Al-Minshawi", arabic: "محمد صديق المنشاوي", country: "Egypt", style: "Murattal", folder: "Minshawy_Murattal_128kbps", image: "/images/reciters/minshawi.png", bio: "Sheikh Muhammad Siddiq Al-Minshawi (1920–1969), known as 'the Crying Sheikh', possessed a voice of extraordinary emotional depth with a natural tremor that moves listeners profoundly. He was the official reciter of Egyptian Radio and his recordings continue to be among the most treasured in the world, decades after his passing." },
             shaatree: { name: "Abu Bakr Ash-Shaatree", arabic: "أبو بكر الشاطري", country: "Saudi Arabia", style: "Murattal", folder: "Abu_Bakr_Ash-Shaatree_128kbps", image: "/images/reciters/as-shateree.png", bio: "Sheikh Abu Bakr Ash-Shaatree was born in 1970 in Makkah and studied tajweed under prominent scholars. He is known for his gentle, flowing recitation style and has served as Imam of Quba Mosque in Madinah and led Tarawih prayers at Masjid Al-Haram. His recitations are widely praised for their accessibility and spiritual beauty." },
             muaiqly: { name: "Maher Al-Muaiqly", arabic: "ماهر المعيقلي", country: "Saudi Arabia", style: "Murattal", folder: "Maher_AlMuaiqly_64kbps", image: "/images/reciters/maher.png", bio: "Sheikh Maher Al-Muaiqly is a permanent Imam of Masjid Al-Haram in Makkah, born in 1969. He leads Fajr and Tarawih prayers at the Grand Mosque, reaching millions of pilgrims annually. His voice is valued for its pleasant tone, measured pace, and sincere emotional delivery. He studied at Umm Al-Qura University." },
@@ -1152,16 +1170,16 @@
             yasser_dosari: { name: "Yasser Al-Dosari", arabic: "ياسر الدوسري", country: "Saudi Arabia", style: "Murattal", folder: "Yasser_Al_Dosari_128kbps", fullSurahOnly: true, image: "/images/reciters/yasser_dosari.png", bio: "Sheikh Yasser Al-Dosari is a Saudi Imam and Khatib known for his beautiful, emotional recitation. He serves as an Imam at a mosque in Riyadh and has memorized the Quran with multiple recitations. His recordings are beloved for their clarity, tajweed precision, and spiritual depth." },
             mansour_salmi: { name: "Mansour Al-Salmi", arabic: "منور السالمي", country: "Saudi Arabia", style: "Murattal", folder: "Mansour_Al_Salmi_128kbps", fullSurahOnly: true, image: "/images/reciters/mansour_salmi.png", bio: "Sheikh Mansour Al-Salmi is a Saudi Quran reciter known for his calm, melodious voice and precise tajweed. His recitations are widely appreciated for their soothing quality and are popular for both learning and daily listening." },
             // Non-Hafs Riwayat reciters
-            husary_warsh: { name: "Al-Husary (Warsh)", arabic: "الحصري — ورش", country: "Egypt", style: "Warsh", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Warsh riwayah from Nafi. This riwayah is widely used in North and West Africa. His Warsh recitation maintains the same scholarly precision as his Hafs recitation, making it an excellent reference for students of this riwayah." },
-            husary_qalun: { name: "Al-Husary (Qalun)", arabic: "الحصري — قالون", country: "Egypt", style: "Qalun", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Qalun riwayah from Nafi. Qalun is the second most common riwayah after Hafs, popular in Libya, Tunisia, and parts of Egypt." },
-            abdulbasit_warsh: { name: "Abdul Basit (Warsh)", arabic: "عبدالباسط — ورش", country: "Egypt", style: "Warsh", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/basit.png", bio: "Sheikh Abdul Basit Abdul Samad reciting in the Warsh riwayah. His Warsh recitation showcases his extraordinary vocal range and emotional depth in this alternative qira'ah, offering a unique listening experience." },
-            ibrahim_dosari_warsh: { name: "Ibrahim Al-Dosari (Warsh)", arabic: "إبراهيم الدوسري — ورش", country: "Saudi Arabia", style: "Warsh", folder: "Ibrahim_Dosari_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/ibrahim_dosari_warsh.png", bio: "Sheikh Ibrahim Al-Dosari reciting in the Warsh riwayah from Nafi. A beautiful recitation in the North African tradition, bringing the Warsh riwayah to a wider audience." },
-            huthaifi_qalun: { name: "Ali Al-Hudhaify (Qalun)", arabic: "الحذيفي — قالون", country: "Saudi Arabia", style: "Qalun", folder: "Hudhaify_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-hudaify.png", bio: "Sheikh Ali Al-Hudhaify, Imam of the Prophet's Mosque, reciting in the Qalun riwayah. His Qalun recitation demonstrates the differences in pronunciation and rules compared to the more common Hafs riwayah." },
-            airawy_warsh: { name: "Mohammad Al-Airawy (Warsh)", arabic: "العيراوي — ورش", country: "Egypt", style: "Warsh", folder: "Al-Airawy_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/airawy_warsh.png", bio: "Sheikh Mohammad Al-Airawy reciting in the Warsh riwayah from Nafi. A clear and measured recitation that follows the Warsh tradition, popular in North African countries." },
+            husary_warsh: { name: "Al-Husary (Warsh)", arabic: "الحصري - ورش", country: "Egypt", style: "Warsh", folder: "Husary_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Warsh riwayah from Nafi. This riwayah is widely used in North and West Africa. His Warsh recitation maintains the same scholarly precision as his Hafs recitation, making it an excellent reference for students of this riwayah." },
+            husary_qalun: { name: "Al-Husary (Qalun)", arabic: "الحصري - قالون", country: "Egypt", style: "Qalun", folder: "Husary_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-husary.png", bio: "Sheikh Mahmoud Khalil Al-Husary reciting in the Qalun riwayah from Nafi. Qalun is the second most common riwayah after Hafs, popular in Libya, Tunisia, and parts of Egypt." },
+            abdulbasit_warsh: { name: "Abdul Basit (Warsh)", arabic: "عبدالباسط - ورش", country: "Egypt", style: "Warsh", folder: "Abdul_Basit_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/basit.png", bio: "Sheikh Abdul Basit Abdul Samad reciting in the Warsh riwayah. His Warsh recitation showcases his extraordinary vocal range and emotional depth in this alternative qira'ah, offering a unique listening experience." },
+            ibrahim_dosari_warsh: { name: "Ibrahim Al-Dosari (Warsh)", arabic: "إبراهيم الدوسري - ورش", country: "Saudi Arabia", style: "Warsh", folder: "Ibrahim_Dosari_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/ibrahim_dosari_warsh.png", bio: "Sheikh Ibrahim Al-Dosari reciting in the Warsh riwayah from Nafi. A beautiful recitation in the North African tradition, bringing the Warsh riwayah to a wider audience." },
+            huthaifi_qalun: { name: "Ali Al-Hudhaify (Qalun)", arabic: "الحذيفي - قالون", country: "Saudi Arabia", style: "Qalun", folder: "Hudhaify_Qalun_128kbps", fullSurahOnly: true, riwayah: "Qalun", image: "/images/reciters/al-hudaify.png", bio: "Sheikh Ali Al-Hudhaify, Imam of the Prophet's Mosque, reciting in the Qalun riwayah. His Qalun recitation demonstrates the differences in pronunciation and rules compared to the more common Hafs riwayah." },
+            airawy_warsh: { name: "Mohammad Al-Airawy (Warsh)", arabic: "العيراوي - ورش", country: "Egypt", style: "Warsh", folder: "Al-Airawy_Warsh_128kbps", fullSurahOnly: true, riwayah: "Warsh", image: "/images/reciters/airawy_warsh.png", bio: "Sheikh Mohammad Al-Airawy reciting in the Warsh riwayah from Nafi. A clear and measured recitation that follows the Warsh tradition, popular in North African countries." },
         };
 
         // ═══════════════════════════════════════════════
-        // SURAH LIST — static, no API needed
+        // SURAH LIST - static, no API needed
         // ═══════════════════════════════════════════════
         const SURAH_LIST = [
             { id: 1, name: "الفاتحة", tr: "Al-Fatihah", meaning: "The Opener", verses: 7, type: "Meccan" },
@@ -1281,7 +1299,7 @@
         ];
 
         // ═══════════════════════════════════════════════
-        // BOOT — read reciter id from URL
+        // BOOT - read reciter id from URL
         // e.g. reciter.html?r=ali_jaber  →  loads Ali Jaber
         // ═══════════════════════════════════════════════
         const reciterId = new URLSearchParams(location.search).get("r") || "mishari";
@@ -1300,8 +1318,8 @@
         // helpers
         function pad3(n) { return String(n).padStart(3, "0"); }
 
-        // BUG FIX 1: audio URL now uses reciterData.folder from ABOVE — NOT hardcoded
-        // This is why clicking Ali Jaber was playing Mishary — the folder wasn't being read
+        // BUG FIX 1: audio URL now uses reciterData.folder from ABOVE - NOT hardcoded
+        // This is why clicking Ali Jaber was playing Mishary - the folder wasn't being read
         function audioUrl(surahId) {
             // EveryAyah full-surah format: folder/SSSAAA.mp3 where AAA=000 is full surah
             // If that 000 file doesn't exist we fall back to ayah 001
@@ -1315,13 +1333,13 @@
 
         // HERO
         function populateHero() {
-            document.title = `${reciterData.name} — Baca`;
+            document.title = `${reciterData.name} - Baca`;
             document.getElementById("reciter-name").textContent = reciterData.name;
             document.getElementById("reciter-arabic-name").textContent = reciterData.arabic;
             document.getElementById("stat-style").textContent = reciterData.style;
             document.getElementById("sp-reciter-name").textContent = reciterData.name;
 
-            // Avatar — placeholder is visible by default (see HTML). We only
+            // Avatar - placeholder is visible by default (see HTML). We only
             // swap in the real photo once it is CONFIRMED loaded (onload),
             // and keep the placeholder up on failure (onerror). This avoids
             // the old race where an empty initial src="" could trip the
@@ -1362,6 +1380,10 @@
         }
 
         // RENDER ROWS
+        // v31: each surah row now has a download button (the cloud-download icon)
+        // that lets users download the full surah MP3 to their device storage.
+        // The button uses event.stopPropagation() so clicking it doesn't also
+        // trigger the row's play toggle.
         function renderSurahs(list) {
             const el = document.getElementById("surah-list");
             if (!list.length) {
@@ -1387,8 +1409,10 @@
         <div class="wave-bar" style="height:80%"></div>
       </div>
       <div class="row-arabic">${s.name}</div>
-      <div class="row-duration" id="dur-${s.id}">—</div>
-      <div class="row-offline-badge" id="offline-${s.id}" title="Available offline" style="display:none;"><i class="fa-solid fa-circle-check" style="font-size:.65rem;color:#10b981;"></i></div>
+      <div class="row-duration" id="dur-${s.id}">-</div>
+      <button class="row-download-btn" data-surah-id="${s.id}" data-surah-name="${s.tr}" title="Download ${s.tr} (MP3)" aria-label="Download ${s.tr}">
+        <i class="fa-solid fa-cloud-arrow-down"></i>
+      </button>
     </div>`).join("");
 
             el.querySelectorAll(".surah-row").forEach(row => {
@@ -1396,40 +1420,89 @@
                 row.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") toggleSurah(Number(row.dataset.id)); });
             });
 
-            // Check which surahs are already cached for offline playback
-            checkCachedSurahs();
+            // v31: wire up download buttons
+            el.querySelectorAll(".row-download-btn").forEach(btn => {
+                btn.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var surahId = Number(this.dataset.surahId);
+                    var surahName = this.dataset.surahName;
+                    downloadSurah(surahId, surahName, this);
+                });
+            });
         }
 
-        // === OFFLINE AUDIO CACHE CHECK ===
-        // Asks the service worker which audio files are cached, then shows
-        // a green check badge on surah rows that are available offline.
-        function checkCachedSurahs() {
-            if (!navigator.serviceWorker || !navigator.serviceWorker.controller) return;
+        // v31: Download a full surah MP3 to the user's device.
+        // Uses the BacaDownloader API if available (from js/ayah-downloader.js),
+        // otherwise falls back to a simple fetch + blob download.
+        function downloadSurah(surahId, surahName, btn) {
+            // Find the surah in SURAH_LIST to get its details
+            var s = SURAH_LIST.find(function (x) { return x.id === surahId; });
+            if (!s) return;
 
-            const messageChannel = new MessageChannel();
-            messageChannel.port1.onmessage = function(event) {
-                if (event.data && event.data.type === 'AUDIO_CACHE_INFO') {
-                    const cachedUrls = event.data.urls || [];
-                    // Check each surah's audio URL against the cached list
-                    SURAH_LIST.forEach(s => {
-                        const audioUrl = hasFullSurahAudio(reciterId)
-                            ? getFullSurahAudioUrl(s.id, reciterId)
-                            : audioUrl(s.id);
-                        const isCached = cachedUrls.some(u => u.includes(audioUrl) || audioUrl.includes(u));
-                        const badge = document.getElementById('offline-' + s.id);
-                        if (badge) badge.style.display = isCached ? 'flex' : 'none';
-                    });
+            // Get the current reciter ID and name
+            var reciterId = window.currentReciterId || window.reciterId || 'mishari';
+            var reciterName = 'Mishary Alafasy';
+            // Try to get reciter name from the page's bio section
+            var bioName = document.querySelector('.reciter-name, .reciter-display-name, [data-reciter-name]');
+            if (bioName) reciterName = bioName.textContent.trim();
+            else {
+                // Try the URL params
+                var urlParams = new URLSearchParams(window.location.search);
+                var rParam = urlParams.get('r');
+                if (rParam) {
+                    reciterId = rParam;
+                    reciterName = rParam.charAt(0).toUpperCase() + rParam.slice(1);
                 }
-            };
-            navigator.serviceWorker.controller.postMessage('GET_AUDIO_CACHE_INFO', [messageChannel.port2]);
+            }
+
+            // Check if this reciter has full-surah audio available
+            if (!hasFullSurahAudio(reciterId)) {
+                showToast('This reciter does not support full-surah download. Try another reciter.');
+                return;
+            }
+
+            // Use BacaDownloader if available
+            if (window.BacaDownloader && window.BacaDownloader.downloadFullSurah) {
+                // Visual feedback: change icon to spinner
+                var originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+
+                window.BacaDownloader.downloadFullSurah(surahId, reciterId, reciterName, s.tr).then(function (result) {
+                    btn.innerHTML = originalIcon;
+                    btn.disabled = false;
+                    if (result.success) {
+                        // Change to checkmark briefly
+                        btn.innerHTML = '<i class="fa-solid fa-check" style="color:#10b981"></i>';
+                        setTimeout(function () { btn.innerHTML = originalIcon; }, 2000);
+                    }
+                });
+            } else {
+                // Fallback: simple fetch + download
+                var url = getFullSurahAudioUrl(surahId, reciterId);
+                var filename = s.tr + ' - Full Surah - ' + reciterName + '.mp3';
+                showToast('Downloading ' + s.tr + '...');
+                fetch(url)
+                    .then(function (res) { return res.ok ? res.blob() : Promise.reject(new Error('HTTP ' + res.status)); })
+                    .then(function (blob) {
+                        var a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(a.href);
+                        showToast('Downloaded: ' + s.tr);
+                    })
+                    .catch(function (err) {
+                        showToast('Download failed. Check your internet connection.');
+                        console.error(err);
+                    });
+            }
         }
 
-        // === SHOW OFFLINE BADGE AFTER PLAYING ===
-        // When a surah is played, the SW caches the audio. Show the badge.
-        function showOfflineBadge(surahId) {
-            const badge = document.getElementById('offline-' + surahId);
-            if (badge) badge.style.display = 'flex';
-        }
+        // PLAY LOGIC
         // BUG FIX (full-surah audio): previously this played the surah
         // ayah-by-ayah via everyayah.com (each ayah = separate mp3), which
         // meant the progress bar reset every few seconds and users couldn't
@@ -1438,7 +1511,7 @@
         // NOW we use mp3quran.net full-surah MP3s (one file per surah) so
         // the progress bar shows the entire surah duration and the user can
         // drag to any position. When a surah finishes, we auto-advance to
-        // the next surah — same behaviour as before, just smoother.
+        // the next surah - same behaviour as before, just smoother.
         //
         // Fallback: if a reciter doesn't have a full-surah server entry in
         // data.js FULL_SURAH_SERVERS, we fall back to the old ayah-by-ayah
@@ -1501,14 +1574,10 @@
             window.currentSurahId = id; // expose for floating-player-bar.js
 
             if (hasFullSurahAudio(reciterId)) {
-                // Full-surah MP3 — progress bar will span the whole surah
+                // Full-surah MP3 - progress bar will span the whole surah
                 audio.src = getFullSurahAudioUrl(id, reciterId);
                 audio.load();
-                audio.play().then(() => {
-                    setPlaying(true);
-                    // The SW caches the audio on this fetch. Show the offline badge.
-                    showOfflineBadge(id);
-                }).catch(() => { setPlaying(false); });
+                audio.play().then(() => { setPlaying(true); }).catch(() => { setPlaying(false); });
                 audio.onended = () => {
                     // Repeat one: replay same surah
                     if (repeatMode === 'one') {
@@ -1696,8 +1765,10 @@
                 : [...SURAH_LIST]);
         });
 
-        // BACK TO TOP — now handled by /js/scroll-top.js (professional version)
-        // (old back-top button + JS removed to avoid duplicate)
+        // BACK TO TOP
+        const backTop = document.getElementById("back-top");
+        window.addEventListener("scroll", () => backTop.classList.toggle("show", window.scrollY > 400));
+        backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
         // INIT
         populateHero();
@@ -1713,13 +1784,14 @@
     <script src="../js/shared-nav.js"></script>
     <script src="../js/jumuah.js"></script>
 
+    <!-- v31: Ayah/Surah audio downloader (used by per-surah download buttons) -->
+    <script src="../js/ayah-downloader.js"></script>
+
     <!-- Floating player bar (saves playback state for cross-page persistence) -->
     <script src="../js/floating-player-bar.js"></script>
 
-    <!-- PWA: Service Worker + install prompt -->
+    <!-- PWA: Service Worker registration + install prompt -->
     <script src="/js/pwa-register.js"></script>
-    <!-- Professional scroll-to-top -->
-    <script src="/js/scroll-top.js"></script>
 </body>
 
 </html>

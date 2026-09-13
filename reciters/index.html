@@ -6,17 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- PWA -->
     <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Listen to the Qur'an recited by 34+ world-class reciters, including Warsh and Qalun riwayat. Find your favorite Qari and immerse yourself in the beauty of recitation.">
+    <meta name="description" content="Read the Qur'an with 604-page Uthmani mushaf, 34+ reciters, daily adhkar, prayer guide, and AI assistant.">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+    <link rel="icon" type="image/svg+xml" href="/images/icons/icon.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Baca">
     <meta name="mobile-web-app-capable" content="yes">
-    <!-- New logo styles + Reem Kufi font + green gradient -->
-    <link rel="stylesheet" href="/css/baca-logo.css">
-    <title>Baca — 34+ Qur'an Reciters</title>
+    <title>Reciters - Baca</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -419,24 +418,6 @@
             }
         }
     </style>
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://baca-al-qur-an.vercel.app/reciters/index.html">
-    <meta property="og:title" content="Baca — 34+ Qur'an Reciters">
-    <meta property="og:description" content="Listen to the Qur'an recited by 34+ world-class reciters, including Warsh and Qalun riwayat. Find your favorite Qari and immerse yourself in the beauty of recitation.">
-    <meta property="og:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Baca — Read the Qur'an">
-    <meta property="og:locale" content="en_US">
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://baca-al-qur-an.vercel.app/reciters/index.html">
-    <meta name="twitter:title" content="Baca — 34+ Qur'an Reciters">
-    <meta name="twitter:description" content="Listen to the Qur'an recited by 34+ world-class reciters, including Warsh and Qalun riwayat. Find your favorite Qari and immerse yourself in the beauty of recitation.">
-    <meta name="twitter:image" content="https://baca-al-qur-an.vercel.app/images/baca-social-preview.jpg">
-    <meta name="twitter:site" content="@m1tch0d3r">
-    <meta name="twitter:creator" content="@m1tch0d3r">
 </head>
 
 <body>
@@ -448,10 +429,27 @@
     <div class="bg-glow glow-2"></div>
     <div class="bg-glow glow-3"></div>
 
-    <!-- Navbar (minimal — shared-nav.js adds the floating hamburger) -->
+    <!-- Navbar (minimal - shared-nav.js adds the floating hamburger) -->
     <header class="navbar">
         <a href="../index.html" class="logo">
-            <img class="baca-logo-icon" src="/images/baca-logo.webp" alt="Baca logo" width="36" height="36" loading="eager">
+            <svg class="baca-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.18" />
+                <path d="M24 14C20 12 14 11 8 12V36C14 35 20 36 24 38C28 36 34 35 40 36V12C34 11 28 12 24 14Z"
+                    stroke="url(#bacaLogoGrad)" stroke-width="1.8" stroke-linejoin="round" />
+                <line x1="24" y1="14" x2="24" y2="38" stroke="url(#bacaLogoGrad)" stroke-width="1.5"
+                    stroke-linecap="round" />
+                <path d="M24 4L25.5 8.5L30 9L26.5 12L28 16.5L24 14L20 16.5L21.5 12L18 9L22.5 8.5L24 4Z"
+                    fill="url(#bacaLogoGrad)" opacity="0.9" />
+                <defs>
+                    <linearGradient id="bacaLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#10b981" />
+                        <stop offset="0.5" stop-color="#06b6d4" />
+                        <stop offset="1" stop-color="#6366f1" />
+                    </linearGradient>
+                </defs>
+            </svg>
             <span class="logo-text">Baca</span>
         </a>
         <div class="nav-actions" style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
@@ -564,7 +562,7 @@
     <!-- Floating player bar (resumes audio from reciter page) -->
     <script src="../js/floating-player-bar.js"></script>
 
-    <!-- PWA: Service Worker + install prompt -->
+    <!-- PWA: Service Worker registration + install prompt -->
     <script src="/js/pwa-register.js"></script>
 </body>
 
