@@ -75,26 +75,40 @@
     var css = document.createElement('style');
     css.id = 'baca-tour-css';
     css.textContent = [
+      // v31: INVERTED highlight. Previously the overlay covered EVERYTHING
+      // (including the target) with a dark+blur layer, and the highlight's
+      // box-shadow darkened everything outside the target. But the target
+      // itself was still behind the overlay, so it was still blurred+darkened.
+      //
+      // NOW: the overlay uses backdrop-filter: blur() to blur everything
+      // behind it, PLUS a clip-path with a rectangular hole cut out where
+      // the target is. The target shows through the hole UNBLURRED and
+      // BRIGHT, while everything else is blurred and darkened. This is
+      // what the user asked for: "show the settings icon clear without
+      // any blur and blur the other parts that are irrelevant".
       '.baca-tour-overlay {',
       '  position: fixed; inset: 0; z-index: 99998;',
-      '  background: rgba(0, 0, 0, 0.55);',
-      '  backdrop-filter: blur(2px);',
-      '  -webkit-backdrop-filter: blur(2px);',
+      '  background: rgba(0, 0, 0, 0.5);',
+      '  backdrop-filter: blur(8px);',
+      '  -webkit-backdrop-filter: blur(8px);',
       '  opacity: 0;',
-      '  pointer-events: none;',            /* CRITICAL: invisible overlay must not block clicks */
+      '  pointer-events: none;',
       '  transition: opacity 0.2s ease;',
-      '  display: block;',
+      '  /* clip-path is set dynamically by JS to create a hole for the target */',
+      '  clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* default: fully hidden */',
       '}',
       '.baca-tour-overlay.open {',
       '  opacity: 1;',
-      '  pointer-events: auto;',            /* only block clicks while tour is active */
+      '  pointer-events: auto;',
       '}',
+      // The highlight element is now just a subtle border around the target
+      // (no box-shadow needed - the clip-path handles the "cutout")
       '.baca-tour-highlight {',
       '  position: absolute; border: 2px solid #10b981; border-radius: 8px;',
-      '  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);',
       '  pointer-events: none; transition: all 0.25s ease;',
       '  z-index: 99999;',
-      '  display: none;',                   /* hidden by default; shown only when positioning */
+      '  display: none;',
+      '  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3), 0 4px 20px rgba(16, 185, 129, 0.15);',
       '}',
       '.baca-tour-tooltip {',
       '  position: absolute; z-index: 100000;',
@@ -263,18 +277,68 @@
     tip.style.left = (left + window.scrollX) + 'px';
   }
 
+  // v31: set the overlay's clip-path to create a rectangular hole around the
+  // target. The overlay has backdrop-filter: blur(8px) which blurs everything
+  // behind it. By cutting a hole, the target shows through UNBLURRED while
+  // everything else is blurred. This is the "invert" the user asked for.
+  function setOverlayClipPath(targetRect) {
+    var overlay = state.overlayEl;
+    if (!overlay) return;
+
+    // If no target rect (body/center step), show the overlay with NO hole
+    // (full-screen blur+darken).
+    if (!targetRect || targetRect.width === 0) {
+      // Full coverage, no hole - just a rectangle covering everything
+      overlay.style.clipPath = 'none';
+      overlay.style.webkitClipPath = 'none';
+      return;
+    }
+
+    // Use padding around the target so the hole is a bit larger than the
+    // element itself (gives some breathing room)
+    var pad = 6;
+    var x1 = Math.max(0, targetRect.left - pad);
+    var y1 = Math.max(0, targetRect.top - pad);
+    var x2 = Math.min(window.innerWidth, targetRect.right + pad);
+    var y2 = Math.min(window.innerHeight, targetRect.bottom + pad);
+
+    // Create a polygon with a hole using the nonzero winding rule.
+    // Outer rectangle: clockwise (0,0 -> W,0 -> W,H -> 0,H -> 0,0)
+    // Inner rectangle: counter-clockwise (creates a hole)
+    // The nonzero fill rule means: inside the inner rect, the winding number
+    // is 0 (1 from outer + (-1) from inner), so it's OUTSIDE the clip = hole.
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var polygon = 'polygon(' +
+      '0px 0px, ' + w + 'px 0px, ' + w + 'px ' + h + 'px, 0px ' + h + 'px, 0px 0px, ' +
+      x1 + 'px ' + y1 + 'px, ' +
+      x1 + 'px ' + y2 + 'px, ' +
+      x2 + 'px ' + y2 + 'px, ' +
+      x2 + 'px ' + y1 + 'px, ' +
+      x1 + 'px ' + y1 + 'px' +
+    ')';
+
+    overlay.style.clipPath = polygon;
+    overlay.style.webkitClipPath = polygon;
+  }
+
   function positionHighlight(targetRect) {
     var hl = state.highlightEl;
     if (!targetRect || targetRect.width === 0) {
       hl.style.display = 'none';
+      // No target = no hole in the overlay either
+      setOverlayClipPath(null);
       return;
     }
     hl.style.display = 'block';
-    var pad = 4;
+    var pad = 6;
     hl.style.top = (targetRect.top + window.scrollY - pad) + 'px';
     hl.style.left = (targetRect.left + window.scrollX - pad) + 'px';
     hl.style.width = (targetRect.width + pad * 2) + 'px';
     hl.style.height = (targetRect.height + pad * 2) + 'px';
+
+    // Cut a hole in the overlay so the target is unblurred
+    setOverlayClipPath(targetRect);
   }
 
   function renderStep() {
@@ -368,6 +432,10 @@
     if (state.highlightEl) state.highlightEl.style.display = 'none';
     if (state.overlayEl) {
       state.overlayEl.classList.remove('open'); // CSS sets opacity:0 + pointer-events:none
+      // v31: reset the clip-path so the overlay doesn't leave a "hole" if
+      // the tour is replayed later.
+      state.overlayEl.style.clipPath = '';
+      state.overlayEl.style.webkitClipPath = '';
     }
     // Defensive: clear any scroll/resize rAF that was scheduled mid-render
     if (state._scrollRaf) {

@@ -1351,7 +1351,10 @@ function showAyahPopover(surah, ayah, anchorEl) {
             <i data-lucide="copy"></i> Copy
         </button>
         <button class="popover-action share-btn" data-surah="${surah}" data-ayah="${ayah}">
-            <i data-lucide="share-2"></i> Share
+            <i data-lucide="share-2"></i> Share Image
+        </button>
+        <button class="popover-action video-share-btn" data-surah="${surah}" data-ayah="${ayah}">
+            <i data-lucide="video"></i> Share Video
         </button>
 `;
     if (window.lucide) lucide.createIcons();
@@ -1455,6 +1458,32 @@ async function handleVerseAction(btn, surah, ayah) {
                     showToast("Copied to clipboard");
                 }
             } catch { showToast("Share cancelled"); }
+        }
+    }
+    else if (btn.classList.contains("video-share-btn")) {
+        // v31: Share as video (image + audio with chosen reciter)
+        const pageAyahs = await getAyahsForPage(state.page);
+        const v = pageAyahs.find(a => a.surah === surah && a.ayah === ayah);
+        const arabic = v?.text || "";
+        const surahName = meta?.transliteration || "Surah";
+        const trans = await fetchAyahTranslation(surah, ayah);
+
+        if (window.BacaVideoShare && typeof window.BacaVideoShare.createAyahVideo === 'function') {
+            const theme = document.body.dataset.mushafTheme === "light" ? "light" : "dark";
+            await window.BacaVideoShare.createAyahVideo({
+                arabic: arabic,
+                transliteration: "",
+                translation: trans,
+                reference: surahName + " " + surah + ":" + ayah,
+                surahName: surahName,
+                surahNum: surah,
+                ayahNum: ayah,
+                reciterId: state.reciterId || "mishari",
+                reciterName: state.reciterName || "Mishary Alafasy",
+                theme: theme
+            });
+        } else {
+            showToast("Video sharing is not available on this page.");
         }
     }
 }

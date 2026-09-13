@@ -1441,7 +1441,8 @@ async function openReader(surahNum, scrollToAyah = null) {
           <button class="ayah-action bookmark-btn" data-surah="${surahNum}" data-ayah="${v.id}" title="Bookmark"><i data-lucide="bookmark"></i></button>
           <button class="ayah-action tafsir-btn"   data-surah="${surahNum}" data-ayah="${v.id}" title="Tafsir"><i data-lucide="book-open-text"></i></button>
           <button class="ayah-action copy-btn"     title="Copy verse"><i data-lucide="copy"></i></button>
-          <button class="ayah-action share-btn"    title="Share verse"><i data-lucide="share-2"></i></button>
+          <button class="ayah-action share-btn"    title="Share verse as image" data-surah="${surahNum}" data-ayah="${v.id}"><i data-lucide="share-2"></i></button>
+          <button class="ayah-action video-share-btn" title="Share as video (with reciter audio)" data-surah="${surahNum}" data-ayah="${v.id}"><i data-lucide="video"></i></button>
         </div>
       </div>`;
         }).join("");
@@ -2016,6 +2017,39 @@ ${trans}`;
             if (navigator.share) { await navigator.share({ title: "Qur'an Verse", text }); showToast("Shared ✓"); }
             else { await navigator.clipboard.writeText(text); showToast("Copied to clipboard"); }
         } catch { showToast("Share cancelled"); }
+    }
+});
+
+// v31: VIDEO SHARE - share/download the verse as a video (image + audio with chosen reciter)
+document.addEventListener("click", async e => {
+    const btn = e.target.closest(".video-share-btn"); if (!btn) return;
+    e.preventDefault();
+    const card = btn.closest(".verse-card");
+    if (!card) return;
+    const arabic = card.querySelector(".verse-arabic")?.innerText || "";
+    const trans = card.querySelector(".verse-translation")?.innerText || "";
+    const surahName = document.getElementById("reader-title")?.textContent || "Surah";
+    const ayah = card.dataset?.ayah || btn.dataset?.ayah || "";
+    const translit = card.querySelector(".verse-transliteration")?.innerText || "";
+    const surahNum = Number(btn.dataset?.surah || selectedSurah || 1);
+    const ayahNum = Number(ayah) || 1;
+    const readerTheme = document.querySelector(".reader-content")?.dataset?.theme || "dark";
+
+    if (window.BacaVideoShare && typeof window.BacaVideoShare.createAyahVideo === 'function') {
+        await window.BacaVideoShare.createAyahVideo({
+            arabic: arabic,
+            transliteration: translit,
+            translation: trans,
+            reference: surahName + " " + surahNum + ":" + ayahNum,
+            surahName: surahName,
+            surahNum: surahNum,
+            ayahNum: ayahNum,
+            reciterId: currentReciterId,
+            reciterName: document.getElementById("current-reciter-badge")?.textContent?.trim() || "Mishary Alafasy",
+            theme: readerTheme === "light" ? "light" : "dark"
+        });
+    } else {
+        showToast("Video sharing is not available. The video-share.js script may not have loaded.");
     }
 });
 

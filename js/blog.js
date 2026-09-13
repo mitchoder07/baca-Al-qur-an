@@ -36,7 +36,7 @@
             categoryLabel: 'Hadith',
             title: 'A Lamp in the House',
             excerpt: 'The Prophet (PBUH) said: "The one who is proficient in the recitation of the Quran will be with the honourable scribes, and the one who recites it with difficulty will have a double reward." Never feel discouraged if reading is hard. Your effort itself is rewarded.',
-            date: '2026-08-19',
+            date: '2026-08-20',
             icon: 'fa-lightbulb',
             body: [
                 'The Prophet (PBUH) said: "The one who is proficient in the recitation of the Quran will be with the honourable, righteous scribes (the angels), and the one who recites it with difficulty, stammering through it, will have a double reward." (Sahih al-Bukhari and Muslim). This hadith is one of the most encouraging statements in the entire religion, and it deserves to be written on the wall of every Quran classroom in the world.',
@@ -52,7 +52,7 @@
             categoryLabel: 'Hadith',
             title: 'The Quran Intercedes',
             excerpt: 'The Prophet (PBUH) said: "Read the Quran, for it will come as an intercessor for its companions on the Day of Resurrection." Imagine the Book you spent time with in this life speaking on your behalf in the next.',
-            date: '2026-08-18',
+            date: '2026-08-21',
             icon: 'fa-hands-praying',
             body: [
                 'On the Day of Resurrection, when every soul will be desperate for any advocate, the Quran will rise and speak. The Prophet (PBUH) said: "Read the Quran, for it will come on the Day of Resurrection as an intercessor for its companions." (Sahih Muslim). It will not be a silent book in the next life. It will speak, and its words will carry weight in the court of Allah.',
@@ -68,7 +68,7 @@
             categoryLabel: 'Hadith',
             title: 'Whoever Reads a Letter',
             excerpt: 'The Prophet (PBUH) said: "Whoever reads a letter from the Book of Allah will receive a good deed, and each good deed is multiplied by ten." Think about that the next time you read just one page. The numbers add up fast.',
-            date: '2026-08-17',
+            date: '2026-08-21',
             icon: 'fa-star',
             body: [
                 'The Prophet (PBUH) said: "Whoever reads a letter from the Book of Allah will have a good deed, and each good deed is multiplied by ten. I do not say that Alif-Lam-Mim is one letter, but Alif is a letter, Lam is a letter, and Mim is a letter." (Tirmidhi). Read this hadith slowly. It is a math problem hidden in a sentence.',
@@ -84,7 +84,7 @@
             categoryLabel: 'Hadith',
             title: 'The Heart Rusts',
             excerpt: 'The Prophet (PBUH) said: "These hearts rust just as iron rusts, and water polishes them." He was asked what the water was, and he replied: "The Quran and the remembrance of death." Let the Quran be the polish your heart needs today.',
-            date: '2026-08-16',
+            date: '2026-08-22',
             icon: 'fa-heart',
             body: [
                 'The Prophet (PBUH) said: "Indeed, these hearts rust just as iron rusts, and indeed their polish is the remembrance of Allah and the recitation of the Quran." (Reported by Ibn Abi Dunya and others, with some weakness but the meaning is supported by other authentic narrations). He was asked, "O Messenger of Allah, what is the polish?" He said, "The Quran and the remembrance of death."',
@@ -100,7 +100,7 @@
             categoryLabel: 'Hadith',
             title: 'No People Gather',
             excerpt: 'The Prophet (PBUH) said: "No people gather in a house of the houses of Allah, reciting the Book of Allah and studying it together, except tranquility descends upon them, mercy covers them, and the angels surround them." Gather to read, even if it is online.',
-            date: '2026-08-15',
+            date: '2026-08-22',
             icon: 'fa-users',
             body: [
                 'The Prophet (PBUH) said: "No people gather in a house from the houses of Allah, reciting the Book of Allah and studying it together, except that tranquility descends upon them, mercy covers them, the angels surround them, and Allah mentions them to those in His presence." (Sahih Muslim). This is one of the most beautiful descriptions of collective worship in the entire hadith corpus.',
@@ -117,7 +117,7 @@
             categoryLabel: 'Hadith',
             title: 'The Quran is a Proof',
             excerpt: 'The Prophet (PBUH) said: "The Quran is a proof for you or against you." The way you live with the Quran determines whether it speaks for you or against you. Let it be your greatest advocate.',
-            date: '2026-08-14',
+            date: '2026-08-23',
             icon: 'fa-scale-balanced',
             body: [
                 'The Prophet (PBUH) said: "The Quran is a proof for you or against you." (Sahih Muslim). Read the sentence twice. It is one of the most sobering statements in the entire religion. The same book, the same verses, the same letters, can either testify in your favour or testify against you. The Quran is not neutral. It is an active witness.',
@@ -133,7 +133,7 @@
             categoryLabel: 'Hadith',
             title: 'Fasting and the Quran',
             excerpt: 'The Prophet (PBUH) said: "Fasting and the Quran intercede for the servant on the Day of Resurrection. Fasting says: O Lord, I prevented him from food and desires, so accept my intercession. And the Quran says: I prevented him from sleep, so accept my intercession."',
-            date: '2026-08-13',
+            date: '2026-08-24',
             icon: 'fa-sun',
             body: [
                 'The Prophet (PBUH) said: "Fasting and the Quran will intercede for the servant on the Day of Resurrection. Fasting will say: O Lord, I prevented him from food and desires, so accept my intercession. And the Quran will say: O Lord, I prevented him from sleep, so accept my intercession." (Musnad Ahmad, hasan). This hadith gives us a glimpse into the Day of Judgement that we rarely think about: inanimate acts of worship speaking on our behalf.',
@@ -150,7 +150,7 @@
             categoryLabel: 'Hadith',
             title: 'The Example of a Believer',
             excerpt: 'The Prophet (PBUH) said: "The example of the believer who reads the Quran is like that of a citron, its taste is sweet and its scent is pleasant." Your recitation should leave a sweet impression on everyone around you.',
-            date: '2026-08-12',
+            date: '2026-08-24',
             icon: 'fa-lemon',
             body: [
                 'The Prophet (PBUH) said: "The example of the believer who recites the Quran and acts according to it is like a citron, which tastes good and smells good. And the example of the believer who does not recite the Quran but acts according to it is like a date, which tastes good but has no smell. And the example of the hypocrite who recites the Quran is like the sweet basil, which smells good but tastes bitter. And the example of the hypocrite who does not recite the Quran is like the colocynth, which tastes bitter and has no smell." (Sahih al-Bukhari and Muslim).',
@@ -168,7 +168,7 @@
             categoryLabel: 'Hadith',
             title: 'Recite Even If You Stumble',
             excerpt: 'The Prophet (PBUH) said to a man who was struggling to recite: "Keep reciting, for the one who recites the Quran with difficulty, stammering through it, will have a double reward." Your struggle is seen and rewarded.',
-            date: '2026-08-11',
+            date: '2026-08-25',
             icon: 'fa-person-walking',
             body: [
                 'The Prophet (PBUH) said: "The one who recites the Quran and is proficient in it will be with the honourable scribes, and the one who recites the Quran while it is difficult for him, and stumbles through it, will have two rewards." (Sahih al-Bukhari and Muslim). The word used for "stumbling" in Arabic is yattada\'ad, which describes the effort of someone whose tongue is not used to the sounds, who hesitates, who repeats, who struggles to form each word.',
@@ -185,7 +185,7 @@
             categoryLabel: 'Hadith',
             title: 'Envy in Two Things',
             excerpt: 'The Prophet (PBUH) said: "Envy is not justified except in two cases: a man whom Allah has given the Quran and he recites it during the night and day, and a man whom Allah has given wealth and he spends it in charity." Let people envy your connection with the Quran.',
-            date: '2026-08-10',
+            date: '2026-08-25',
             icon: 'fa-eye',
             body: [
                 'The Prophet (PBUH) said: "Envy is not justified except in two cases: a man whom Allah has given knowledge of the Quran, and he acts by it during the night and day; and a man whom Allah has given wealth, and he spends it in charity during the night and day." (Sahih al-Bukhari and Muslim). Envy (hasad) is normally forbidden in Islam, because it is a wish for the blessing to be removed from the other person. But here, the Prophet (PBUH) makes a specific exception.',
@@ -202,7 +202,7 @@
             categoryLabel: 'Hadith',
             title: 'The Parent and the Quran',
             excerpt: 'The Prophet (PBUH) said: "Whoever reads the Quran, learns it, and acts upon it will be given a crown of light to wear on the Day of Resurrection, and its light will be brighter than the sun. And his parents will be given garments that surpass the whole world." Your reading elevates your parents too.',
-            date: '2026-08-09',
+            date: '2026-08-26',
             icon: 'fa-crown',
             body: [
                 'The Prophet (PBUH) said: "Whoever reads the Quran, learns it, and acts upon it will be given a crown of light on the Day of Resurrection, brighter than the sun. Its light will illuminate the entire gathering. His parents will wear two garments that the world has never seen. They will say: \'Why have we been given these garments?\' It will be said: \'Because of your child\'s recitation of the Quran.\'" (Bayhaqi, hasan).',
@@ -221,7 +221,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'Why Al-Fatihah Was Revealed First',
             excerpt: 'Al-Fatihah, meaning "The Opening," was the first complete surah revealed to the Prophet (PBUH). It serves as the gateway to the Quran and the backbone of every prayer. Every conversation with Allah begins with praise, and this surah teaches us exactly how to start.',
-            date: '2026-08-19',
+            date: '2026-08-26',
             icon: 'fa-scroll',
             body: [
                 'Al-Fatihah, "The Opening," occupies a unique position in the Quran. It is not the very first revelation chronologically (Surah Al-Alaq, the first five verses, came earlier), but it is widely regarded as the first complete surah revealed to the Prophet Muhammad (PBUH). It is the gateway through which the rest of the Quran is approached, and it is the only surah that every Muslim, without exception, recites in every single unit of every prayer.',
@@ -238,7 +238,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'The Night of Power',
             excerpt: 'Surah Al-Qadr was revealed to tell us about Laylatul Qadr, the night better than a thousand months. The Quran itself was sent down on this night. It falls in the last ten nights of Ramadan, most likely on an odd numbered night. Search for it with sincere prayer.',
-            date: '2026-08-18',
+            date: '2026-08-27',
             icon: 'fa-moon',
             body: [
                 'Surah Al-Qadr was revealed to honour and explain a single night: Laylatul Qadr, the Night of Decree. Allah says: "Indeed, We sent it down during the Night of Decree. And what will make you know what the Night of Decree is? The Night of Decree is better than a thousand months. The angels and the Spirit descend in it, by permission of their Lord, with every decree. Peace it is until the emergence of dawn." (97:1-5)',
@@ -255,7 +255,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'Ayat al-Kursi and Its Power',
             excerpt: 'Ayat al-Kursi (2:255) was revealed to confirm the greatness of Allah in a way no other verse does. The Prophet (PBUH) called it the greatest verse in the Quran. Reading it after every prayer grants you protection until the next prayer.',
-            date: '2026-08-17',
+            date: '2026-08-27',
             icon: 'fa-shield-halved',
             body: [
                 'Ayat al-Kursi, the "Verse of the Throne," is verse 255 of Surah Al-Baqarah. It is widely regarded as the greatest single verse in the entire Quran. The Prophet (PBUH) confirmed this when he said to Ubayy ibn Ka\'b: "O Abu al-Mundhir, do you know which verse in the Book of Allah is the greatest?" Ubayy said: "Allah and His Messenger know best." The Prophet (PBUH) repeated the question, and Ubayy said: "Ayat al-Kursi." The Prophet (PBUH) struck him on the chest and said: "By Allah, congratulate Abu al-Mundhir for this knowledge." (Muslim).',
@@ -273,7 +273,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'Surah Al-Ikhlas Equals a Third',
             excerpt: 'The Prophet (PBUH) told his companions that Surah Al-Ikhlas equals one third of the Quran. It was revealed when the people of Makkah asked the Prophet to describe the lineage of Allah. The answer: He is One, without beginning or end, and nothing compares to Him.',
-            date: '2026-08-16',
+            date: '2026-08-28',
             icon: 'fa-hand-fist',
             body: [
                 'Surah Al-Ikhlas, the 112th surah, is one of the shortest in the Quran - only four verses - but the Prophet (PBUH) said it equals one-third of the Quran. In a famous hadith in Bukhari, the Prophet (PBUH) asked his companions: "Is any of you able to recite a third of the Quran in one night?" They found this difficult and said: "Who among us is able to do that?" He said: "Allah the One, the Self-Sufficient (Surah Al-Ikhlas) is one third of the Quran."',
@@ -291,7 +291,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'The Cave of Protection',
             excerpt: 'Surah Al-Kahf was revealed in response to a test the people of Makkah set for the Prophet, asking about the story of the young men who slept in a cave for centuries. Reading it every Friday brings light between you and the Kaaba.',
-            date: '2026-08-15',
+            date: '2026-08-28',
             icon: 'fa-mountain',
             body: [
                 'Surah Al-Kahf, the 18th surah, was revealed in response to a deliberate test set by the leaders of Quraysh. They had sent a delegation to the Jews of Madinah to ask about the Prophet (PBUH), since the Jews were People of the Book and might know whether Muhammad was a true prophet. The Jews told the Quraysh: "Ask him about three things: the story of the young men who left their people in ancient times (the People of the Cave), the story of the man who travelled to the east and west of the earth (Dhul-Qarnayn), and the meaning of the Ruh (the soul)."',
@@ -309,7 +309,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'Surah An-Nas and the Whispers',
             excerpt: 'The last three surahs were revealed when the Prophet (PBUH) was affected by a spell cast on him. Allah sent these surahs as a cure and a protection. Reading them morning and evening shields you from harm, envy, and negative thoughts.',
-            date: '2026-08-14',
+            date: '2026-08-29',
             icon: 'fa-shield-heart',
             body: [
                 'Surahs Al-Ikhlas (112), Al-Falaq (113), and An-Nas (114) are often called the "three protective surahs" or al-Mu\'awwidhat (the ones used for seeking refuge). They were revealed, according to authentic hadith, in the context of a specific event: the spell that was cast on the Prophet (PBUH) by a Jewish man named Lubaid ibn al-A\'sam, with the help of his daughters.',
@@ -327,7 +327,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'The Change of Qibla',
             excerpt: 'Verses in Surah Al-Baqarah (2:144-150) were revealed when the Muslims were commanded to change the direction of prayer from Jerusalem to Makkah. It was a test of obedience. The Quran reminds us that Allah is everywhere, but unity of direction matters.',
-            date: '2026-08-13',
+            date: '2026-08-29',
             icon: 'fa-compass',
             body: [
                 'For roughly sixteen to eighteen months after the migration to Madinah, the Muslims prayed facing Jerusalem (Bayt al-Maqdis). This was the original qibla of Islam. The Prophet (PBUH) longed to face the Ka\'bah, the house built by his forefather Ibrahim (peace be upon him), but he waited for Allah\'s command. He would often turn his face to the sky, looking up, hoping for the revelation to come.',
@@ -346,7 +346,7 @@
             categoryLabel: 'Sabab Nuzul',
             title: 'The Story of Yusuf',
             excerpt: 'Surah Yusuf was revealed as a single complete surah, a beautiful narrative of patience, betrayal, forgiveness, and reunion. The Prophet (PBUH) called it "the best of stories." It was revealed during the Year of Sorrow, comforting the Prophet through his own trials.',
-            date: '2026-08-12',
+            date: '2026-08-30',
             icon: 'fa-book',
             body: [
                 'Surah Yusuf, the 12th surah, was revealed as a single, complete surah - unlike most surahs which were revealed gradually over time. It was revealed in what is known as the "Year of Sorrow" (Am al-Huzn), the year in which the Prophet (PBUH) lost both his wife Khadijah and his uncle Abu Talib, his two greatest supporters. The surah came as a comfort, a reminder that the path of prophets is paved with patience, betrayal, and ultimately reunion.',
@@ -367,7 +367,7 @@
             categoryLabel: 'Fasting',
             title: 'Fasting on Monday',
             excerpt: 'The Prophet (PBUH) was asked about fasting on Monday. He said: "That is the day I was born, the day I was sent as a Messenger, and the day I received revelation." A beautiful reason to fast this Monday.',
-            date: '2026-08-17',
+            date: '2026-08-31',
             icon: 'fa-sun',
             body: [
                 'The Prophet (PBUH) was once asked about fasting on Mondays. His answer was one of the most personal statements he ever made about his own life: "That is the day I was born, the day I was sent (as a Messenger), and the day I received revelation." (Sahih Muslim). In a single sentence, the Prophet (PBUH) gave us three reasons to honour Monday with a fast.',
@@ -385,7 +385,7 @@
             categoryLabel: 'Fasting',
             title: 'Fasting on Thursday',
             excerpt: 'The Prophet (PBUH) used to fast on Mondays and Thursdays. He said: "Deeds are presented to Allah on Mondays and Thursdays, and I want my deeds to be presented while I am fasting." Try it this Thursday.',
-            date: '2026-08-15',
+            date: '2026-09-03',
             icon: 'fa-calendar-day',
             body: [
                 'The Prophet (PBUH) said: "Deeds are presented to Allah on Mondays and Thursdays, and I want my deeds to be presented while I am fasting." (Tirmidhi, hasan). This hadith is short, but it contains a complete theology of voluntary worship. Let us unpack it carefully.',
@@ -403,7 +403,7 @@
             categoryLabel: 'Fasting',
             title: 'The White Days',
             excerpt: 'Fasting on the 13th, 14th, and 15th of every Islamic month (the white days when the moon is full) was a regular practice of the Prophet (PBUH). It is like fasting the whole year in reward. Three days, huge return.',
-            date: '2026-08-13',
+            date: '2026-09-10',
             icon: 'fa-circle',
             body: [
                 'The Prophet (PBUH) used to fast on the 13th, 14th, and 15th of every Islamic (lunar) month. These three days are called al-Ayyam al-Bid, the "white days," because the nights are lit by the full moon. The Prophet (PBUH) said: "Fasting three days of every month is like fasting the entire year." (Bukhari and Muslim). The reward is enormous compared to the effort.',
@@ -423,7 +423,7 @@
             categoryLabel: 'Feature',
             title: 'Word by Word Analysis',
             excerpt: 'Tap any Arabic word in the Mushaf Reader to see its transliteration, translation, and root meaning. Perfect for deepening your understanding one word at a time. Try it on any verse.',
-            date: '2026-08-16',
+            date: '2026-08-30',
             icon: 'fa-magnifying-glass',
             body: [
                 'Baca\'s Mushaf Reader includes a feature that turns every Arabic word into a doorway. Tap any word in any verse, and a small panel opens showing you three things: the transliteration (how the word is pronounced, written in Latin letters), the translation (the English meaning), and the root (the three or four-letter Arabic root from which the word is derived).',
@@ -440,7 +440,7 @@
             categoryLabel: 'Feature',
             title: 'Install Baca for Offline Reading',
             excerpt: 'You can install Baca as a mobile app that works offline. Tap "Install App" in the footer or use your browser menu to add it to your home screen. Read the Quran anywhere, even without internet.',
-            date: '2026-08-11',
+            date: '2026-08-31',
             icon: 'fa-download',
             body: [
                 'Baca is a Progressive Web App (PWA). This means it can be installed on your phone or computer and used like a native app, with one big advantage: it works offline. Once installed, you can read the Quran, listen to recitations you have cached, and access your bookmarks even when you have no internet connection. This is particularly useful for travel, for areas with poor connectivity, and for those who want to disconnect from notifications while reading.',
@@ -457,7 +457,7 @@
             categoryLabel: 'Feature',
             title: 'Daily Adhkar with Audio',
             excerpt: 'Never miss your morning and evening adhkar again. Baca includes the full collection with Arabic audio, transliteration, and translation. Set a daily reminder and build the habit.',
-            date: '2026-08-08',
+            date: '2026-09-01',
             icon: 'fa-bell',
             body: [
                 'The morning and evening adhkar are one of the most beloved sunnahs of the Prophet (PBUH). They are a set of remembrances and du\'as that he used to recite after Fajr (morning) and after Asr (evening). They are short - typically taking five to ten minutes - but they form a powerful spiritual shield for the day and the night.',
@@ -477,7 +477,7 @@
             categoryLabel: 'Reflection',
             title: 'The Power of Bismillah',
             excerpt: 'Every surah in the Quran except Surah At-Tawbah begins with Bismillah ir-Rahman ir-Raheem. Before you start anything today, a meal, a task, a journey, say it. It transforms the ordinary into an act of worship.',
-            date: '2026-08-15',
+            date: '2026-09-02',
             icon: 'fa-heart',
             body: [
                 'Bismillah ir-Rahman ir-Raheem. "In the name of Allah, the Most Gracious, the Most Merciful." This phrase appears at the beginning of every surah in the Quran except one (At-Tawbah, which is a surah of war and warning, not of mercy). It appears 114 times in the Quran. It is the most repeated phrase in the daily life of a Muslim. And it is, in many ways, the key to the entire religion.',
@@ -494,7 +494,7 @@
             categoryLabel: 'Reflection',
             title: 'The Quran is Not Just for Reading',
             excerpt: 'The first word revealed was Iqra, which means read, but it also means recite, proclaim, and convey. The Quran is meant to be lived, not just read. Let one verse today change one action in your life.',
-            date: '2026-08-12',
+            date: '2026-09-03',
             icon: 'fa-lightbulb',
             body: [
                 'The first word of the Quran revealed to the Prophet Muhammad (PBUH) was "Iqra" - "Read" (or "Recite"). The full first revelation was: "Read in the name of your Lord who created. Created man from a clinging clot. Read, and your Lord is the Most Generous. Who taught by the pen. Taught man that which he knew not." (96:1-5). This word, Iqra, contains the entire purpose of the Quran in a single command.',
@@ -512,7 +512,7 @@
             categoryLabel: 'Reflection',
             title: 'A Letter to Your Future Self',
             excerpt: 'Every page you read, every ayah you memorize, every duaa you make from the Quran is a letter to your future self in the hereafter. What kind of letter are you writing today?',
-            date: '2026-08-09',
+            date: '2026-09-04',
             icon: 'fa-envelope',
             body: [
                 'Imagine that every page of the Quran you read, every ayah you memorise, every du\'a you make, is a letter you are writing to your future self. Not your future self in five years or ten years, but your future self in the Hereafter. The self who will stand before Allah. The self who will be asked about every moment of every day. The self who will need every ally they can find.',
@@ -534,7 +534,7 @@
             categoryLabel: 'Dua',
             title: 'Dua for Knowledge',
             excerpt: 'Rabbi zidni ilma. My Lord, increase me in knowledge. This is from Surah Ta-Ha (20:114). A short, powerful dua you can recite before reading the Quran or studying anything beneficial.',
-            date: '2026-08-14',
+            date: '2026-09-04',
             icon: 'fa-hands-praying',
             body: [
                 'Rabbi zidni ilma. "My Lord, increase me in knowledge." This short du\'a is from the Quran itself, from Surah Ta-Ha (20:114). Allah says: "And say: My Lord, increase me in knowledge." It is one of the few du\'as that the Quran explicitly commands the Prophet (PBUH) - and by extension, all of us - to say.',
@@ -553,7 +553,7 @@
             categoryLabel: 'Dua',
             title: 'Dua for Protection',
             excerpt: 'Bismillahil-ladhi la yadurru ma asmihi shay un fil ardi wa la fis sama i wa huwas sami ul alim. In the name of Allah, with whose name nothing on earth or in the sky can cause harm. Read this three times morning and evening for complete protection.',
-            date: '2026-08-11',
+            date: '2026-09-05',
             icon: 'fa-shield',
             body: [
                 'There is a du\'a that the Prophet (PBUH) called the most comprehensive du\'a for protection. He said: "Whoever says three times in the morning and three times in the evening: \'Bismillahil-ladhi la yadurru ma\'asmihi shay\'un fil-ardi wa la fis-sama\'i wa huwas-Sami\'ul \'Alim\' - nothing will harm him." (Abu Dawud, Tirmidhi, hasan).',
@@ -572,7 +572,7 @@
             categoryLabel: 'Dua',
             title: 'Dua for Forgiveness',
             excerpt: 'Rabbi ghfir li wa tub alayya innaka antat tawwabur rahim. My Lord, forgive me and accept my repentance, for You are the Accepter of repentance, the Most Merciful. A beautiful dua the Prophet (PBUH) recited over a hundred times a day.',
-            date: '2026-08-08',
+            date: '2026-09-06',
             icon: 'fa-hand-holding-heart',
             body: [
                 'The Prophet (PBUH) - the best of creation, the one whose sins (past and future) were already forgiven by Allah - used to recite a specific du\'a of repentance over a hundred times a day. Ibn Umar (may Allah be pleased with him) reported: "We counted that the Messenger of Allah said in one gathering one hundred times: \'Rabbi-ghfir li wa tub alayya, innaka anta-Tawwabu-r-Rahim.\' - \'My Lord, forgive me and accept my repentance. Indeed, You are the Accepting of repentance, the Merciful.\'" (Abu Dawud, Tirmidhi, hasan).',
@@ -593,7 +593,7 @@
             categoryLabel: 'Story',
             title: 'Ashab al-Kahf: The Sleepers in the Cave',
             excerpt: 'A group of young believers, persecuted by a tyrant king, fled to a cave and were put to sleep by Allah for 300 years. When they woke, the entire world had changed. Their story is one of faith, patience, and the eternal protection of Allah.',
-            date: '2026-08-20',
+            date: '2026-09-07',
             icon: 'fa-mountain',
             body: [
                 'The story of Ashab al-Kahf, the People of the Cave, is one of the most beloved and mysterious stories in the entire Quran. It is told in Surah Al-Kahf (18:9-26), revealed in response to a test set by the people of Makkah, who had been told by the Jews of Madinah to ask the Prophet (PBUH) about the young men who fled their city in ancient times. The Prophet (PBUH) did not know the details, waited for revelation, and received the entire story.',
@@ -614,7 +614,7 @@
             categoryLabel: 'Story',
             title: 'Nuh and the Great Flood',
             excerpt: 'A prophet who preached for 950 years and was mocked by his people. When only a handful believed, Allah commanded him to build an ark. The flood that followed wiped out the entire civilization. A story of patience, obedience, and divine justice.',
-            date: '2026-08-19',
+            date: '2026-09-07',
             icon: 'fa-water',
             body: [
                 'Nuh (Noah, peace be upon him) is one of the five greatest prophets in Islam, the others being Ibrahim, Musa, Isa, and Muhammad (peace be upon them all). Nuh is called "the grateful servant" and the second father of humanity - after the flood, all human beings descend from his three surviving sons. His story is told in detail in several surahs of the Quran, particularly Surah Nuh (71), Surah Hud (11:25-49), and Surah Al-Mu\'minun (23:23-30).',
@@ -637,7 +637,7 @@
             categoryLabel: 'Story',
             title: 'Ibrahim: The Friend of Allah',
             excerpt: 'A young man who smashed the idols of his people and was thrown into a fire by his own father. Allah cooled the fire for him. He built the Kaaba with his son. He is the father of the prophets, the friend of Allah, the model of tawheed.',
-            date: '2026-08-18',
+            date: '2026-09-08',
             icon: 'fa-fire',
             body: [
                 'Ibrahim (Abraham, peace be upon him) is called Khalilullah, the Friend of Allah. He is the second father of the prophets - every prophet after him, including the final prophet Muhammad (PBUH), is from his lineage. His story is told in several surahs, particularly Surah Ibrahim (14), Surah Maryam (19:41-50), Surah Al-Anbiya (21:51-70), and Surah As-Saffat (37:83-113).',
@@ -660,7 +660,7 @@
             categoryLabel: 'Story',
             title: 'Musa and the Parting of the Sea',
             excerpt: 'A prophet raised in the palace of the tyrant who killed his people. He returned to confront him, led his people out of slavery, and saw the sea split open. The story of Musa is the most frequently told story in the Quran.',
-            date: '2026-08-17',
+            date: '2026-09-09',
             icon: 'fa-water',
             body: [
                 'Musa (Moses, peace be upon him) is the prophet whose story is told most often in the Quran. His name appears 136 times, and his story is recounted in dozens of surahs. Allah says to the Prophet Muhammad (PBUH): "And We relate to you the best of stories in what We have revealed to you of the Quran, even though before it you were among the unaware." (12:3). The story of Musa is one of those best stories.',
@@ -683,7 +683,7 @@
             categoryLabel: 'Story',
             title: 'Maryam and the Birth of Isa',
             excerpt: 'A young woman who guarded her chastity, chosen by Allah above all women, who gave birth to a prophet without a father. Her story is one of purity, trust, and divine miracles. The Quran devotes an entire surah to her.',
-            date: '2026-08-16',
+            date: '2026-09-10',
             icon: 'fa-star',
             body: [
                 'Maryam (Mary, may Allah be pleased with her) is one of the four greatest women in Islamic tradition, and the only woman mentioned by name in the Quran. An entire surah is named after her (Surah Maryam, 19), and she is mentioned in many other places. The Quran calls her "chosen above the women of the worlds" (3:42). She is the mother of Isa (Jesus, peace be upon him), one of the five greatest prophets.',
@@ -707,7 +707,7 @@
             categoryLabel: 'Story',
             title: 'Abu Bakr: The First Caliph',
             excerpt: 'The first man to believe in the Prophet (PBUH). His wealth, his influence, his tears, and his wisdom sustained the early Muslim community. He was the Prophet\'s companion in the cave, his father-in-law, and his first successor. The Prophet said: "If I were to take a close friend, it would be Abu Bakr."',
-            date: '2026-08-15',
+            date: '2026-09-11',
             icon: 'fa-user-tie',
             body: [
                 'Abu Bakr as-Siddiq (may Allah be pleased with him) was the first man to believe in the Prophet Muhammad (PBUH). He was the Prophet\'s closest companion, his companion in the cave on the night of the Hijrah, his father-in-law, and the first caliph after his death. The Prophet (PBUH) said: "If I were to take a close friend (khalil) from my nation, I would take Abu Bakr. But your companion (the Prophet himself) is the close friend of Allah." (Bukhari and Muslim).',
@@ -732,7 +732,7 @@
             categoryLabel: 'Story',
             title: 'Umar ibn al-Khattab: The Just',
             excerpt: 'A powerful man who went from being the Prophet\'s fiercest enemy to his most steadfast companion. He ruled an empire stretching from Persia to Egypt, walking the streets at night to check on his people. The Prophet said: "If there were to be a prophet after me, it would be Umar."',
-            date: '2026-08-14',
+            date: '2026-09-11',
             icon: 'fa-scale-balanced',
             body: [
                 'Umar ibn al-Khattab (may Allah be pleased with him) was the second caliph of Islam and one of the most powerful figures in Islamic history. His reign (634-644 CE) saw the rapid expansion of the Islamic state into Persia, Egypt, and the Levant. He was known for his justice, his piety, his courage, and his humility. The Prophet (PBUH) said: "If there were to be a prophet after me, it would be Umar ibn al-Khattab." (Tirmidhi).',
@@ -757,7 +757,7 @@
             categoryLabel: 'Story',
             title: 'Pharaoh: The Tyrant Who Claimed Divinity',
             excerpt: 'The most powerful king of his time, who claimed to be God, who killed the male children of Banu Isra\'il, who was drowned by Allah in the very sea he pursued Musa into. His body was preserved as a sign for all generations. The Quran warns us about his arrogance.',
-            date: '2026-08-13',
+            date: '2026-09-12',
             icon: 'fa-crown',
             body: [
                 'Pharaoh (Fir\'awn in Arabic) is the name given in the Quran to the king of Egypt at the time of Musa (peace be upon him). He is one of the most frequently mentioned figures in the Quran, and his story is one of the most detailed. He is the archetype of the tyrant, the one who claimed divinity, the one who persecuted his own people, and the one whose destruction was a sign for all of humanity.',
@@ -781,7 +781,7 @@
             categoryLabel: 'Story',
             title: 'Bilal: The First Muezzin',
             excerpt: 'An Abyssinian slave who refused to renounce Islam, tortured in the desert sun, bought and freed by Abu Bakr, chosen by the Prophet to give the first call to prayer. His voice, the Prophet said, "overtakes the voices of the muezzins."',
-            date: '2026-08-12',
+            date: '2026-09-12',
             icon: 'fa-microphone',
             body: [
                 'Bilal ibn Rabah (may Allah be pleased with him) was an Abyssinian slave in Makkah who became one of the most beloved companions of the Prophet (PBUH). He was the first muezzin in Islam, the one whose voice first called the Muslims to prayer. His story is one of the most moving in Islamic history, a story of suffering, faith, and the dignity that Allah gives to those the world considers worthless.',
