@@ -956,6 +956,46 @@ function initDailyAyahActions() {
         }
     });
 
+    // v32: Daily ayah audio download (MP3)
+    document.getElementById("daily-download-btn")?.addEventListener("click", async () => {
+        if (!dailyAyahData) return;
+        if (window.BacaDownloader && typeof window.BacaDownloader.downloadAyahAudio === 'function') {
+            const reciterName = document.getElementById("current-reciter-badge")?.textContent?.trim() || "Mishary Alafasy";
+            await window.BacaDownloader.downloadAyahAudio(
+                dailyAyahData.surah,
+                dailyAyahData.ayah,
+                currentReciterId,
+                reciterName,
+                dailyAyahData.surahName
+            );
+        } else {
+            showToast("Audio downloader not loaded.");
+        }
+    });
+
+    // v32: Daily ayah video share (image + audio with chosen reciter)
+    document.getElementById("daily-video-btn")?.addEventListener("click", async () => {
+        if (!dailyAyahData) return;
+        if (window.BacaVideoShare && typeof window.BacaVideoShare.createAyahVideo === 'function') {
+            const siteTheme = document.body.classList.contains("light-mode") ? "light" : "dark";
+            const reciterName = document.getElementById("current-reciter-badge")?.textContent?.trim() || "Mishary Alafasy";
+            await window.BacaVideoShare.createAyahVideo({
+                arabic: dailyAyahData.arabic,
+                transliteration: "",
+                translation: dailyAyahData.translation,
+                reference: `${dailyAyahData.surahName} ${dailyAyahData.surah}:${dailyAyahData.ayah}`,
+                surahName: dailyAyahData.surahName,
+                surahNum: dailyAyahData.surah,
+                ayahNum: dailyAyahData.ayah,
+                reciterId: currentReciterId,
+                reciterName: reciterName,
+                theme: siteTheme
+            });
+        } else {
+            showToast("Video sharing not loaded.");
+        }
+    });
+
     // TAFSIR
     const tafsirBtn = document.getElementById("daily-tafsir-btn");
     const tafsirPanel = createDailyTafsirPanel();

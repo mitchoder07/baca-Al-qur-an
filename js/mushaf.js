@@ -458,6 +458,8 @@ function persistState() {
     localStorage.setItem("mushafPage", state.page);
     localStorage.setItem("mushafSurah", state.surah);
     localStorage.setItem("reciterId", state.reciterId);
+    // v32: expose reciter ID globally so ayah-downloader.js can read it
+    window.currentReciterId = state.reciterId;
     localStorage.setItem("mushafTheme", state.theme);
     localStorage.setItem("mushafTajweed", state.tajweedOn);
     localStorage.setItem("mushafArabicFont", state.arabicFont);
@@ -815,6 +817,8 @@ async function fetchTafsir(surahNum, ayahNum, source = "ibnkathir") {
 /* INIT */
 
 function init() {
+    // v32: expose reciter ID globally for ayah-downloader.js
+    window.currentReciterId = state.reciterId;
     // Apply reader theme (controls page background + text colors in read area)
     applyTheme(state.theme);
     // Sync body chrome (navbar, toolbar, drawers) with siteTheme from index.html

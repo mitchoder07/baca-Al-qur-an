@@ -71,44 +71,59 @@
   }
 
   // === RECITER URL HELPERS ===
-  // Mirrors the logic in js/script.js getAyahAudioUrl() so this file is
-  // self-contained. Supports both per-ayah (everyayah.com) and full-surah
-  // (mp3quran.net) reciters.
+  // v32 FIX: The v31 version had WRONG folder names (e.g. "Alafasy" instead
+  // of "Alafasy_128kbps"), which caused 404 errors on everyayah.com for
+  // EVERY reciter. Now we use the EXACT same RECITERS array as script.js,
+  // with the correct folder names verified against the live everyayah.com
+  // server.
+  //
+  // We also try to use window.getAyahAudioUrl() from script.js first (which
+  // has the full RECITERS array with proper folder + fullSurahOnly handling).
+  // Only fall back to the local map if script.js isn't loaded.
 
   var RECITER_FOLDERS = {
-    'mishari': 'Alafasy',
-    'sudais': 'Abdul_Basit',
-    'abdulbasit': 'Abdul_Basit',
-    'husary': 'Husary',
-    'husary_muj': 'Husary_128kbps',
-    'minshawi': 'Minshawy_Murattal',
-    'shaatree': 'Saood_ash-Shuraym',
-    'muaiqly': 'MaherAlMuaiqly',
-    'shuraym': 'Saood_ash-Shuraym',
+    'mishari': 'Alafasy_128kbps',
+    'sudais': 'Abdurrahmaan_As-Sudais_192kbps',
+    'ali_jaber': 'Ali_Jaber_64kbps',
+    'abdulbasit': 'Abdul_Basit_Murattal_192kbps',
+    'abdulbasit_mj': 'Abdul_Basit_Mujawwad_128kbps',
+    'husary': 'Husary_128kbps',
+    'husary_muj': 'Husary_128kbps_Mujawwad',
+    'minshawi': 'Minshawy_Murattal_128kbps',
+    'shaatree': 'Abu_Bakr_Ash-Shaatree_128kbps',
+    'muaiqly': 'Maher_AlMuaiqly_64kbps',
+    'shuraym': 'Saood_ash-Shuraym_128kbps',
     'hudhaify': 'Hudhaify_128kbps',
-    'ajamy': 'Ahmed_ibn_Ali_al-Ajamy_128kbps',
+    'ajamy': 'ahmed_ibn_ali_al_ajamy_128kbps',
     'jibreel': 'Muhammad_Jibreel_128kbps',
     'ayyoub': 'Muhammad_Ayyoub_128kbps',
-    'ghamdi': 'Saood_ash-Shuraym',
-    'basfar': 'Abdullaah_3awwaad_Al-Juhaynee_128kbps',
-    'matroud': 'Mahmood_Khaleel_Al-Husaree_128kbps',
+    'ghamdi': 'Ghamadi_40kbps',
+    'basfar': 'Abdullah_Basfar_192kbps',
+    'matroud': 'Abdullah_Matroud_128kbps',
     'juhaynee': 'Abdullaah_3awwaad_Al-Juhaynee_128kbps',
-    'johany': 'Abdullaah_3awwaad_Al-Juhaynee_128kbps',
-    'tablawi': 'Mohammad_al-Tablawi_128kbps',
-    'rifai': 'Hani_Rifai_128kbps',
-    'qasim': 'Abdul_Muhsin_al-Qasim_128kbps',
+    'johany': 'Abdullah_Al-Johany_128kbps',
+    'tablawi': 'Mohammad_al_Tablaway_128kbps',
+    'rifai': 'Hani_Rifai_192kbps',
+    'qasim': 'Muhsin_Al_Qasim_192kbps',
     'neana': 'Ahmed_Neana_128kbps',
     'ayman_swed': 'Ayman_Sowaid_64kbps',
     'okasha': 'Okasha_Kameny_64kbps',
-    'yasser_dosari': 'Yasser_Ad-Dosari_128kbps',
-    'mansour_salmi': 'Mansour_Al-Salmi_64kbps',
+    'yasser_dosari': 'Yasser_Al_Dosari_128kbps',
+    'mansour_salmi': 'Mansour_Al_Salmi_128kbps',
     'husary_warsh': 'Husary_Warsh_128kbps',
     'husary_qalun': 'Husary_Qalun_128kbps',
     'abdulbasit_warsh': 'Abdul_Basit_Warsh_128kbps',
-    'ibrahim_dosari_warsh': 'Ibrahim_Al-Dosari_Warsh_128kbps',
+    'ibrahim_dosari_warsh': 'Ibrahim_Dosari_Warsh_128kbps',
     'huthaifi_qalun': 'Hudhaify_Qalun_128kbps',
     'airawy_warsh': 'Al-Airawy_Warsh_128kbps',
   };
+
+  // Reciters that are full-surah-only (no per-ayah audio on everyayah.com)
+  var FULL_SURAH_ONLY_RECITERS = [
+    'okasha', 'yasser_dosari', 'mansour_salmi',
+    'husary_warsh', 'husary_qalun', 'abdulbasit_warsh',
+    'ibrahim_dosari_warsh', 'huthaifi_qalun', 'airawy_warsh'
+  ];
 
   var FULL_SURAH_SERVERS = {
     'mishari': 'https://server8.mp3quran.net/afs/',
@@ -140,6 +155,14 @@
   };
 
   function getAyahAudioUrl(surahNum, ayahNum, reciterId) {
+    // v32: try to use script.js's getAyahAudioUrl first (it has the full
+    // RECITERS array with proper fullSurahOnly handling)
+    if (typeof window.getAyahAudioUrl === 'function') {
+      try {
+        return window.getAyahAudioUrl(surahNum, ayahNum, reciterId);
+      } catch (e) { /* fall through to local implementation */ }
+    }
+    // Local fallback
     var folder = RECITER_FOLDERS[reciterId] || RECITER_FOLDERS['mishari'];
     var s = pad3(surahNum);
     var a = pad3(ayahNum);
