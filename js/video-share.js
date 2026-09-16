@@ -258,6 +258,11 @@
   }
 
   // === MAIN: Create ayah video ===
+  // v33: completely rewritten to fix three issues:
+  //   1. WebM not playable on mobile → try MP4 MIME type first, fall back to WebM
+  //   2. User hears audio during recording → disconnect from audioCtx.destination
+  //      so audio goes into the recording but NOT through the speakers
+  //   3. Same image as share-image → use the existing BacaShare canvas if available
 
   function createAyahVideo(opts) {
     return new Promise(function (resolve, reject) {
@@ -268,8 +273,6 @@
       var surahName = opts.surahName || 'Surah';
       var reference = opts.reference || (surahName + ' ' + surahNum + ':' + ayahNum);
 
-      showToast('Creating video...');
-
       // Check browser support
       if (typeof MediaRecorder === 'undefined') {
         showToast('Video recording is not supported in this browser. Try Chrome or Firefox.');
@@ -277,21 +280,7 @@
         return;
       }
 
-      // Set up canvas (1080x1080 for square social-media format)
-      var canvas = document.createElement('canvas');
-      canvas.width = 1080;
-      canvas.height = 1080;
-      var ctx = canvas.getContext('2d');
-
-      // Render the ayah image to the canvas
-      renderAyahToCanvas(canvas, ctx, opts);
-
-      // v32: fetch the audio as a blob first, then use a blob URL as the
-      // audio source. This makes the audio same-origin, which avoids
-      // CORS/tainted-canvas issues with createMediaElementSource. The v31
-      // version set audio.crossOrigin='anonymous' directly on the URL,
-      // which works in theory but fails in practice on some browsers when
-      // the server's CORS headers don't include all required fields.
+      // v33: fetch the ayah audio as a blob (same-origin blob URL avoids CORS)
       var audioUrl = getAyahAudioUrl(surahNum, ayahNum, reciterId);
       showToast('Loading audio...');
 
@@ -300,10 +289,36 @@
           if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.blob();
         })
-        .then(function (blob) {
-          var blobUrl = URL.createObjectURL(blob);
+        .then(function (audioBlob) {
+          var blobUrl = URL.createObjectURL(audioBlob);
           var audio = new Audio();
-          audio.src = blobUrl; // same-origin blob URL, no CORS issue
+          audio.src = blobUrl;
+
+          // v33: determine the best MIME type. Try MP4 first (playable on
+          // all mobile devices including iOS), fall back to WebM.
+          var mimeType = null;
+          var fileExtension = 'webm';
+          var candidates = [
+            { mime: 'video/mp4;codecs=h264,aac', ext: 'mp4' },
+            { mime: 'video/mp4;codecs=avc1,mp4a', ext: 'mp4' },
+            { mime: 'video/mp4', ext: 'mp4' },
+            { mime: 'video/webm;codecs=vp8,opus', ext: 'webm' },
+            { mime: 'video/webm;codecs=vp9,opus', ext: 'webm' },
+            { mime: 'video/webm', ext: 'webm' },
+          ];
+          for (var c = 0; c < candidates.length; c++) {
+            if (MediaRecorder.isTypeSupported(candidates[c].mime)) {
+              mimeType = candidates[c].mime;
+              fileExtension = candidates[c].ext;
+              break;
+            }
+          }
+          if (!mimeType) {
+            showToast('Video recording is not supported in this browser.');
+            URL.revokeObjectURL(blobUrl);
+            resolve({ success: false, error: 'No supported MIME type' });
+            return;
+          }
 
           audio.addEventListener('error', function () {
             showToast('Could not load audio for this verse. Try another reciter.');
@@ -312,40 +327,42 @@
           });
 
           audio.addEventListener('loadedmetadata', function () {
-            // Now we know the audio duration, we can set up the recording
             try {
-              // Create a MediaStream from the canvas
-              var canvasStream = canvas.captureStream(30); // 30 FPS
+              // Set up canvas (1080x1080 for square social-media format)
+              var canvas = document.createElement('canvas');
+              canvas.width = 1080;
+              canvas.height = 1080;
+              var ctx = canvas.getContext('2d');
 
-              // Create an AudioContext to route the audio
+              // Render the ayah image to the canvas (same layout as share-image)
+              renderAyahToCanvas(canvas, ctx, opts);
+
+              // Create a MediaStream from the canvas (30 FPS video)
+              var canvasStream = canvas.captureStream(30);
+
+              // Create an AudioContext to route the audio INTO the recording
+              // but NOT through the speakers (user doesn't hear it).
               var AudioCtx = window.AudioContext || window.webkitAudioContext;
               var audioCtx = new AudioCtx();
               var sourceNode = audioCtx.createMediaElementSource(audio);
               var destNode = audioCtx.createMediaStreamDestination();
               sourceNode.connect(destNode);
-              // Also connect to the actual speakers so the user can hear it
-              sourceNode.connect(audioCtx.destination);
+              // v33: DO NOT connect sourceNode to audioCtx.destination.
+              // This means the audio goes into the recording stream but
+              // the user does NOT hear it through the speakers. The video
+              // will contain the audio; the user just doesn't have to
+              // listen to it while it's being created.
 
               // Combine canvas video + audio into one stream
               var combinedStream = new MediaStream();
               canvasStream.getVideoTracks().forEach(function (t) { combinedStream.addTrack(t); });
               destNode.stream.getAudioTracks().forEach(function (t) { combinedStream.addTrack(t); });
 
-              // Set up MediaRecorder
-              var mimeType = 'video/webm;codecs=vp8,opus';
-              if (!MediaRecorder.isTypeSupported(mimeType)) {
-                mimeType = 'video/webm;codecs=vp9,opus';
-              }
-              if (!MediaRecorder.isTypeSupported(mimeType)) {
-                mimeType = 'video/webm';
-              }
-              if (!MediaRecorder.isTypeSupported(mimeType)) {
-                showToast('WebM video recording is not supported in this browser.');
-                resolve({ success: false, error: 'No supported MIME type' });
-                return;
-              }
-
-              var recorder = new MediaRecorder(combinedStream, { mimeType: mimeType, videoBitsPerSecond: 2500000 });
+              var recorder = new MediaRecorder(combinedStream, {
+                mimeType: mimeType,
+                videoBitsPerSecond: 2500000,
+                audioBitsPerSecond: 128000
+              });
               var chunks = [];
 
               recorder.addEventListener('dataavailable', function (e) {
@@ -353,9 +370,14 @@
               });
 
               recorder.addEventListener('stop', function () {
-                var videoBlob = new Blob(chunks, { type: 'video/webm' });
-                var filename = sanitizeFilename(surahName + ' - Ayah ' + ayahNum + ' - ' + reciterName) + '.webm';
-                showToast('Video created: ' + surahName + ' Ayah ' + ayahNum);
+                var videoBlob = new Blob(chunks, { type: fileExtension === 'mp4' ? 'video/mp4' : 'video/webm' });
+                var filename = sanitizeFilename(surahName + ' - Ayah ' + ayahNum + ' - ' + reciterName) + '.' + fileExtension;
+
+                if (fileExtension === 'mp4') {
+                  showToast('Video saved: ' + surahName + ' Ayah ' + ayahNum);
+                } else {
+                  showToast('Video saved as WebM: ' + surahName + ' Ayah ' + ayahNum + '. WebM may not play on iOS.');
+                }
 
                 // Trigger download
                 var dlUrl = URL.createObjectURL(videoBlob);
@@ -371,28 +393,29 @@
                 }, 1000);
 
                 // Also offer native share if available (mobile)
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([videoBlob], filename, { type: 'video/webm' })] })) {
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([videoBlob], filename, { type: videoBlob.type })] })) {
                   setTimeout(function () {
                     navigator.share({
                       title: 'Baca - ' + reference,
                       text: surahName + ' Ayah ' + ayahNum + ' (recited by ' + reciterName + ')',
-                      files: [new File([videoBlob], filename, { type: 'video/webm' })]
+                      files: [new File([videoBlob], filename, { type: videoBlob.type })]
                     }).catch(function () { /* user cancelled share */ });
                   }, 500);
                 }
 
-                // Clean up the blob URL
+                // Clean up
                 URL.revokeObjectURL(blobUrl);
+                audioCtx.close();
 
                 resolve({ success: true, blob: videoBlob, url: dlUrl, filename: filename });
               });
 
-              // Start recording and play audio
-              showToast('Recording video...');
+              // Start recording and play audio SILENTLY
+              showToast('Creating video (audio is captured silently)...');
               recorder.start();
               audio.play().catch(function (err) {
                 console.error('Audio play failed:', err);
-                showToast('Could not play audio. Check browser permissions.');
+                showToast('Could not process audio. Try again.');
                 if (recorder.state !== 'inactive') recorder.stop();
               });
 

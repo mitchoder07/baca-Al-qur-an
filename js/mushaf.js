@@ -1718,6 +1718,12 @@ function playAyah(surah, ayah) {
 
     // Different ayah - stop current and start new one
     state.currentAyahAudio = { surah, ayah };
+    // v33: expose the current surah/ayah globally so ayah-downloader.js
+    // and video-share.js can read the CORRECT numbers. Without this,
+    // the downloader always defaults to surah=1 (Al-Fatihah) regardless
+    // of which surah is actually being viewed/played on the Mushaf page.
+    window.currentMushafSurah = surah;
+    window.currentMushafAyah = ayah;
     const url = API.ayahAudio(surah, ayah, state.reciterId);
     el.ayahAudio.src = url;
     el.ayahAudio.play().then(() => {

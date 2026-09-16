@@ -267,12 +267,55 @@
   // button appears in the DOM.
 
   function getActiveAudioContext() {
-    // The home page (index.html) uses two audio elements:
-    //   - #surah-audio (full-surah player in the audio drawer)
-    //   - #ayah-player (per-ayah player for individual verse buttons)
-    // The Mushaf page uses #ayah-audio.
-    // We determine which is currently playing and extract surah/ayah info
-    // from the floating player's display.
+    // v33: the Mushaf page exposes window.currentMushafSurah and
+    // window.currentMushafAyah when an ayah is played. Use those first.
+    // The home page (index.html) exposes window.selectedSurah and
+    // window.currentAyahPlaying. Fall back to reading the floating
+    // player's text if neither is available.
+
+    var surahNum = 0;
+    var ayahNum = 0;
+    var reciterId = 'mishari';
+    var reciterName = 'Mishary Alafasy';
+    var surahName = 'Surah';
+
+    // --- Mushaf page: check globals exposed by mushaf.js ---
+    if (typeof window.currentMushafSurah === 'number' && window.currentMushafSurah > 0) {
+      surahNum = window.currentMushafSurah;
+      ayahNum = window.currentMushafAyah || 1;
+      reciterId = window.currentReciterId || 'mishari';
+      // Get reciter name from the Mushaf toolbar indicator
+      var mushafReciterIndicator = document.getElementById('reciter-indicator');
+      if (mushafReciterIndicator) {
+        reciterName = mushafReciterIndicator.textContent.trim();
+      }
+      // Get surah name from the floating player
+      var fpSurah = document.getElementById('floating-surah');
+      if (fpSurah) surahName = fpSurah.textContent.trim();
+      // Or from SURAH_LIST if available
+      if (typeof window.SURAH_LIST !== 'undefined' && window.SURAH_LIST) {
+        var meta = window.SURAH_LIST.find(function (s) { return s.id === surahNum; });
+        if (meta) surahName = meta.transliteration || meta.name || surahName;
+      } else if (typeof SURAH_LIST !== 'undefined') {
+        // Mushaf page has SURAH_LIST in its own scope
+        var meta2 = SURAH_LIST[surahNum - 1];
+        if (meta2) surahName = meta2.transliteration || meta2.name || surahName;
+      }
+      return { surahNum: surahNum, ayahNum: ayahNum, reciterId: reciterId, reciterName: reciterName, surahName: surahName };
+    }
+
+    // --- Home page (index.html): check globals exposed by script.js ---
+    if (typeof window.selectedSurah === 'number' && window.selectedSurah > 0) {
+      surahNum = window.selectedSurah;
+    }
+    if (typeof window.currentAyahPlaying === 'number' && window.currentAyahPlaying > 0) {
+      ayahNum = window.currentAyahPlaying;
+    }
+    if (typeof window.currentReciterId === 'string') {
+      reciterId = window.currentReciterId;
+    }
+
+    // --- Fall back to reading the floating player text ---
     var fp = document.getElementById('floating-player');
     if (!fp || fp.hidden || fp.style.display === 'none') return null;
 
@@ -280,16 +323,14 @@
     var ayahEl = document.getElementById('floating-ayah');
     if (!surahNameEl || !ayahEl) return null;
 
-    var surahName = surahNameEl.textContent || '';
+    surahName = surahNameEl.textContent || '';
     var ayahText = ayahEl.textContent || '';
-    // ayahText looks like "Ayah 5" or "Ayah 5 (range loop)"
     var ayahMatch = ayahText.match(/Ayah\s+(\d+)/i);
-    var ayahNum = ayahMatch ? parseInt(ayahMatch[1], 10) : 1;
+    if (ayahMatch) ayahNum = parseInt(ayahMatch[1], 10);
+    if (!ayahNum) ayahNum = 1;
 
-    // We don't have surah number directly, but we can look it up from
-    // the global SURAH_LIST if available, or from the current surah context.
-    var surahNum = 1;
-    if (typeof window.SURAH_LIST !== 'undefined') {
+    // Look up surah number by name if we don't already have it
+    if (!surahNum && typeof window.SURAH_LIST !== 'undefined') {
       for (var i = 0; i < window.SURAH_LIST.length; i++) {
         if (window.SURAH_LIST[i].transliteration === surahName ||
             window.SURAH_LIST[i].name === surahName) {
@@ -297,30 +338,18 @@
           break;
         }
       }
-    } else if (typeof window.selectedSurah === 'number') {
-      surahNum = window.selectedSurah;
-    } else if (typeof window.currentSurahId === 'number') {
-      surahNum = window.currentSurahId;
     }
+    if (!surahNum) surahNum = 1;
 
-    // Get the reciter ID from wherever the page stores it
-    var reciterId = 'mishari'; // default
-    var reciterName = 'Mishary Alafasy';
-    if (typeof window.currentReciterId === 'string') {
-      reciterId = window.currentReciterId;
-    } else {
-      var reciterSelect = document.getElementById('reciter-select') ||
-                          document.getElementById('reciter-select2');
-      if (reciterSelect && reciterSelect.value) {
-        reciterId = reciterSelect.value;
-      }
-    }
     // Get reciter name from the badge or dropdown
     var badge = document.getElementById('current-reciter-badge');
-    if (badge) reciterName = badge.textContent.trim();
-    else {
+    if (badge) {
+      reciterName = badge.textContent.trim();
+    } else {
       var sel = document.getElementById('reciter-select2') || document.getElementById('reciter-select');
-      if (sel) reciterName = sel.options[sel.selectedIndex].text;
+      if (sel && sel.selectedIndex >= 0) {
+        reciterName = sel.options[sel.selectedIndex].text;
+      }
     }
 
     return { surahNum: surahNum, ayahNum: ayahNum, reciterId: reciterId, reciterName: reciterName, surahName: surahName };
