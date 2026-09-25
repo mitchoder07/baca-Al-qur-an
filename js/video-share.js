@@ -196,29 +196,32 @@
 
     // === Transliteration ===
     var translit = opts.transliteration || '';
+    var translitLineHeight = 34;
+    var translitGapFromArabic = 50;
     if (translit) {
       ctx.font = 'italic 24px "Poppins", sans-serif';
       ctx.fillStyle = isLight ? '#475569' : '#cbd5e1';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      var translitY = startY + arabicLines.length * lineHeight + 40;
+      var translitY = startY + arabicLines.length * lineHeight + translitGapFromArabic;
       var translitLines = wrapText(ctx, translit, maxWidth);
       for (var j = 0; j < translitLines.length; j++) {
-        ctx.fillText(translitLines[j], W / 2, translitY + j * 32);
+        ctx.fillText(translitLines[j], W / 2, translitY + j * translitLineHeight);
       }
     }
 
     // === Translation ===
     var translation = opts.translation || '';
+    var translitGapToTranslation = 55;
     if (translation) {
       ctx.font = '20px "Poppins", sans-serif';
       ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      var transY = startY + arabicLines.length * lineHeight + (translit ? translitLines.length * 32 + 20 : 40);
+      var transY = startY + arabicLines.length * lineHeight + translitGapFromArabic + (translit ? translitLines.length * translitLineHeight + translitGapToTranslation : 40);
       var transLines = wrapText(ctx, translation, maxWidth);
       for (var k = 0; k < transLines.length; k++) {
-        ctx.fillText(transLines[k], W / 2, transY + k * 28);
+        ctx.fillText(transLines[k], W / 2, transY + k * 30);
       }
     }
 
