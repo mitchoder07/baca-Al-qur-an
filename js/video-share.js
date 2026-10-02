@@ -261,11 +261,21 @@
   }
 
   // === MAIN: Create ayah video ===
-  // v33: completely rewritten to fix three issues:
-  //   1. WebM not playable on mobile → try MP4 MIME type first, fall back to WebM
-  //   2. User hears audio during recording → disconnect from audioCtx.destination
-  //      so audio goes into the recording but NOT through the speakers
-  //   3. Same image as share-image → use the existing BacaShare canvas if available
+  // v34: completely rewritten to produce WhatsApp-compatible MP4.
+  //
+  // WhatsApp does NOT support WebM/Opus audio. It needs MP4 with H.264
+  // video + AAC audio. Three strategies, tried in order:
+  //
+  //   1. MediaRecorder with video/mp4 (Chrome 126+, Safari 14+)
+  //      → produces MP4 directly, best option
+  //
+  //   2. WebCodecs API + mp4-muxer (Chrome 94+ without MP4 MediaRecorder)
+  //      → encodes H.264 frames from canvas + AAC audio from decoded blob,
+  //        muxes into MP4 using the mp4-muxer library (loaded from CDN)
+  //
+  //   3. WebM fallback (Firefox, old browsers)
+  //      → produces WebM with Opus audio, warns user that WhatsApp may
+  //        not play the audio
 
   function createAyahVideo(opts) {
     return new Promise(function (resolve, reject) {
@@ -276,14 +286,12 @@
       var surahName = opts.surahName || 'Surah';
       var reference = opts.reference || (surahName + ' ' + surahNum + ':' + ayahNum);
 
-      // Check browser support
-      if (typeof MediaRecorder === 'undefined') {
-        showToast('Video recording is not supported in this browser. Try Chrome or Firefox.');
-        resolve({ success: false, error: 'MediaRecorder not supported' });
+      if (typeof MediaRecorder === 'undefined' && typeof VideoEncoder === 'undefined') {
+        showToast('Video recording is not supported in this browser.');
+        resolve({ success: false, error: 'Not supported' });
         return;
       }
 
-      // v33: fetch the ayah audio as a blob (same-origin blob URL avoids CORS)
       var audioUrl = getAyahAudioUrl(surahNum, ayahNum, reciterId);
       showToast('Loading audio...');
 
@@ -293,156 +301,57 @@
           return res.blob();
         })
         .then(function (audioBlob) {
-          var blobUrl = URL.createObjectURL(audioBlob);
-          var audio = new Audio();
-          audio.src = blobUrl;
+          // v34: check which strategy to use
 
-          // v33: determine the best MIME type. Try MP4 first (playable on
-          // all mobile devices including iOS), fall back to WebM.
-          var mimeType = null;
-          var fileExtension = 'webm';
-          var candidates = [
-            { mime: 'video/mp4;codecs=h264,aac', ext: 'mp4' },
-            { mime: 'video/mp4;codecs=avc1,mp4a', ext: 'mp4' },
-            { mime: 'video/mp4', ext: 'mp4' },
-            { mime: 'video/webm;codecs=vp8,opus', ext: 'webm' },
-            { mime: 'video/webm;codecs=vp9,opus', ext: 'webm' },
-            { mime: 'video/webm', ext: 'webm' },
+          // Strategy 1: MediaRecorder with MP4 (Chrome 126+, Safari)
+          var mp4Mime = null;
+          var mp4Candidates = [
+            'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+            'video/mp4;codecs=avc1.4D401E,mp4a.40.2',
+            'video/mp4;codecs=avc1.640028,mp4a.40.2',
+            'video/mp4;codecs=avc1,mp4a.40.2',
+            'video/mp4'
           ];
-          for (var c = 0; c < candidates.length; c++) {
-            if (MediaRecorder.isTypeSupported(candidates[c].mime)) {
-              mimeType = candidates[c].mime;
-              fileExtension = candidates[c].ext;
-              break;
+          if (typeof MediaRecorder !== 'undefined') {
+            for (var i = 0; i < mp4Candidates.length; i++) {
+              if (MediaRecorder.isTypeSupported(mp4Candidates[i])) {
+                mp4Mime = mp4Candidates[i];
+                break;
+              }
             }
           }
-          if (!mimeType) {
-            showToast('Video recording is not supported in this browser.');
-            URL.revokeObjectURL(blobUrl);
-            resolve({ success: false, error: 'No supported MIME type' });
-            return;
-          }
 
-          audio.addEventListener('error', function () {
-            showToast('Could not load audio for this verse. Try another reciter.');
-            URL.revokeObjectURL(blobUrl);
-            resolve({ success: false, error: 'Audio load failed' });
-          });
-
-          audio.addEventListener('loadedmetadata', function () {
-            try {
-              // Set up canvas (1080x1080 for square social-media format)
-              var canvas = document.createElement('canvas');
-              canvas.width = 1080;
-              canvas.height = 1080;
-              var ctx = canvas.getContext('2d');
-
-              // Render the ayah image to the canvas (same layout as share-image)
-              renderAyahToCanvas(canvas, ctx, opts);
-
-              // Create a MediaStream from the canvas (30 FPS video)
-              var canvasStream = canvas.captureStream(30);
-
-              // Create an AudioContext to route the audio INTO the recording
-              // but NOT through the speakers (user doesn't hear it).
-              var AudioCtx = window.AudioContext || window.webkitAudioContext;
-              var audioCtx = new AudioCtx();
-              var sourceNode = audioCtx.createMediaElementSource(audio);
-              var destNode = audioCtx.createMediaStreamDestination();
-              sourceNode.connect(destNode);
-              // v33: DO NOT connect sourceNode to audioCtx.destination.
-              // This means the audio goes into the recording stream but
-              // the user does NOT hear it through the speakers. The video
-              // will contain the audio; the user just doesn't have to
-              // listen to it while it's being created.
-
-              // Combine canvas video + audio into one stream
-              var combinedStream = new MediaStream();
-              canvasStream.getVideoTracks().forEach(function (t) { combinedStream.addTrack(t); });
-              destNode.stream.getAudioTracks().forEach(function (t) { combinedStream.addTrack(t); });
-
-              var recorder = new MediaRecorder(combinedStream, {
-                mimeType: mimeType,
-                videoBitsPerSecond: 2500000,
-                audioBitsPerSecond: 128000
-              });
-              var chunks = [];
-
-              recorder.addEventListener('dataavailable', function (e) {
-                if (e.data && e.data.size > 0) chunks.push(e.data);
-              });
-
-              recorder.addEventListener('stop', function () {
-                var videoBlob = new Blob(chunks, { type: fileExtension === 'mp4' ? 'video/mp4' : 'video/webm' });
-                var filename = sanitizeFilename(surahName + ' - Ayah ' + ayahNum + ' - ' + reciterName) + '.' + fileExtension;
-
-                if (fileExtension === 'mp4') {
-                  showToast('Video saved: ' + surahName + ' Ayah ' + ayahNum);
-                } else {
-                  showToast('Video saved as WebM: ' + surahName + ' Ayah ' + ayahNum + '. WebM may not play on iOS.');
+          if (mp4Mime) {
+            // Strategy 1: MediaRecorder MP4 (native, best quality)
+            recordWithMediaRecorder(audioBlob, opts, mp4Mime, 'mp4', surahName, ayahNum, reciterName, reference, resolve);
+          } else if (typeof VideoEncoder !== 'undefined' && typeof AudioEncoder !== 'undefined') {
+            // Strategy 2: WebCodecs + mp4-muxer (Chrome 94+)
+            showToast('Creating MP4 video...');
+            createMP4WithWebCodecs(audioBlob, opts, surahName, ayahNum, reciterName, reference, resolve);
+          } else {
+            // Strategy 3: WebM fallback
+            var webmMime = null;
+            var webmCandidates = [
+              'video/webm;codecs=vp8,opus',
+              'video/webm;codecs=vp9,opus',
+              'video/webm'
+            ];
+            if (typeof MediaRecorder !== 'undefined') {
+              for (var w = 0; w < webmCandidates.length; w++) {
+                if (MediaRecorder.isTypeSupported(webmCandidates[w])) {
+                  webmMime = webmCandidates[w];
+                  break;
                 }
-
-                // Trigger download
-                var dlUrl = URL.createObjectURL(videoBlob);
-                var a = document.createElement('a');
-                a.href = dlUrl;
-                a.download = filename;
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(function () {
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(dlUrl);
-                }, 1000);
-
-                // Also offer native share if available (mobile)
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([videoBlob], filename, { type: videoBlob.type })] })) {
-                  setTimeout(function () {
-                    navigator.share({
-                      title: 'Baca - ' + reference,
-                      text: surahName + ' Ayah ' + ayahNum + ' (recited by ' + reciterName + ')',
-                      files: [new File([videoBlob], filename, { type: videoBlob.type })]
-                    }).catch(function () { /* user cancelled share */ });
-                  }, 500);
-                }
-
-                // Clean up
-                URL.revokeObjectURL(blobUrl);
-                audioCtx.close();
-
-                resolve({ success: true, blob: videoBlob, url: dlUrl, filename: filename });
-              });
-
-              // Start recording and play audio SILENTLY
-              showToast('Creating video (audio is captured silently)...');
-              recorder.start();
-              audio.play().catch(function (err) {
-                console.error('Audio play failed:', err);
-                showToast('Could not process audio. Try again.');
-                if (recorder.state !== 'inactive') recorder.stop();
-              });
-
-              // When audio ends, stop recording
-              audio.addEventListener('ended', function () {
-                if (recorder.state !== 'inactive') {
-                  recorder.stop();
-                }
-              });
-
-              // Safety timeout: stop after 5 minutes max
-              setTimeout(function () {
-                if (recorder.state !== 'inactive') {
-                  recorder.stop();
-                }
-              }, 5 * 60 * 1000);
-
-            } catch (err) {
-              console.error('Video creation failed:', err);
-              showToast('Video creation failed: ' + (err.message || 'unknown error'));
-              URL.revokeObjectURL(blobUrl);
-              resolve({ success: false, error: err.message });
+              }
             }
-          });
+            if (webmMime) {
+              showToast('Creating WebM video (WhatsApp may not play audio)...');
+              recordWithMediaRecorder(audioBlob, opts, webmMime, 'webm', surahName, ayahNum, reciterName, reference, resolve);
+            } else {
+              showToast('Video recording is not supported in this browser.');
+              resolve({ success: false, error: 'No supported format' });
+            }
+          }
         })
         .catch(function (err) {
           console.error('Audio fetch failed:', err);
@@ -450,6 +359,286 @@
           resolve({ success: false, error: 'Audio fetch failed: ' + err.message });
         });
     });
+  }
+
+  // === Strategy 1 & 3: MediaRecorder (MP4 or WebM) ===
+  function recordWithMediaRecorder(audioBlob, opts, mimeType, fileExtension, surahName, ayahNum, reciterName, reference, resolve) {
+    var blobUrl = URL.createObjectURL(audioBlob);
+    var audio = new Audio();
+    audio.src = blobUrl;
+
+    audio.addEventListener('error', function () {
+      showToast('Could not load audio for this verse.');
+      URL.revokeObjectURL(blobUrl);
+      resolve({ success: false, error: 'Audio load failed' });
+    });
+
+    audio.addEventListener('loadedmetadata', function () {
+      try {
+        var canvas = document.createElement('canvas');
+        canvas.width = 1080;
+        canvas.height = 1080;
+        var ctx = canvas.getContext('2d');
+        renderAyahToCanvas(canvas, ctx, opts);
+
+        var canvasStream = canvas.captureStream(30);
+        var AudioCtx = window.AudioContext || window.webkitAudioContext;
+        var audioCtx = new AudioCtx();
+        var sourceNode = audioCtx.createMediaElementSource(audio);
+        var destNode = audioCtx.createMediaStreamDestination();
+        sourceNode.connect(destNode);
+        // v33: do NOT connect to speakers - silent capture
+
+        var combinedStream = new MediaStream();
+        canvasStream.getVideoTracks().forEach(function (t) { combinedStream.addTrack(t); });
+        destNode.stream.getAudioTracks().forEach(function (t) { combinedStream.addTrack(t); });
+
+        var recorder = new MediaRecorder(combinedStream, {
+          mimeType: mimeType,
+          videoBitsPerSecond: 2500000,
+          audioBitsPerSecond: 128000
+        });
+        var chunks = [];
+
+        recorder.addEventListener('dataavailable', function (e) {
+          if (e.data && e.data.size > 0) chunks.push(e.data);
+        });
+
+        recorder.addEventListener('stop', function () {
+          var contentType = fileExtension === 'mp4' ? 'video/mp4' : 'video/webm';
+          var videoBlob = new Blob(chunks, { type: contentType });
+          var filename = sanitizeFilename(surahName + ' - Ayah ' + ayahNum + ' - ' + reciterName) + '.' + fileExtension;
+
+          if (fileExtension === 'mp4') {
+            showToast('Video saved: ' + surahName + ' Ayah ' + ayahNum);
+          } else {
+            showToast('Video saved (WebM - WhatsApp may not play audio)');
+          }
+
+          finishVideoDownload(videoBlob, filename, reference, surahName, ayahNum, reciterName, resolve);
+          URL.revokeObjectURL(blobUrl);
+          audioCtx.close();
+        });
+
+        showToast('Creating video (audio captured silently)...');
+        recorder.start();
+        audio.play().catch(function (err) {
+          console.error('Audio play failed:', err);
+          showToast('Could not process audio.');
+          if (recorder.state !== 'inactive') recorder.stop();
+        });
+
+        audio.addEventListener('ended', function () {
+          if (recorder.state !== 'inactive') recorder.stop();
+        });
+
+        setTimeout(function () {
+          if (recorder.state !== 'inactive') recorder.stop();
+        }, 5 * 60 * 1000);
+
+      } catch (err) {
+        console.error('Video creation failed:', err);
+        showToast('Video creation failed: ' + (err.message || 'unknown error'));
+        URL.revokeObjectURL(blobUrl);
+        resolve({ success: false, error: err.message });
+      }
+    });
+  }
+
+  // === Strategy 2: WebCodecs + mp4-muxer (produces proper MP4 for WhatsApp) ===
+  function createMP4WithWebCodecs(audioBlob, opts, surahName, ayahNum, reciterName, reference, resolve) {
+    // Load mp4-muxer from CDN
+    var muxerScript = document.querySelector('script[src*="mp4-muxer"]');
+    var loadPromise = Promise.resolve();
+
+    if (!muxerScript && !window.mp4Muxer) {
+      loadPromise = new Promise(function (loadResolve, loadReject) {
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js';
+        s.onload = loadResolve;
+        s.onerror = function () { loadReject(new Error('Failed to load mp4-muxer library')); };
+        document.head.appendChild(s);
+      });
+    }
+
+    loadPromise.then(function () {
+      // Set up canvas
+      var canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1080;
+      var ctx = canvas.getContext('2d');
+      renderAyahToCanvas(canvas, ctx, opts);
+
+      // Decode the audio to get raw samples + duration
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      var audioCtx = new AudioCtx();
+
+      audioBlob.arrayBuffer().then(function (arrayBuffer) {
+        return audioCtx.decodeAudioData(arrayBuffer);
+      }).then(function (audioBuffer) {
+        var sampleRate = audioBuffer.sampleRate;
+        var durationSec = audioBuffer.duration;
+        var fps = 30;
+        var totalFrames = Math.ceil(durationSec * fps);
+
+        // Set up mp4-muxer
+        var Muxer = window.mp4Muxer.Muxer;
+        var ArrayBufferTarget = window.mp4Muxer.ArrayBufferTarget;
+
+        var muxer = new Muxer({
+          target: new ArrayBufferTarget(),
+          video: {
+            codec: 'avc',
+            width: 1080,
+            height: 1080
+          },
+          audio: {
+            codec: 'aac',
+            sampleRate: sampleRate,
+            numberOfChannels: 1
+          },
+          fastStart: 'in-memory'
+        });
+
+        // Set up VideoEncoder (H.264)
+        var videoEncoder = new VideoEncoder({
+          output: function (chunk, meta) { muxer.addVideoChunk(chunk, meta); },
+          error: function (e) { console.error('VideoEncoder error:', e); }
+        });
+        videoEncoder.configure({
+          codec: 'avc1.42E01E',
+          width: 1080,
+          height: 1080,
+          bitrate: 2500000,
+          framerate: fps
+        });
+
+        // Set up AudioEncoder (AAC)
+        var audioEncoder = new AudioEncoder({
+          output: function (chunk, meta) { muxer.addAudioChunk(chunk, meta); },
+          error: function (e) { console.error('AudioEncoder error:', e); }
+        });
+        audioEncoder.configure({
+          codec: 'mp4a.40.2',
+          numberOfChannels: 1,
+          sampleRate: sampleRate,
+          bitrate: 128000
+        });
+
+        // Encode audio: create AudioData from the decoded buffer
+        var audioData = new AudioData({
+          format: 'f32-planar',
+          sampleRate: sampleRate,
+          numberOfFrames: audioBuffer.length,
+          numberOfChannels: 1,
+          timestamp: 0,
+          data: audioBuffer.getChannelData(0)
+        });
+        audioEncoder.encode(audioData);
+        audioData.close();
+
+        // Encode video frames one at a time
+        showToast('Encoding video frames (0/' + totalFrames + ')...');
+
+        function encodeFrame(frameIdx) {
+          if (frameIdx >= totalFrames) {
+            // All frames encoded - flush and finalize
+            showToast('Finalizing video...');
+
+            var flushVideo = videoEncoder.flush();
+            var flushAudio = audioEncoder.flush();
+
+            Promise.all([flushVideo, flushAudio]).then(function () {
+              videoEncoder.close();
+              audioEncoder.close();
+              muxer.finalize();
+
+              var mp4Buffer = muxer.target.buffer;
+              var videoBlob = new Blob([mp4Buffer], { type: 'video/mp4' });
+              var filename = sanitizeFilename(surahName + ' - Ayah ' + ayahNum + ' - ' + reciterName) + '.mp4';
+
+              showToast('Video saved: ' + surahName + ' Ayah ' + ayahNum);
+              finishVideoDownload(videoBlob, filename, reference, surahName, ayahNum, reciterName, resolve);
+              audioCtx.close();
+            }).catch(function (err) {
+              console.error('Flush failed:', err);
+              showToast('Video encoding failed.');
+              resolve({ success: false, error: err.message });
+              audioCtx.close();
+            });
+            return;
+          }
+
+          // Update progress every 30 frames (once per second)
+          if (frameIdx % 30 === 0 && frameIdx > 0) {
+            showToast('Encoding video (' + Math.round(frameIdx / totalFrames * 100) + '%)...');
+          }
+
+          var timestamp = Math.round(frameIdx * 1000000 / fps); // microseconds
+          var frame = new VideoFrame(canvas, { timestamp: timestamp });
+          videoEncoder.encode(frame, { keyFrame: frameIdx % 60 === 0 });
+          frame.close();
+
+          // Process next frame on next tick to avoid blocking UI
+          // Encode in batches of 5, then yield
+          if (frameIdx % 5 === 4) {
+            setTimeout(function () { encodeFrame(frameIdx + 1); }, 0);
+          } else {
+            encodeFrame(frameIdx + 1);
+          }
+        }
+
+        encodeFrame(0);
+
+      }).catch(function (err) {
+        console.error('Audio decode failed:', err);
+        showToast('Could not decode audio. Try another reciter.');
+        resolve({ success: false, error: err.message });
+        audioCtx.close();
+      });
+    }).catch(function (err) {
+      console.error('mp4-muxer load failed:', err);
+      // Fall back to WebM if mp4-muxer can't load
+      showToast('Falling back to WebM...');
+      var webmMime = 'video/webm;codecs=vp8,opus';
+      if (typeof MediaRecorder !== 'undefined' && !MediaRecorder.isTypeSupported(webmMime)) {
+        webmMime = 'video/webm';
+      }
+      if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(webmMime)) {
+        recordWithMediaRecorder(audioBlob, opts, webmMime, 'webm', surahName, ayahNum, reciterName, reference, resolve);
+      } else {
+        showToast('Video recording is not supported.');
+        resolve({ success: false, error: 'No supported format' });
+      }
+    });
+  }
+
+  // === Shared: finish download + native share ===
+  function finishVideoDownload(videoBlob, filename, reference, surahName, ayahNum, reciterName, resolve) {
+    var dlUrl = URL.createObjectURL(videoBlob);
+    var a = document.createElement('a');
+    a.href = dlUrl;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(dlUrl);
+    }, 1000);
+
+    // Also offer native share if available (mobile)
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([videoBlob], filename, { type: videoBlob.type })] })) {
+      setTimeout(function () {
+        navigator.share({
+          title: 'Baca - ' + reference,
+          text: surahName + ' Ayah ' + ayahNum + ' (recited by ' + reciterName + ')',
+          files: [new File([videoBlob], filename, { type: videoBlob.type })]
+        }).catch(function () { /* user cancelled share */ });
+      }, 500);
+    }
+
+    resolve({ success: true, blob: videoBlob, url: dlUrl, filename: filename });
   }
 
   // Expose public API
