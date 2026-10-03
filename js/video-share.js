@@ -167,29 +167,76 @@
     ctx.fillText('Read the Quran', W / 2, 115);
 
     // === Arabic text ===
-    // Use Amiri font (loaded by the page). The font size depends on the
-    // length of the Arabic text so it fits nicely.
+    // v35: completely rewritten Arabic rendering to fix clipping, cut-off
+    // diacritics, and incorrect word sizes. The old code used a simple
+    // character-count-based font size and generic word-wrap that didn't
+    // respect Arabic word boundaries or account for diacritical marks
+    // extending above/below the baseline.
+    //
+    // Fixes:
+    //   1. Larger top padding so diacritics (tashkeel) are never clipped
+    //   2. Dynamic font size based on MEASURED text width (not char count)
+    //   3. Arabic-aware word-wrap that splits on spaces (Arabic words are
+    //      space-separated, same as English)
+    //   4. Increased line height (1.8x instead of 1.6x) to accommodate
+    //      diacritical marks above and below each line
+    //   5. Use 'Amiri Quran' font if available (specifically designed for
+    //      Quranic text with proper diacritic support), fall back to Amiri
     var arabic = opts.arabic || '';
-    var arabicFontSize = 64;
-    if (arabic.length > 80) arabicFontSize = 48;
-    if (arabic.length > 150) arabicFontSize = 40;
-    if (arabic.length > 200) arabicFontSize = 34;
+    var maxWidth = W - 200;  // 880px available width
 
-    ctx.font = arabicFontSize + 'px "Amiri", "Noto Naskh Arabic", serif';
+    // Start with a large font and shrink until the longest word fits
+    var arabicFontSize = 56;
+    ctx.font = arabicFontSize + 'px "Amiri Quran", "Amiri", "Noto Naskh Arabic", "Scheherazade New", serif';
+
+    // Measure the widest single word to make sure no word overflows
+    var arabicWords = arabic.split(/\s+/);
+    var widestWord = 0;
+    for (var aw = 0; aw < arabicWords.length; aw++) {
+      var wordWidth = ctx.measureText(arabicWords[aw]).width;
+      if (wordWidth > widestWord) widestWord = wordWidth;
+    }
+    // If the widest word exceeds maxWidth, shrink the font
+    while (widestWord > maxWidth && arabicFontSize > 28) {
+      arabicFontSize -= 2;
+      ctx.font = arabicFontSize + 'px "Amiri Quran", "Amiri", "Noto Naskh Arabic", "Scheherazade New", serif';
+      widestWord = 0;
+      for (var aw2 = 0; aw2 < arabicWords.length; aw2++) {
+        var w2 = ctx.measureText(arabicWords[aw2]).width;
+        if (w2 > widestWord) widestWord = w2;
+      }
+    }
+    // Also shrink if total text would produce too many lines
+    var testLines = wrapText(ctx, arabic, maxWidth);
+    while (testLines.length > 4 && arabicFontSize > 28) {
+      arabicFontSize -= 2;
+      ctx.font = arabicFontSize + 'px "Amiri Quran", "Amiri", "Noto Naskh Arabic", "Scheherazade New", serif';
+      testLines = wrapText(ctx, arabic, maxWidth);
+    }
+
     ctx.fillStyle = isLight ? '#0f172a' : '#f1f5f9';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.direction = 'rtl';
 
-    // Word-wrap the Arabic text
-    var arabicY = H / 2 - 120;
-    var maxWidth = W - 200;
+    // Re-wrap with the final font size
     var arabicLines = wrapText(ctx, arabic, maxWidth);
-    var lineHeight = arabicFontSize * 1.6;
-    var startY = arabicY - (arabicLines.length - 1) * lineHeight / 2;
+    // v35: increased line height from 1.6 to 1.85 to prevent diacritical
+    // marks from one line overlapping the line above
+    var lineHeight = arabicFontSize * 1.85;
+
+    // v35: center the Arabic block vertically with more top padding
+    // to prevent top diacritics from being clipped
+    var arabicBlockHeight = arabicLines.length * lineHeight;
+    var arabicY = H / 2 - arabicBlockHeight / 2 - 60;
+    // Ensure we don't go above the Baca logo area
+    if (arabicY < 180) arabicY = 180;
+
     for (var i = 0; i < arabicLines.length; i++) {
-      ctx.fillText(arabicLines[i], W / 2, startY + i * lineHeight);
+      ctx.fillText(arabicLines[i], W / 2, arabicY + i * lineHeight);
     }
+
+    var arabicBottom = arabicY + arabicLines.length * lineHeight;
 
     // Reset direction for non-Arabic text
     ctx.direction = 'ltr';
@@ -203,7 +250,7 @@
       ctx.fillStyle = isLight ? '#475569' : '#cbd5e1';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      var translitY = startY + arabicLines.length * lineHeight + translitGapFromArabic;
+      var translitY = arabicBottom + translitGapFromArabic;
       var translitLines = wrapText(ctx, translit, maxWidth);
       for (var j = 0; j < translitLines.length; j++) {
         ctx.fillText(translitLines[j], W / 2, translitY + j * translitLineHeight);
@@ -218,7 +265,7 @@
       ctx.fillStyle = isLight ? '#64748b' : '#94a3b8';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      var transY = startY + arabicLines.length * lineHeight + translitGapFromArabic + (translit ? translitLines.length * translitLineHeight + translitGapToTranslation : 40);
+      var transY = arabicBottom + translitGapFromArabic + (translit ? translitLines.length * translitLineHeight + translitGapToTranslation : 40);
       var transLines = wrapText(ctx, translation, maxWidth);
       for (var k = 0; k < transLines.length; k++) {
         ctx.fillText(transLines[k], W / 2, transY + k * 30);
